@@ -2,7 +2,7 @@
 The database design for the new helpdesk it-system.
 
 ## Dokumentation
-The wiki page on this repo holds the the dokumentation for this project.
+The wiki page on this repo holds the dokumentation for this project.
 
 ## Discussions
 The discussions page is the perfect place to chat with others about the project and propose new ideas or features.
