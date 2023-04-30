@@ -2,7 +2,7 @@
 The database design for the new helpdesk it-system.
 
 ## Dokumentation
-The wiki page on this repo holds the dokumentation for this project.
+The [wiki](https://github.com/kenn7575/sop-it-service-solution/wiki) page on this repo holds the dokumentation for this project.
 
 ## Discussions
 📨 The [discussions](https://github.com/kenn7575/sop-it-service-solution/discussions) page is the perfect place to chat with others about the project and propose new ideas or features.
