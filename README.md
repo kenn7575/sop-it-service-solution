@@ -6,6 +6,7 @@ The wiki page on this repo holds the dokumentation for this project.
 
 ## Discussions
 📨 The [discussions](https://github.com/kenn7575/sop-it-service-solution/discussions) page is the perfect place to chat with others about the project and propose new ideas or features.
+
 📣 Here you can also find [announcements](https://github.com/kenn7575/sop-it-service-solution/discussions/categories/announcements) about the projects progress.
 
 ## Issues
