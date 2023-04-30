@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Obvious errors that compromises the systems functionality
 title: ''
 labels: ''
 assignees: ''
