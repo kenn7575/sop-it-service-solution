@@ -1,5 +1,6 @@
 # sop-database-design
-The database design for the new helpdesk it-system.
+### welcome to the sop it service solution repo.
+🙌 Let's make this project a reality, together.
 
 ## Status
 📆 This project is in early development - Expect constant changes.
