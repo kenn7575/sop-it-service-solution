@@ -1,6 +1,6 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: Concerns
+about: Other types of errors that compromises the systems efficiency or usability.
 title: ''
 labels: ''
 assignees: ''
