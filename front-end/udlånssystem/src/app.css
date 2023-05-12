@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: system-ui, system-ui;
+}
+:root {
+  --nav-color: #410081;
+  --bg-color-1: #1d013e;
+}
