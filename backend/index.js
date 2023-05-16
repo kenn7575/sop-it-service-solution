@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const session = require('express-session');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcrypt');
@@ -16,6 +17,12 @@ app.use(express.urlencoded({ extended: true }))
 app.set('json spaces', 2);
 app.set('trust proxy', true)
 app.enable('trust proxy')
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000*60*60*24*30 }
+}))
 
 var auth_level = 0
 
@@ -47,23 +54,22 @@ app.get("/", async (req, res) => {
 const salt = 10;
 
 app.get('/test', (req, res) => {
-    const password = '$2y$10$WiHx.zshe1ngYPHNVZcGj.OAUPAK2phWDELzCLEet4ZOySfrFvNcy'
-    const password2 = '$2y$10$hA2PFMOfqGQICg83J8UYDOCntSx9IOu1YnLDOsHbwfnXzlmsUWt1e'
-    const password3 = '$2y$10$.kmLO4lsi0NvuxNukbVUMeF.su0BcrQTjxE6eXoU/NI/zAgzwP0v2'
-
     const users = require('./users.json')
-
-    const user = users.find(u => u.username === req.body.username)
+    const username = req.body.username ? req.body.username : req.query.username
+    const password = req.body.password ? req.body.password : req.query.password
+    const user = users.find(u => u.username === username)
 
     if (user === undefined) return res.send("User not found")
+    req.session.user = user
+    req.session.save()
+    
+    bcrypt.hash(user.password, salt, (err, hash) => { res.send(hash) })
+    bcrypt.compare(password, user.password.replace("$2y$", "$2b$"), (err, result) => { console.log(result) })
+})
 
-    bcrypt.hash(user.password, salt, (err, hash) => {
-        res.send(hash)
-    })
-
-    bcrypt.compare(req.body.password, user.password.replace("$2y$", "$2b$"), (err, result) => {
-        console.log(result)
-    })
+app.get('/test2', (req, res) => {
+    // console.log(req.session.user)
+    res.send(req.session.user)
 })
 
 app.get('/:table', async (req, res) => {
@@ -72,7 +78,7 @@ app.get('/:table', async (req, res) => {
     try { res.send( await prisma[req.params.table].findMany() ) }
     catch (err) {
         res.send(`no table named "${req.params.table}"`)
-}}
-)
+}
+})
 
 app.listen(3000)
