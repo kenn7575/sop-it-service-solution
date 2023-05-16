@@ -27,18 +27,11 @@
     display: grid;
     grid-template-columns: auto 1fr;
     height: 100vh;
-    background: var(--bg-color-1);
+    background-color: var(--bg1);
   }
   header {
-    background: var(--nav-color);
-    width: 70px;
+    background: var(--nav);
+    width: 20rem;
     transition: width 0.3s ease-in-out;
-    border-radius: 0 15px 15px 0;
-  }
-  main {
-    background-color: var(--bg-color-1);
-  }
-  header:hover {
-    width: 250px;
   }
 </style>
