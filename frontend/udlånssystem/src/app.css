@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: system-ui, system-ui;
+}
+:root {
+  --nav: #272737;
+  --bg1: #2d2d3f;
+  --bg2: #464660;
+  --p: #00c16e;
+  --s: #f85a40;
+  --text1: #fff;
+  --text2: #bebecc;
+}
+.light {
+  --nav: #dddddd;
+  --bg1: #ffffff;
+  --bg2: #e6e6e6;
+  --p: #00c16e;
+  --s: #f85a40;
+  --text1: #303033;
+  --text2: #8f9192;
+}
