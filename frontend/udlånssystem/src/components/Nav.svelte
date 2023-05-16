@@ -2,6 +2,7 @@
   import logo from "../../public/logo.png";
   import SearchInput from "./SearchInput.svelte";
   import NavBtn from "./Nav-btn.svelte";
+  import NavMenu from "./Nav-menu.svelte";
 </script>
 
 <div class="content">
@@ -12,8 +13,22 @@
       <h2>By Kenni & Nima</h2>
     </div>
   </div>
-  <SearchInput placeholder="Search" />
-  <NavBtn />
+  <div class="search">
+    <SearchInput placeholder="Search" />
+  </div>
+  <NavBtn destination="/" text="Home" icon="fa-solid fa-house" />
+  <NavBtn destination="/users" text="Users" icon="fa-solid fa-user" />
+  <NavBtn
+    destination="/dashboard"
+    text="Dashboard"
+    icon="fa-solid fa-chart-line"
+  />
+  <NavBtn
+    destination="/products"
+    text="Products"
+    icon="fa-solid fa-bag-shopping"
+  />
+  <NavMenu destination="/users" />
 </div>
 
 <style>
@@ -22,8 +37,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     height: 100%;
+  }
+  .search {
+    width: 100%;
+    margin: 1rem 0;
   }
   .watermark {
     display: flex;

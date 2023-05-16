@@ -4,28 +4,44 @@
   export let destination = "/";
   export let text = "Home";
   export let icon = "fa-solid fa-house";
+  export let buttons = [{ text: "test", icon: "", destination: "/" }];
 
   $: currentPath = $path;
-  function handleClick() {
-    navigate(destination, { replace: true });
+  function handleClick(dest) {
+    navigate(dest, { replace: true });
     path.update(() => {
       return destination;
     });
   }
+  function handleMenuClick() {
+    open = !open;
+  }
+
+  let open = false;
 </script>
 
 {#if currentPath == destination}
-  <button on:click={handleClick} class="selected">
+  <button class="outer selected">
     <div class="flex">
       <i class={icon} />
       <p>{text}</p>
     </div>
   </button>
 {:else}
-  <button on:click={handleClick}>
+  <button class="outer">
     <div class="flex">
       <i class={icon} />
       <p>{text}</p>
+    </div>
+    <div class="space">
+      {#each buttons as button}
+        <button class="inner">
+          <div class="flex">
+            <i class={button.icon} />
+            <p>{button.text}</p>
+          </div>
+        </button>
+      {/each}
     </div>
   </button>
 {/if}
@@ -36,10 +52,16 @@
     color: red;
     width: 100%;
     border: none;
-    padding: 0.7rem 1rem;
     border-radius: 10px;
     transition: background-color 100ms ease-in-out;
   }
+  button.outer {
+    padding: 0;
+  }
+  .flex {
+    padding: 0.7rem 1rem;
+  }
+
   button:hover:not(.selected) {
     background-color: var(--bg2);
     cursor: pointer;
@@ -66,5 +88,8 @@
   p {
     font-size: 1.2rem;
     color: var(--text2);
+  }
+  button {
+    background-color: #f005;
   }
 </style>

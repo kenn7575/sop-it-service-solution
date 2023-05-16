@@ -28,7 +28,7 @@
     background-color: var(--bg2);
 
     padding-left: 12px;
-    height: 40px;
+    height: 2.813rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
