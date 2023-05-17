@@ -13,6 +13,7 @@
   --s: #f85a40;
   --text1: #fff;
   --text2: #bebecc;
+  --text3: #bebecc;
 }
 .light {
   --nav: #dddddd;
@@ -22,4 +23,5 @@
   --s: #f85a40;
   --text1: #303033;
   --text2: #8f9192;
+  --text3: #303033;
 }

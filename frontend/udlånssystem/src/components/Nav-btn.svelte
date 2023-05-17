@@ -16,21 +16,12 @@
   }
 </script>
 
-{#if currentPath === destination}
-  <button on:click={handleClick} class="selected">
-    <div class="flex">
-      <i class={icon} />
-      <p>{text}</p>
-    </div>
-  </button>
-{:else}
-  <button on:click={handleClick}>
-    <div class="flex">
-      <i class={icon} />
-      <p>{text}</p>
-    </div>
-  </button>
-{/if}
+<button on:click={handleClick} class:selected={currentPath === destination}>
+  <div class="flex">
+    <i class={icon} />
+    <p>{text}</p>
+  </div>
+</button>
 
 <style>
   button {
@@ -54,19 +45,18 @@
   }
   .selected {
     background-color: var(--p);
-    color: var(--text1) !important;
   }
   .selected p,
   .selected i {
-    color: var(--text1) !important;
+    color: #fff !important;
   }
   i {
     font-size: 1.25rem;
     width: 2rem;
-    color: var(--text2);
+    color: var(--text3);
   }
   p {
     font-size: 1.2rem;
-    color: var(--text2);
+    color: var(--text3);
   }
 </style>

@@ -2,6 +2,7 @@
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
   import { formatPath } from "../services/pathFormatter.js";
+  import { fade } from "svelte/transition";
 
   export let destination = "/";
   export let text = "Home";
@@ -14,17 +15,21 @@
     },
   ];
 
+  //subscription to path store
   $: currentPath = $path;
+
+  //update path store and navigate to destination
   function handleNavClick(dest) {
-    navigate(dest, { replace: true });
+    dest = destination + dest;
     path.update(() => {
-      return destination + dest;
+      return dest;
     });
+    navigate(dest, { replace: true });
   }
+  //toggle menu
   function handleMenuClick() {
     open = !open;
   }
-
   let open = false;
 </script>
 
@@ -71,14 +76,11 @@
     border-radius: 10px;
     transition: background-color 100ms ease-in-out;
   }
-  .true {
-    background-color: var(--p);
+  button.outer {
+    padding: 0;
   }
   .large {
     padding: 0.7rem 1rem;
-  }
-  button.outer {
-    padding: 0;
   }
   .small {
     padding: 0.5rem 1rem;
@@ -90,6 +92,10 @@
     width: 100%;
     padding-left: 4rem;
   }
+  .show {
+    height: auto;
+  }
+  /* Target buttons hover if not selected */
   button:hover:not(.selected) {
     background-color: var(--bg2);
     cursor: pointer;
@@ -114,11 +120,11 @@
   i {
     font-size: 1.25rem;
     width: 2rem;
-    color: var(--text2);
+    color: var(--text3);
     transition: transform 150ms ease-in-out;
   }
   p {
     font-size: 1.2rem;
-    color: var(--text2);
+    color: var(--text3);
   }
 </style>

@@ -14,6 +14,12 @@
     path.update(() => {
       return window.location.pathname;
     });
+    //set theme
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.className = "dark";
+    } else {
+      document.documentElement.className = "light";
+    }
   });
 </script>
 
