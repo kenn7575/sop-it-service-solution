@@ -1,11 +1,13 @@
 <script>
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
+
   export let destination = "/";
   export let text = "Home";
   export let icon = "fa-solid fa-house";
 
   $: currentPath = $path;
+
   function handleClick() {
     navigate(destination, { replace: true });
     path.update(() => {
@@ -14,7 +16,7 @@
   }
 </script>
 
-{#if currentPath == destination}
+{#if currentPath === destination}
   <button on:click={handleClick} class="selected">
     <div class="flex">
       <i class={icon} />

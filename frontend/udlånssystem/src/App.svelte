@@ -8,6 +8,8 @@
   import Dashboard from "./pages/Dashboard.svelte";
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
+  import { formatPath } from "./services/pathFormatter.js";
+
   onMount(() => {
     path.update(() => {
       return window.location.pathname;

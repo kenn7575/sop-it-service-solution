@@ -28,7 +28,21 @@
     text="Products"
     icon="fa-solid fa-bag-shopping"
   />
-  <NavMenu destination="/users" />
+  <NavMenu
+    buttons={[
+      {
+        text: "Categories & groups",
+        icon: "",
+        destination: "/categories-groups",
+      },
+      { text: "Product types", icon: "", destination: "/product-types" },
+      { text: "Locations", icon: "", destination: "/locations" },
+      { text: "Brands", icon: "", destination: "/brands" },
+    ]}
+    icon="fa-solid fa-ellipsis"
+    text="More"
+    destination="/more"
+  />
 </div>
 
 <style>
@@ -39,6 +53,7 @@
     align-items: center;
     gap: 0.5rem;
     height: 100%;
+    overflow-y: auto;
   }
   .search {
     width: 100%;
