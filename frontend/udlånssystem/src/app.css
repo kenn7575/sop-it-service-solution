@@ -4,6 +4,7 @@
   box-sizing: border-box;
   color: var(--text1);
   font-family: system-ui, system-ui;
+  transition: background 500ms;
 }
 :root {
   --nav: #272737;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+export const welcome = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Created with Vectornator (http://vectornator.io/) -->
 <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 865.76 682.89" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -120,3 +120,5 @@
 <path d="M290.821 368.327L295.461 346.197L288.251 346.197L288.251 344.497L297.671 344.497L297.671 345.497L292.911 368.307L290.821 368.327Z" fill="#2f2e41" fill-rule="nonzero" opacity="1" stroke="none"/>
 </g>
 </svg>
+
+`;

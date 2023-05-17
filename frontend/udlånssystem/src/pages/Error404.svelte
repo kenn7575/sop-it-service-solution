@@ -23,4 +23,7 @@
     height: 100%;
     overflow-y: auto;
   }
+  p {
+    color: var(--text2);
+  }
 </style>

@@ -12,6 +12,7 @@
   import ProductTypes from "./pages/More/Product-Types.svelte";
   import Help from "./pages/help.svelte";
   import Notifications from "./pages/Notifications.svelte";
+  import Chat from "./pages/Chat.svelte";
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
@@ -43,13 +44,13 @@
       <Route path="hjem" component={Home} />
       <Route path="brugere" component={Users} />
       <Route path="dashboard" component={Dashboard} />
-      <Route path="Produkter" component={Products} />
+      <Route path="produkter" component={Products} />
       <Route path="mere/brands" component={Brands} />
       <Route path="mere/kategorier" component={CategoriesGroups} />
       <Route path="mere/lokaliteter" component={Locations} />
       <Route path="mere/produkttyper" component={ProductTypes} />
-      <Route path="hjelp" component={Help} />
       <Route path="notifikationer" component={Notifications} />
+      <Route path="chat" component={Chat} />
     </main>
   </Router>
 </div>
@@ -64,7 +65,7 @@
   header {
     background: var(--nav);
     width: 20rem;
-    transition: width 0.3s ease-in-out;
+    height: 100vh;
   }
   main {
     overflow-y: auto;

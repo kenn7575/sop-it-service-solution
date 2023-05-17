@@ -90,6 +90,9 @@
   }
   .buttons {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     padding-left: 4rem;
   }
   .show {
