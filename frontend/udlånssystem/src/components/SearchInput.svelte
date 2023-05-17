@@ -53,6 +53,7 @@
     background-color: var(--search-area-bg);
     color: var(--text1);
   }
+
   ::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: var(--text2);

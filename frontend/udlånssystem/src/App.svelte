@@ -6,6 +6,13 @@
   import Error404 from "./pages/Error404.svelte";
   import Products from "./pages/Products.svelte";
   import Dashboard from "./pages/Dashboard.svelte";
+  import Brands from "./pages/More/Brands.svelte";
+  import CategoriesGroups from "./pages/More/Categories-groups.svelte";
+  import Locations from "./pages/More/Locations.svelte";
+  import ProductTypes from "./pages/More/Product-Types.svelte";
+  import Help from "./pages/help.svelte";
+  import Notifications from "./pages/Notifications.svelte";
+
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
   import { formatPath } from "./services/pathFormatter.js";
@@ -33,10 +40,16 @@
     <main>
       <Route component={Error404} />
       <Route path="/" component={Home} />
-      <Route path="home" component={Home} />
-      <Route path="users" component={Users} />
+      <Route path="hjem" component={Home} />
+      <Route path="brugere" component={Users} />
       <Route path="dashboard" component={Dashboard} />
-      <Route path="products" component={Products} />
+      <Route path="Produkter" component={Products} />
+      <Route path="mere/brands" component={Brands} />
+      <Route path="mere/kategorier" component={CategoriesGroups} />
+      <Route path="mere/lokaliteter" component={Locations} />
+      <Route path="mere/produkttyper" component={ProductTypes} />
+      <Route path="hjelp" component={Help} />
+      <Route path="notifikationer" component={Notifications} />
     </main>
   </Router>
 </div>

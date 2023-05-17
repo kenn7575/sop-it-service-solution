@@ -17,37 +17,37 @@
   <div class="search">
     <SearchInput placeholder="Search" />
   </div>
-  <NavBtn destination="/" text="Home" icon="fa-solid fa-house" />
-  <NavBtn destination="/users" text="Users" icon="fa-solid fa-user" />
+  <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
+  <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" />
   <NavBtn
     destination="/dashboard"
     text="Dashboard"
     icon="fa-solid fa-chart-line"
   />
   <NavBtn
-    destination="/products"
-    text="Products"
+    destination="/produkter"
+    text="Produkter"
     icon="fa-solid fa-bag-shopping"
   />
   <NavMenu
     buttons={[
       {
-        text: "Categories & groups",
+        text: "Kategorier & grupper",
         icon: "",
-        destination: "/categories-groups",
+        destination: "/kategorier",
       },
-      { text: "Product types", icon: "", destination: "/product-types" },
-      { text: "Locations", icon: "", destination: "/locations" },
+      { text: "Produkttyper", icon: "", destination: "/produkttyper" },
+      { text: "Lokaliteter", icon: "", destination: "/lokaliteter" },
       { text: "Brands", icon: "", destination: "/brands" },
     ]}
     icon="fa-solid fa-ellipsis"
-    text="More"
-    destination="/more"
+    text="Mere"
+    destination="/mere"
   />
   <hr />
   <NavBtn
-    destination="/notifications"
-    text="Notifications"
+    destination="/notifikationer"
+    text="Notifikationer"
     icon="fa-solid fa-bell"
   />
   <NavBtn
@@ -102,7 +102,6 @@
   h1 {
     font-size: 1.75rem;
     font-weight: 500;
-    color: var(--text1);
   }
   h2 {
     font-size: 1rem;

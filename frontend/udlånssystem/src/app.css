@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: #fff;
+  color: var(--text1);
   font-family: system-ui, system-ui;
 }
 :root {
@@ -24,4 +24,7 @@
   --text1: #303033;
   --text2: #8f9192;
   --text3: #303033;
+}
+h1 {
+  color: var(--text1);
 }

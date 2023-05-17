@@ -111,11 +111,10 @@
   }
   .selected {
     background-color: var(--p);
-    color: var(--text1) !important;
   }
   .selected p,
   .selected i {
-    color: var(--text1) !important;
+    color: #fff !important;
   }
   i {
     font-size: 1.25rem;
