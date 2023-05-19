@@ -25,10 +25,11 @@
     <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
     <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" />
     <NavBtn
-      destination="/dashboard"
-      text="Dashboard"
-      icon="fa-solid fa-chart-line"
+      destination="/udlån"
+      text="Udlån"
+      icon="fa-solid fa-file-signature"
     />
+
     <NavBtn
       destination="/produkter"
       text="Produkter"
@@ -39,13 +40,30 @@
     <NavMenu
       buttons={[
         {
-          text: "Kategorier & grupper",
-          icon: "",
-          destination: "/kategorier",
+          text: "Produktkategorier",
+          icon: "fa-solid fa-tag",
+          destination: "/Produktkategorier",
         },
-        { text: "Produkttyper", icon: "", destination: "/produkttyper" },
-        { text: "Lokaliteter", icon: "", destination: "/lokaliteter" },
-        { text: "Brands", icon: "", destination: "/brands" },
+        {
+          text: "Produkttyper",
+          icon: "fa-solid fa-barcode",
+          destination: "/produkttyper",
+        },
+        {
+          text: "Lokaliteter",
+          destination: "/lokaliteter",
+          icon: "fa-solid fa-location-dot",
+        },
+        {
+          text: "Brands",
+          destination: "/brands",
+          icon: "fa-regular fa-copyright",
+        },
+        {
+          text: "Dashboard",
+          icon: "fa-solid fa-chart-line",
+          destination: "/dashboard ",
+        },
       ]}
       icon="fa-solid fa-ellipsis"
       text="Mere"

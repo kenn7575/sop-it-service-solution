@@ -12,7 +12,7 @@
 
 <style>
   .svg {
-    width: 75%;
+    width: 60%;
   }
   .content {
     padding-top: 4rem;
@@ -21,7 +21,6 @@
     align-items: center;
     gap: 0.5rem;
     max-height: 100vh;
-    overflow: hidden;
   }
   p {
     color: var(--text2);

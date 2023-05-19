@@ -49,7 +49,7 @@
       <Route path="dashboard" component={Dashboard} />
       <Route path="produkter" component={Products} />
       <Route path="brands" component={Brands} />
-      <Route path="kategorier" component={CategoriesGroups} />
+      <Route path="produktkategorier" component={CategoriesGroups} />
       <Route path="lokaliteter" component={Locations} />
       <Route path="produkttyper" component={ProductTypes} />
       <Route path="notifikationer" component={Notifications} />
@@ -72,9 +72,12 @@
   }
   main {
     overflow-y: auto;
+    position: relative;
   }
   .breadcrumps {
     width: 100%;
     padding: 0.5rem;
+    position: sticky;
+    top: 0;
   }
 </style>

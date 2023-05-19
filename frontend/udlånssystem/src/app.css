@@ -9,9 +9,8 @@
 *:focus {
   outline: solid var(--p) 3px;
   border: solid var(--p) 3px;
-  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
-    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
+
 :root {
   --nav: #272737;
   --bg1: #2d2d3f;
