@@ -1,12 +1,14 @@
 <script>
+  import { onMount } from "svelte";
   export let tableData = [
     ["ID", "Name", "Age"],
-    [1, "John", 25],
-    [2, "Alice", 30],
+    [2, "John", 25],
+    [1, "Alice", 30],
     [3, "Bob", 20],
   ];
+
   let sortAscending = true;
-  let sortColumn = 0;
+  let sortColumn = -1;
 
   function sortTable(data, columnIndex) {
     if (columnIndex === sortColumn) {
@@ -27,6 +29,12 @@
       tableData = [data[0], ...sortedData];
     }
   }
+  function isEven(index) {
+    return index % 2 === 0;
+  }
+  onMount(() => {
+    sortTable(tableData, 0);
+  });
 </script>
 
 <table>
@@ -38,8 +46,13 @@
     </tr>
   </thead>
   <tbody>
-    {#each tableData.slice(1) as row}
-      <tr>
+    {#each tableData.slice(1) as row, rowIndex}
+      <tr
+        class:row-even={isEven(rowIndex)}
+        on:click={() => {
+          console.log(row[0] + " cliked");
+        }}
+      >
         {#each row as cell}
           <td>{cell}</td>
         {/each}
@@ -49,7 +62,19 @@
 </table>
 
 <style>
-  tr {
+  table {
+    width: 100%;
+  }
+  thead tr {
     cursor: pointer;
+  }
+  tbody tr {
+    background: var(--bg2);
+  }
+  td {
+    padding: 0.5rem;
+  }
+  tr.row-even {
+    background: var(--bg3);
   }
 </style>
