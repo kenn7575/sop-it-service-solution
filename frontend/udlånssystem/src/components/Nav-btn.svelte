@@ -16,7 +16,11 @@
   }
 </script>
 
-<button on:click={handleClick} class:selected={currentPath === destination}>
+<button
+  on:click={handleClick}
+  disabled={currentPath === destination}
+  class:selected={currentPath === destination}
+>
   <div class="flex">
     <i class={icon} />
     <p>{text}</p>

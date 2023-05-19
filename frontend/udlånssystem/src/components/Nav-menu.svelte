@@ -1,17 +1,15 @@
 <script>
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
-  import { formatPath } from "../services/pathFormatter.js";
-  import { fade } from "svelte/transition";
+  import { stripPath } from "../services/pathFormatter.js";
 
-  export let destination = "/";
   export let text = "Home";
   export let icon = "fa-solid fa-house";
   export let buttons = [
     {
       text: "",
       icon: "",
-      destination: "",
+      destination: "/",
     },
   ];
 
@@ -20,7 +18,6 @@
 
   //update path store and navigate to destination
   function handleNavClick(dest) {
-    dest = destination + dest;
     path.update(() => {
       return dest;
     });
@@ -34,7 +31,8 @@
 </script>
 
 <button
-  class:selected={!open && formatPath(currentPath, 1) === destination}
+  class:selected={!open &&
+    buttons.some((button) => button.destination === currentPath)}
   class="outer"
   on:click={handleMenuClick}
 >
@@ -51,11 +49,12 @@
   <div class="buttons">
     {#each buttons as button}
       <button
-        class:selected={currentPath === destination + button.destination}
+        class:selected={currentPath === button.destination}
         class="selected"
         on:click={() => {
           handleNavClick(button.destination);
         }}
+        disabled={currentPath === button.destination}
       >
         <div class="flex small">
           {#if button.icon}
@@ -78,6 +77,7 @@
   }
   button.outer {
     padding: 0;
+    cursor: pointer;
   }
   .large {
     padding: 0.7rem 1rem;

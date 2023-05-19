@@ -35,6 +35,11 @@
 </div>
 
 <style>
+  /* if input is active give border to wrapper */
+  .search-wrapper:focus-within {
+    border: 3px solid var(--p);
+  }
+
   .search-wrapper {
     border-radius: 10px;
     background-color: var(--bg2);
@@ -52,7 +57,7 @@
     overflow: hidden;
     border: 1px solid var(--text1);
   }
-  .search-wrapper {
+  .search-wrapper * {
     box-shadow: none;
   }
   .search-input {

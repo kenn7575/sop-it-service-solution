@@ -13,10 +13,10 @@
   import Help from "./pages/help.svelte";
   import Notifications from "./pages/Notifications.svelte";
   import Chat from "./pages/Chat.svelte";
+  import Breadcrumps from "./components/breadcrumps.svelte";
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
-  import { formatPath } from "./services/pathFormatter.js";
 
   onMount(() => {
     path.update(() => {
@@ -39,16 +39,19 @@
     </header>
     <!-- routes -->
     <main>
+      <div class="breadcrumps">
+        <Breadcrumps />
+      </div>
       <Route component={Error404} />
       <Route path="/" component={Home} />
       <Route path="hjem" component={Home} />
       <Route path="brugere" component={Users} />
       <Route path="dashboard" component={Dashboard} />
       <Route path="produkter" component={Products} />
-      <Route path="mere/brands" component={Brands} />
-      <Route path="mere/kategorier" component={CategoriesGroups} />
-      <Route path="mere/lokaliteter" component={Locations} />
-      <Route path="mere/produkttyper" component={ProductTypes} />
+      <Route path="brands" component={Brands} />
+      <Route path="kategorier" component={CategoriesGroups} />
+      <Route path="lokaliteter" component={Locations} />
+      <Route path="produkttyper" component={ProductTypes} />
       <Route path="notifikationer" component={Notifications} />
       <Route path="chat" component={Chat} />
     </main>
@@ -69,5 +72,9 @@
   }
   main {
     overflow-y: auto;
+  }
+  .breadcrumps {
+    width: 100%;
+    padding: 0.5rem;
   }
 </style>

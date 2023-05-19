@@ -49,7 +49,6 @@
       ]}
       icon="fa-solid fa-ellipsis"
       text="Mere"
-      destination="/mere"
     />
   </div>
   <div class="section section3">
@@ -74,13 +73,15 @@
 
 <style>
   .content {
-    padding: 0.8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
     overflow-y: auto;
     position: relative;
+  }
+  .content > div {
+    padding: 0.8rem;
   }
   .section {
     width: 100%;
