@@ -26,8 +26,22 @@
   //toggle menu
   function handleMenuClick() {
     open = !open;
+    if (open) {
+      scrollIntoView(buttons[buttons.length - 1].text);
+    }
   }
   let open = false;
+
+  //scroll to element when menu is opened
+  function scrollIntoView(classname) {
+    setTimeout(() => {
+      const el = document.querySelector("#" + classname);
+      if (!el) return;
+      el.scrollIntoView({
+        behavior: "smooth",
+      });
+    }, 1);
+  }
 </script>
 
 <button
@@ -51,6 +65,7 @@
       <button
         class:selected={currentPath === button.destination}
         class="selected"
+        id={button.text}
         on:click={() => {
           handleNavClick(button.destination);
         }}
