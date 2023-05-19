@@ -1,7 +1,7 @@
 <script>
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
-  import { stripPath } from "../services/pathFormatter.js";
+  import { fly } from "svelte/transition";
 
   export let text = "Home";
   export let icon = "fa-solid fa-house";
@@ -46,7 +46,7 @@
   </div>
 </button>
 {#if open}
-  <div class="buttons">
+  <div class="buttons" transition:fly={{ y: -20, duration: 200 }}>
     {#each buttons as button}
       <button
         class:selected={currentPath === button.destination}

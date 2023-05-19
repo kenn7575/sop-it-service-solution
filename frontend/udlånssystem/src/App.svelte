@@ -14,6 +14,7 @@
   import Notifications from "./pages/Notifications.svelte";
   import Chat from "./pages/Chat.svelte";
   import Breadcrumps from "./components/breadcrumps.svelte";
+  import Udlån from "./pages/Udlån.svelte";
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
@@ -54,6 +55,7 @@
       <Route path="produkttyper" component={ProductTypes} />
       <Route path="notifikationer" component={Notifications} />
       <Route path="chat" component={Chat} />
+      <Route path="loans" component={Udlån} />
     </main>
   </Router>
 </div>

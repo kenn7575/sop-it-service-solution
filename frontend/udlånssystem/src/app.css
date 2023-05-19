@@ -10,7 +10,9 @@
   outline: solid var(--p) 3px;
   border: solid var(--p) 3px;
 }
-
+html {
+  background-color: var(--bg1);
+}
 :root {
   --nav: #272737;
   --bg1: #2d2d3f;

@@ -25,8 +25,8 @@
     <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
     <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" />
     <NavBtn
-      destination="/udlån"
-      text="Udlån"
+      destination="/loans"
+      text="Loans"
       icon="fa-solid fa-file-signature"
     />
 
@@ -42,7 +42,7 @@
         {
           text: "Produktkategorier",
           icon: "fa-solid fa-tag",
-          destination: "/Produktkategorier",
+          destination: "/produktkategorier",
         },
         {
           text: "Produkttyper",
