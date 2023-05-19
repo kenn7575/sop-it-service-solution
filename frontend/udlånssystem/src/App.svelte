@@ -6,13 +6,13 @@
   import Error404 from "./pages/Error404.svelte";
   import Products from "./pages/Products.svelte";
   import Dashboard from "./pages/Dashboard.svelte";
-  import Brands from "./pages/More/Brands.svelte";
-  import CategoriesGroups from "./pages/More/Categories-groups.svelte";
-  import Locations from "./pages/More/Locations.svelte";
-  import ProductTypes from "./pages/More/Product-Types.svelte";
+  import Brands from "./pages/Brands.svelte";
+  import CategoriesGroups from "./pages/Categories-groups.svelte";
+  import Locations from "./pages/Locations.svelte";
+  import ProductTypes from "./pages/Product-Types.svelte";
   import Help from "./pages/help.svelte";
   import Notifications from "./pages/Notifications.svelte";
-  import Chat from "./pages/Chat.svelte";
+  import Chat from "./pages/chat.svelte";
   import Breadcrumps from "./components/breadcrumps.svelte";
   import Udlån from "./pages/Udlån.svelte";
 
