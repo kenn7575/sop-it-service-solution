@@ -13,7 +13,7 @@
     return data;
   }
 
-  let data = [
+  let tableData = [
     ["username", "name", "phone", "age"],
     ["kenn7575", "Kenni", 53805027, 19],
     ["nima123", "Nima", 12345678, 18],
@@ -26,12 +26,12 @@
 
 <h1>Users</h1>
 <div class="content">
-  <Table {data} />
+  <Table {tableData} />
 </div>
 
 <style>
   .content {
-    padding-top: 5rem;
+    padding: 5rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -64,17 +64,23 @@
 <style>
   table {
     width: 100%;
+    border-collapse: collapse;
   }
   thead tr {
     cursor: pointer;
   }
   tbody tr {
     background: var(--bg2);
+    cursor: pointer;
   }
   td {
     padding: 0.5rem;
   }
   tr.row-even {
     background: var(--bg3);
+  }
+  th {
+    text-align: left;
+    padding: 0.5rem;
   }
 </style>
