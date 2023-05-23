@@ -1,9 +1,14 @@
 <?php
-    $request = $_SERVER['REQUEST_URI'];
+    // $request = $_SERVER['REQUEST_URI'];
 
-    $table = explode('/', $request)[2];
+    // $table = explode('/', $request)[2];
 
-    $conn = new mysqli("127.0.0.1", "root", "", "sop", '3306');
+    $table = $_GET['table'];
+
+    $user = "user";
+    $password = "user";
+
+    $conn = new mysqli("127.0.0.1", $user, $password, "sop", '3306');
 
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);}
 
@@ -21,5 +26,5 @@
       }
     } else { echo "{0: results}"; }
     
-    echo json_encode($list)
+    echo json_encode($list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     ?>
