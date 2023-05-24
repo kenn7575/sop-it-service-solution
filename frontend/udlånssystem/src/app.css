@@ -6,7 +6,7 @@
   font-family: system-ui, system-ui;
   transition: background 500ms;
 }
-*:focus {
+button:focus {
   outline: solid var(--p) 3px;
   border: solid var(--p) 3px;
 }

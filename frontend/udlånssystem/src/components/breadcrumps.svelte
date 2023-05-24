@@ -12,7 +12,6 @@
   }
 
   $: currentPath = $path;
-  $: console.log(currentPath);
 </script>
 
 <div class="content">

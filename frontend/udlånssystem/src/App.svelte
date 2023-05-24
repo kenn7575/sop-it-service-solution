@@ -81,5 +81,6 @@
     padding: 0.5rem;
     position: sticky;
     top: 0;
+    z-index: 99999999999999999999999999999999999;
   }
 </style>

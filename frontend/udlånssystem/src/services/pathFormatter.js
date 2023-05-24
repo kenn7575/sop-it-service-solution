@@ -30,6 +30,3 @@ export const formatPathToBreadcrumps = (path) => {
     };
   });
 };
-console.log(formatPathToBreadcrumps("/test/test2/test3"));
-console.log(formatPathToBreadcrumps("/"));
-console.log(formatPathToBreadcrumps("/users"));
