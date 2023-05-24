@@ -43,19 +43,21 @@
       <div class="breadcrumps">
         <Breadcrumps />
       </div>
-      <Route component={Error404} />
-      <Route path="/" component={Home} />
-      <Route path="hjem" component={Home} />
-      <Route path="brugere" component={Users} />
-      <Route path="dashboard" component={Dashboard} />
-      <Route path="produkter" component={Products} />
-      <Route path="brands" component={Brands} />
-      <Route path="produktkategorier" component={CategoriesGroups} />
-      <Route path="lokaliteter" component={Locations} />
-      <Route path="produkttyper" component={ProductTypes} />
-      <Route path="notifikationer" component={Notifications} />
-      <Route path="chat" component={Chat} />
-      <Route path="loans" component={Udlån} />
+      <div class="main">
+        <Route component={Error404} />
+        <Route path="/" component={Home} />
+        <Route path="hjem" component={Home} />
+        <Route path="brugere" component={Users} />
+        <Route path="dashboard" component={Dashboard} />
+        <Route path="produkter" component={Products} />
+        <Route path="brands" component={Brands} />
+        <Route path="produktkategorier" component={CategoriesGroups} />
+        <Route path="lokaliteter" component={Locations} />
+        <Route path="produkttyper" component={ProductTypes} />
+        <Route path="notifikationer" component={Notifications} />
+        <Route path="chat" component={Chat} />
+        <Route path="loans" component={Udlån} />
+      </div>
     </main>
   </Router>
 </div>
@@ -73,8 +75,12 @@
     height: 100vh;
   }
   main {
+    overflow-y: hidden;
+    height: 100vh;
     overflow-y: auto;
     position: relative;
+    display: grid;
+    grid-template-rows: 50px 1fr;
   }
   .breadcrumps {
     width: 100%;
@@ -82,5 +88,9 @@
     position: sticky;
     top: 0;
     z-index: 99999999999999999999999999999999999;
+  }
+  .main {
+    overflow-y: hidden;
+    height: 100%;
   }
 </style>
