@@ -15,8 +15,14 @@
   let filterIndex = 0; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
 
+  let dropdownOpen = false; //used to determine if the dropdown is open
+
   //log all state variables
   $: filterIndex && filterData();
+
+  function toggleDropdown() {
+    dropdownOpen = !dropdownOpen;
+  }
 
   //sortTable
   function sortTable(data, columnIndex) {
@@ -54,6 +60,20 @@
 
     tableDataFiltered = filteredData;
   }
+  //change page
+  function PageChangeUp() {
+    if (page < tableDataFiltered.length / 20) {
+      page += 1;
+    }
+  }
+  function PageChangeDown() {
+    if (page > 1) {
+      page -= 1;
+    }
+  }
+  function PageChangeTo(pageNumber) {
+    page = pageNumber;
+  }
 </script>
 
 <div class="content">
@@ -75,16 +95,17 @@
       </div>
       <strong> efter </strong>
       <div class="dropdown">
-        <button class="dropdown-btn">
+        <button class="dropdown-btn" on:click={toggleDropdown}>
           <p>{tableHeadings[filterIndex]}</p>
           <i class="fa-solid fa-angle-down" />
         </button>
-        <div class="options">
+        <div class="options" class:hidden={!dropdownOpen}>
           {#each tableHeadings as option, index}
             <button
               class="option-btn"
               on:click={() => {
                 filterIndex = index;
+                toggleDropdown();
               }}
             >
               <p>{option}</p>
@@ -100,39 +121,162 @@
   </div>
 
   <!-- ! table -->
-  <table>
-    <thead>
-      <tr>
-        {#each tableHeadings as heading, index}
-          <th on:click={() => sortTable(tableDataFiltered, index)}>{heading}</th
-          >
-        {/each}
-      </tr>
-    </thead>
-    <tbody>
-      {#each tableDataFiltered.slice((page - 1) * 20, page * 20 - 1) as row, rowIndex}
-        <tr
-          class:row-even={rowIndex % 2 === 0}
-          on:click={() => {
-            console.log(row[0] + " cliked");
-          }}
-        >
-          {#each row as cell}
-            <td>{cell}</td>
+  <div class="table">
+    <table>
+      <thead>
+        <tr>
+          {#each tableHeadings as heading, index}
+            <th on:click={() => sortTable(tableDataFiltered, index)}
+              >{heading}</th
+            >
           {/each}
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each tableDataFiltered.slice((page - 1) * 20, page * 20 - 1) as row, rowIndex}
+          <tr
+            class:row-even={rowIndex % 2 === 0}
+            on:click={() => {
+              console.log(row[0] + " cliked");
+            }}
+          >
+            {#each row as cell}
+              <td>{cell}</td>
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ! pagination -->
+  <div class="koedsovs">
+    <div class="pagination">
+      <button id="one" on:click={PageChangeDown}
+        ><i class="fa-solid fa-angle-left" /></button
+      >
+      {#if page >= 3}
+        <button
+          id="two"
+          on:click={() => {
+            PageChangeTo(1);
+          }}>1</button
+        >
+      {/if}
+      {#if page === 1}
+        <button id="four" class="currentPage">{page}</button>
+        <button
+          id="five"
+          on:click={() => {
+            PageChangeTo(page + 1);
+          }}>{page + 1}</button
+        >
+        <button
+          id="six"
+          on:click={() => {
+            PageChangeTo(page + 2);
+          }}>{page + 2}</button
+        >
+      {:else if page > 1 && page < Math.ceil(tableDataFiltered.length / 20)}
+        <button
+          id="four"
+          on:click={() => {
+            PageChangeTo(page - 1);
+          }}>{page - 1}</button
+        >
+        <button id="five" class="currentPage">{page}</button>
+        <button
+          id="six"
+          on:click={() => {
+            PageChangeTo(page + 1);
+          }}>{page + 1}</button
+        >
+      {:else}
+        <button
+          id="four"
+          on:click={() => {
+            PageChangeTo(page - 2);
+          }}>{page - 2}</button
+        >
+        <button
+          id="five"
+          on:click={() => {
+            PageChangeTo(page - 1);
+          }}>{page - 1}</button
+        >
+        <button id="six" class="currentPage">{page}</button>
+      {/if}
+
+      {#if page <= Math.ceil(tableDataFiltered.length / 20) - 2}
+        <button
+          id="eight"
+          on:click={() => {
+            PageChangeTo(page + 2);
+          }}>{Math.ceil(tableDataFiltered.length / 20)}</button
+        >
+      {/if}
+      <button id="nine" on:click={PageChangeUp}
+        ><i class="fa-solid fa-angle-right" /></button
+      >
+    </div>
+  </div>
 </div>
 
 <style>
+  /* pegination */
+  .pagination button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  #five {
+    grid-column-start: 5;
+  }
+  #four {
+    grid-column-start: 4;
+  }
+  #six {
+    grid-column-start: 6;
+  }
+  #three {
+    grid-column-start: 3;
+  }
+  #seven {
+    grid-column-start: 7;
+  }
+  #eight {
+    grid-column-start: 8;
+  }
+  #nine {
+    grid-column-start: 9;
+  }
+  #one {
+    grid-column-start: 1;
+  }
+  #two {
+    grid-column-start: 2;
+  }
+  .pagination {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0.5rem;
+    align-items: center;
+    width: fit-content;
+  }
+  .currentPage {
+    background-color: var(--p);
+    color: #fff;
+  }
+  .koedsovs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
   /* main */
+
   .content {
     padding: 1rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 40px auto 2.5rem;
     gap: 0.5rem;
     width: 100%;
     overflow-y: hidden;
@@ -142,7 +286,10 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    overflow-y: scroll;
+  }
+  .table {
+    width: 100%;
+    overflow-y: auto;
   }
   thead tr {
     cursor: pointer;
@@ -160,6 +307,9 @@
   th {
     text-align: left;
     padding: 0.5rem;
+  }
+  tr {
+    height: 3rem;
   }
   /* controls */
   .controls {
@@ -186,6 +336,9 @@
     color: #fff;
   }
   /* dropdown */
+  .hidden {
+    display: none;
+  }
   .dropdown {
     position: relative;
     width: 8rem;
@@ -260,7 +413,7 @@
   .search-input {
     border: none;
     flex: 1;
-    
+
     outline: none;
     height: 100%;
     font-size: 16px;

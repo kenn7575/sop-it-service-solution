@@ -21,7 +21,6 @@
     ["jesp1234", "Jesper", 12345678, 17],
     ["had4753", "Hanne", 65432112, 11],
     ["kur2445", "kurt", 12345678, 18],
-
     ["nima123", "Nima", 12345678, 18],
     //add a lot more unique data
     ["jesp1234", "Jesper", 12345678, 17],
@@ -192,7 +191,13 @@
   ];
 </script>
 
-<Table {inputData} />
+<div class="table">
+  <Table {inputData} />
+</div>
 
 <style>
+  .table {
+    width: 100%;
+    height: 100%;
+  }
 </style>
