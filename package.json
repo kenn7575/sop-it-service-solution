@@ -7,12 +7,14 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "nodemon": "^2.0.22",
-    "prisma": "^4.13.0"
+    "prisma": "^4.13.0",
+    "vitest": "^0.31.1"
   },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon backend/index.js",
     "i-frontend": "cd frontend/udlånssystem && npm install",
-    "dev-frontend": "cd frontend/udlånssystem && npm run dev"
+    "dev-frontend": "cd frontend/udlånssystem && npm run dev",
+    "test": "vitest"
   }
 }

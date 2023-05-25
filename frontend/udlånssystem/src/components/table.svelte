@@ -32,7 +32,6 @@
       sortAscending = true;
       sortColumn = columnIndex;
     }
-    const sortKey = tableHeadings[columnIndex];
     const sortedData = data.sort((a, b) => {
       const valueA = a[columnIndex];
       const valueB = b[columnIndex];
@@ -155,7 +154,7 @@
       <button id="one" on:click={PageChangeDown}
         ><i class="fa-solid fa-angle-left" /></button
       >
-      {#if page >= 3}
+      {#if page >= 2}
         <button
           id="two"
           on:click={() => {
@@ -163,63 +162,31 @@
           }}>1</button
         >
       {/if}
-      {#if page === 1}
-        <button id="four" class="currentPage">{page}</button>
-        <button
-          id="five"
-          on:click={() => {
-            PageChangeTo(page + 1);
-          }}>{page + 1}</button
-        >
-        <button
-          id="six"
-          on:click={() => {
-            PageChangeTo(page + 2);
-          }}>{page + 2}</button
-        >
-      {:else if page > 1 && page < Math.ceil(tableDataFiltered.length / 20)}
-        <button
-          id="four"
-          on:click={() => {
-            PageChangeTo(page - 1);
-          }}>{page - 1}</button
-        >
-        <button id="five" class="currentPage">{page}</button>
-        <button
-          id="six"
-          on:click={() => {
-            PageChangeTo(page + 1);
-          }}>{page + 1}</button
-        >
-      {:else}
-        <button
-          id="four"
-          on:click={() => {
-            PageChangeTo(page - 2);
-          }}>{page - 2}</button
-        >
-        <button
-          id="five"
-          on:click={() => {
-            PageChangeTo(page - 1);
-          }}>{page - 1}</button
-        >
-        <button id="six" class="currentPage">{page}</button>
+      {#if page >= 3}
+        <p id="three">...</p>
       {/if}
 
-      {#if page <= Math.ceil(tableDataFiltered.length / 20) - 2}
+      <button id="four" class="currentPage">{page}</button>
+      {#if page < Math.ceil(tableDataFiltered.length / 20) - 1}
+        <p id="five">...</p>
+      {/if}
+      {#if page < Math.ceil(tableDataFiltered.length / 20)}
         <button
-          id="eight"
+          id="six"
           on:click={() => {
-            PageChangeTo(page + 2);
+            PageChangeTo(Math.ceil(tableDataFiltered.length / 20));
           }}>{Math.ceil(tableDataFiltered.length / 20)}</button
         >
       {/if}
-      <button id="nine" on:click={PageChangeUp}
+
+      <button id="seven" on:click={PageChangeUp}
         ><i class="fa-solid fa-angle-right" /></button
       >
     </div>
   </div>
+  <p>
+    viser {page * 20 - 19} til {page * 20} ud af {tableDataFiltered.length}
+  </p>
 </div>
 
 <style>
@@ -227,6 +194,25 @@
   .pagination button {
     width: 2.5rem;
     height: 2.5rem;
+    background: var(--bg2);
+    border: 1px solid var(--text1);
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  .pagination button:not(.currentPage):hover {
+    background: var(--bg3);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+      rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+      rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    cursor: pointer;
+  }
+  .currentPage {
+    background-color: var(--p) !important;
+    color: #fff !important;
+  }
+  .pagination p {
+    text-align: center;
+    width: 100%;
   }
   #five {
     grid-column-start: 5;
@@ -234,38 +220,31 @@
   #four {
     grid-column-start: 4;
   }
-  #six {
-    grid-column-start: 6;
-  }
+
   #three {
     grid-column-start: 3;
   }
-  #seven {
-    grid-column-start: 7;
-  }
-  #eight {
-    grid-column-start: 8;
-  }
-  #nine {
-    grid-column-start: 9;
-  }
+
   #one {
     grid-column-start: 1;
   }
   #two {
     grid-column-start: 2;
   }
+  #six {
+    grid-column-start: 6;
+  }
+  #seven {
+    grid-column-start: 7;
+  }
   .pagination {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 0.5rem;
     align-items: center;
     width: fit-content;
   }
-  .currentPage {
-    background-color: var(--p);
-    color: #fff;
-  }
+
   .koedsovs {
     width: 100%;
     display: flex;
@@ -282,6 +261,7 @@
     overflow-y: hidden;
     height: 100%;
   }
+
   /* table */
   table {
     width: 100%;
@@ -293,6 +273,9 @@
   }
   thead tr {
     cursor: pointer;
+    position: sticky;
+    top: 0;
+    background: var(--bg1);
   }
   tbody tr {
     background: var(--bg2);
@@ -343,8 +326,7 @@
     position: relative;
     width: 8rem;
     border-radius: 10px;
-
-    background-color: var(--bg2);
+    height: 100%;
   }
   .dropdown-btn {
     border: solid 1px var(--text1);
@@ -352,16 +334,22 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
-
+    background-color: var(--bg2);
     font-size: 1rem;
-    height: 2.2rem;
-
     padding: 0 12px;
     width: 100%;
+    height: 100%;
   }
   .dropdown-btn:focus {
-    outline: none;
-    border: 3px solid var(--p);
+    border: none;
+    outline: 3px solid var(--p);
+  }
+  .dropdown-btn:hover {
+    background: var(--bg3);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+      rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+      rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    cursor: pointer;
   }
   .options {
     position: absolute;
@@ -370,16 +358,28 @@
     width: 100%;
     border-radius: 10px;
     background: var(--bg2);
-    padding: 0.1rem;
+
     border: solid 1px var(--text1);
+    z-index: 10;
   }
   .option-btn {
     width: 100%;
-    padding: 0.5rem;
-    margin: 0.1rem;
+
+    padding: 0.75rem 0.5rem;
+
     border: none;
     border-radius: 10px;
+    background: var(--bg2);
   }
+  .option-btn:hover {
+    background: var(--bg3);
+    cursor: pointer;
+  }
+  .option-btn:focus {
+    border: 3px solid var(--p);
+    outline: none;
+  }
+
   /* search */
   .search {
     display: flex;
@@ -395,7 +395,7 @@
     background-color: var(--bg2);
 
     padding-left: 12px;
-    height: 2.2rem;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -413,7 +413,7 @@
   .search-input {
     border: none;
     flex: 1;
-
+    margin-left: 12px;
     outline: none;
     height: 100%;
     font-size: 16px;

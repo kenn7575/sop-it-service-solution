@@ -33,7 +33,7 @@
     text-indent: -9999px;
     width: 50px;
     height: 25px;
-    background: var(--s);
+    background: #aaa;
     display: block;
     border-radius: 100px;
     position: relative;
