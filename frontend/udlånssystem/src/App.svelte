@@ -15,6 +15,9 @@
   import Chat from "./pages/chat.svelte";
   import Breadcrumps from "./components/breadcrumps.svelte";
   import Udlån from "./pages/Udlån.svelte";
+  import axios from "axios";
+
+  axios.defaults.headers.common['Authorization'] = "test321";
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
