@@ -25,8 +25,8 @@
     <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
     <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" />
     <NavBtn
-      destination="/loans"
-      text="Loans"
+      destination="/udlaan"
+      text="Udlån"
       icon="fa-solid fa-file-signature"
     />
 

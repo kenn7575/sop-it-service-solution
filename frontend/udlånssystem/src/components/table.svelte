@@ -5,13 +5,13 @@
   export let inputData = [];
 
   //split data into tableData and tableHeadings
-  let tableData = inputData.slice(1);
-  let tableHeadings = inputData[0];
+  $: tableData = inputData.slice(1);
+  $: tableHeadings = inputData[0];
 
   let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
-  let tableDataFiltered = tableData; //used to determine what data should be displayed in the table after filtering
+  $: tableDataFiltered = tableData; //used to determine what data should be displayed in the table after filtering
   let filterIndex = 0; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
 

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
+  import axios from "axios";
   import Nav from "./components/Nav.svelte";
   import Home from "./pages/Home.svelte";
   import Users from "./pages/Users.svelte";
@@ -9,15 +10,21 @@
   import Brands from "./pages/Brands.svelte";
   import CategoriesGroups from "./pages/Categories-groups.svelte";
   import Locations from "./pages/Locations.svelte";
-  import ProductTypes from "./pages/Product-Types.svelte";
+  import ProductTypes from "./pages/ProductTypes.svelte";
   import Help from "./pages/help.svelte";
   import Notifications from "./pages/Notifications.svelte";
   import Chat from "./pages/chat.svelte";
   import Breadcrumps from "./components/breadcrumps.svelte";
-  import Udlån from "./pages/Udlån.svelte";
-  import axios from "axios";
+  import Loans from "./pages/Loans.svelte";
 
   axios.defaults.headers.common['Authorization'] = "test321";
+  axios.defaults.baseURL = "http://172.16.3.135:5000";
+  axios.defaults.params = {
+    user: import.meta.env.VITE_APP_ADMIN_USERNAME,
+    password: import.meta.env.VITE_APP_ADMIN_PASSWORD
+  };
+
+  console.log(import.meta.env.VITE_APP_ADMIN_USERNAME);
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
@@ -59,7 +66,7 @@
         <Route path="produkttyper" component={ProductTypes} />
         <Route path="notifikationer" component={Notifications} />
         <Route path="chat" component={Chat} />
-        <Route path="loans" component={Udlån} />
+        <Route path="udlaan" component={Loans} />
       </div>
     </main>
   </Router>

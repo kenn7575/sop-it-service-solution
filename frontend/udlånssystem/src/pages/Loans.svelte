@@ -3,12 +3,11 @@
     import axios from "axios";
     import { onMount } from "svelte";
     import { getData } from "../data/data";
-    import testData from "../data/users_testData.json"
 
     let inputData = [[]];
 
     onMount(async () => {
-        inputData = await getData('users');
+        inputData = await getData('loans');
     });
 </script>
 
