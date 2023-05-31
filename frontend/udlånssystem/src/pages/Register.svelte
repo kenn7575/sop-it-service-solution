@@ -91,12 +91,11 @@
     <label>By</label>
   </div>
   <div class="center">
-    <button>Submit</button>
+    <button>Opret dig</button>
   </div>
 </form>
 
 <style>
-  .transition,
   form button,
   form .question label,
   form .question input.text {
@@ -111,9 +110,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  html {
-    background-color: var(--s);
-  }
   .center {
     width: 100%;
     display: flex;
@@ -127,7 +123,6 @@
     align-items: center;
   }
   form {
-    box-sizing: border-box;
     position: relative;
     display: inline-block;
     max-width: 700px;
@@ -136,12 +131,13 @@
     overflow-y: auto;
     background: transparent;
     border-radius: 40px;
-    margin: 20px 0;
+    margin: 20px 0px;
     left: 50%;
     -moz-transform: translate(-50%, 0);
     -ms-transform: translate(-50%, 0);
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
+    padding: 0 15px;
   }
   form h1 {
     color: #303033;
@@ -157,15 +153,16 @@
   }
   form button {
     margin-top: 35px;
+    margin-bottom: 5px;
     background-color: #fff;
-    border: 1px solid var(--s);
+    border: 1px solid var(--p);
     line-height: 0;
     font-size: 17px;
     display: inline-block;
     box-sizing: border-box;
     padding: 20px 15px;
     border-radius: 60px;
-    color: var(--s);
+    color: var(--p);
     font-weight: 300;
     letter-spacing: 0.01em;
     position: relative;
@@ -174,7 +171,7 @@
   form button:hover,
   form button:focus {
     color: #fff;
-    background-color: var(--s);
+    background-color: var(--p);
   }
   form .question {
     position: relative;
@@ -188,7 +185,7 @@
   }
   form .question label {
     transform-origin: left center;
-    color: var(--s);
+    color: var(--p);
     font-weight: 300;
     letter-spacing: 0.01em;
     font-size: 17px;
@@ -203,7 +200,7 @@
   form .question input.text {
     appearance: none;
     background-color: none;
-    border: 1px solid var(--s);
+    border: 1px solid var(--p);
     line-height: 0;
     font-size: 17px;
     width: 100%;
@@ -211,7 +208,7 @@
     box-sizing: border-box;
     padding: 10px 15px;
     border-radius: 60px;
-    color: var(--s);
+    color: var(--p);
     font-weight: 500;
     letter-spacing: 0.01em;
     position: relative;
@@ -219,7 +216,7 @@
   }
   form .question input.text:focus {
     outline: none;
-    background: var(--s);
+    background: var(--p);
     color: #fff;
     margin-top: 30px;
   }

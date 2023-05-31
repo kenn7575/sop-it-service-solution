@@ -53,7 +53,7 @@
     position: relative;
   }
   .mode:focus {
-    outline: solid 3px var(--s);
+    outline: solid 3px var(--p);
   }
 
   .mode::before {
@@ -62,7 +62,7 @@
 
     width: 10px;
     height: 10px;
-    background: var(--s);
+    background: var(--p);
     bottom: 3px;
     z-index: 10;
   }
@@ -72,7 +72,7 @@
 
     width: 20px;
     height: 20px;
-    background: var(--s);
+    background: var(--p);
     bottom: 3px;
     border-radius: 50%;
     z-index: 10;
@@ -104,7 +104,7 @@
     content: "";
     width: 100%;
     height: 3px;
-    background: var(--s);
+    background: var(--p);
     position: absolute;
     bottom: 0;
     left: 0;
@@ -127,7 +127,7 @@
     gap: 1rem;
     height: 100vh;
     width: 100%;
-    background: #fff;
+    background: #f5f5f5;
     /* background: radial-gradient(
       circle,
       rgba(0, 193, 110, 1) 15%,
@@ -149,7 +149,7 @@
       rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   }
   .selected {
-    background: var(--s);
+    background: var(--p);
     color: #fff;
     cursor: default;
     outline: none;
