@@ -1,6 +1,7 @@
 <script>
   import Login from "./Login.svelte";
   import Register from "./Register.svelte";
+
   let newUser = false;
 </script>
 
@@ -43,12 +44,16 @@
   }
   .mode {
     width: 50%;
-    background: var(--bg2);
+    background: #fff;
+    color: #333;
     height: 2rem;
     border: none;
     border-radius: 15px 15px 0 0;
     cursor: pointer;
     position: relative;
+  }
+  .mode:focus {
+    outline: solid 3px var(--s);
   }
 
   .mode::before {
@@ -57,7 +62,7 @@
 
     width: 10px;
     height: 10px;
-    background: var(--p);
+    background: var(--s);
     bottom: 3px;
     z-index: 10;
   }
@@ -67,7 +72,7 @@
 
     width: 20px;
     height: 20px;
-    background: var(--p);
+    background: var(--s);
     bottom: 3px;
     border-radius: 50%;
     z-index: 10;
@@ -99,20 +104,22 @@
     content: "";
     width: 100%;
     height: 3px;
-    background: var(--p);
+    background: var(--s);
     position: absolute;
     bottom: 0;
     left: 0;
     z-index: 11;
   }
   .selected::after {
-    background-color: var(--bg2);
+    background-color: #fff;
   }
   .mode:focus {
     transform: translateY(-3px);
   }
 
   .login {
+    padding: 2rem 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -120,20 +127,29 @@
     gap: 1rem;
     height: 100vh;
     width: 100%;
-    background: var(--bg1);
+    background: #fff;
+    /* background: radial-gradient(
+      circle,
+      rgba(0, 193, 110, 1) 15%,
+      rgba(255, 255, 255, 1) 100%
+    ); */
   }
   .cont {
     max-width: 700px;
+    max-height: 100%;
+    height: fit-content;
     width: min(50%, 500px);
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background: var(--bg3);
+    background: #fff;
     border-radius: 20px;
     padding: 2rem;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+      rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   }
   .selected {
-    background: var(--p);
+    background: var(--s);
     color: #fff;
     cursor: default;
     outline: none;
