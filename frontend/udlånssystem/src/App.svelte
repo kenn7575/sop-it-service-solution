@@ -1,4 +1,6 @@
 <script lang="ts">
+  import NotLoggedIn from "./pages/notLoggedIn.svelte";
+  import { currentUser } from "./services/currentUser";
   import { Router, Route } from "svelte-routing";
   import axios from "axios";
   import Nav from "./components/Nav.svelte";
@@ -17,11 +19,11 @@
   import Breadcrumps from "./components/breadcrumps.svelte";
   import Loans from "./pages/Loans.svelte";
 
-  axios.defaults.headers.common['Authorization'] = "test321";
+  axios.defaults.headers.common["Authorization"] = "test321";
   axios.defaults.baseURL = "http://172.16.3.135:5000";
   axios.defaults.params = {
     user: import.meta.env.VITE_APP_ADMIN_USERNAME,
-    password: import.meta.env.VITE_APP_ADMIN_PASSWORD
+    password: import.meta.env.VITE_APP_ADMIN_PASSWORD,
   };
 
   console.log(import.meta.env.VITE_APP_ADMIN_USERNAME);
@@ -40,37 +42,42 @@
       document.documentElement.className = "light";
     }
   });
+  $: logedIn = $currentUser;
 </script>
 
-<div class="app">
-  <Router>
-    <!-- navigation -->
-    <header>
-      <Nav />
-    </header>
-    <!-- routes -->
-    <main>
-      <div class="breadcrumps">
-        <Breadcrumps />
-      </div>
-      <div class="main">
-        <Route component={Error404} />
-        <Route path="/" component={Home} />
-        <Route path="hjem" component={Home} />
-        <Route path="brugere" component={Users} />
-        <Route path="dashboard" component={Dashboard} />
-        <Route path="produkter" component={Products} />
-        <Route path="brands" component={Brands} />
-        <Route path="produktkategorier" component={CategoriesGroups} />
-        <Route path="lokaliteter" component={Locations} />
-        <Route path="produkttyper" component={ProductTypes} />
-        <Route path="notifikationer" component={Notifications} />
-        <Route path="chat" component={Chat} />
-        <Route path="udlaan" component={Loans} />
-      </div>
-    </main>
-  </Router>
-</div>
+{#if logedIn}
+  <div class="app">
+    <Router>
+      <!-- navigation -->
+      <header>
+        <Nav />
+      </header>
+      <!-- routes -->
+      <main>
+        <div class="breadcrumps">
+          <Breadcrumps />
+        </div>
+        <div class="main">
+          <Route component={Error404} />
+          <Route path="/" component={Home} />
+          <Route path="hjem" component={Home} />
+          <Route path="brugere" component={Users} />
+          <Route path="dashboard" component={Dashboard} />
+          <Route path="produkter" component={Products} />
+          <Route path="brands" component={Brands} />
+          <Route path="produktkategorier" component={CategoriesGroups} />
+          <Route path="lokaliteter" component={Locations} />
+          <Route path="produkttyper" component={ProductTypes} />
+          <Route path="notifikationer" component={Notifications} />
+          <Route path="chat" component={Chat} />
+          <Route path="udlaan" component={Loans} />
+        </div>
+      </main>
+    </Router>
+  </div>
+{:else}
+  <NotLoggedIn />
+{/if}
 
 <style>
   .app {
