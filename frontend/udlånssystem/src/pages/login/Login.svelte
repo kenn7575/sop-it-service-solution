@@ -14,8 +14,10 @@
       .then((res) => {
         if (res.data.status === 403) {
           password = "";
-          errorMessages = "Forkert brugernavn eller adgangskode";
+
+          errorMessages = "Forkert uni-login eller adgangskode";
         } else {
+          localStorage.setItem("session", res.data.message);
           currentUser.update(() => {
             return { username: username, password: password };
           });

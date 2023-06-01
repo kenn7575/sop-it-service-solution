@@ -28,11 +28,15 @@
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
+
   $: console.log("user", $currentUser);
+
   login();
 
   axios.defaults.headers.common["Authorization"] = "test321";
-  axios.defaults.headers.post["Content-Type"] = `application/x-www-form-urlencoded`;
+  axios.defaults.headers.post[
+    "Content-Type"
+  ] = `application/x-www-form-urlencoded`;
   axios.defaults.baseURL = "http://172.16.3.135:5000";
   axios.defaults.params = {
     user: import.meta.env.VITE_APP_ADMIN_USERNAME,
@@ -57,6 +61,7 @@
   $: logedIn = $currentUser;
 </script>
 
+<!-- {#if true} -->
 {#if logedIn}
   <div class="app">
     <Router>
