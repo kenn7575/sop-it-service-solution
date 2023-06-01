@@ -9,12 +9,9 @@
 
   function login(e) {
     e.preventDefault();
-    console.log(username);
     axios
       .post("/login.php", { username: username, password: password })
-
       .then((res) => {
-        console.log("🚀 ~ file: Login.svelte:15 ~ .then ~ res:", res);
         if (res.data.status === 403) {
           password = "";
 

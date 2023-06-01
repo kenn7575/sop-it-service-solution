@@ -7,7 +7,7 @@
   let inputData = [[]];
 
   onMount(async () => {
-    inputData = await getData("products");
+    inputData = await getData("items");
   });
 </script>
 
