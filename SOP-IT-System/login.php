@@ -1,9 +1,5 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8; application/x-www-form-urlencoded;");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: *");
+include "headers.php";
 
 $username = $_POST['username'] ?? "";
 $password = $_POST['password'] ?? "";

@@ -1,9 +1,5 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-
-$header = apache_request_headers()['Authorization'] ?? $_GET['auth'] ?? "";
+include "headers.php";
 
 $table = $_GET['table'] ?? "items";
 $user = $_GET['user'] ?? "guest";
