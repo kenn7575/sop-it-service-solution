@@ -1,10 +1,10 @@
 <script>
   $: username = "";
   $: password = "";
-
+  import { currentUser } from "../../services/currentUser";
   import axios from "axios";
+  $: user = $currentUser;
   function login(e) {
-    // console.log("is thsi running?");
     e.preventDefault();
     // axios
     //   .post("/login.php", { username: username, password: password })
@@ -21,20 +21,9 @@
     //   .catch((err) => {
     //     console.log(err);
     //   });
-    console.log("is this running?");
-    fetch("http://172.16.3.135:5000/login.php", {
-      method: "post",
-      headers: {
-        username: username,
-        password: password,
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        response.json();
-      })
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+    currentUser.update(() => {
+      return { username: username, password: password };
+    });
   }
 </script>
 

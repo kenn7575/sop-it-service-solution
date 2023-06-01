@@ -1,9 +1,11 @@
 <script>
   import { onMount } from "svelte";
-
+  import { navigate } from "svelte-routing";
+  import { path } from "../stores/pathStore";
+  import { create_bidirectional_transition } from "svelte/internal";
   //import data
   export let inputData = [];
-
+  $: currentPath = $path;
   //split data into tableData and tableHeadings
   $: tableData = inputData.slice(1);
   $: tableHeadings = inputData[0];
@@ -73,6 +75,9 @@
   function PageChangeTo(pageNumber) {
     page = pageNumber;
   }
+  function handleButtonClick() {
+    navigate(`${currentPath}/new`);
+  }
 </script>
 
 <div class="content">
@@ -113,7 +118,7 @@
         </div>
       </div>
     </div>
-    <button class="add-user">
+    <button class="add-user" on:click={handleButtonClick}>
       <i class="fa-solid fa-plus" />
       <p>Tilføj</p>
     </button>
