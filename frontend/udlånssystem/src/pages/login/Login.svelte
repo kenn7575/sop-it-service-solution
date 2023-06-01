@@ -1,44 +1,69 @@
 <script>
   $: username = "";
   $: password = "";
-  import { currentUser } from "../../services/currentUser";
+
+  let errorMessages = "";
+
+  import { currentUser } from "../../services/login";
   import axios from "axios";
-  $: user = $currentUser;
+
   function login(e) {
     e.preventDefault();
-    // axios
-    //   .post("/login.php", { username: username, password: password })
-    //   .then((res) => {
-    //     if (res.status === 403) {
-    //       alert("Forkert brugernavn eller adgangskode");
-    //     }
-    //     console.log(res);
-    //     if (res.data.access_token) {
-    //       localStorage.setItem("token", res.data.access_token);
-    //       window.location.href = "/";
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    currentUser.update(() => {
-      return { username: username, password: password };
-    });
+    console.log(username);
+    axios
+      .post("/login.php", { username: username, password: password })
+
+      .then((res) => {
+        console.log("🚀 ~ file: Login.svelte:15 ~ .then ~ res:", res);
+        if (res.data.status === 403) {
+          password = "";
+
+          errorMessages = "Forkert brugernavn eller adgangskode";
+        } else {
+          currentUser.update(() => {
+            return { username: username, password: password };
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  function resetError() {
+    errorMessages = "";
   }
 </script>
 
 <form on:submit={login}>
-  <div class="center">
+  <div class="column">
     <h1>Velkommen tilbage</h1>
+    {#if errorMessages}
+      <p class="errorMessage">{errorMessages}</p>
+    {/if}
   </div>
 
-  <div class="question">
-    <input bind:value={username} class="text" type="text" name="" required />
-    <label>Uni-login</label>
+  <div class="question mt20">
+    <input
+      class:error={errorMessages}
+      on:focus={resetError}
+      bind:value={username}
+      class="text"
+      type="text"
+      name=""
+      required
+    />
+    <label class:error={errorMessages}>Uni-login</label>
   </div>
-  <div class="question">
-    <input bind:value={password} class="text" type="password" required />
-    <label>Adgangskode</label>
+  <div class="question" class:error={errorMessages}>
+    <input
+      class:error={errorMessages}
+      on:focus={resetError}
+      bind:value={password}
+      class="text"
+      type="password"
+      required
+    />
+    <label class:error={errorMessages}>Adgangskode</label>
   </div>
   <div class="center">
     <button>Login</button>
@@ -46,7 +71,6 @@
 </form>
 
 <style>
-  .transition,
   form button,
   form .question label,
   form .question input.text {
@@ -60,11 +84,20 @@
     font-weight: 800;
     -webkit-font-smoothing: antialiased;
   }
-
+  .mt20 {
+    margin-top: 20px;
+  }
   .center {
     width: 100%;
     display: flex;
     justify-content: center;
+  }
+  .column {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
   form {
     position: relative;
@@ -86,8 +119,7 @@
     color: #303033;
     font-weight: 400;
     letter-spacing: 0.01em;
-
-    margin-bottom: 35px;
+    margin-bottom: 10px;
   }
   form button {
     margin-top: 35px;
@@ -151,6 +183,7 @@
     position: relative;
     z-index: 1;
   }
+
   form .question input.text:focus {
     outline: none;
     background: var(--p);
@@ -173,5 +206,13 @@
     -ms-transform: translate(5px, -35px) scale(0.7);
     -webkit-transform: translate(5px, -35px) scale(0.7);
     transform: translate(5px, -35px) scale(0.7);
+  }
+  form .question .error {
+    border-color: var(--s) !important;
+    color: var(--s) !important;
+  }
+  .errorMessage {
+    color: var(--s) !important;
+    font-weight: 400 !important;
   }
 </style>

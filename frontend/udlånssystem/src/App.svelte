@@ -1,6 +1,6 @@
 <script lang="ts">
   import NotLoggedIn from "./pages/login/index.svelte";
-  import { currentUser } from "./services/currentUser";
+  import { currentUser, login } from "./services/login";
   import { Router, Route } from "svelte-routing";
   import axios from "axios";
 
@@ -28,6 +28,8 @@
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
+  $: console.log("user", $currentUser);
+  login();
 
   axios.defaults.headers.common["Authorization"] = "test321";
   axios.defaults.baseURL = "http://172.16.3.135:5000";
@@ -35,8 +37,6 @@
     user: import.meta.env.VITE_APP_ADMIN_USERNAME,
     password: import.meta.env.VITE_APP_ADMIN_PASSWORD,
   };
-
-  console.log(import.meta.env.VITE_APP_ADMIN_USERNAME);
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
@@ -46,6 +46,7 @@
       return window.location.pathname;
     });
     //set theme
+
     if (localStorage.getItem("theme") === "dark") {
       document.documentElement.className = "dark";
     } else {
@@ -72,6 +73,8 @@
           <Route component={Error404} />
           <Route path="/" component={Home} />
           <Route path="hjem" component={Home} />
+
+          <!-- pages -->
           <Route path="brugere" component={Users} />
           <Route path="dashboard" component={Dashboard} />
           <Route path="produkter" component={Products} />
