@@ -77,6 +77,9 @@
   }
   function handleButtonClick() {
     navigate(`${currentPath}/new`);
+    path.update(() => {
+      return `${currentPath}/new`;
+    });
   }
 </script>
 

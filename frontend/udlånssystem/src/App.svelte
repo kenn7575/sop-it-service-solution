@@ -56,6 +56,7 @@
   $: logedIn = $currentUser;
 </script>
 
+<!-- {#if true} -->
 {#if logedIn}
   <div class="app">
     <Router>

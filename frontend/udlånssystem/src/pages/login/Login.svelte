@@ -18,7 +18,7 @@
         if (res.data.status === 403) {
           password = "";
 
-          errorMessages = "Forkert brugernavn eller adgangskode";
+          errorMessages = "Forkert uni-login eller adgangskode";
         } else {
           currentUser.update(() => {
             return { username: username, password: password };
