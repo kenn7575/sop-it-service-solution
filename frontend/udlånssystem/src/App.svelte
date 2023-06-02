@@ -29,7 +29,7 @@
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
 
-  $: console.log("user", $currentUser);
+  // $: console.log("user", $currentUser);
 
   login();
 

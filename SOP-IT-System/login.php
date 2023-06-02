@@ -4,7 +4,6 @@ include "headers.php";
 $username = $_POST['username'] ?? "";
 $password = $_POST['password'] ?? "";
 
-$env = parse_ini_file('.env');
 $conn = new mysqli("127.0.0.1", $env['ADMIN_USERNAME'], $env['ADMIN_PASSWORD'], "sop", '3306');
 
 if ($conn->connect_error) {

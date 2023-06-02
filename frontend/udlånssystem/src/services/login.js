@@ -4,15 +4,18 @@ import axios from "axios";
 export const currentUser = writable(null); //check for session token in local storage
 
 export const getSession = () => {
-  return localStorage.getItem("session") !== null;
+  return localStorage.getItem("session");
 };
 //validate session token
 export const validateSession = async (token) => {
-  let data = axios.post("/validate.php", { token: token }).then((res) => {
+  let data = axios.post("http://172.16.3.135:5000/validate.php",
+  { token: token },
+  {headers: {'Content-type': 'application/x-www-form-urlencoded'}
+}).then((res) => {
     return res.data;
   });
   //TODO: handle error
-  return data.message;
+return data
 };
 
 //login user
