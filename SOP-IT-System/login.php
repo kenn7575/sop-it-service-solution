@@ -1,14 +1,9 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8; application/x-www-form-urlencoded;");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: *");
+include "headers.php";
 
 $username = $_POST['username'] ?? "";
 $password = $_POST['password'] ?? "";
 
-$env = parse_ini_file('.env');
 $conn = new mysqli("127.0.0.1", $env['ADMIN_USERNAME'], $env['ADMIN_PASSWORD'], "sop", '3306');
 
 if ($conn->connect_error) {
