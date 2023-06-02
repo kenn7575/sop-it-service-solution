@@ -2,6 +2,7 @@
   import Table from "../../components/table.svelte";
   import axios from "axios";
   import { onMount } from "svelte";
+
   import { getData } from "../../data/data";
 
   let inputData = [[]];

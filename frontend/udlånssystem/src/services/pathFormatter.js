@@ -30,3 +30,17 @@ export const formatPathToBreadcrumps = (path) => {
     };
   });
 };
+export const getLastPath = (inputPath) => {
+  if (inputPath === undefined) {
+    inputPath = window.location.pathname;
+  }
+  console.log(inputPath, "test");
+
+  //convert path to array
+  let paths = inputPath.split("/");
+
+  //remove empty strings
+  paths = paths.filter((p) => p !== "");
+
+  return paths[paths.length - 1];
+};

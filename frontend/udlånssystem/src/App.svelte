@@ -1,8 +1,10 @@
 <script lang="ts">
-  import NotLoggedIn from "./pages/login/index.svelte";
   import { currentUser, login } from "./services/login";
   import { Router, Route } from "svelte-routing";
   import axios from "axios";
+
+  //login page
+  import NotLoggedIn from "./pages/login/index.svelte";
 
   //pages import
   import Nav from "./components/Nav.svelte";
@@ -21,6 +23,16 @@
   import Breadcrumps from "./components/breadcrumps.svelte";
   import Loans from "./pages/loans/index.svelte";
 
+  //dynamic pages import
+  import usersEdit from "./pages/users/edit.svelte";
+  import productsEdit from "./pages/products/edit.svelte";
+  import brandsEdit from "./pages/brands/edit.svelte";
+  import categoriesEdit from "./pages/categories/edit.svelte";
+  import locationsEdit from "./pages/locations/edit.svelte";
+  import productTypesEdit from "./pages/productTypes/edit.svelte";
+  import loansEdit from "./pages/loans/edit.svelte";
+
+  //new pages import
   import usersNew from "./pages/users/new.svelte";
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
@@ -51,7 +63,6 @@
       return window.location.pathname;
     });
     //set theme
-
     if (localStorage.getItem("theme") === "dark") {
       document.documentElement.className = "dark";
     } else {
@@ -61,8 +72,9 @@
   $: logedIn = $currentUser;
 </script>
 
-<!-- {#if true} -->
-{#if logedIn}
+<!-- While in development disable login -->
+{#if true}
+  <!-- {#if logedIn} -->
   <div class="app">
     <Router>
       <!-- navigation -->
@@ -94,12 +106,18 @@
           <Route path="help" component={Help} />
 
           <!-- dynamic routs -->
-          <Route path="brugere/:id" component={Home} />
+          <Route path="brugere/:id" component={usersEdit} />
+          <Route path="produkter/:id" component={productsEdit} />
+          <Route path="brands/:id" component={brandsEdit} />
+          <Route path="produktkategorier/:id" component={categoriesEdit} />
+          <Route path="lokaliteter/:id" component={locationsEdit} />
+          <Route path="produkttyper/:id" component={productTypesEdit} />
+          <Route path="udlaan/:id" component={loansEdit} />
 
           <!-- new routes -->
           <Route path="brugere/new" component={usersNew} />
           <Route path="produkter/new" component={productsNew} />
-          <Route path="brands/new" component={productsNew} />
+          <Route path="brands/new" component={brandsNew} />
           <Route path="produktkategorier/new" component={categoriesNew} />
           <Route path="lokaliteter/new" component={locationsNew} />
           <Route path="produkttyper/new" component={productTypesNew} />
