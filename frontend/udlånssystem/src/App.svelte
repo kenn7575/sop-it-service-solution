@@ -91,6 +91,10 @@
           <Route path="notifikationer" component={Notifications} />
           <Route path="chat" component={Chat} />
           <Route path="udlaan" component={Loans} />
+          <Route path="help" component={Help} />
+
+          <!-- dynamic routs -->
+          <Route path="brugere/:id" component={Home} />
 
           <!-- new routes -->
           <Route path="brugere/new" component={usersNew} />
