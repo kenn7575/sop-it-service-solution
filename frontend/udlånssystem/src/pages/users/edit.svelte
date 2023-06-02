@@ -1,6 +1,7 @@
 <script>
   import { getLastPath } from "../../services/pathFormatter";
-  let id = getLastPath();
+  import { path } from "../../stores/pathStore";
+  $: id = getLastPath($path);
 </script>
 
 <h1>edit</h1>

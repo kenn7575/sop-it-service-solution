@@ -7,7 +7,7 @@
   let searchPromt = "";
 
   function handleSubmit() {
-    navigate(`/brugere/${searchPromt}`);
+    navigate(`/brugere/${searchPromt}`, { replace: true });
     path.update(() => {
       return `/brugere/${searchPromt}`;
     });
@@ -50,7 +50,7 @@
     padding-left: 12px;
     height: 2.813rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     max-width: 480px;
