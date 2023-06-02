@@ -1,6 +1,7 @@
 <script>
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
+  import { stripPath } from "../services/pathFormatter.js";
 
   export let destination = "/";
   export let text = "Home";
@@ -18,8 +19,8 @@
 
 <button
   on:click={handleClick}
-  disabled={currentPath === destination}
-  class:selected={currentPath === destination}
+  disabled={stripPath(currentPath, 1) === destination}
+  class:selected={stripPath(currentPath, 1) === destination}
 >
   <div class="flex">
     <i class={icon} />
