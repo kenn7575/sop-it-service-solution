@@ -9,7 +9,6 @@ export function cheatCode() {
       index++;
       if (index === codes.length) {
         window.removeEventListener("keydown", keydownHandler);
-
         window.dispatchEvent(new Event("cheatCode"));
       }
     } else {

@@ -4,12 +4,16 @@
   import nyanCat from "../../public/nyanCat.gif";
 
   let cheatActive = false;
-  window.addEventListener("cheatCode", (e) => {
-    if (!cheatActive) {
-      cheatActive = true;
-    }
-    //remove event listener
-  });
+  window.addEventListener(
+    "cheatCode",
+    (e) => {
+      if (!cheatActive) {
+        cheatActive = true;
+      }
+      //remove event listener
+    },
+    { once: true }
+  );
   cheatCode();
 </script>
 
