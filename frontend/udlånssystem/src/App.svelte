@@ -70,6 +70,13 @@
     }
   });
   $: logedIn = $currentUser;
+
+  //on page change update path
+  window.onpopstate = function (event) {
+    path.update(() => {
+      return window.location.pathname;
+    });
+  };
 </script>
 
 <!-- While in development disable login -->
