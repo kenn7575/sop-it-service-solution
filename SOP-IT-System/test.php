@@ -1,5 +1,6 @@
 <?php
   require __DIR__ . '/vendor/autoload.php';
+  include "headers.php";
 
   $options = array(
     'cluster' => 'eu',
@@ -12,9 +13,10 @@
     $options
   );
 
-  $data['message'] = 'hello world';
-  for ($i = 0; $i < 100; $i++) {
-    $pusher->trigger('chat-channel', 'chat-event', $data);
-    sleep(1);
+  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    die(json_encode(['message'=>'ok'], JSON_PRETTY_PRINT));
   }
+$data['message'] = $_POST['message'] ?? "data";
+$pusher->trigger('chat-channel', 'chat-event', $data);
+
 ?>
