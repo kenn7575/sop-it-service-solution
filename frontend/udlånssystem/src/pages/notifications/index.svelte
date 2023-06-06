@@ -1,1 +1,5 @@
-<h1>Notifications</h1>
+<script>
+  import CommingSoon from "../commingSoon.svelte";
+</script>
+
+<CommingSoon />

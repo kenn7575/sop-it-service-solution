@@ -1,21 +1,39 @@
 <script>
+  import { navigate } from "svelte-routing";
+  import { path } from "../stores/pathStore";
   export let placeholder = "Search";
 
+  $: currentPath = $path;
   let searchPromt = "";
 
-  function handleSubmit() {}
+  function handleSubmit() {
+    navigate(`/brugere/${searchPromt}`, { replace: true });
+    path.update(() => {
+      return `/brugere/${searchPromt}`;
+    });
+  }
+  function handleInput() {
+    if (searchPromt === "" || searchPromt === undefined) {
+      navigate(`/brugere`);
+      path.update(() => {
+        return `/brugere`;
+      });
+    }
+  }
 </script>
 
 <div class="content">
   <div class="search-wrapper">
     <i class="fa-solid fa-magnifying-glass" />
-    <input
-      bind:value={searchPromt}
-      on:submit={handleSubmit}
-      class="search-input"
-      type="text"
-      {placeholder}
-    />
+    <form on:submit|preventDefault={handleSubmit}>
+      <input
+        bind:value={searchPromt}
+        on:input={handleInput}
+        class="search-input"
+        type="text"
+        {placeholder}
+      />
+    </form>
   </div>
 </div>
 
@@ -32,7 +50,7 @@
     padding-left: 12px;
     height: 2.813rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     max-width: 480px;

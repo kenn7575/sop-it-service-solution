@@ -8,14 +8,16 @@ export const getSession = () => {
 };
 //validate session token
 export const validateSession = async (token) => {
-  let data = axios.post("http://172.16.3.135:5000/validate.php",
-  { token: token },
-  {headers: {'Content-type': 'application/x-www-form-urlencoded'}
-}).then((res) => {
-    return res.data;
-  });
-  //TODO: handle error
-return data
+  let data = axios
+    .post(
+      "http://172.16.3.135:5000/validate.php",
+      { token: token },
+      { headers: { "Content-type": "application/x-www-form-urlencoded" } }
+    )
+    .then((res) => {
+      return res.data;
+    });
+  return data;
 };
 
 //login user

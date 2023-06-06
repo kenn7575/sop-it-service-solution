@@ -81,6 +81,12 @@
       return `${currentPath}/new`;
     });
   }
+  function handleRowClick(id) {
+    navigate(`${currentPath}/${id}`);
+    path.update(() => {
+      return `${currentPath}/${id}`;
+    });
+  }
 </script>
 
 <div class="content">
@@ -144,7 +150,7 @@
           <tr
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
-              console.log(row[0] + " cliked");
+              handleRowClick(row[0]);
             }}
           >
             {#each row as cell}

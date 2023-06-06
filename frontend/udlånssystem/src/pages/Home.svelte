@@ -1,14 +1,33 @@
 <script>
+  import { cheatCode } from "../services/cheatCode.js";
   import { welcome } from "../../public/svg/welcome.js";
+  import nyanCat from "../../public/nyanCat.gif";
+
+  let cheatActive = false;
+  window.addEventListener(
+    "cheatCode",
+    (e) => {
+      if (!cheatActive) {
+        cheatActive = true;
+      }
+      //remove event listener
+    },
+    { once: true }
+  );
+  cheatCode();
 </script>
 
-<div class="content">
-  <h1>Velkommen til helpdesk'en</h1>
-  <p>Hvordan kan vi hjælpe dig i dag?</p>
-  <div class="svg">
-    {@html welcome}
+{#if cheatActive}
+  <img src={nyanCat} alt="nyan cat" />
+{:else}
+  <div class="content">
+    <h1>Velkommen til helpdesk'en</h1>
+    <p>Hvordan kan vi hjælpe dig i dag?</p>
+    <div class="svg">
+      {@html welcome}
+    </div>
   </div>
-</div>
+{/if}
 
 <style>
   .svg {
@@ -28,5 +47,10 @@
   }
   h1 {
     font-size: 3rem;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>

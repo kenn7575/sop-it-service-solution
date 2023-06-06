@@ -16,7 +16,6 @@ export const stripPath = (path, level) => {
 export const formatPathToBreadcrumps = (path) => {
   //convert path to array
   let paths = path.split("/");
-
   //remove empty strings
   paths = paths.filter((p) => p !== "");
 
@@ -29,4 +28,18 @@ export const formatPathToBreadcrumps = (path) => {
       seperator: i !== paths.length - 1,
     };
   });
+};
+export const getLastPath = (inputPath) => {
+  if (inputPath === undefined) {
+    inputPath = window.location.pathname;
+  }
+  console.log(inputPath, "test");
+
+  //convert path to array
+  let paths = inputPath.split("/");
+
+  //remove empty strings
+  paths = paths.filter((p) => p !== "");
+
+  return paths[paths.length - 1];
 };
