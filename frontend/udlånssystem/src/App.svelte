@@ -80,8 +80,8 @@
 </script>
 
 <!-- While in development disable login -->
-{#if true}
-  <!-- {#if logedIn} -->
+<!-- {#if true} -->
+{#if logedIn}
   <div class="app">
     <Router>
       <!-- navigation -->

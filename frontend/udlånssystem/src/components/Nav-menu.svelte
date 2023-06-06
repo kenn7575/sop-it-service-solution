@@ -26,6 +26,7 @@
   //toggle menu
   function handleMenuClick() {
     open = !open;
+
     if (open) {
       scrollIntoView(buttons[buttons.length - 1].text);
     }
@@ -65,7 +66,7 @@
       <button
         class:selected={currentPath === button.destination}
         class="selected"
-        id={button.text}
+        id="{button.text} disable-focus"
         on:click={() => {
           handleNavClick(button.destination);
         }}
