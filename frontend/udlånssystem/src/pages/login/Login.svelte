@@ -16,12 +16,16 @@
           password = "";
 
           errorMessages = "Forkert uni-login eller adgangskode";
-        } else {
+
+        } else if (res.data.status === 401) {
+          errorMessages = "Adgang nægtet";
+
+        } else if (res.data.status === 200) {
           localStorage.setItem("session", res.data.message);
           currentUser.update(() => {
             return { username: username, password: password };
           });
-        }
+        } else { errorMessages = "Der skete en fejl";}
       })
       .catch((err) => {
         console.log(err);

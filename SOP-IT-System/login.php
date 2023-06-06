@@ -16,11 +16,15 @@ $user = $result->fetch_assoc();
 
 // if ($user == null || !password_verify($password, $user['password'])) {
 if ($user == null) {
-    die(json_encode(['message'=>'Invalid username or password1', 'status'=>403, 'user'=>$_POST], JSON_PRETTY_PRINT));
+    die(json_encode(['message'=>'Invalid username or password', 'status'=>403, 'user'=>$_POST], JSON_PRETTY_PRINT));
 }
 
 if (!password_verify($password, $user['password'])) {
-    die(json_encode(['message'=>'Invalid username or password2', 'status'=>403], JSON_PRETTY_PRINT));
+    die(json_encode(['message'=>'Invalid username or password', 'status'=>403], JSON_PRETTY_PRINT));
+}
+
+if ($user['role_id'] < 5) {
+    die(json_encode(['message'=>'Unauthorized', 'status'=>401], JSON_PRETTY_PRINT));
 }
 
 $user_hash = password_hash($user['username'].$user['UUID'], PASSWORD_DEFAULT);
