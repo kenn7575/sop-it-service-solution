@@ -6,7 +6,7 @@
   let inputData = [[]];
 
   onMount(async () => {
-    inputData = await getData("users");
+    inputData = await getData("users_view");
   });
 </script>
 
