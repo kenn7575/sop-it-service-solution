@@ -146,7 +146,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each tableDataFiltered.slice((page - 1) * 20, page * 20 - 1) as row, rowIndex}
+        {#each tableDataFiltered.slice((page - 1) * 20, page * 20) as row, rowIndex}
           <tr
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
