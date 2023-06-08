@@ -7,9 +7,21 @@ $conn = new mysqli("127.0.0.1", $env['ADMIN_USERNAME'], $env['ADMIN_PASSWORD'], 
 
 $token = $_POST['token'] ?? "";
 
-$result = $conn->query("SELECT * FROM login_sessions WHERE token = '$token'");
+$login_session = null;
 
-$login_session = $result->fetch_assoc();
+// $result = $conn->query("SELECT * FROM login_sessions WHERE token = '$token'");
+
+// $login_session = $result->fetch_assoc();
+
+$result = $conn->query("SELECT * FROM login_sessions");
+
+while($row = $result->fetch_assoc())
+{
+    if (password_verify($row['username'].$row['user_UUID'], $token)) {
+        $login_session = $row;
+    }
+}
+
 
 if ($login_session == null) {
     die(json_encode(['message'=>'Invalid token', 'status'=>403], JSON_PRETTY_PRINT));

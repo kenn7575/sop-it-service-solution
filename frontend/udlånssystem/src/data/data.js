@@ -4,7 +4,7 @@ function objectToList(data) {
     var temp_list = [];
     var temp_list2 = [];
 
-    Object.keys(data[0]).map((key) => { if (key !== "password") temp_list2.push(key); });
+    Object.keys(data[0]).map((key) => { if (key !== "password") temp_list2.push(key.replaceAll("_", " ")); });
 
     temp_list.push(temp_list2);
 

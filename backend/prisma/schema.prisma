@@ -14,20 +14,17 @@ model addresses {
   postal_code    String  @db.Char(4)
   address_line_1 String  @db.VarChar(255)
   address_line_2 String? @db.VarChar(255)
-  users          users[]
 }
 
 model authorization_level {
-  UUID  Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name  String  @db.VarChar(255)
+  UUID  Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name  String @db.VarChar(255)
   level Int
-  roles roles[]
 }
 
 model brands {
-  UUID     Int        @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name     String     @db.VarChar(255)
-  products products[]
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
 }
 
 model buildings {
@@ -36,10 +33,9 @@ model buildings {
 }
 
 model categories {
-  UUID              Int        @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name              String?    @db.VarChar(255)
+  UUID              Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String? @db.VarChar(255)
   category_group_id Int
-  products          products[]
 
   @@index([category_group_id], map: "category_group_id")
 }
@@ -50,21 +46,17 @@ model category_groups {
 }
 
 model educations {
-  UUID  Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name  String  @db.VarChar(255)
-  users users[]
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
 }
 
 model items {
-  UUID                Int             @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  date_created        DateTime        @default(now()) @db.DateTime(0)
-  date_updated        DateTime?       @default(now()) @db.DateTime(0)
-  storage_location_id Int?            @db.UnsignedInt
-  product_status_id   Int             @db.UnsignedInt
-  product_id          Int             @db.UnsignedInt
-  product_status      product_status  @relation(fields: [product_status_id], references: [UUID], onUpdate: Restrict, map: "items_ibfk_2")
-  products            products        @relation(fields: [product_id], references: [UUID], onUpdate: Restrict, map: "items_ibfk_3")
-  items_in_loan       items_in_loan[]
+  UUID                Int       @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  date_created        DateTime  @default(now()) @db.DateTime(0)
+  date_updated        DateTime? @default(now()) @db.DateTime(0)
+  storage_location_id Int?      @db.UnsignedInt
+  product_status_id   Int       @db.UnsignedInt
+  product_id          Int       @db.UnsignedInt
 
   @@index([storage_location_id], map: "items_ibfk_1")
   @@index([product_id], map: "product_id")
@@ -72,32 +64,25 @@ model items {
 }
 
 model items_in_loan {
-  UUID    Int   @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  loan_id Int   @db.UnsignedInt
-  item_id Int   @db.UnsignedInt
-  loans   loans @relation(fields: [loan_id], references: [UUID], onUpdate: Restrict, map: "items_in_loan_ibfk_1")
-  items   items @relation(fields: [item_id], references: [UUID], onUpdate: Restrict, map: "items_in_loan_ibfk_2")
+  UUID    Int @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  loan_id Int @db.UnsignedInt
+  item_id Int @db.UnsignedInt
 
   @@index([item_id], map: "item_id")
   @@index([loan_id], map: "loan_id")
 }
 
 model loans {
-  UUID                                    Int               @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  date_created                            DateTime          @default(now()) @db.DateTime(0)
-  date_updated                            DateTime          @default(now()) @db.DateTime(0)
-  date_of_return                          DateTime?         @db.DateTime(0)
-  location_of_use_id                      Int?              @db.UnsignedInt
-  user_id                                 Int               @db.UnsignedInt
-  helpdesk_personel_id                    Int               @db.UnsignedInt
-  selfservice_case_id                     Int?              @db.UnsignedInt
-  recipient_type_id                       Int               @db.UnsignedInt
-  items_in_loan                           items_in_loan[]
-  zones                                   zones?            @relation(fields: [location_of_use_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "loans_ibfk_1")
-  users_loans_user_idTousers              users             @relation("loans_user_idTousers", fields: [user_id], references: [UUID], onUpdate: Restrict, map: "loans_ibfk_2")
-  users_loans_helpdesk_personel_idTousers users             @relation("loans_helpdesk_personel_idTousers", fields: [helpdesk_personel_id], references: [UUID], onUpdate: Restrict, map: "loans_ibfk_3")
-  selfservice_case                        selfservice_case? @relation(fields: [selfservice_case_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "loans_ibfk_4")
-  recipient_type                          recipient_type    @relation(fields: [recipient_type_id], references: [UUID], onUpdate: Restrict, map: "loans_ibfk_5")
+  UUID                 Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  date_created         DateTime  @default(now()) @db.DateTime(0)
+  date_updated         DateTime  @default(now()) @db.DateTime(0)
+  date_of_return       DateTime? @db.DateTime(0)
+  location_of_use_id   Int?      @db.UnsignedInt
+  user_id              Int       @db.UnsignedInt
+  helpdesk_personel_id Int       @db.UnsignedInt
+  selfservice_case_id  Int?      @db.UnsignedInt
+  recipient_type_id    Int       @db.UnsignedInt
+  loan_length          Int?
 
   @@index([helpdesk_personel_id], map: "helpdesk_personel_id")
   @@index([location_of_use_id], map: "location_of_use_id")
@@ -106,60 +91,58 @@ model loans {
   @@index([user_id], map: "user_id")
 }
 
+model login_sessions {
+  UUID            Int      @id @default(autoincrement()) @db.UnsignedInt
+  username        String   @db.VarChar(255)
+  user_UUID       Int
+  expiration_date DateTime @db.DateTime(0)
+  token           String   @db.VarChar(255)
+}
+
 model pickup_locations {
-  UUID             Int                @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  name             String             @db.VarChar(255)
-  selfservice_case selfservice_case[]
+  UUID Int    @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
 }
 
 model product_status {
-  UUID        Int     @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  status_name String  @db.VarChar(255)
-  items       items[]
+  UUID        Int    @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  status_name String @db.VarChar(255)
 }
 
 model products {
-  UUID              Int        @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name              String     @db.VarChar(255)
+  UUID              Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String    @db.VarChar(255)
   brand_id          Int
   category_id       Int
-  date_created      DateTime   @default(now()) @db.DateTime(0)
-  date_updated      DateTime?  @db.DateTime(0)
-  product_id_prefix String?    @db.VarChar(50)
-  max_loan_period   Int        @default(180)
-  items             items[]
-  brands            brands     @relation(fields: [brand_id], references: [UUID], onUpdate: Restrict, map: "products_ibfk_1")
-  categories        categories @relation(fields: [category_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "products_ibfk_2")
+  amount            Int?
+  date_created      DateTime  @default(now()) @db.DateTime(0)
+  date_updated      DateTime? @db.DateTime(0)
+  product_id_prefix String?   @db.VarChar(50)
+  image_name        String?   @db.VarChar(50)
 
   @@index([brand_id], map: "brand_id")
   @@index([category_id], map: "products_ibfk_2")
 }
 
 model recipient_type {
-  UUID  Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  NAME  String  @db.VarChar(255)
-  loans loans[]
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  NAME String @db.VarChar(255)
 }
 
 model roles {
-  UUID                   Int                 @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name                   String              @db.VarChar(255)
-  authorization_level_id Int                 @db.UnsignedInt
-  authorization_level    authorization_level @relation(fields: [authorization_level_id], references: [UUID], onUpdate: Restrict, map: "roles_ibfk_1")
-  users                  users[]
+  UUID                   Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name                   String @db.VarChar(255)
+  authorization_level_id Int    @db.UnsignedInt
 
   @@index([authorization_level_id], map: "authorization_level_id")
 }
 
 model selfservice_case {
-  UUID                       Int               @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  delivery_location_id       Int?              @db.UnsignedInt
-  pickup_location_id         Int?              @db.UnsignedInt
-  distribution_date          DateTime          @db.DateTime(0)
-  estimated_time_consumption DateTime?         @db.DateTime(0)
-  loans                      loans[]
-  zones                      zones?            @relation(fields: [delivery_location_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "selfservice_case_ibfk_1")
-  pickup_locations           pickup_locations? @relation(fields: [pickup_location_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "selfservice_case_ibfk_2")
+  UUID                       Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  delivery_location_id       Int?      @db.UnsignedInt
+  pickup_location_id         Int?      @db.UnsignedInt
+  distribution_date          DateTime  @db.DateTime(0)
+  estimated_time_consumption DateTime? @db.DateTime(0)
 
   @@index([delivery_location_id], map: "delivery_location_id")
   @@index([pickup_location_id], map: "pickup_location_id")
@@ -173,27 +156,23 @@ model storage_locations {
   idle_since   DateTime? @default(now()) @db.DateTime(0)
   img_name     String?   @db.VarChar(255)
   date_updated DateTime  @default(now()) @db.DateTime(0)
-  zones        zones     @relation(fields: [zone_id], references: [UUID], onUpdate: Restrict, map: "storage_locations_ibfk_1")
 
   @@index([zone_id], map: "zone_id")
 }
 
 model users {
-  UUID                                    Int         @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  username                                String      @db.VarChar(255)
-  password                                String      @db.VarChar(255)
-  name                                    String      @db.VarChar(255)
-  is_ad_user                              Boolean
-  date_created                            DateTime    @default(now()) @db.DateTime(0)
-  date_updated                            DateTime    @default(now()) @db.DateTime(0)
-  address_id                              Int?        @db.UnsignedInt
-  education_id                            Int?        @db.UnsignedInt
-  role_id                                 Int?        @db.UnsignedInt
-  loans_loans_user_idTousers              loans[]     @relation("loans_user_idTousers")
-  loans_loans_helpdesk_personel_idTousers loans[]     @relation("loans_helpdesk_personel_idTousers")
-  addresses                               addresses?  @relation(fields: [address_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "users_ibfk_1")
-  educations                              educations? @relation(fields: [education_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "users_ibfk_2")
-  roles                                   roles?      @relation(fields: [role_id], references: [UUID], onDelete: Restrict, onUpdate: Restrict, map: "users_ibfk_3")
+  UUID         Int      @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  username     String   @db.VarChar(255)
+  password     String   @db.VarChar(255)
+  name         String   @db.VarChar(255)
+  mail         String   @db.VarChar(255)
+  is_ad_user   Boolean
+  date_created DateTime @default(now()) @db.DateTime(0)
+  date_updated DateTime @default(now()) @db.DateTime(0)
+  address_id   Int?     @db.UnsignedInt
+  education_id Int?     @db.UnsignedInt
+  role_id      Int?     @db.UnsignedInt
+  img_name     String?  @db.VarChar(255)
 
   @@index([address_id], map: "address_id")
   @@index([education_id], map: "education_id")
@@ -201,13 +180,10 @@ model users {
 }
 
 model zones {
-  UUID              Int                 @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name              String              @db.VarChar(255)
-  building_id       Int
-  floor_level       Int
-  loans             loans[]
-  selfservice_case  selfservice_case[]
-  storage_locations storage_locations[]
+  UUID        Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name        String @db.VarChar(255)
+  building_id Int
+  floor_level Int
 
   @@index([building_id], map: "building_id")
 }
