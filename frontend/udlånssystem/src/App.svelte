@@ -22,6 +22,7 @@
   import Chat from "./pages/chat/index.svelte";
   import Breadcrumps from "./components/breadcrumps.svelte";
   import Loans from "./pages/loans/index.svelte";
+  import Loading from "./pages/Loading.svelte";
 
   //dynamic pages import
   import usersEdit from "./pages/users/edit.svelte";
@@ -43,7 +44,10 @@
 
   // $: console.log("user", $currentUser);
 
-  login();
+  $: loading = true;
+  login().then(() => {
+    loading = false;
+  });
 
   axios.defaults.headers.common["Authorization"] = "test321";
   axios.defaults.headers.post[
@@ -69,7 +73,7 @@
       document.documentElement.className = "light";
     }
   });
-  $: logedIn = $currentUser;
+  $: loggedIn = $currentUser;
 
   //on page change update path
   window.onpopstate = function (event) {
@@ -81,7 +85,7 @@
 
 <!-- While in development disable login -->
 <!-- {#if true} -->
-{#if logedIn}
+{#if loggedIn}
   <div class="app">
     <Router>
       <!-- navigation -->
@@ -133,6 +137,8 @@
       </main>
     </Router>
   </div>
+{:else if loading}
+  <Loading />
 {:else}
   <NotLoggedIn />
 {/if}

@@ -56,7 +56,7 @@
     const filteredData = tableData.filter((row) => {
       let value = row[filterIndex];
       value = value.toString().toLowerCase();
-      console.log("expects", value, "to includes", searchPromt.toLowerCase());
+      // console.log("expects", value, "to includes", searchPromt.toLowerCase());
       return value.includes(searchPromt.toLowerCase());
     });
 
