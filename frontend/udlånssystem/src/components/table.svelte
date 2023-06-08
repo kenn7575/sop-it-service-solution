@@ -16,6 +16,7 @@
   $: tableDataFiltered = tableData; //used to determine what data should be displayed in the table after filtering
   let filterIndex = 0; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
+  let items_per_page = 20; //used to determine how many items should be displayed per page
 
   let dropdownOpen = false; //used to determine if the dropdown is open
 
@@ -63,7 +64,7 @@
   }
   //change page
   function PageChangeUp() {
-    if (page < tableDataFiltered.length / 20) {
+    if (page < tableDataFiltered.length / items_per_page) {
       page += 1;
     }
   }
@@ -146,7 +147,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each tableDataFiltered.slice((page - 1) * 20, page * 20 - 1) as row, rowIndex}
+        {#each tableDataFiltered.slice((page - 1) * items_per_page, page * items_per_page - 1) as row, rowIndex}
           <tr
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
@@ -181,15 +182,15 @@
       {/if}
 
       <button id="four" class="currentPage">{page}</button>
-      {#if page < Math.ceil(tableDataFiltered.length / 20) - 1}
+      {#if page < Math.ceil(tableDataFiltered.length / items_per_page) - 1}
         <p id="five">...</p>
       {/if}
-      {#if page < Math.ceil(tableDataFiltered.length / 20)}
+      {#if page < Math.ceil(tableDataFiltered.length / items_per_page)}
         <button
           id="six"
           on:click={() => {
-            PageChangeTo(Math.ceil(tableDataFiltered.length / 20));
-          }}>{Math.ceil(tableDataFiltered.length / 20)}</button
+            PageChangeTo(Math.ceil(tableDataFiltered.length / items_per_page));
+          }}>{Math.ceil(tableDataFiltered.length / items_per_page)}</button
         >
       {/if}
 
@@ -199,7 +200,7 @@
     </div>
   </div>
   <p>
-    viser {page * 20 - 19} til {page * 20} ud af {tableDataFiltered.length}
+    viser {page * items_per_page - (items_per_page - 1)} til {page * items_per_page} ud af {tableDataFiltered.length}
   </p>
 </div>
 
