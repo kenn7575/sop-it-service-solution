@@ -7,37 +7,37 @@
   export let inputData = [];
   $: currentPath = $path;
   //split data into tableData and tableHeadings
-  $: tableHeadings = Object.keys(inputData[0]);
-  $: tableData = Object.values(inputData);
+  $: tableData = inputData.slice(1);
+  $: tableHeadings = inputData[0];
 
   let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
-  $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
-  let filterKey = tableHeadings; //used to determine which column the user is searching in
+  $: tableDataFiltered = tableData; //used to determine what data should be displayed in the table after filtering
+  let filterIndex = 0; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
   let items_per_page = 20; //used to determine how many items should be displayed per page
 
   let dropdownOpen = false; //used to determine if the dropdown is open
 
   //log all state variables
-  $: filterKey && filterData();
+  $: filterIndex && filterData();
 
   function toggleDropdown() {
     dropdownOpen = !dropdownOpen;
   }
 
   //sortTable
-  function sortTable(data, columnKey) {
-    if (columnKey === sortColumn) {
+  function sortTable(data, columnIndex) {
+    if (columnIndex === sortColumn) {
       sortAscending = !sortAscending;
     } else {
       sortAscending = true;
-      sortColumn = columnKey;
+      sortColumn = columnIndex;
     }
     const sortedData = data.sort((a, b) => {
-      const valueA = a[columnKey];
-      const valueB = b[columnKey];
+      const valueA = a[columnIndex];
+      const valueB = b[columnIndex];
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
     });
     if (!sortAscending) {
@@ -48,15 +48,13 @@
   }
 
   onMount(() => {
-    sortTable(tableDataFiltered, tableHeadings[0]);
+    sortTable(tableDataFiltered, 0);
   });
 
   //filter Data
   function filterData() {
-    console.log(tableData)
-    const filteredData = tableData.filter(row => {
-
-      let value = row[filterKey];
+    const filteredData = tableData.filter((row) => {
+      let value = row[filterIndex];
       value = value.toString().toLowerCase();
       // console.log("expects", value, "to includes", searchPromt.toLowerCase());
       return value.includes(searchPromt.toLowerCase());
@@ -112,7 +110,7 @@
       <strong> efter </strong>
       <div class="dropdown">
         <button class="dropdown-btn" on:click={toggleDropdown}>
-          <p>{tableHeadings[filterKey]}</p>
+          <p>{tableHeadings[filterIndex]}</p>
           <i class="fa-solid fa-angle-down" />
         </button>
         <div class="options" class:hidden={!dropdownOpen}>
@@ -120,7 +118,7 @@
             <button
               class="option-btn"
               on:click={() => {
-                filterKey = option;
+                filterIndex = index;
                 toggleDropdown();
               }}
             >
@@ -141,8 +139,8 @@
     <table>
       <thead>
         <tr>
-          {#each tableHeadings as heading}
-            <th on:click={() => sortTable(tableDataFiltered, heading)}
+          {#each tableHeadings as heading, index}
+            <th on:click={() => sortTable(tableDataFiltered, index)}
               >{heading}</th
             >
           {/each}
@@ -156,7 +154,7 @@
               handleRowClick(row[0]);
             }}
           >
-            {#each Object.values(row) as cell}
+            {#each row as cell}
               <td>{cell}</td>
             {/each}
           </tr>

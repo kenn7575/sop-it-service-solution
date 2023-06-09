@@ -23,7 +23,7 @@ export async function getData(table) {
         "", { params: { table: table } }
     );
 
-    data = objectToList(data);
+    // data = objectToList(data);
     return data;
 }
 
