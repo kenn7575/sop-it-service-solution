@@ -6,13 +6,24 @@
 
   let inputData = [[]];
 
+  import { path } from "../../stores/pathStore";
+  import { navigate } from "svelte-routing";
+  $: currentPath = $path;
+  function handleRowClick(event) {
+    let id = event.detail.id;
+    navigate(`${currentPath}/${id}`);
+    path.update(() => {
+      return `${currentPath}/${id}`;
+    });
+  }
+
   onMount(async () => {
     inputData = await getData("brands");
   });
 </script>
 
 <div class="table">
-  <Table {inputData} />
+  <Table {inputData} on:message={handleRowClick} />
 </div>
 
 <style>
