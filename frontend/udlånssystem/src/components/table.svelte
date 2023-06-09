@@ -23,7 +23,7 @@
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
   $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
-  let filterKey = tableHeadings; //used to determine which column the user is searching in
+  $: filterKey = tableHeadings[0]; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
   let items_per_page = 20; //used to determine how many items should be displayed per page
 
@@ -62,11 +62,9 @@
 
   //filter Data
   function filterData() {
-    console.log(tableData)
     const filteredData = tableData.filter(row => {
-
       let value = row[filterKey];
-      value = value.toString().toLowerCase();
+      value = value ? value.toString().toLowerCase() : "";
       // console.log("expects", value, "to includes", searchPromt.toLowerCase());
       return value.includes(searchPromt.toLowerCase());
     });
@@ -115,7 +113,7 @@
       <strong> efter </strong>
       <div class="dropdown">
         <button class="dropdown-btn" on:click={toggleDropdown}>
-          <p>{tableHeadings[filterKey]}</p>
+          <p>{filterKey}</p>
           <i class="fa-solid fa-angle-down" />
         </button>
         <div class="options" class:hidden={!dropdownOpen}>
