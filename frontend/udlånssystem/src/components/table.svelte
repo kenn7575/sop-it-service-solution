@@ -2,7 +2,16 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
-  import { create_bidirectional_transition } from "svelte/internal";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+  function forwardId(object) {
+    dispatch("message", {
+      keys: tableHeadings,
+      values: object,
+    });
+  }
+
   //import data
   export let inputData = [];
   $: currentPath = $path;
@@ -84,12 +93,6 @@
       return `${currentPath}/new`;
     });
   }
-  function handleRowClick(id) {
-    navigate(`${currentPath}/${id}`);
-    path.update(() => {
-      return `${currentPath}/${id}`;
-    });
-  }
 </script>
 
 <div class="content">
@@ -153,7 +156,7 @@
           <tr
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
-              handleRowClick(row[0]);
+              forwardId(row);
             }}
           >
             {#each Object.values(row) as cell}
@@ -202,7 +205,8 @@
     </div>
   </div>
   <p>
-    viser {page * items_per_page - (items_per_page - 1)} til {page * items_per_page} ud af {tableDataFiltered.length}
+    viser {page * items_per_page - (items_per_page - 1)} til {page *
+      items_per_page} ud af {tableDataFiltered.length}
   </p>
 </div>
 

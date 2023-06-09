@@ -22,6 +22,7 @@
 {:else}
   <div class="content">
     <h1>Velkommen til helpdesk'en</h1>
+    <input type="number" name="count" id="ss" />
     <p>Hvordan kan vi hjælpe dig i dag?</p>
     <div class="svg">
       {@html welcome}

@@ -2,16 +2,26 @@
   import Table from "../../components/table.svelte";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
-
+  import { navigate } from "svelte-routing";
+  $: currentPath = $path;
+  function handleRowClick(event) {
+    let id = event.detail.id;
+    navigate(`${currentPath}/${id}`);
+    path.update(() => {
+      return `${currentPath}/${id}`;
+    });
+  }
   let inputData = [[]];
 
   onMount(async () => {
     inputData = await getData("users_view");
   });
+
+  import { path } from "../../stores/pathStore";
 </script>
 
 <div class="table">
-  <Table {inputData} />
+  <Table {inputData} on:message={handleRowClick} />
 </div>
 
 <style>
