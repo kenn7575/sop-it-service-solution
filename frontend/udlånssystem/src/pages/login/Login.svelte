@@ -4,32 +4,29 @@
 
   let errorMessages = "";
 
-  import { currentUser } from "../../services/login";
-  import axios from "axios";
+  import { currentUser, loginViaCredentials } from "../../services/login";
+  $: console.log("user", $currentUser);
 
-  function login(e) {
+  async function login(e) {
     e.preventDefault();
-    axios
-      .post("/login.php", { username: username, password: password })
-      .then((res) => {
-        if (res.data.status === 403) {
-          password = "";
+    loginViaCredentials(username, password).then((res) => {
+      console.log(
+        "🚀 ~ file: Login.svelte:13 ~ loginViaCredentials ~ res:",
+        res
+      );
+      if (res.status === 200) {
+        currentUser.update(() => {
+          return res.user;
+        });
+        //set session
+        localStorage.setItem("session", res.message);
+      }
+      if (res.status === 403)
+        errorMessages = "Forkert uni-login eller adgangskode";
 
-          errorMessages = "Forkert uni-login eller adgangskode";
-
-        } else if (res.data.status === 401) {
-          errorMessages = "Adgang nægtet";
-
-        } else if (res.data.status === 200) {
-          localStorage.setItem("session", res.data.message);
-          currentUser.update(() => {
-            return { username: username, password: password };
-          });
-        } else { errorMessages = "Der skete en fejl";}
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      if (res.status === 401) errorMessages = "Adgang nægtet";
+      if (res.status === 500) errorMessages = "Serveren problemer";
+    });
   }
   function resetError() {
     errorMessages = "";
@@ -51,7 +48,7 @@
       bind:value={username}
       class="text"
       type="text"
-      name=""
+      name="username"
       required
     />
     <label class:error={errorMessages}>Uni-login</label>
@@ -63,6 +60,7 @@
       bind:value={password}
       class="text"
       type="password"
+      name="password"
       required
     />
     <label class:error={errorMessages}>Adgangskode</label>

@@ -8,7 +8,7 @@
   let inputData = [[]];
 
   onMount(async () => {
-    inputData = await getData("items");
+    inputData = await getData("available_products_view");
   });
 
   import { path } from "../../stores/pathStore";
@@ -24,7 +24,11 @@
 </script>
 
 <div class="table">
-  <Table {inputData} on:message={handleRowClick} />
+  <Table
+    {inputData}
+    buttonDestination="produkter/new"
+    on:message={handleRowClick}
+  />
 </div>
 
 <style>

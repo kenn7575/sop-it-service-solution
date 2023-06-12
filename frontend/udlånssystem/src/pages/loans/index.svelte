@@ -23,7 +23,11 @@
 </script>
 
 <div class="table">
-  <Table {inputData} on:message={handleRowClick} />
+  <Table
+    {inputData}
+    buttonDestination={"udlaan/new"}
+    on:message={handleRowClick}
+  />
 </div>
 
 <style>

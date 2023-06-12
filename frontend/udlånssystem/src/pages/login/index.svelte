@@ -1,8 +1,10 @@
 <script>
   import Login from "./Login.svelte";
   import Register from "./Register.svelte";
+  import { loginViaSession } from "../../services/login";
 
   let newUser = false;
+  loginViaSession();
 </script>
 
 <div class="login">
