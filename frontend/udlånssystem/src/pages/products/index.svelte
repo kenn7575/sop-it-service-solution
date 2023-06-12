@@ -15,7 +15,7 @@
   import { navigate } from "svelte-routing";
   $: currentPath = $path;
   function handleRowClick(event) {
-    let id = event.detail.id;
+    let id = event.detail.UUID;
     navigate(`${currentPath}/${id}`);
     path.update(() => {
       return `${currentPath}/${id}`;

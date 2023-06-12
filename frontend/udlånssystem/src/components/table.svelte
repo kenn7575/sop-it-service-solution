@@ -6,10 +6,9 @@
 
   const dispatch = createEventDispatcher();
   function forwardId(object) {
-    dispatch("message", {
-      keys: tableHeadings,
-      values: object,
-    });
+    dispatch("message", 
+      object
+    );
   }
 
   //import data
