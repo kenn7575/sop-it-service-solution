@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentUser, login } from "./services/login";
+  import { currentUser, loginViaSession } from "./services/login";
   import { Router, Route } from "svelte-routing";
   import axios from "axios";
 
@@ -45,7 +45,7 @@
   // $: console.log("user", $currentUser);
 
   $: loading = true;
-  login().then(() => {
+  loginViaSession().then(() => {
     loading = false;
   });
 
@@ -137,10 +137,15 @@
       </main>
     </Router>
   </div>
-{:else if loading}
-  <Loading />
 {:else}
-  <NotLoggedIn />
+  <!-- if not logged in -->
+  {#await loginViaSession()}
+    <Loading />
+  {:then res}
+    <NotLoggedIn />
+  {:catch error}
+    <p>{error.message}</p>
+  {/await}
 {/if}
 
 <style>

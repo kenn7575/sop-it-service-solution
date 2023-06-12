@@ -7,6 +7,7 @@
   //Data to be sent
   let user = { id: "", unilogin: "" };
   let products = [];
+  $: console.log(products);
   let info = {
     returnDate: "",
     department: "",
@@ -26,13 +27,11 @@
 
   //Users
   function handleUserSelection(event) {
-    let keys = event.detail.id;
-    let values = event.detail.value;
-    console.log(keys, values);
+    user = event.detail;
     page++;
   }
 
-  let inputDataUser = [[]];
+  let inputDataUser = [[]]; //get data onMount
 
   function validateUser() {
     if (!user) {
@@ -42,7 +41,7 @@
   }
 
   //Products
-  let inputDataProducts = [[]];
+  let inputDataProducts = [[]]; //get data onMount
   function validateProducts() {
     if (products.length == 0) {
       return false;
@@ -50,15 +49,13 @@
     return true;
   }
   function handleAddProduct(event) {
-    console.log("clicked");
-
-    let id = event.detail.id;
-    console.log(id);
-    products.push([1, 1, 1, 1]);
+    console.log(event.detail);
+    //move product from inputDataProducts to products
+    let product = event.detail;
+    products.push(product);
     products = products;
-    //remove from inputdataProducts
-    inputDataProducts = inputDataProducts.filter((row) => {
-      return row[0] != id;
+    inputDataProducts = inputDataProducts.filter((item) => {
+      return item.UUID !== product.UUID;
     });
   }
 
@@ -150,13 +147,23 @@
 {#if page === 1}
   <!-- ! User -->
   <div class="table">
-    <Table inputData={inputDataUser} on:message={handleUserSelection} />
+    <Table
+      inputData={inputDataUser}
+      on:message={handleUserSelection}
+      buttonDestination="/brugere/new"
+    />
   </div>
 {:else if page === 2}
   <!-- ! Products -->
   <div class="tables">
     <Table on:message={handleAddProduct} inputData={inputDataProducts} />
-    <Table inputData={[["UUID", "Navn", "Producent", "Antal"], ...products]} />
+    {#if products.length > 0}
+      <Table inputData={products} />
+    {:else}
+      <div class="center">
+        <p>Tryk for at tilføje produkter</p>
+      </div>
+    {/if}
   </div>
 {:else if page === 3}
   <DateInput
@@ -212,12 +219,22 @@
     width: 100%;
     height: 100%;
   }
-  .tables {
+  .center {
+    width: 100%;
+    height: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
     width: 100%;
     height: calc(100% - 4rem);
   }
+
   span {
     color: var(--text2);
   }

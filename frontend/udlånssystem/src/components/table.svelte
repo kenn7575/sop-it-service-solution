@@ -4,11 +4,11 @@
   import { path } from "../stores/pathStore";
   import { createEventDispatcher } from "svelte";
 
+  export let buttonDestination = "";
+
   const dispatch = createEventDispatcher();
   function forwardId(object) {
-    dispatch("message", 
-      object
-    );
+    dispatch("message", object);
   }
 
   //import data
@@ -22,7 +22,7 @@
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
   $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
-  $: filterKey = tableHeadings[0]; //used to determine which column the user is searching in
+  let filterKey = tableHeadings ? tableHeadings[0] : "UUID"; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
   let items_per_page = 20; //used to determine how many items should be displayed per page
 
@@ -61,7 +61,7 @@
 
   //filter Data
   function filterData() {
-    const filteredData = tableData.filter(row => {
+    const filteredData = tableData.filter((row) => {
       let value = row[filterKey];
       value = value ? value.toString().toLowerCase() : "";
       // console.log("expects", value, "to includes", searchPromt.toLowerCase());
@@ -85,10 +85,12 @@
     page = pageNumber;
   }
   function handleButtonClick() {
-    navigate(`${currentPath}/new`);
-    path.update(() => {
-      return `${currentPath}/new`;
-    });
+    if (buttonDestination) {
+      navigate(buttonDestination);
+      path.update(() => {
+        return buttonDestination;
+      });
+    }
   }
 </script>
 
@@ -130,10 +132,12 @@
         </div>
       </div>
     </div>
-    <button class="add-user" on:click={handleButtonClick}>
-      <i class="fa-solid fa-plus" />
-      <p>Tilføj</p>
-    </button>
+    {#if buttonDestination}
+      <button class="add-user" on:click={handleButtonClick}>
+        <i class="fa-solid fa-plus" />
+        <p>Tilføj</p>
+      </button>
+    {/if}
   </div>
 
   <!-- ! table -->

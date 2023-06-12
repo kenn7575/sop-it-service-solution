@@ -4,6 +4,7 @@
   import { getData } from "../../data/data";
   import { navigate } from "svelte-routing";
   $: currentPath = $path;
+
   function handleRowClick(event) {
     let id = event.detail.UUID;
     navigate(`${currentPath}/${id}`);
@@ -11,6 +12,7 @@
       return `${currentPath}/${id}`;
     });
   }
+
   let inputData = [[]];
 
   onMount(async () => {
@@ -21,7 +23,11 @@
 </script>
 
 <div class="table">
-  <Table {inputData} on:message={handleRowClick} />
+  <Table
+    {inputData}
+    buttonDestination={"brugere/new"}
+    on:message={handleRowClick}
+  />
 </div>
 
 <style>
