@@ -8,7 +8,7 @@
   //Data to be sent
   let user = { id: "", unilogin: "" };
   let products = [];
-  $: console.log(products);
+
   let info = {
     returnDate: "",
     department: "",
@@ -35,9 +35,8 @@
   let inputDataUser = [[]]; //get data onMount
 
   function validateUser() {
-    if (!user) {
-      return false;
-    }
+    if (user.id == "") return false;
+    if (user.unilogin == "") return false;
     return true;
   }
 
@@ -50,7 +49,6 @@
     return true;
   }
   function handleAddProduct(event) {
-    console.log(event.detail);
     //move product from inputDataProducts to products
     let product = event.detail;
     products.push(product);
@@ -192,6 +190,9 @@
     display: grid;
     grid-template-rows: 56px 1fr;
   }
+  .table {
+    overflow: auto;
+  }
   .page-nav-btn {
     display: flex;
     align-items: center;
@@ -240,6 +241,7 @@
     gap: 1rem;
     width: 100%;
     height: max-content;
+    overflow: auto;
   }
   .splitscreen {
     width: 100%;

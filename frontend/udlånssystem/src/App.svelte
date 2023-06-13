@@ -42,13 +42,6 @@
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
 
-  // $: console.log("user", $currentUser);
-
-  $: loading = true;
-  loginViaSession().then(() => {
-    loading = false;
-  });
-
   import "./axiosConfig.js";
 
   import { path } from "./stores/pathStore";

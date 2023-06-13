@@ -1,71 +1,72 @@
 <script>
-  import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
 
   let selectedFile;
-  $: console.log(selectedFile);
 
-  function handleFileSelect(event) {
-    selectedFile = event.target.files[0];
-  }
-
-  onMount(() => {
-    function handleFileDrop(event) {
-      event.preventDefault();
-      selectedFile = event.dataTransfer.files[0];
-    }
-
-    function highlightDropZone(event) {
-      event.preventDefault();
-      event.currentTarget.classList.add("highlight");
-    }
-
-    function unhighlightDropZone(event) {
-      event.preventDefault();
-      event.currentTarget.classList.remove("highlight");
-    }
-
-    const dropZone = document.querySelector(".drop-zone");
-
-    dropZone.addEventListener("dragover", highlightDropZone);
-    dropZone.addEventListener("dragleave", unhighlightDropZone);
-    dropZone.addEventListener("drop", handleFileDrop);
-
-    return () => {
-      dropZone.removeEventListener("dragover", highlightDropZone);
-      dropZone.removeEventListener("dragleave", unhighlightDropZone);
-      dropZone.removeEventListener("drop", handleFileDrop);
+  function importData() {
+    let input = document.createElement("input");
+    input.type = "file";
+    input.onchange = (_) => {
+      // you can use this method to get file and perform respective operations
+      let files = Array.from(input.files);
+      console.log(files);
     };
-  });
-
-  function handleSubmit() {
-    if (selectedFile) {
-      // Perform the file upload or any other desired action
-      console.log("Selected file:", selectedFile);
-    }
+    input.click();
   }
 
-  function handleCancel() {
-    // Handle cancel action
+  const dispatch = createEventDispatcher();
+
+  function forwardImage(object) {
+    dispatch("message", object);
+  }
+
+  let heighlightDropZone = false;
+
+  function handleFileDrop(event) {
+    event.preventDefault();
+    let highlightDropZone = false;
+    const files = event.dataTransfer
+      ? event.dataTransfer.files
+      : event.target.files;
+    const selectedFile = files[0];
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const imageUrl = e.target.result;
+      forwardImage(imageUrl);
+    };
+
+    reader.readAsDataURL(selectedFile);
+  }
+
+  function highlightDropZone(event) {
+    event.preventDefault();
+    heighlightDropZone = true;
+  }
+
+  function unhighlightDropZone(event) {
+    event.preventDefault();
+    heighlightDropZone = false;
   }
 </script>
 
-<div class="drop-zone">
+<button
+  class:highlight={heighlightDropZone}
+  on:drop={handleFileDrop}
+  on:dragleave={unhighlightDropZone}
+  on:dragover={highlightDropZone}
+  on:click={importData}
+  class="drop-zone"
+>
   <span class="drop-zone__prompt">Drop file here or click to upload</span>
-  <input
-    type="file"
-    name="myFile"
-    class="drop-zone__input"
-    on:change={handleFileSelect}
-  />
-</div>
-
-<button on:click={handleSubmit}>Save & Submit</button>
-<button on:click={handleCancel}>Cancel</button>
+  <input type="file" name="myFile" class="drop-zone-input" />
+</button>
 
 <style>
   .drop-zone {
-    max-width: 200px;
-    height: 200px;
+    max-width: 100%;
+    height: 100%;
     padding: 25px;
     display: flex;
     align-items: center;
@@ -76,11 +77,15 @@
     font-size: 20px;
     cursor: pointer;
     color: #cccccc;
-    border: 4px dashed #009578;
+    border: 4px dashed var(--text2);
     border-radius: 10px;
+    background: transparent;
   }
 
-  .drop-zone__input {
+  .drop-zone-input {
     display: none;
+  }
+  .highlight {
+    background: var(--bg1);
   }
 </style>
