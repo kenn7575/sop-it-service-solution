@@ -8,18 +8,23 @@
 
   let inputData = [[]];
   console.log(id)
+  $: user = $currentUser;
+
+  // onMount(async () => {
+  //   inputData = await axios.get("select_user.php", {
+  //     params: {
+  //       user: 'user',
+  //       password: 'user',
+  //       id: user.UUID,
+  //       username: user.username,
+  //     },
+  //   }).then(res => { return res.data; })
+  // });
 
   onMount(async () => {
-    inputData = await axios.get("select_user.php", {
-      params: {
-        user: 'user',
-        password: 'user',
-        id: "717",
-        username: 'udlaantest'
-      },
-    }).then(res => { return res.data; })
+    inputData = await getData("users_view_extended", id);
   });
 </script>
 
 <h1>Details for user</h1>
-<h2>{JSON.stringify(currentUser)}</h2>
+<h2>{JSON.stringify(inputData)}</h2>

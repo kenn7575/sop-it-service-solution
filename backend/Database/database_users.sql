@@ -5,7 +5,7 @@ CREATE USER 'admin'@localhost IDENTIFIED BY 'admin';
 
 USE `sop`;
 GRANT SELECT ON `items` TO 'guest'@localhost;
-GRANT SELECT (UUID) ON `products` TO 'guest'@localhost;
+GRANT SELECT (UUID, name, amount) ON `products` TO 'guest'@localhost;
 GRANT SELECT ON `educations` TO 'guest'@localhost;
 GRANT SELECT ON `brands` TO 'guest'@localhost;
 GRANT SELECT ON `buildings` TO 'guest'@localhost;
@@ -27,7 +27,9 @@ GRANT SELECT ON `product_status` TO 'user'@localhost;
 GRANT EXECUTE ON PROCEDURE `select_user` TO 'user'@localhost;
 GRANT EXECUTE ON PROCEDURE `column_permissions` TO 'user'@localhost;
 
-GRANT ALL PRIVILEGES ON *.* TO 'admin'@localhost;
+GRANT ALL PRIVILEGES ON `sop`.* TO 'admin'@localhost;
+
+REVOKE DROP ON *.* FROM 'admin'@localhost;
 
 SHOW GRANTS FOR 'guest'@localhost;
 SHOW GRANTS FOR 'user'@localhost;

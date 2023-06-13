@@ -31,7 +31,8 @@ if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {    array_push($all_columns, $row["COLUMN_NAME"]);     } 
 }
 
-$all_columns = implode(", ", $all_columns);
+
+$all_columns = "`".implode("`, `", $all_columns)."`";
 
 $columns = $_GET['columns'] ?? $all_columns;
 

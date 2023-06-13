@@ -7,7 +7,7 @@
   let inputData = [[]];
 
   onMount(async () => {
-    inputData = await getData("loans");
+    inputData = await getData("loans_view");
   });
 
   import { path } from "../../stores/pathStore";

@@ -1,13 +1,16 @@
 <script>
   import profilePic from "../../public/profile.png";
+  import { currentUser } from "../services/login";
+
+  $: user = $currentUser;
 </script>
 
 <div class="content">
   <div class="info">
-    <img src={profilePic} alt="profilePic" />
+    <img src={user.img_name ? `/public/${user.img_name}.png` : profilePic} alt="profilePic" />
     <div class="text">
-      <h3>Søren</h3>
-      <p>søre69420</p>
+      <h3>{user.name || "Søren"} </h3>
+      <p>{user.username || "søren69420"}</p>
     </div>
   </div>
 
