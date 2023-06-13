@@ -1,7 +1,7 @@
 <script lang="ts">
   import { currentUser, loginViaSession } from "./services/login";
   import { Router, Route } from "svelte-routing";
-  import axios from "axios";
+  import DropZone from "./components/drop-zone.svelte";
 
   //login page
   import NotLoggedIn from "./pages/login/index.svelte";
@@ -131,6 +131,7 @@
   </div>
 {:else}
   <!-- if not logged in -->
+
   {#await loginViaSession()}
     <Loading />
   {:then res}
