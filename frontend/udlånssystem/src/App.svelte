@@ -49,7 +49,7 @@
     loading = false;
   });
 
-  import "./axiosConfig.js"
+  import "./axiosConfig.js";
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
