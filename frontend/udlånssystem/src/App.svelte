@@ -131,14 +131,13 @@
   </div>
 {:else}
   <!-- if not logged in -->
-  <!-- {#await loginViaSession()}
+  {#await loginViaSession()}
     <Loading />
   {:then res}
     <NotLoggedIn />
   {:catch error}
     <p>{error.message}</p>
-  {/await} -->
-  <NotLoggedIn />
+  {/await}
 {/if}
 
 <style>
