@@ -31,6 +31,23 @@
   function resetError() {
     errorMessages = "";
   }
+
+  let isRunningAway = false;
+  let runningLeft = true;
+  let runningRight = false;
+  function runAway() {
+    if (password && username) return;
+    if (isRunningAway === false) {
+      isRunningAway = !isRunningAway;
+    } else {
+      runningLeft = !runningLeft;
+      runningRight = !runningRight;
+    }
+  }
+  function stopRunning() {
+    isRunningAway = false;
+    console.log("runn");
+  }
 </script>
 
 <form on:submit={login}>
@@ -43,6 +60,7 @@
 
   <div class="question mt20">
     <input
+      on:input={stopRunning}
       class:error={errorMessages}
       on:focus={resetError}
       bind:value={username}
@@ -55,6 +73,7 @@
   </div>
   <div class="question" class:error={errorMessages}>
     <input
+      on:input={stopRunning}
       class:error={errorMessages}
       on:focus={resetError}
       bind:value={password}
@@ -66,11 +85,21 @@
     <label class:error={errorMessages}>Adgangskode</label>
   </div>
   <div class="center">
-    <button>Login</button>
+    <button
+      class:run-left={isRunningAway && runningLeft}
+      class:run-right={isRunningAway && runningRight}
+      on:mouseenter={runAway}>Login</button
+    >
   </div>
 </form>
 
 <style>
+  .run-left {
+    transform: translateX(-100px);
+  }
+  .run-right {
+    transform: translateX(100px);
+  }
   form button,
   form .question label,
   form .question input.text {

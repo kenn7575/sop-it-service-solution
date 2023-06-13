@@ -49,7 +49,7 @@
     loading = false;
   });
 
-  import "./axiosConfig.js"
+  import "./axiosConfig.js";
 
   import { path } from "./stores/pathStore";
   import { onMount } from "svelte";
@@ -131,13 +131,14 @@
   </div>
 {:else}
   <!-- if not logged in -->
-  {#await loginViaSession()}
+  <!-- {#await loginViaSession()}
     <Loading />
   {:then res}
     <NotLoggedIn />
   {:catch error}
     <p>{error.message}</p>
-  {/await}
+  {/await} -->
+  <NotLoggedIn />
 {/if}
 
 <style>
