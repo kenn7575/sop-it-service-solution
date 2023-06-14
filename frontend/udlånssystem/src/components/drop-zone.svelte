@@ -6,16 +6,14 @@
   function importData() {
     let input = document.createElement("input");
     input.type = "file";
-    input.onchange = (_) => {
+    input.onchange = (e) => {
       // you can use this method to get file and perform respective operations
-      let files = Array.from(input.files);
-      console.log(files);
+      handleFileDrop(e);
     };
     input.click();
   }
 
   const dispatch = createEventDispatcher();
-
   function forwardImage(object) {
     dispatch("message", object);
   }
@@ -24,7 +22,7 @@
 
   function handleFileDrop(event) {
     event.preventDefault();
-    let highlightDropZone = false;
+    heighlightDropZone = false;
     const files = event.dataTransfer
       ? event.dataTransfer.files
       : event.target.files;
@@ -59,8 +57,15 @@
   on:click={importData}
   class="drop-zone"
 >
-  <span class="drop-zone__prompt">Drop file here or click to upload</span>
-  <input type="file" name="myFile" class="drop-zone-input" />
+  <span class="drop-zone__prompt"
+    >Træk filer ind eller klik for at uploade fra pc</span
+  >
+  <input
+    on:drop={handleFileDrop}
+    type="file"
+    name="myFile"
+    class="drop-zone-input"
+  />
 </button>
 
 <style>

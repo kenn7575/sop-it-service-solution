@@ -62,93 +62,103 @@
   <div class="form">
     <form id="user-form" on:submit={login}>
       <div class="question">
-        <label class:error={errorMessages}>Fornavn <span>*</span></label>
+        <label for class:error={errorMessages}>Fornavn <span>*</span></label>
         <input
+          id="firstName"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={firstName}
           autocomplete="off"
           class="text"
           type="text"
-          name="firstName"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>Efternavn <span>*</span></label>
+        <label for="lastName" class:error={errorMessages}
+          >Efternavn <span>*</span></label
+        >
         <input
+          id="lastName"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={lastName}
           class="text"
           type="text"
-          name="lastName"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>Adgangskode <span>*</span></label>
+        <label for="password" class:error={errorMessages}
+          >Adgangskode <span>*</span></label
+        >
         <input
+          id="password"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={password}
           class="text"
           type="password"
-          name="password"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>Uni-login <span>*</span></label>
+        <label for="unilogin" class:error={errorMessages}
+          >Uni-login <span>*</span></label
+        >
         <input
+          id="unilogin"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={unilogin}
           class="text"
           type="text"
-          name="unilogin"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>Email <span>*</span></label>
+        <label for="email" class:error={errorMessages}
+          >Email <span>*</span></label
+        >
         <input
+          id="email"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={email}
           class="text"
           type="text"
-          name="email"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>Vejnavn <span>*</span></label>
+        <label for="street1" class:error={errorMessages}
+          >Vejnavn <span>*</span></label
+        >
         <input
+          id="street1"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={street1}
           class="text"
           type="text"
-          name="streetline1"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>Etage </label>
+        <label for="street2" class:error={errorMessages}>Etage </label>
         <input
+          id="street2"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={street2}
           class="text"
           type="text"
-          name="streetline2"
         />
       </div>
       <div class="question" class:error={errorMessages}>
@@ -160,7 +170,6 @@
           bind:value={city}
           class="text"
           type="text"
-          name="city"
           required
         />
       </div>
@@ -174,7 +183,6 @@
           class="text"
           id="zip"
           type="text"
-          name="zip"
           required
         />
       </div>
