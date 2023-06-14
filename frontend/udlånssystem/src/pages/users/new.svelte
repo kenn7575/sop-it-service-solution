@@ -17,7 +17,7 @@
     zip: "",
     city: "",
     profilePicture: "",
-  }
+  };
 
   let roles = [];
   let educations = [];
@@ -51,15 +51,16 @@
 
   function handleSubmit(e) {
     if (validate(new_user)) {
-      return errorMessages = validate(new_user);
+      return (errorMessages = validate(new_user));
     }
-    
-    console.log(new_user)
-    axios.post("/create_user.php", {new_user: JSON.stringify(new_user)}).then(res => {
-      if (res) console.log("Bruger oprettet");
-    });
-  }
 
+    console.log(new_user);
+    axios
+      .post("/create_user.php", { new_user: JSON.stringify(new_user) })
+      .then((res) => {
+        if (res) console.log("Bruger oprettet");
+      });
+  }
 </script>
 
 <div class="content">
@@ -196,26 +197,26 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class:error={errorMessages}>Postnummer <span>*</span></label>
+        <label for="a9" class:error={errorMessages}
+          >Postnummer <span>*</span></label
+        >
         <input
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={new_user.zip}
           class="text"
-          id="postnummer"
-          pattern="[0-9]{4}"
-          type="number"
+          id="zip"
+          type="text"
           required
         />
       </div>
       <div class="question">
-        <label for="role" class:error={errorMessages}
+        <label for="a10" class:error={errorMessages}
           >Bruger rolle <span>*</span></label
         >
 
-        <select id="role" required form="user-form" bind:value={new_user.role}>
+        <select id="a10" required form="user-form" bind:value={new_user.role}>
           <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
             <option id="role" value={role.UUID}>{role.name}</option>
@@ -224,11 +225,16 @@
       </div>
 
       <div class="question">
-        <label for="education" class:error={errorMessages}
+        <label for="a11" class:error={errorMessages}
           >Uddannelse<span>*</span></label
         >
 
-        <select id="education" required form="user-form" bind:value={new_user.education}>
+        <select
+          id="a11"
+          required
+          form="user-form"
+          bind:value={new_user.education}
+        >
           <option selected disabled>Vælg fra liste</option>
           {#each educations as education}
             <option id="education" value={education.UUID}

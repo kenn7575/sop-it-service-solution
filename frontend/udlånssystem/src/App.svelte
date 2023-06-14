@@ -24,7 +24,7 @@
   import Loans from "./pages/loans/index.svelte";
   import Loading from "./pages/Loading.svelte";
 
-  //dynamic pages import
+  //dynamic pages import - edit
   import usersEdit from "./pages/users/edit.svelte";
   import productsEdit from "./pages/products/edit.svelte";
   import brandsEdit from "./pages/brands/edit.svelte";
@@ -32,6 +32,9 @@
   import locationsEdit from "./pages/locations/edit.svelte";
   import productTypesEdit from "./pages/productTypes/edit.svelte";
   import loansEdit from "./pages/loans/edit.svelte";
+
+  //dynamic pages import - details
+  import usersDetails from "./pages/users/details.svelte";
 
   //new pages import
   import usersNew from "./pages/users/new.svelte";
@@ -88,7 +91,7 @@
           <Route path="/" component={Home} />
           <Route path="hjem" component={Home} />
 
-          <!-- pages -->
+          <!-- pages index-->
           <Route path="brugere" component={Users} />
           <Route path="dashboard" component={Dashboard} />
           <Route path="produkter" component={Products} />
@@ -101,14 +104,18 @@
           <Route path="udlaan" component={Loans} />
           <Route path="help" component={Help} />
 
-          <!-- dynamic routs -->
-          <Route path="brugere/:id" component={usersEdit} />
-          <Route path="produkter/:id" component={productsEdit} />
-          <Route path="brands/:id" component={brandsEdit} />
-          <Route path="produktkategorier/:id" component={categoriesEdit} />
-          <Route path="lokaliteter/:id" component={locationsEdit} />
-          <Route path="produkttyper/:id" component={productTypesEdit} />
-          <Route path="udlaan/:id" component={loansEdit} />
+          <!-- dynamic routs details-->
+          <Route path="brugere/details/:id" component={usersDetails} />
+
+          <!-- dynsmic routes edit -->
+          <Route path="brugere/edit/:id" component={usersEdit} />
+
+          <Route path="produkter/edit/:id" component={productsEdit} />
+          <Route path="brands/edit/:id" component={brandsEdit} />
+          <Route path="produktkategorier/edit/:id" component={categoriesEdit} />
+          <Route path="lokaliteter/edit/:id" component={locationsEdit} />
+          <Route path="produkttyper/edit/:id" component={productTypesEdit} />
+          <Route path="udlaan/edit/:id" component={loansEdit} />
 
           <!-- new routes -->
           <Route path="brugere/new" component={usersNew} />
