@@ -7,9 +7,9 @@
 
   function handleRowClick(event) {
     let id = event.detail.UUID;
-    navigate(`${currentPath}/${id}`);
+    navigate(`${currentPath}/details/${id}`);
     path.update(() => {
-      return `${currentPath}/${id}`;
+      return `${currentPath}/details/${id}`;
     });
   }
 
