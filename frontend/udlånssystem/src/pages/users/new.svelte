@@ -24,8 +24,8 @@
   onMount(async () => {
     roles = await getData("roles");
     educations = await getData("educations");
-    education = educations[0].UUID;
-    role = roles[0].UUID;
+    new_user.education = educations[0].UUID;
+    new_user.role = roles[0].UUID;
   });
   let errorMessages = "";
 
@@ -198,7 +198,7 @@
           >Bruger rolle <span>*</span></label
         >
 
-        <select id="role" required form="user-form" bind:value={role}>
+        <select id="role" required form="user-form" bind:value={new_user.role}>
           <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
             <option id="role" value={role.UUID}>{role.name}</option>
@@ -211,7 +211,7 @@
           >Uddannelse<span>*</span></label
         >
 
-        <select id="education" required form="user-form" bind:value={education}>
+        <select id="education" required form="user-form" bind:value={new_user.education}>
           <option selected disabled>Vælg fra liste</option>
           {#each educations as education}
             <option id="education" value={education.UUID}
