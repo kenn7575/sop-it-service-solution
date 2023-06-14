@@ -1,13 +1,14 @@
 <script lang="js">
   //General
   import Table from "../../components/table.svelte";
+  import TableSimplified from "../../components/table-simplified.svelte";
   import { getData } from "../../data/data";
   import { onMount } from "svelte";
 
   //Data to be sent
   let user = { id: "", unilogin: "" };
   let products = [];
-  $: console.log(products);
+
   let info = {
     returnDate: "",
     department: "",
@@ -34,9 +35,8 @@
   let inputDataUser = [[]]; //get data onMount
 
   function validateUser() {
-    if (!user) {
-      return false;
-    }
+    if (user.id == "") return false;
+    if (user.unilogin == "") return false;
     return true;
   }
 
@@ -49,7 +49,6 @@
     return true;
   }
   function handleAddProduct(event) {
-    console.log(event.detail);
     //move product from inputDataProducts to products
     let product = event.detail;
     products.push(product);
@@ -84,95 +83,99 @@
   }
 </script>
 
-<div class="navigation-bar">
-  <button
-    on:click={() => {
-      page = 1;
-    }}
-    class:current={1 === page}
-    class:invalid={page > 1 && !validateUser()}
-    class:valid={page > 1 && validateUser()}
-    class="page-nav-btn"
-  >
-    <i class="fa-solid fa-user" />
-    <p>Bruger</p>
-    {#if user.unilogin}
-      <span>|</span>
-      <span>{user.unilogin} </span>
-    {/if}
-  </button>
-  <i class="fa-solid fa-angles-right" />
-  <button
-    on:click={() => {
-      page = 2;
-    }}
-    class:current={2 === page}
-    class:invalid={page > 2 && !validateProducts()}
-    class:valid={page > 2 && validateProducts()}
-    class="page-nav-btn"
-  >
-    <i class="fa-solid fa-cart-shopping" />
-    <p>Produkter</p>
-    <!-- {#if products.length > 0}
+<div class="content">
+  <div class="navigation-bar">
+    <button
+      on:click={() => {
+        page = 1;
+      }}
+      class:current={1 === page}
+      class:invalid={page > 1 && !validateUser()}
+      class:valid={page > 1 && validateUser()}
+      class="page-nav-btn"
+    >
+      <i class="fa-solid fa-user" />
+      <p>Bruger</p>
+      {#if user.unilogin}
+        <span>|</span>
+        <span>{user.unilogin} </span>
+      {/if}
+    </button>
+    <i class="fa-solid fa-angles-right" />
+    <button
+      on:click={() => {
+        page = 2;
+      }}
+      class:current={2 === page}
+      class:invalid={page > 2 && !validateProducts()}
+      class:valid={page > 2 && validateProducts()}
+      class="page-nav-btn"
+    >
+      <i class="fa-solid fa-cart-shopping" />
+      <p>Produkter</p>
+      <!-- {#if products.length > 0}
       <span>|</span>
       <span>{products.length} gendstande</span>
     {/if} -->
-  </button>
-  <i class="fa-solid fa-angles-right" />
-  <button
-    on:click={() => {
-      page = 3;
-    }}
-    class:current={3 === page}
-    class:invalid={page > 3 && !validateInfo()}
-    class:valid={page > 3 && validateInfo()}
-    class="page-nav-btn"
-  >
-    <i class="fa-solid fa-info" />
-    <p>Info</p>
-  </button>
-  <i class="fa-solid fa-angles-right" />
-  <button
-    on:click={() => {
-      page = 4;
-    }}
-    class:current={4 === page}
-    class="page-nav-btn"
-  >
-    <i class="fa-solid fa-file-signature" />
-    <p>Gemmense</p>
-  </button>
-</div>
+    </button>
+    <i class="fa-solid fa-angles-right" />
+    <button
+      on:click={() => {
+        page = 3;
+      }}
+      class:current={3 === page}
+      class:invalid={page > 3 && !validateInfo()}
+      class:valid={page > 3 && validateInfo()}
+      class="page-nav-btn"
+    >
+      <i class="fa-solid fa-info" />
+      <p>Info</p>
+    </button>
+    <i class="fa-solid fa-angles-right" />
+    <button
+      on:click={() => {
+        page = 4;
+      }}
+      class:current={4 === page}
+      class="page-nav-btn"
+    >
+      <i class="fa-solid fa-file-signature" />
+      <p>Gemmense</p>
+    </button>
+  </div>
 
-{#if page === 1}
-  <!-- ! User -->
-  <div class="table">
-    <Table
-      inputData={inputDataUser}
-      on:message={handleUserSelection}
-      buttonDestination="/brugere/new"
-    />
-  </div>
-{:else if page === 2}
-  <!-- ! Products -->
-  <div class="tables">
-    <Table on:message={handleAddProduct} inputData={inputDataProducts} />
-    {#if products.length > 0}
-      <Table inputData={products} />
-    {:else}
-      <div class="center">
-        <p>Tryk for at tilføje produkter</p>
+  {#if page === 1}
+    <!-- ! User -->
+    <div class="table">
+      <Table
+        inputData={inputDataUser}
+        on:message={handleUserSelection}
+        buttonDestination="/brugere/new"
+      />
+    </div>
+  {:else if page === 2}
+    <!-- ! Products -->
+    <div class="tables">
+      <div class="splitscreen">
+        <Table on:message={handleAddProduct} inputData={inputDataProducts} />
       </div>
-    {/if}
-  </div>
-{:else if page === 3}
-  <DateInput
-    bind:value={defaultDate}
-    max={maxDate}
-    format={"yyyy-MM-dd"}
-    min={date}
-  />
-{/if}
+      {#if products.length > 0}
+        <TableSimplified inputData={products} />
+      {:else}
+        <div class="center">
+          <p>Tryk for at tilføje produkter</p>
+        </div>
+      {/if}
+    </div>
+  {:else if page === 3}
+    <DateInput
+      bind:value={defaultDate}
+      max={maxDate}
+      format={"yyyy-MM-dd"}
+      min={date}
+    />
+  {/if}
+</div>
 
 <style>
   .navigation-bar {
@@ -180,6 +183,15 @@
     align-items: center;
     gap: 1rem;
     padding: 0.5rem;
+  }
+  .content {
+    width: 100%;
+    max-height: 100%;
+    display: grid;
+    grid-template-rows: 56px 1fr;
+  }
+  .table {
+    overflow: auto;
   }
   .page-nav-btn {
     display: flex;
@@ -215,10 +227,7 @@
     border: none;
     background: var(--bg2);
   }
-  .table {
-    width: 100%;
-    height: 100%;
-  }
+
   .center {
     width: 100%;
     height: 100%;
@@ -226,15 +235,18 @@
     justify-content: center;
     align-items: center;
   }
-
   .tables {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     width: 100%;
-    height: calc(100% - 4rem);
+    height: max-content;
+    overflow: auto;
   }
-
+  .splitscreen {
+    width: 100%;
+    height: 100%;
+  }
   span {
     color: var(--text2);
   }

@@ -12,21 +12,17 @@
   let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
 
-  //create event dispatcher
-  const dispatch = createEventDispatcher();
-  function forwardId(object) {
-    dispatch("message", object);
-  }
+  $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
 
   //sortTable
-  function sortTable(data, columnKey) {
+  function sortTable(columnKey) {
     if (columnKey === sortColumn) {
       sortAscending = !sortAscending;
     } else {
       sortAscending = true;
       sortColumn = columnKey;
     }
-    const sortedData = data.sort((a, b) => {
+    const sortedData = tableData.sort((a, b) => {
       const valueA = a[columnKey];
       const valueB = b[columnKey];
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
@@ -38,19 +34,27 @@
     }
   }
 
+  const dispatch = createEventDispatcher();
+
+  function forwardId(object) {
+    dispatch("message", object);
+  }
+  //log all state variables
+
   onMount(() => {
-    sortTable(tableData, tableHeadings[0]);
+    sortTable(tableHeadings[0]);
   });
 </script>
 
 <div class="content">
+  <h1>Indkøbskurv</h1>
   <!-- ! table -->
   <div class="table">
     <table>
       <thead>
         <tr>
           {#each tableHeadings as heading}
-            <th on:click={() => sortTable(tableData, heading)}>{heading}</th>
+            <th on:click={() => sortTable(heading)}>{heading}</th>
           {/each}
         </tr>
       </thead>
@@ -73,15 +77,17 @@
 </div>
 
 <style>
+  /* pegination */
+
   .content {
     padding: 1rem 1rem;
-    display: grid;
-    grid-template-rows: 40px auto 2.5rem;
-    gap: 0.5rem;
+    display: block;
+
     width: 100%;
-    overflow-y: hidden;
-    height: 100%;
+    overflow-y: auto;
   }
+
+  /* table */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -112,5 +118,8 @@
   }
   tr {
     height: 3rem;
+  }
+  h1 {
+    height: 48px;
   }
 </style>

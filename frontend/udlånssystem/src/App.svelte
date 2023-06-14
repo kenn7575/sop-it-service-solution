@@ -1,7 +1,7 @@
 <script lang="ts">
   import { currentUser, loginViaSession } from "./services/login";
   import { Router, Route } from "svelte-routing";
-  import axios from "axios";
+  import DropZone from "./components/drop-zone.svelte";
 
   //login page
   import NotLoggedIn from "./pages/login/index.svelte";
@@ -41,13 +41,6 @@
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
-
-  // $: console.log("user", $currentUser);
-
-  $: loading = true;
-  loginViaSession().then(() => {
-    loading = false;
-  });
 
   import "./axiosConfig.js";
 
@@ -131,6 +124,7 @@
   </div>
 {:else}
   <!-- if not logged in -->
+
   {#await loginViaSession()}
     <Loading />
   {:then res}
