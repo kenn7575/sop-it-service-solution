@@ -20,10 +20,12 @@
 
   let roles = [];
   let educations = [];
+
   onMount(async () => {
     roles = await getData("roles");
-
     educations = await getData("educations");
+    education = educations[0].UUID;
+    role = roles[0].UUID;
   });
   let errorMessages = "";
 
@@ -65,9 +67,11 @@
   <div class="form">
     <form id="user-form" on:submit={login}>
       <div class="question">
-        <label for class:error={errorMessages}>Fornavn <span>*</span></label>
+        <label for="a1" class:error={errorMessages}
+          >Fornavn <span>*</span></label
+        >
         <input
-          id="firstName"
+          id="a1"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={new_user.firstName}
@@ -78,11 +82,11 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="lastName" class:error={errorMessages}
+        <label for="a2" class:error={errorMessages}
           >Efternavn <span>*</span></label
         >
         <input
-          id="lastName"
+          id="a2"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -93,11 +97,11 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="password" class:error={errorMessages}
+        <label for="a3" class:error={errorMessages}
           >Adgangskode <span>*</span></label
         >
         <input
-          id="password"
+          id="a3"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -108,11 +112,11 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="unilogin" class:error={errorMessages}
+        <label for="a4" class:error={errorMessages}
           >Uni-login <span>*</span></label
         >
         <input
-          id="unilogin"
+          id="a4"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -123,11 +127,10 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="email" class:error={errorMessages}
-          >Email <span>*</span></label
+        <label for="a5" class:error={errorMessages}>E-mail <span>*</span></label
         >
         <input
-          id="email"
+          id="a5"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -138,11 +141,11 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="street1" class:error={errorMessages}
+        <label for="a6" class:error={errorMessages}
           >Vejnavn <span>*</span></label
         >
         <input
-          id="street1"
+          id="a6"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -153,9 +156,9 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="street2" class:error={errorMessages}>Etage </label>
+        <label for="a7" class:error={errorMessages}>Etage </label>
         <input
-          id="street2"
+          id="a7"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -165,8 +168,9 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label class:error={errorMessages}>City <span>*</span></label>
+        <label for="a8" class:error={errorMessages}>City <span>*</span></label>
         <input
+          id="a8"
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
@@ -190,19 +194,29 @@
         />
       </div>
       <div class="question">
-        <label class:error={errorMessages}>Bruger rolle <span>*</span></label>
-
-        <select
-          required
-          name="cars"
-          id="cars"
-          form="user-form"
-          bind:value={new_user.role}
+        <label for="role" class:error={errorMessages}
+          >Bruger rolle <span>*</span></label
         >
+
+        <select id="role" required form="user-form" bind:value={role}>
           <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
             <option id="role" value={role.UUID}>{role.name}</option>
-            <label for="role">Postnummer </label>
+          {/each}
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="education" class:error={errorMessages}
+          >Uddannelse<span>*</span></label
+        >
+
+        <select id="education" required form="user-form" bind:value={education}>
+          <option selected disabled>Vælg fra liste</option>
+          {#each educations as education}
+            <option id="education" value={education.UUID}
+              >{education.name}</option
+            >
           {/each}
         </select>
       </div>
@@ -227,6 +241,8 @@
     border: var(--text1) 1px solid;
     border-radius: 10px;
     background: var(--bg1);
+    font-size: 1rem;
+    padding: 10px 15px;
   }
 
   .content {
