@@ -1,5 +1,5 @@
 <script>
-  import profilePic from "../../public/profile.png";
+  import profilePic from "../../../../mappePaaServeren/profile.png";
   import { currentUser } from "../services/login";
 
   $: user = $currentUser;
@@ -7,7 +7,7 @@
 
 <div class="content">
   <div class="info">
-    <img src={user.img_name ? `/public/${user.img_name}.png` : profilePic} alt="profilePic" />
+    <img src={user.img_name ? `../../../../mappe_på_serveren/${user.img_name}.png` : profilePic} alt="profilePic" />
     <div class="text">
       <h3>{user.name || "Søren"} </h3>
       <p>{user.username || "søren69420"}</p>
