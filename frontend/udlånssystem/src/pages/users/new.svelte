@@ -2,18 +2,21 @@
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
-  $: firstName = "";
-  $: lastName = "";
-  $: password = "";
-  $: unilogin = "";
-  $: email = "";
-  $: role = "";
-  $: education = "";
-  $: street1 = "";
-  $: street2 = "";
-  $: zip = "";
-  $: city = "";
-  $: profilePicture = "";
+
+  $: new_user = {
+    firstName: "",
+    lastName: "",
+    password: "",
+    unilogin: "",
+    email: "",
+    role: "",
+    education: "",
+    street1: "",
+    street2: "",
+    zip: "",
+    city: "",
+    profilePicture: "",
+  }
 
   let roles = [];
   let educations = [];
@@ -36,26 +39,26 @@
   function validateEmail(email) {}
 
   function clearPicture() {
-    profilePicture = "";
+    new_user.profilePicture = "";
   }
   function handleFileDrop(event) {
-    profilePicture = event.detail;
+    new_user.profilePicture = event.detail;
   }
 </script>
 
 <div class="content">
   <div class="image-upload">
     <img
-      src={profilePicture
-        ? profilePicture
+      src={new_user.profilePicture
+        ? new_user.profilePicture
         : "https://img.freepik.com/free-icon/user_318-563642.jpg"}
       alt="Profile picture"
     />
     <div class="buttons">
-      <button disabled={profilePicture === ""} on:click={clearPicture}
+      <button disabled={new_user.profilePicture === ""} on:click={clearPicture}
         >Slet</button
       >
-      <button disabled={profilePicture === ""}>Gem</button>
+      <button disabled={new_user.profilePicture === ""}>Gem</button>
     </div>
     <DropZone on:message={handleFileDrop} />
   </div>
@@ -67,7 +70,7 @@
           id="firstName"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={firstName}
+          bind:value={new_user.firstName}
           autocomplete="off"
           class="text"
           type="text"
@@ -83,7 +86,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={lastName}
+          bind:value={new_user.lastName}
           class="text"
           type="text"
           required
@@ -98,7 +101,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={password}
+          bind:value={new_user.password}
           class="text"
           type="password"
           required
@@ -113,7 +116,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={unilogin}
+          bind:value={new_user.unilogin}
           class="text"
           type="text"
           required
@@ -128,7 +131,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={email}
+          bind:value={new_user.email}
           class="text"
           type="text"
           required
@@ -143,7 +146,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={street1}
+          bind:value={new_user.street1}
           class="text"
           type="text"
           required
@@ -156,7 +159,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={street2}
+          bind:value={new_user.street2}
           class="text"
           type="text"
         />
@@ -167,7 +170,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={city}
+          bind:value={new_user.city}
           class="text"
           type="text"
           required
@@ -179,7 +182,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={zip}
+          bind:value={new_user.zip}
           class="text"
           id="zip"
           type="text"
@@ -194,7 +197,7 @@
           name="cars"
           id="cars"
           form="user-form"
-          bind:value={role}
+          bind:value={new_user.role}
         >
           <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
@@ -223,6 +226,7 @@
     height: 40px;
     border: var(--text1) 1px solid;
     border-radius: 10px;
+    background: var(--bg1);
   }
 
   .content {
