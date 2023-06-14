@@ -2,17 +2,18 @@
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
+  import validate from "../../services/validateNewUser.js";
 
   $: new_user = {
     firstName: "",
     lastName: "",
     password: "",
     unilogin: "",
-    email: "",
+    mail: "",
     role: "",
     education: "",
     street1: "",
-    street2: "",
+    street2: null,
     zip: "",
     city: "",
     profilePicture: "",
@@ -30,7 +31,8 @@
   let errorMessages = "";
 
   import { currentUser, loginViaCredentials } from "../../services/login";
-  $: console.log("user", $currentUser);
+  import axios from "axios";
+  // $: console.log("user", $currentUser);
 
   async function login(e) {
     e.preventDefault();
@@ -46,10 +48,24 @@
   function handleFileDrop(event) {
     new_user.profilePicture = event.detail;
   }
+
+  function handleSubmit(e) {
+    if (validate(new_user)) {
+      return (errorMessages = validate(new_user));
+    }
+
+    console.log(new_user);
+    axios
+      .post("/create_user.php", { new_user: JSON.stringify(new_user) })
+      .then((res) => {
+        if (res) console.log("Bruger oprettet");
+      });
+  }
 </script>
 
 <div class="content">
   <div class="image-upload">
+    <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
       src={new_user.profilePicture
         ? new_user.profilePicture
@@ -71,7 +87,7 @@
           >Fornavn <span>*</span></label
         >
         <input
-          id="a1"
+          id="firstName"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={new_user.firstName}
@@ -134,7 +150,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.email}
+          bind:value={new_user.mail}
           class="text"
           type="text"
           required
@@ -190,8 +206,8 @@
           on:focus={resetError}
           bind:value={new_user.zip}
           class="text"
-          id="a9"
-          type="number"
+          id="zip"
+          type="text"
           required
         />
       </div>
@@ -228,7 +244,7 @@
         </select>
       </div>
 
-      <button>Opret bruger</button>
+      <button on:click={handleSubmit}>Opret bruger</button>
     </form>
   </div>
 </div>
@@ -382,6 +398,7 @@
     border-color: var(--s) !important;
     color: var(--s) !important;
   }
+
   .errorMessage {
     color: var(--s) !important;
     font-weight: 400 !important;

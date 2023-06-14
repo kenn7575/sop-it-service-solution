@@ -1,5 +1,6 @@
 <script>
   import profilePic from "../../../../mappePaaServeren/profile.png";
+  import pic from "../../../../mappePaaServeren/gulerodder.png";
   import { currentUser } from "../services/login";
 
   $: user = $currentUser;
@@ -9,7 +10,8 @@
   <div class="info">
     {#if user}
       <img
-        src={user.img_name ? `../../../../mappePaaServeren${user.img_name}.png` : profilePic}
+      
+        src={user.img_name ? `../../../../mappePaaServeren/${user.img_name}.png` : profilePic}
         alt="profilePic"
       />
     {:else}
