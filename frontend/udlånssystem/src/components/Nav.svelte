@@ -13,7 +13,10 @@
       <img src={logo} alt="logo" />
       <div class="text">
         <h1>Udlånssystem</h1>
-        <h2>By Kenni & Nima</h2>
+        <h2>
+          By <a target="_blank" href="https://github.com/kenn7575">Kenni</a> &
+          <a target="_blank" href="https://github.com/ItzNimaB">Nima</a>
+        </h2>
       </div>
     </div>
     <div class="search">
@@ -148,10 +151,12 @@
     font-size: 1.75rem;
     font-weight: 500;
   }
-  h2 {
+  h2,
+  a {
     font-size: 1rem;
     color: var(--text2);
     font-weight: 400;
+    text-decoration: none;
   }
   hr {
     width: 100%;

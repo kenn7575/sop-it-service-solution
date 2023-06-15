@@ -2,32 +2,47 @@
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
+  import axios from "axios";
 
   let editMode = false;
+  export let id;
 
-  $: new_user = {
-    firstName: "info",
-    lastName: "",
-    password: "",
-    unilogin: "",
-    email: "",
-    role: "",
-    education: "",
-    street1: "",
-    street2: "",
-    zip: "",
-    city: "",
-    profilePicture: "",
-  };
-
+  //get data for select options
   let roles = [];
   let educations = [];
+
+  $: userInput = {};
+  $: user = {};
+
+  $: userAddressInput = {};
+  $: userAddress = {};
+
   onMount(async () => {
     roles = await getData("roles");
     educations = await getData("educations");
-    new_user.education = educations[0].UUID;
-    new_user.role = roles[0].UUID;
+    let userInput = await getData("users", id);
+    user = userInput[0];
+    if (user.address_id !== null) {
+      userAddress = await getData("addresses", user.address_id);
+      userAddress = userAddress[0];
+    }
   });
+
+  function handleUserUpdate() {
+    const combinedUser = { ...userAddress, ...user };
+    console.log(combinedUser, "combinedUser");
+    axios
+      .post("update_user.php", combinedUser)
+      .then((res) => {
+        if (res) console.log(res);
+        editMode = false;
+        alert("Bruger opdateret");
+      })
+      .catch((err) => {
+        alert("Felf! " + err);
+      });
+  }
+
   let errorMessages = "";
 
   function toggleEditMode() {
@@ -37,22 +52,22 @@
     errorMessages = "";
   }
   function clearPicture() {
-    new_user.profilePicture = "";
+    user.profilePicture = "";
   }
   function handleFileDrop(event) {
-    new_user.profilePicture = event.detail;
+    user.profilePicture = event.detail;
   }
 </script>
 
 <div class="content">
   <div class="image-upload">
     <img
-      src={new_user.profilePicture
-        ? new_user.profilePicture
+      src={user.profilePicture
+        ? user.profilePicture
         : "https://img.freepik.com/free-icon/user_318-563642.jpg"}
       alt="Profile picture"
     />
-    {#if editMode && new_user.profilePicture}
+    {#if editMode && user.profilePicture}
       <button id="clear-picture" on:click={clearPicture}
         ><i class="fa-solid fa-trash" /></button
       >
@@ -65,7 +80,7 @@
         on:click={clearPicture}>Annuller</button
       >
       {#if editMode}
-        <button>Gem</button>
+        <button on:click={handleUserUpdate}>Gem</button>
       {:else}
         <button on:click={toggleEditMode}>Rediger</button>
       {/if}
@@ -74,27 +89,12 @@
       <DropZone on:message={handleFileDrop} />
     {/if}
   </div>
+
   <div class="form">
     <form id="user-form">
-      <div class="question">
-        <label for="a1" class:error={errorMessages}
-          >Fornavn <span class:hidden={!editMode}>*</span></label
-        >
-        <input
-          id="a1"
-          disabled={!editMode}
-          class:error={errorMessages}
-          on:focus={resetError}
-          bind:value={new_user.firstName}
-          autocomplete="off"
-          class="text"
-          type="text"
-          required
-        />
-      </div>
       <div class="question" class:error={errorMessages}>
         <label for="a2" class:error={errorMessages}
-          >Efternavn <span class:hidden={!editMode}>*</span></label
+          >Navn <span class:hidden={!editMode}>*</span></label
         >
         <input
           id="a2"
@@ -102,28 +102,13 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.lastName}
+          bind:value={user.name}
           class="text"
           type="text"
           required
         />
       </div>
-      <div class="question" class:error={errorMessages}>
-        <label for="a3" class:error={errorMessages}
-          >Adgangskode <span class:hidden={!editMode}>*</span></label
-        >
-        <input
-          id="a3"
-          disabled={!editMode}
-          autocomplete="off"
-          class:error={errorMessages}
-          on:focus={resetError}
-          bind:value={new_user.password}
-          class="text"
-          type="password"
-          required
-        />
-      </div>
+
       <div class="question" class:error={errorMessages}>
         <label for="a4" class:error={errorMessages}
           >Uni-login <span class:hidden={!editMode}>*</span></label
@@ -134,7 +119,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.unilogin}
+          bind:value={user.username}
           class="text"
           type="text"
           required
@@ -150,7 +135,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.email}
+          bind:value={user.mail}
           class="text"
           type="text"
           required
@@ -166,28 +151,28 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.street1}
+          bind:value={userAddress.address_line_1}
           class="text"
           type="text"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="a7" class:error={errorMessages}>Etage </label>
+        <label for="a7" class:error={errorMessages}>Etage mm.</label>
         <input
           id="a7"
           disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.street2}
+          bind:value={userAddress.address_line_2}
           class="text"
           type="text"
         />
       </div>
       <div class="question" class:error={errorMessages}>
         <label for="a8" class:error={errorMessages}
-          >City <span class:hidden={!editMode}>*</span></label
+          >By <span class:hidden={!editMode}>*</span></label
         >
         <input
           id="a8"
@@ -195,7 +180,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.city}
+          bind:value={userAddress.city}
           class="text"
           type="text"
           required
@@ -210,7 +195,7 @@
           disabled={!editMode}
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={new_user.zip}
+          bind:value={userAddress.postal_code}
           class="text"
           id="a9"
           type="number"
@@ -227,9 +212,8 @@
           id="a10"
           required
           form="user-form"
-          bind:value={new_user.role}
+          bind:value={user.role_id}
         >
-          <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
             <option id="role" value={role.UUID}>{role.name}</option>
           {/each}
@@ -246,12 +230,13 @@
           id="a11"
           required
           form="user-form"
-          bind:value={new_user.education}
+          bind:value={user.education_id}
         >
-          <option selected disabled>Vælg fra liste</option>
           {#each educations as education}
-            <option id="education" value={education.UUID}
-              >{education.name}</option
+            <option
+              selected={education.UUID === user.education_id}
+              id="education"
+              value={education.UUID}>{education.name}</option
             >
           {/each}
         </select>
@@ -271,8 +256,10 @@
     background: var(--s);
     border: none;
     transform: translateX(-40px);
+    cursor: pointer;
+    outline: 4px solid var(--bg2);
   }
-  .clear-picture:focus {
+  #clear-picture:focus {
     outline: 4px solid var(--text1);
   }
   .hidden {
@@ -402,6 +389,9 @@
     display: block;
     z-index: 2;
     pointer-events: none;
+  }
+  .question {
+    margin-bottom: 1rem;
   }
   form .question input.text {
     appearance: none;

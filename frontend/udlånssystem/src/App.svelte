@@ -33,9 +33,6 @@
   import productTypesEdit from "./pages/productTypes/edit.svelte";
   import loansEdit from "./pages/loans/edit.svelte";
 
-  //dynamic pages import - details
-  import usersDetails from "./pages/users/details.svelte";
-
   //new pages import
   import usersNew from "./pages/users/new.svelte";
   import productsNew from "./pages/products/new.svelte";
@@ -104,11 +101,8 @@
           <Route path="udlaan" component={Loans} />
           <Route path="help" component={Help} />
 
-          <!-- dynamic routs details-->
-          <Route path="brugere/details/:id" component={usersDetails} />
-
           <!-- dynsmic routes edit -->
-          <Route path="brugere/edit/:id" component={usersEdit} />
+          <Route path="brugere/:id" component={usersEdit} />
 
           <Route path="produkter/edit/:id" component={productsEdit} />
           <Route path="brands/edit/:id" component={brandsEdit} />
