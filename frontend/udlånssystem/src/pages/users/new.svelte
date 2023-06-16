@@ -197,26 +197,26 @@
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="a9" class:error={errorMessages}
-          >Postnummer <span>*</span></label
-        >
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class:error={errorMessages}>Postnummer <span>*</span></label>
         <input
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
           bind:value={new_user.zip}
           class="text"
-          id="zip"
-          type="text"
+          id="postnummer"
+          pattern="[0-9]{4}"
+          type="number"
           required
         />
       </div>
       <div class="question">
-        <label for="a10" class:error={errorMessages}
+        <label for="role" class:error={errorMessages}
           >Bruger rolle <span>*</span></label
         >
 
-        <select id="a10" required form="user-form" bind:value={new_user.role}>
+        <select id="role" required form="user-form" bind:value={new_user.role}>
           <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
             <option id="role" value={role.UUID}>{role.name}</option>
@@ -225,12 +225,12 @@
       </div>
 
       <div class="question">
-        <label for="a11" class:error={errorMessages}
+        <label for="education" class:error={errorMessages}
           >Uddannelse<span>*</span></label
         >
 
         <select
-          id="a11"
+          id="education"
           required
           form="user-form"
           bind:value={new_user.education}
