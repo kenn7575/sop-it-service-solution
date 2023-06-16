@@ -16,7 +16,7 @@
     "dev": "nodemon backend/index.js",
     "i-frontend": "cd frontend/udlånssystem && npm install",
     "dev-frontend": "cd frontend/udlånssystem && npm run dev",
-    "backend": "cd backend/routes && concurrently \"php -S localhost:5000\" \"php -S 172.16.3.33:5000\"",
+    "backend": "cd backend/routes && concurrently \"php -S localhost:5000\" \"php -S 172.16.3.102:5000\"",
     "test": "vitest"
   },
   "devDependencies": {
