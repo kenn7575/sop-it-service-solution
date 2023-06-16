@@ -30,11 +30,9 @@
 
   function handleUserUpdate() {
     const combinedUser = { ...userAddress, ...user };
-    console.log(combinedUser, "combinedUser");
     axios
       .post("update_user.php", combinedUser)
       .then((res) => {
-        if (res) console.log(res.data);
         editMode = false;
         alert("Bruger opdateret");
       })
