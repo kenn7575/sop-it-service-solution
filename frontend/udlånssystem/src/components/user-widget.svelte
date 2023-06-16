@@ -10,8 +10,7 @@
   <div class="info">
     {#if user}
       <img
-      
-        src={user.img_name ? `../../../../mappePaaServeren/${user.img_name}.png` : profilePic}
+        src={user.img_name ? pic : profilePic}        
         alt="profilePic"
       />
     {:else}

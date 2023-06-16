@@ -33,7 +33,7 @@
     axios
       .post("update_user.php", userExport)
       .then((res) => {
-        if (res) console.log(res);
+        if (res) console.log(res.data);
         editMode = false;
         alert("Bruger opdateret");
       })

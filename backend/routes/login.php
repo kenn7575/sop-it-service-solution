@@ -1,14 +1,9 @@
 <?php
 include "headers.php";
+include "admin_db_conn.php";
 
 $username = $_POST['username'] ?? "";
 $password = $_POST['password'] ?? "";
-
-$conn = new mysqli("127.0.0.1", $env['ADMIN_USERNAME'], $env['ADMIN_PASSWORD'], "sop", '3306');
-
-if ($conn->connect_error) {
-  die(json_encode([['message'=>$conn->connect_error]], JSON_PRETTY_PRINT));
-}
 
 $result = $conn->query("SELECT * FROM users WHERE username = '$username'");
 
