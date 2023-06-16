@@ -6,9 +6,8 @@
   import { onMount } from "svelte";
 
   //Data to be sent
-  let user = { id: "", unilogin: "" };
+  let user = {};
   let products = [];
-
   let info = {
     returnDate: "",
     department: "",
@@ -18,6 +17,8 @@
   };
 
   //data
+  let inputDataUser = [[]]; //get data onMount
+  let inputDataProducts = [[]]; //get data onMount
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
@@ -28,32 +29,38 @@
 
   //Users
   function handleUserSelection(event) {
+    console.log(event.detail);
     user = event.detail;
     page++;
   }
-
-  let inputDataUser = [[]]; //get data onMount
-
-  function validateUser() {
-    if (user.id == "") return false;
-    if (user.unilogin == "") return false;
+  function userIsValid() {
+    if (!user.UUID) return false;
     return true;
   }
 
   //Products
-  let inputDataProducts = [[]]; //get data onMount
   function validateProducts() {
     if (products.length == 0) {
       return false;
     }
     return true;
   }
+
   function handleAddProduct(event) {
     //move product from inputDataProducts to products
     let product = event.detail;
     products.push(product);
     products = products;
     inputDataProducts = inputDataProducts.filter((item) => {
+      return item.UUID !== product.UUID;
+    });
+  }
+  function handleRemoveProduct(event) {
+    //move product from products to inputDataProducts
+    let product = event.detail;
+    inputDataProducts.push(product);
+    inputDataProducts = inputDataProducts;
+    products = products.filter((item) => {
       return item.UUID !== product.UUID;
     });
   }
@@ -90,15 +97,15 @@
         page = 1;
       }}
       class:current={1 === page}
-      class:invalid={page > 1 && !validateUser()}
-      class:valid={page > 1 && validateUser()}
+      class:invalid={page > 1 && !userIsValid()}
+      class:valid={page > 1 && userIsValid()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-user" />
       <p>Bruger</p>
-      {#if user.unilogin}
+      {#if user.Brugernavn}
         <span>|</span>
-        <span>{user.unilogin} </span>
+        <span>{user.Brugernavn} </span>
       {/if}
     </button>
     <i class="fa-solid fa-angles-right" />
@@ -113,10 +120,10 @@
     >
       <i class="fa-solid fa-cart-shopping" />
       <p>Produkter</p>
-      <!-- {#if products.length > 0}
-      <span>|</span>
-      <span>{products.length} gendstande</span>
-    {/if} -->
+      {#if products.length > 0}
+        <span>|</span>
+        <span>{products.length}</span>
+      {/if}
     </button>
     <i class="fa-solid fa-angles-right" />
     <button
@@ -160,7 +167,10 @@
         <Table on:message={handleAddProduct} inputData={inputDataProducts} />
       </div>
       {#if products.length > 0}
-        <TableSimplified inputData={products} />
+        <TableSimplified
+          on:message={handleRemoveProduct}
+          inputData={products}
+        />
       {:else}
         <div class="center">
           <p>Tryk for at tilføje produkter</p>
@@ -236,11 +246,10 @@
     align-items: center;
   }
   .tables {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+
     gap: 1rem;
     width: 100%;
-    height: max-content;
     overflow: auto;
   }
   .splitscreen {
