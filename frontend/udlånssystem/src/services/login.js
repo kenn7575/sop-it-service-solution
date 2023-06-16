@@ -10,7 +10,7 @@ export const getSession = () => {
 export const validateSession = async (token) => {
   let data = axios
     .post(
-      "http://172.16.3.33:5000/validate.php",
+      "http://172.16.3.102:5000/validate.php",
       { token: token },
       { headers: { "Content-type": "application/x-www-form-urlencoded" } }
     )
