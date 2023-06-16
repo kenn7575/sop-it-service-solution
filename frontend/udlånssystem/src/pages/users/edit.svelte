@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
   import axios from "axios";
+  import type { UserModel } from "../../types/user";
 
   let editMode = false;
   export let id;
@@ -11,27 +12,26 @@
   let roles = [];
   let educations = [];
 
-  $: userInput = {};
-  $: user = {};
-
-  $: userAddressInput = {};
-  $: userAddress = {};
+  let picture;
+  let userImport: UserModel;
+  let userExport: UserModel;
 
   onMount(async () => {
     roles = await getData("roles");
     educations = await getData("educations");
-    let userInput = await getData("users", id);
-    user = userInput[0];
-    if (user.address_id !== null) {
-      userAddress = await getData("addresses", user.address_id);
-      userAddress = userAddress[0];
+    try {
+      userImport = await getData("users", id);
+      userExport = userImport;
+    } catch (error) {
+      console.log(error);
     }
   });
 
   function handleUserUpdate() {
-    const combinedUser = { ...userAddress, ...user };
+    if (userExport === userImport) {
+    }
     axios
-      .post("update_user.php", combinedUser)
+      .post("update_user.php", userExport)
       .then((res) => {
         editMode = false;
         alert("Bruger opdateret");
@@ -46,26 +46,29 @@
   function toggleEditMode() {
     editMode = !editMode;
   }
+  function resetPage() {
+    userExport;
+  }
   function resetError() {
     errorMessages = "";
   }
   function clearPicture() {
-    user.profilePicture = "";
+    picture = "";
   }
   function handleFileDrop(event) {
-    user.profilePicture = event.detail;
+    picture = event.detail;
   }
 </script>
 
 <div class="content">
   <div class="image-upload">
     <img
-      src={user.profilePicture
-        ? user.profilePicture
+      src={picture
+        ? picture
         : "https://img.freepik.com/free-icon/user_318-563642.jpg"}
       alt="Profile picture"
     />
-    {#if editMode && user.profilePicture}
+    {#if editMode && picture}
       <button id="clear-picture" on:click={clearPicture}
         ><i class="fa-solid fa-trash" /></button
       >
@@ -100,7 +103,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={user.name}
+          bind:value={userExport.Name}
           class="text"
           type="text"
           required
@@ -117,7 +120,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={user.username}
+          bind:value={userExport.Username}
           class="text"
           type="text"
           required
@@ -133,7 +136,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={user.mail}
+          bind:value={userExport.Mail}
           class="text"
           type="text"
           required
@@ -149,7 +152,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userAddress.address_line_1}
+          bind:value={userExport.Address.StreetLine1}
           class="text"
           type="text"
           required
@@ -163,7 +166,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userAddress.address_line_2}
+          bind:value={userExport.Address.StreetLine2}
           class="text"
           type="text"
         />
@@ -178,7 +181,7 @@
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userAddress.city}
+          bind:value={userExport.Address.City}
           class="text"
           type="text"
           required
@@ -193,7 +196,7 @@
           disabled={!editMode}
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userAddress.postal_code}
+          bind:value={userExport.Address.PostalCode}
           class="text"
           id="a9"
           type="number"
@@ -210,12 +213,13 @@
           id="a10"
           required
           form="user-form"
-          bind:value={user.role_id}
+          bind:value={userExport.Role}
         >
           {#each roles as role}
-            <option id="role" value={role.UUID}>{role.name}</option>
+            <option id="role" value={role}>{role.name}</option>
           {/each}
         </select>
+        <!-- Todo: make sure that select option value role comform to roleModel -->
       </div>
 
       <div class="question">
@@ -228,13 +232,13 @@
           id="a11"
           required
           form="user-form"
-          bind:value={user.education_id}
+          bind:value={userExport.Education}
         >
           {#each educations as education}
             <option
-              selected={education.UUID === user.education_id}
+              selected={education.UUID === userExport.Education.UUID}
               id="education"
-              value={education.UUID}>{education.name}</option
+              value={education}>{education.name}</option
             >
           {/each}
         </select>

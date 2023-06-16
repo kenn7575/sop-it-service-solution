@@ -13,7 +13,10 @@
 
   //import data
   export let inputData = [];
-  $: currentPath = $path;
+
+  //resort data every time inputData changes
+  $: inputData && sortTable(inputData, sortColumn);
+
   //split data into tableData and tableHeadings
   $: tableHeadings = Object.keys(inputData[0]);
   $: tableData = Object.values(inputData);
@@ -36,12 +39,14 @@
   }
 
   //sortTable
-  function sortTable(data, columnKey) {
-    if (columnKey === sortColumn) {
-      sortAscending = !sortAscending;
-    } else {
-      sortAscending = true;
-      sortColumn = columnKey;
+  function sortTable(data, columnKey, disableActiveSort) {
+    if (disableActiveSort !== true) {
+      if (columnKey === sortColumn) {
+        sortAscending = !sortAscending;
+      } else {
+        sortAscending = true;
+        sortColumn = columnKey;
+      }
     }
     const sortedData = data.sort((a, b) => {
       const valueA = a[columnKey];
@@ -282,6 +287,7 @@
     width: 100%;
     overflow-y: hidden;
     height: 100%;
+    min-height: 35rem;
   }
 
   /* table */
