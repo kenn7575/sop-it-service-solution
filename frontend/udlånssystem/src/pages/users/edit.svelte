@@ -14,6 +14,7 @@
 
   let picture;
   let userImport: UserModel;
+  $: console.log("🚀 ~ file: edit.svelte:17 ~ userImport:", userImport);
   let userExport: UserModel;
 
   onMount(async () => {
@@ -49,34 +50,35 @@
     }
   });
 
-  function isAddressValid(addressId){
-    if(addressId === null){
+  function isAddressValid(addressId) {
+    if (addressId === null) {
       return false;
     }
-    if(addressId.street_line_1 === null){
+    if (addressId.street_line_1 === null) {
       return false;
     }
-    if(addressId.street_line_2 === null){
+    if (addressId.street_line_2 === null) {
       return false;
     }
-    if(addressId.city === null){
+    if (addressId.city === null) {
       return false;
     }
-    if(addressId.postal_code === null){
+    if (addressId.postal_code === null) {
       return false;
     }
     return true;
   }
   function handleUserUpdate() {
+    console.log(userExport, userImport);
     if (userExport === userImport) {
-      return
+      alert("Ingen ændringer");
+      return;
     }
-    if(!isAddressValid(userExport.address_id)){
-      addres
+    if (!isAddressValid(userExport.address_id)) {
+      userExport.address_id = null;
+    }
+    console.log(userExport);
 
-    }
-    
-    
     axios
       .post("update_user.php", userExport)
       .then((res) => {
@@ -94,7 +96,7 @@
     editMode = !editMode;
   }
   function resetPage() {
-    userExport;
+    userExport = userImport;
   }
   function resetError() {
     errorMessages = "";
@@ -126,7 +128,7 @@
         <button
           on:click={toggleEditMode}
           disabled={!editMode}
-          on:click={clearPicture}>Annuller</button
+          on:click={resetPage}>Annuller</button
         >
         {#if editMode}
           <button on:click={handleUserUpdate}>Gem</button>
@@ -201,7 +203,7 @@
             autocomplete="off"
             class:error={errorMessages}
             on:focus={resetError}
-            bind:value={userExport.address_id.street_line_1}
+            bind:value={userExport.address_id.address_line_1}
             class="text"
             type="text"
             required
@@ -215,7 +217,7 @@
             autocomplete="off"
             class:error={errorMessages}
             on:focus={resetError}
-            bind:value={userExport.address_id.street_line_2}
+            bind:value={userExport.address_id.address_line_2}
             class="text"
             type="text"
           />
