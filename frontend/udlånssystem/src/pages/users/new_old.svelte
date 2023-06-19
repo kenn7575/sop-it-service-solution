@@ -2,277 +2,232 @@
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
-  import axios from "axios";
+  import validate from "../../services/validateNewUser.js";
   import type { UserModel } from "../../types/userModel";
-  import type { AddressModel } from "../../types/addressModel";
-  import { currentUser } from "../../services/login";
-  import { navigate } from "svelte-routing/src/history";
 
-  $: user = $currentUser;
+  let exportUser: UserModel;
 
-  let editMode = false;
-  export let id;
-
-  //get data for select options
   let roles = [];
   let educations = [];
 
-  let picture;
-
-  let userExport: UserModel;
-
   onMount(async () => {
-    try {
-      console.log(user);
-      roles = await axios
-        .post("roles.php", { role_id: user.role_id })
-        .then((res) => {
-          return res.data;
-        });
-
-      educations = await axios.get("educations.php").then((res) => {
-        return res.data;
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    roles = await getData("roles");
+    educations = await getData("educations");
+    exportUser.education_id = educations[0].UUID;
+    exportUser.role = roles[3].UUID;
   });
-
-  function isAddressValid(addressId: AddressModel) {
-    if (addressId === null) {
-      return false;
-    }
-    if (addressId.address_line_1 === null) {
-      return false;
-    }
-    if (addressId.address_line_2 === null) {
-      return false;
-    }
-    if (addressId.city === null) {
-      return false;
-    }
-    if (addressId.postal_code === null) {
-      return false;
-    }
-    return true;
-  }
-
-  function handleUserUpdate() {
-    if (!isAddressValid(userExport.address_id)) {
-      userExport.address_id = null;
-    }
-
-    axios
-      .post("update_userV2.php", userExport)
-      .then((res) => {
-        editMode = false;
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
-  }
 
   let errorMessages = "";
 
-  function toggleEditMode() {
-    editMode = !editMode;
-  }
+  import { currentUser, loginViaCredentials } from "../../services/login";
+  import axios from "axios";
+  // $: console.log("user", $currentUser);
 
+  async function login(e) {
+    e.preventDefault();
+  }
   function resetError() {
     errorMessages = "";
   }
+  function validateEmail(email) {}
+
   function clearPicture() {
-    picture = "";
+    new_user.profilePicture = "";
   }
   function handleFileDrop(event) {
-    picture = event.detail;
+    new_user.profilePicture = event.detail;
+  }
+
+  function handleSubmit(e) {
+    if (validate(new_user)) {
+      return (errorMessages = validate(new_user));
+    }
+
+    console.log(new_user);
+    axios
+      .post("/create_user.php", { new_user: JSON.stringify(new_user) })
+      .then((res) => {
+        if (res) console.log("Bruger oprettet");
+      });
   }
 </script>
 
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-
 <div class="content">
   <div class="image-upload">
+    <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
-      src={picture
-        ? picture
+      src={new_user.profilePicture
+        ? new_user.profilePicture
         : "https://img.freepik.com/free-icon/user_318-563642.jpg"}
       alt="Profile picture"
     />
-    {#if editMode && picture}
-      <button id="clear-picture" on:click={clearPicture}
-        ><i class="fa-solid fa-trash" /></button
-      >
-    {/if}
-
     <div class="buttons">
-      <button on:click={toggleEditMode} disabled={!editMode}>Annuller</button>
-
-      <button on:click={handleUserUpdate}>Gem</button>
+      <button disabled={new_user.profilePicture === ""} on:click={clearPicture}
+        >Slet</button
+      >
+      <button on:click={handleSubmit}>Gem</button>
     </div>
-
     <DropZone on:message={handleFileDrop} />
   </div>
-
   <div class="form">
-    <form id="user-form">
+    <form id="user-form" on:submit={login}>
+      <div class="question">
+        <label for="a1" class:error={errorMessages}
+          >Fornavn <span>*</span></label
+        >
+        <input
+          id="firstName"
+          class:error={errorMessages}
+          on:focus={resetError}
+          bind:value={new_user.firstName}
+          autocomplete="off"
+          class="text"
+          type="text"
+          required
+        />
+      </div>
       <div class="question" class:error={errorMessages}>
         <label for="a2" class:error={errorMessages}
-          >Navn <span class:hidden={!editMode}>*</span></label
+          >Efternavn <span>*</span></label
         >
         <input
           id="a2"
-          disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.name}
+          bind:value={new_user.lastName}
           class="text"
           type="text"
           required
         />
       </div>
-
+      <div class="question" class:error={errorMessages}>
+        <label for="a3" class:error={errorMessages}
+          >Adgangskode <span>*</span></label
+        >
+        <input
+          id="a3"
+          autocomplete="off"
+          class:error={errorMessages}
+          on:focus={resetError}
+          bind:value={new_user.password}
+          class="text"
+          type="password"
+          required
+        />
+      </div>
       <div class="question" class:error={errorMessages}>
         <label for="a4" class:error={errorMessages}
-          >Uni-login <span class:hidden={!editMode}>*</span></label
+          >Uni-login <span>*</span></label
         >
         <input
           id="a4"
-          disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.username}
+          bind:value={new_user.unilogin}
           class="text"
           type="text"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="a5" class:error={errorMessages}
-          >E-mail <span class:hidden={!editMode}>*</span></label
+        <label for="a5" class:error={errorMessages}>E-mail <span>*</span></label
         >
         <input
           id="a5"
-          disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.mail}
+          bind:value={new_user.mail}
           class="text"
           type="text"
           required
         />
       </div>
-
       <div class="question" class:error={errorMessages}>
         <label for="a6" class:error={errorMessages}
-          >Vejnavn <span class:hidden={!editMode}>*</span></label
+          >Vejnavn <span>*</span></label
         >
         <input
           id="a6"
-          disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.address_id.address_line_1}
+          bind:value={new_user.street1}
           class="text"
           type="text"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="a7" class:error={errorMessages}>Etage mm.</label>
+        <label for="a7" class:error={errorMessages}>Etage </label>
         <input
           id="a7"
-          disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.address_id.address_line_2}
+          bind:value={new_user.street2}
           class="text"
           type="text"
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="a8" class:error={errorMessages}
-          >By <span class:hidden={!editMode}>*</span></label
-        >
+        <label for="a8" class:error={errorMessages}>City <span>*</span></label>
         <input
           id="a8"
-          disabled={!editMode}
           autocomplete="off"
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.address_id.city}
+          bind:value={new_user.city}
           class="text"
           type="text"
           required
         />
       </div>
       <div class="question" class:error={errorMessages}>
-        <label for="a9" class:error={errorMessages}
-          >Postnummer <span class:hidden={!editMode}>*</span></label
-        >
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class:error={errorMessages}>Postnummer <span>*</span></label>
         <input
           autocomplete="off"
-          disabled={!editMode}
           class:error={errorMessages}
           on:focus={resetError}
-          bind:value={userExport.address_id.postal_code}
+          bind:value={new_user.zip}
           class="text"
-          id="a9"
+          id="postnummer"
+          pattern="[0-9]{4}"
           type="number"
           required
         />
       </div>
       <div class="question">
-        <label for="a10" class:error={errorMessages}
-          >Bruger rolle <span class:hidden={!editMode}>*</span></label
+        <label for="role" class:error={errorMessages}
+          >Bruger rolle <span>*</span></label
         >
 
-        <select
-          disabled={!editMode}
-          id="a10"
-          required
-          form="user-form"
-          bind:value={userExport.role_id}
-        >
+        <select id="role" required form="user-form" bind:value={new_user.role}>
+          <option selected disabled>Vælg fra liste</option>
           {#each roles as role}
-            <option id="role" value={role}>{role.name}</option>
+            <option id="role" value={role.UUID}>{role.name}</option>
           {/each}
         </select>
       </div>
 
       <div class="question">
-        <label for="a11" class:error={errorMessages}
-          >Uddannelse<span class:hidden={!editMode}>*</span></label
+        <label for="education" class:error={errorMessages}
+          >Uddannelse<span>*</span></label
         >
 
         <select
-          disabled={!editMode}
-          id="a11"
+          id="education"
           required
           form="user-form"
-          bind:value={userExport.education_id}
+          bind:value={new_user.education}
         >
+          <option selected disabled>Vælg fra liste</option>
           {#each educations as education}
-            <option
-              selected={education.UUID === userExport.education_id.UUID}
-              id="education"
-              value={education}>{education.name}</option
+            <option id="education" value={education.UUID}
+              >{education.name}</option
             >
           {/each}
         </select>
@@ -281,39 +236,7 @@
   </div>
 </div>
 
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-<!--  -->
-
 <style>
-  button#clear-picture {
-    position: absolute;
-    width: 4rem;
-    height: 4rem;
-    right: 0;
-    font-size: 2rem;
-    border-radius: 50%;
-    background: var(--s);
-    border: none;
-    transform: translateX(-40px);
-    cursor: pointer;
-    outline: 4px solid var(--bg2);
-  }
-  #clear-picture:focus {
-    outline: 4px solid var(--text1);
-  }
-  .hidden {
-    display: none;
-  }
   .buttons {
     display: flex;
     width: 100%;
@@ -330,11 +253,6 @@
     background: var(--bg1);
     font-size: 1rem;
     padding: 10px 15px;
-  }
-  input.text:disabled,
-  select:disabled {
-    color: var(--text2) !important;
-    opacity: 1;
   }
 
   .content {
@@ -359,7 +277,6 @@
     background-color: var(--bg2);
     border-radius: 10px;
     padding: 1rem;
-    position: relative;
   }
   .form {
     width: 100%;
@@ -439,9 +356,6 @@
     z-index: 2;
     pointer-events: none;
   }
-  .question {
-    margin-bottom: 1rem;
-  }
   form .question input.text {
     appearance: none;
     background: none;
@@ -470,5 +384,12 @@
   form .question .error {
     border-color: var(--s) !important;
     color: var(--s) !important;
+  }
+  .question {
+    margin-bottom: 1rem;
+  }
+  .errorMessage {
+    color: var(--s) !important;
+    font-weight: 400 !important;
   }
 </style>

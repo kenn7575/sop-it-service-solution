@@ -34,7 +34,7 @@
   import loansEdit from "./pages/loans/edit.svelte";
 
   //new pages import
-  import usersNew from "./pages/users/new.svelte";
+  import usersNew from "./pages/users/new_old.svelte";
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
   import categoriesNew from "./pages/categories/new.svelte";

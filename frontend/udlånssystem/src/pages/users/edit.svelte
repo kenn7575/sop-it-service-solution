@@ -4,6 +4,8 @@
   import { getData } from "../../data/data";
   import axios from "axios";
   import type { UserModel } from "../../types/userModel";
+  import type { AddressModel } from "../../types/addressModel";
+  import App from "../../App.svelte";
 
   let editMode = false;
   export let id;
@@ -14,7 +16,7 @@
 
   let picture;
   let userImport: UserModel;
-  $: console.log("🚀 ~ file: edit.svelte:17 ~ userImport:", userImport);
+
   let userExport: UserModel;
 
   onMount(async () => {
@@ -32,16 +34,13 @@
         .then((res) => {
           return res.data;
         });
-      console.log(
-        "🚀 ~ file: edit.svelte:24 ~ onMount ~ userImport:",
-        userImport
-      );
-      userExport = userImport;
+
+      userExport = { ...userImport };
       if (userExport.address_id === null)
         userExport.address_id = {
           UUID: null,
-          street_line_1: null,
-          street_line_2: null,
+          address_line_1: null,
+          address_line_2: null,
           city: null,
           postal_code: null,
         };
@@ -50,14 +49,14 @@
     }
   });
 
-  function isAddressValid(addressId) {
+  function isAddressValid(addressId: AddressModel) {
     if (addressId === null) {
       return false;
     }
-    if (addressId.street_line_1 === null) {
+    if (addressId.address_line_1 === null) {
       return false;
     }
-    if (addressId.street_line_2 === null) {
+    if (addressId.address_line_2 === null) {
       return false;
     }
     if (addressId.city === null) {
@@ -68,6 +67,7 @@
     }
     return true;
   }
+
   function handleUserUpdate() {
     console.log(userExport, userImport);
     if (userExport === userImport) {
@@ -77,13 +77,11 @@
     if (!isAddressValid(userExport.address_id)) {
       userExport.address_id = null;
     }
-    console.log(userExport);
 
     axios
-      .post("update_user.php", userExport)
+      .post("update_userV2.php", userExport)
       .then((res) => {
         editMode = false;
-        alert("Bruger opdateret");
       })
       .catch((err) => {
         alert("Felf! " + err);

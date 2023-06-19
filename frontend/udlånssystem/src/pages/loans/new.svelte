@@ -6,22 +6,24 @@
   import { onMount } from "svelte";
 
   //Data to be sent
+  let defaultDate = new Date();
+
   let user = {};
   let products = [];
-  let info = {
-    returnDate: "",
-    department: "",
-    loanType: "",
-    location: "",
-    employee: "",
-  };
+  let returnDate = defaultDate;
+  let department;
+  let loanType;
+  let location;
+  let employee;
 
   //data
   let inputDataUser = [[]]; //get data onMount
   let inputDataProducts = [[]]; //get data onMount
+  let departments = []; //get data onMount
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
+    departments = await getData("departments");
   });
 
   //same page navigation
@@ -70,7 +72,7 @@
   //now
   let date = new Date();
   //default date
-  let defaultDate = new Date();
+
   date.setMonth(date.getMonth() + 1);
   //create max date on 6 months
   let maxDate = new Date();
@@ -180,12 +182,24 @@
   {:else if page === 3}
     <div class="grid">
       <div class="grid-item g1">
+        <h4>Retur dato</h4>
+        <hr />
         <DateInput
-          bind:value={defaultDate}
+          visible={true}
+          bind:value={returnDate}
           max={maxDate}
           format={"yyyy-MM-dd"}
           min={date}
         />
+      </div>
+      <div class="grid-item g2">
+        <h4>Afdeling</h4>
+        <hr />
+        <select name="Afdeling" id="Afdeling">
+          {#each departments as department}
+            <option value={department.UUID}>{department.Navn}</option>
+          {/each}
+        </select>
       </div>
     </div>
   {/if}
@@ -197,10 +211,18 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(3, 1fr);
     gap: 1rem;
-    background: red;
+    height: 100%;
   }
-
+  .grid-item {
+    background: #f002;
+  }
   .g1 {
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+  .g2 {
+    grid-column: 1/2;
+    grid-row: 2/3;
   }
   .navigation-bar {
     display: flex;
@@ -210,7 +232,7 @@
   }
   .content {
     width: 100%;
-    max-height: 100%;
+    height: 100%;
     display: grid;
     grid-template-rows: 56px 1fr;
   }
@@ -269,6 +291,10 @@
   .splitscreen {
     width: 100%;
     height: 100%;
+  }
+  hr {
+    margin: 0.5rem 0;
+    border: solid 1px var(--text2);
   }
   span {
     color: var(--text2);
