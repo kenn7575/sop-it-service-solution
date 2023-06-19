@@ -178,16 +178,30 @@
       {/if}
     </div>
   {:else if page === 3}
-    <DateInput
-      bind:value={defaultDate}
-      max={maxDate}
-      format={"yyyy-MM-dd"}
-      min={date}
-    />
+    <div class="grid">
+      <div class="grid-item g1">
+        <DateInput
+          bind:value={defaultDate}
+          max={maxDate}
+          format={"yyyy-MM-dd"}
+          min={date}
+        />
+      </div>
+    </div>
   {/if}
 </div>
 
 <style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1rem;
+    background: red;
+  }
+
+  .g1 {
+  }
   .navigation-bar {
     display: flex;
     align-items: center;

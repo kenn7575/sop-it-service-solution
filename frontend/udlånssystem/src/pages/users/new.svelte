@@ -76,7 +76,9 @@
       <button disabled={new_user.profilePicture === ""} on:click={clearPicture}
         >Slet</button
       >
-      <button disabled={new_user.profilePicture === ""}>Gem</button>
+      <button on:click={handleSubmit} disabled={new_user.profilePicture === ""}
+        >Gem</button
+      >
     </div>
     <DropZone on:message={handleFileDrop} />
   </div>
@@ -243,8 +245,6 @@
           {/each}
         </select>
       </div>
-
-      <button on:click={handleSubmit}>Opret bruger</button>
     </form>
   </div>
 </div>
@@ -398,7 +398,9 @@
     border-color: var(--s) !important;
     color: var(--s) !important;
   }
-
+  .question {
+    margin-bottom: 1rem;
+  }
   .errorMessage {
     color: var(--s) !important;
     font-weight: 400 !important;
