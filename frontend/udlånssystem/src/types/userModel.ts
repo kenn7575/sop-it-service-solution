@@ -8,8 +8,7 @@ export class UserModel {
   username: string;
   name: string;
   mail: string;
-  date_created: Date;
-  date_updated: Date;
+
   img_name: string;
 
   //objects

@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { currentUser, loginViaSession } from "./services/login";
+  import {
+    currentUser,
+    loginViaCredentials,
+    loginViaSession,
+  } from "./services/login";
   import { Router, Route } from "svelte-routing";
-  import DropZone from "./components/drop-zone.svelte";
 
   //login page
   import NotLoggedIn from "./pages/login/index.svelte";
@@ -34,7 +37,7 @@
   import loansEdit from "./pages/loans/edit.svelte";
 
   //new pages import
-  import usersNew from "./pages/users/new_old.svelte";
+  import usersNew from "./pages/users/new.svelte";
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
   import categoriesNew from "./pages/categories/new.svelte";
@@ -45,7 +48,11 @@
   import "./axiosConfig.js";
 
   import { path } from "./stores/pathStore";
+  $: $path, loginViaSession();
+
   import { onMount } from "svelte";
+
+  //subscribe to path and run function on change
 
   onMount(() => {
     path.update(() => {

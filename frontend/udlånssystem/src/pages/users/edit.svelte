@@ -1,29 +1,63 @@
 <script lang="ts">
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
-  import { getData } from "../../data/data";
   import axios from "axios";
   import type { UserModel } from "../../types/userModel";
-  import type { AddressModel } from "../../types/addressModel";
-  import App from "../../App.svelte";
-
-  let editMode = false;
+  import { currentUser } from "../../services/login";
+  //this is the id of the user to be edited
   export let id;
+  $: user = $currentUser;
 
-  //get data for select options
+  //if the page is in edit mode or read only
+  let editMode = false;
+
+  //the picture to be uploaded
+  let picture;
+
+  //imported Data
   let roles = [];
   let educations = [];
 
-  let picture;
   let userImport: UserModel;
 
-  let userExport: UserModel;
+  let name;
+  let username;
+  let mail;
+  let address_line_1;
+  let address_line_2;
+  let city;
+  let postal_code;
+  let role_id;
+  let education_id;
 
+  let new_name;
+  let new_username;
+  let new_mail;
+  let new_address_line_1;
+  let new_address_line_2;
+  let new_city;
+  let new_postal_code;
+  let new_role_id;
+  let new_education_id;
+
+  function doseMach(ojb1, ojb2) {
+    //find out if two objects are the same
+    let keys1 = Object.keys(ojb1);
+    let keys2 = Object.keys(ojb2);
+    if (keys1.length !== keys2.length) return false;
+    for (let key of keys1) {
+      if (ojb1[key] !== ojb2[key]) return false;
+    }
+    return true;
+  }
+  //get all data
   onMount(async () => {
     try {
-      roles = await axios.get("roles.php").then((res) => {
-        return res.data;
-      });
+      roles = await axios
+        .post("roles.php", { role_id: user.role_id })
+        .then((res) => {
+          return res.data;
+        });
 
       educations = await axios.get("educations.php").then((res) => {
         return res.data;
@@ -35,51 +69,94 @@
           return res.data;
         });
 
-      userExport = { ...userImport };
-      if (userExport.address_id === null)
-        userExport.address_id = {
+      if (userImport.address_id === null)
+        userImport.address_id = {
           UUID: null,
           address_line_1: null,
           address_line_2: null,
           city: null,
           postal_code: null,
         };
+
+      asignValuesToUser(userImport);
+      asignValueToNewUser();
     } catch (error) {
       console.log(error);
     }
   });
 
-  function isAddressValid(addressId: AddressModel) {
-    if (addressId === null) {
-      return false;
-    }
-    if (addressId.address_line_1 === null) {
-      return false;
-    }
-    if (addressId.address_line_2 === null) {
-      return false;
-    }
-    if (addressId.city === null) {
-      return false;
-    }
-    if (addressId.postal_code === null) {
-      return false;
-    }
-    return true;
+  function asignValuesToUser(importUser) {
+    name = importUser.name;
+    username = importUser.username;
+    mail = importUser.mail;
+    address_line_1 = importUser.address_id.address_line_1;
+    address_line_2 = importUser.address_id.address_line_2;
+    city = importUser.address_id.city;
+    postal_code = importUser.address_id.postal_code;
+    role_id = importUser.role_id.UUID;
+    education_id = importUser.education_id.UUID;
   }
 
+  function asignValueToNewUser() {
+    new_name = name;
+    new_username = username;
+    new_mail = mail;
+    new_address_line_1 = address_line_1;
+    new_address_line_2 = address_line_2;
+    new_city = city;
+    new_postal_code = postal_code;
+    new_role_id = role_id;
+    new_education_id = education_id;
+  }
   function handleUserUpdate() {
-    console.log(userExport, userImport);
-    if (userExport === userImport) {
+    if (
+      doseMach(
+        {
+          name,
+          username,
+          mail,
+          address_line_1,
+          address_line_2,
+          city,
+          postal_code,
+          role_id,
+          education_id,
+        },
+        {
+          name: new_name,
+          username: new_username,
+          mail: new_mail,
+          address_line_1: new_address_line_1,
+          address_line_2: new_address_line_2,
+          city: new_city,
+          postal_code: new_postal_code,
+          role_id: new_role_id,
+          education_id: new_education_id,
+        }
+      )
+    ) {
       alert("Ingen ændringer");
       return;
     }
-    if (!isAddressValid(userExport.address_id)) {
-      userExport.address_id = null;
-    }
 
+    let userToBeUpdated: UserModel = {
+      UUID: userImport.UUID,
+      name: new_name,
+      username: new_username,
+      mail: new_mail,
+      img_name: picture,
+      address_id: {
+        UUID: userImport.address_id.UUID,
+        address_line_1: new_address_line_1,
+        address_line_2: new_address_line_2,
+        city: new_city,
+        postal_code: new_postal_code,
+      },
+      role_id: new_role_id,
+      education_id: new_education_id,
+    };
     axios
-      .post("update_userV2.php", userExport)
+      .post("update_userV2.php", userToBeUpdated)
       .then((res) => {
         editMode = false;
       })
@@ -88,17 +165,28 @@
       });
   }
 
-  let errorMessages = "";
-
   function toggleEditMode() {
+    if (user.role_id <= role_id) {
+      alert(
+        `Du skal have højre rettighedder for at redigere denne bruger. Du har level ${user.role_id} rettighedder og brugeren har level ${role_id}.`
+      );
+      return;
+    }
     editMode = !editMode;
   }
   function resetPage() {
-    userExport = userImport;
+    new_name = name;
+    new_username = username;
+    new_mail = mail;
+    new_address_line_1 = address_line_1;
+    new_address_line_2 = address_line_2;
+    new_city = city;
+    new_postal_code = postal_code;
+    new_role_id = role_id;
+    new_education_id = education_id;
+    picture = "";
   }
-  function resetError() {
-    errorMessages = "";
-  }
+
   function clearPicture() {
     picture = "";
   }
@@ -141,111 +229,90 @@
 
     <div class="form">
       <form id="user-form">
-        <div class="question" class:error={errorMessages}>
-          <label for="a2" class:error={errorMessages}
-            >Navn <span class:hidden={!editMode}>*</span></label
-          >
+        <div class="question">
+          <label for="a2">Navn <span class:hidden={!editMode}>*</span></label>
           <input
             id="a2"
             disabled={!editMode}
             autocomplete="off"
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.name}
+            bind:value={new_name}
             class="text"
             type="text"
             required
           />
         </div>
 
-        <div class="question" class:error={errorMessages}>
-          <label for="a4" class:error={errorMessages}
+        <div class="question">
+          <label for="a4"
             >Uni-login <span class:hidden={!editMode}>*</span></label
           >
           <input
             id="a4"
             disabled={!editMode}
             autocomplete="off"
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.username}
+            bind:value={new_username}
             class="text"
             type="text"
             required
           />
         </div>
-        <div class="question" class:error={errorMessages}>
-          <label for="a5" class:error={errorMessages}
-            >E-mail <span class:hidden={!editMode}>*</span></label
-          >
+        <div class="question">
+          <label for="a5">E-mail <span class:hidden={!editMode}>*</span></label>
           <input
             id="a5"
             disabled={!editMode}
             autocomplete="off"
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.mail}
+            bind:value={new_mail}
             class="text"
             type="text"
             required
           />
         </div>
 
-        <div class="question" class:error={errorMessages}>
-          <label for="a6" class:error={errorMessages}
-            >Vejnavn <span class:hidden={!editMode}>*</span></label
+        <div class="question">
+          <label for="a6">Vejnavn <span class:hidden={!editMode}>*</span></label
           >
           <input
             id="a6"
             disabled={!editMode}
             autocomplete="off"
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.address_id.address_line_1}
+            bind:value={new_address_line_1}
             class="text"
             type="text"
             required
           />
         </div>
-        <div class="question" class:error={errorMessages}>
-          <label for="a7" class:error={errorMessages}>Etage mm.</label>
+        <div class="question">
+          <label for="a7">Etage mm.</label>
           <input
             id="a7"
             disabled={!editMode}
             autocomplete="off"
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.address_id.address_line_2}
+            bind:value={new_address_line_2}
             class="text"
             type="text"
           />
         </div>
-        <div class="question" class:error={errorMessages}>
-          <label for="a8" class:error={errorMessages}
-            >By <span class:hidden={!editMode}>*</span></label
-          >
+        <div class="question">
+          <label for="a8">By <span class:hidden={!editMode}>*</span></label>
           <input
             id="a8"
             disabled={!editMode}
             autocomplete="off"
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.address_id.city}
+            bind:value={new_city}
             class="text"
             type="text"
             required
           />
         </div>
-        <div class="question" class:error={errorMessages}>
-          <label for="a9" class:error={errorMessages}
+        <div class="question">
+          <label for="a9"
             >Postnummer <span class:hidden={!editMode}>*</span></label
           >
           <input
             autocomplete="off"
             disabled={!editMode}
-            class:error={errorMessages}
-            on:focus={resetError}
-            bind:value={userExport.address_id.postal_code}
+            bind:value={new_postal_code}
             class="text"
             id="a9"
             type="number"
@@ -253,25 +320,28 @@
           />
         </div>
         <div class="question">
-          <label for="a10" class:error={errorMessages}
+          <label for="a10"
             >Bruger rolle <span class:hidden={!editMode}>*</span></label
           >
-
-          <select
-            disabled={!editMode}
-            id="a10"
-            required
-            form="user-form"
-            bind:value={userExport.role_id}
-          >
-            {#each roles as role}
-              <option id="role" value={role}>{role.name}</option>
-            {/each}
-          </select>
+          {#if roles}
+            <select
+              disabled={!editMode}
+              id="a10"
+              required
+              form="user-form"
+              bind:value={new_role_id}
+            >
+              {#each roles as role}
+                <option selected={role.UUID === role_id} value={role.UUID}
+                  >{role.name}</option
+                >
+              {/each}
+            </select>
+          {/if}
         </div>
 
         <div class="question">
-          <label for="a11" class:error={errorMessages}
+          <label for="a11"
             >Uddannelse<span class:hidden={!editMode}>*</span></label
           >
 
@@ -280,13 +350,12 @@
             id="a11"
             required
             form="user-form"
-            bind:value={userExport.education_id}
+            bind:value={new_education_id}
           >
             {#each educations as education}
               <option
-                selected={education.UUID === userExport.education_id.UUID}
-                id="education"
-                value={education}>{education.name}</option
+                selected={education_id === education.UUID}
+                value={education.UUID}>{education.name}</option
               >
             {/each}
           </select>
