@@ -5,10 +5,9 @@ $token = $_POST['token'] ?? "";
 
 $login_session = null;
 
-// $result = $conn->query("SELECT * FROM login_sessions WHERE token = '$token'");
+// TODO: Make unique token for each machine, instead of each user
 
-// $login_session = $result->fetch_assoc();
-
+$conn->query("DELETE FROM `login_sessions` WHERE `expiration_date` < NOW() AND `UUID` > 0");
 $result = $conn->query("SELECT * FROM login_sessions");
 
 while($row = $result->fetch_assoc())

@@ -46,7 +46,6 @@
   }
   function stopRunning() {
     isRunningAway = false;
-    console.log("runn");
   }
 </script>
 

@@ -1,12 +1,10 @@
 <?php
 include "admin_db_conn.php";
-
+try {
 $data = (object) $_POST;
 
-// $conn->query("START TRANSACTION;");
+$conn->query("START TRANSACTION;");
 
-$data->education_id = $data->education_id["UUID"];
-$data->role_id = $data->role_id["UUID"];
 $address = $data->address_id;
 
 if (isset($address)) {
@@ -32,19 +30,34 @@ if (isset($address)) {
     else { $data->address_id = $conn->insert_id; }
 }
 
-$set_address = isset($address) ? "`address_id` = '$data->address_id'" : "`address_id` = NULL";
+$update_address = isset($address) ? "`address_id` = '$data->address_id'" : "`address_id` = NULL";
+$insert_address = isset($address) ? "'$data->address_id'" : "NULL";
+$user_UUID = isset($data->UUID) ? $data->UUID : "NULL";
+$data->img_name = isset($data->img_name) ? $data->img_name : "NULL";
 
 $conn->query(
-"UPDATE `users` SET
+"INSERT INTO `users` (`UUID`, `username`, `name`, `mail`, `education_id`, `role_id`, `address_id`, `img_name`) VALUES
+    (
+        $user_UUID,
+        '$data->username',
+        '$data->name',
+        '$data->mail',
+        '$data->education_id',
+        '$data->role_id',
+        '$data->address_id',
+        '$data->img_name'
+    )
+ON DUPLICATE KEY UPDATE
     `username` = '$data->username',
     `name` = '$data->name',
     `mail` = '$data->mail',
     `education_id` = '$data->education_id',
     `role_id` = '$data->role_id',
-    $set_address
-WHERE `UUID` = $data->UUID
+    $update_address
 ");
 
  $result = $conn->query("COMMIT;");
 
  echo json_encode($result, JSON_PRETTY_PRINT);
+
+} catch(PDOException $e) { die("Fejl"); }
