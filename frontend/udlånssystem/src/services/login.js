@@ -23,7 +23,12 @@ export const validateSession = async (token) => {
 //login user
 export const loginViaSession = async () => {
   let token = getSession();
-  if (!token) return false; //no session token
+  if (!token) {
+    currentUser.update((user) => {
+      return null; //update current user
+    });
+    return false;
+  }
 
   let res = await validateSession(token);
 
@@ -35,6 +40,9 @@ export const loginViaSession = async () => {
   } else {
     //remove session token
     localStorage.removeItem("session");
+    currentUser.update((user) => {
+      return null; //update current user
+    });
     return false;
   }
 };
