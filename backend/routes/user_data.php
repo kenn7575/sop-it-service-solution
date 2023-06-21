@@ -1,5 +1,5 @@
 <?php
-include "admin_db_conn.php";
+include "components/admin_db_conn.php";
 
 $UUID_query = "";
 $table = $_GET['table'] ?? "users";

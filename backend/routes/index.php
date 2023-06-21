@@ -1,5 +1,5 @@
 <?php
-include "headers.php";
+include "components/headers.php";
 
 $table = $_GET['table'] ?? "items";
 $user = $_GET['user'] ?? "guest";

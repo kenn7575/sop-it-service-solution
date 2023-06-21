@@ -1,5 +1,5 @@
 <?php
-include "admin_db_conn.php";
+include "components/admin_db_conn.php";
 try {
 $data = (object) $_POST;
 
@@ -17,10 +17,10 @@ if (isset($address)) {
     }
 }
 
-$update_string = implode(", ", $update_list);
+if (isset($update_list)) $update_string = implode(", ", $update_list);
 
-$insert_keys_string = implode(", ", $insert_keys_list);
-$insert_values_string = implode(", ", $insert_values_list);
+if (isset($insert_keys_list)) $insert_keys_string = implode(", ", $insert_keys_list);
+if (isset($insert_values_list)) $insert_values_string = implode(", ", $insert_values_list);
 
 if (isset($address)) {
     $address_line_2 = isset($address->address_line_2) ? "`address_line_2` = '$address->address_line_2'" : "`address_line_2` = NULL";
@@ -32,20 +32,22 @@ if (isset($address)) {
 
 $update_address = isset($address) ? "`address_id` = '$data->address_id'" : "`address_id` = NULL";
 $insert_address = isset($address) ? "'$data->address_id'" : "NULL";
-$user_UUID = isset($data->UUID) ? $data->UUID : "NULL";
-$data->img_name = isset($data->img_name) ? $data->img_name : "NULL";
+$user_UUID = isset($data->UUID) ? "'$data->UUID'" : "NULL";
+$user_img_name = isset($data->img_name) ? "'$data->img_name'" : "NULL";
+$user_password = "'" . password_hash($data->password, PASSWORD_DEFAULT) . "'";
 
 $conn->query(
-"INSERT INTO `users` (`UUID`, `username`, `name`, `mail`, `education_id`, `role_id`, `address_id`, `img_name`) VALUES
+"INSERT INTO `users` (`UUID`, `username`, `password`, `name`, `mail`, `education_id`, `role_id`, `address_id`, `img_name`) VALUES
     (
         $user_UUID,
         '$data->username',
+        $user_password,
         '$data->name',
         '$data->mail',
         '$data->education_id',
         '$data->role_id',
         '$data->address_id',
-        '$data->img_name'
+        $user_img_name
     )
 ON DUPLICATE KEY UPDATE
     `username` = '$data->username',

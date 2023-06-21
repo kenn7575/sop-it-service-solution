@@ -1,5 +1,5 @@
 <?php
-include "admin_db_conn.php";
+include "components/admin_db_conn.php";
 
 $user = (object) $_POST;
 
