@@ -58,7 +58,15 @@ export async function loginViaCredentials(username, password) {
       if (res.data.status === 200) {
         output.user = res.data.user;
       }
+    })
+    .catch((err) => {
+      alert(`Ukendt fejl! Kunne ikke kontakte serveren. ${err}`);
     });
-
   return output;
+}
+export function logout() {
+  localStorage.removeItem("session");
+  currentUser.update((user) => {
+    return null; //update current user
+  });
 }

@@ -1,0 +1,18 @@
+{
+  "UUID": "1086",
+  "username": "test123t",
+  "password": "$2y$10$WqQxt5xj.mjFz.NEmvCAQelfiYWA4azVAS/YMQJAgWNiILvbja8DK",
+  "name": "Testing Test",
+  "mail": "test123t@edu.sde.dk",
+  "is_ad_user": "1",
+  "date_created": "2023-03-21 10:39:23",
+  "date_updated": "2023-06-13 14:27:20",
+  "address_id": null,
+  "education_id": { "UUID": "1", "name": "Datatekniker med programmering EUX" },
+  "role_id": {
+    "UUID": "5",
+    "name": "help desk personale",
+    "authorization_level_id": "2"
+  },
+  "img_name": "gulerodder"
+}
