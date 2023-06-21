@@ -4,6 +4,10 @@
   import axios from "axios";
   import type { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
+  import { getData } from "../../data/data";
+  import validateInputs from "../../services/validateInputs.js";
+  import doseObjectsMach from "../../services/doseObjectsMach.js";
+
   //this is the id of the user to be edited
   export let id;
   $: user = $currentUser;
@@ -40,50 +44,44 @@
   let new_role_id;
   let new_education_id;
 
-  function doseMach(ojb1, ojb2) {
-    //find out if two objects are the same
-    let keys1 = Object.keys(ojb1);
-    let keys2 = Object.keys(ojb2);
-    if (keys1.length !== keys2.length) return false;
-    for (let key of keys1) {
-      if (ojb1[key] !== ojb2[key]) return false;
-    }
-    return true;
-  }
   //get all data
   onMount(async () => {
     try {
-      roles = await axios
-        .post("roles.php", { role_id: user.role_id })
-        .then((res) => {
-          return res.data;
-        });
+      roles = await getData("roles_view").then((res) => {
+        res.map((role) => (role.UUID = role.UUID.toString()));
 
-      educations = await axios.get("educations.php").then((res) => {
-        return res.data;
+        return res;
       });
 
-      userImport = await axios
-        .get("user_data.php", { params: { UUID: id } })
-        .then((res) => {
-          return res.data;
-        });
+      educations = await getData("educations").then((res) => {
+        res.map((edu) => (edu.UUID = edu.UUID.toString()));
+        return res;
+      });
 
-      if (userImport.address_id === null)
-        userImport.address_id = {
-          UUID: null,
-          address_line_1: null,
-          address_line_2: null,
-          city: null,
-          postal_code: null,
-        };
-
-      asignValuesToUser(userImport);
-      asignValueToNewUser();
+      getUser();
     } catch (error) {
       console.log(error);
     }
   });
+  async function getUser() {
+    userImport = await axios
+      .get("user_data.php", { params: { UUID: id } })
+      .then((res) => {
+        return res.data;
+      });
+
+    if (userImport.address_id === null)
+      userImport.address_id = {
+        UUID: null,
+        address_line_1: null,
+        address_line_2: null,
+        city: null,
+        postal_code: null,
+      };
+
+    asignValuesToUser(userImport);
+    asignValueToNewUser();
+  }
 
   function asignValuesToUser(importUser) {
     name = importUser.name;
@@ -109,8 +107,13 @@
     new_education_id = education_id;
   }
   function handleUserUpdate() {
+    if (!validateInputs()) {
+      alert("Udfyld alle felter");
+      return;
+    }
+
     if (
-      doseMach(
+      doseObjectsMach(
         {
           name,
           username,
@@ -145,6 +148,7 @@
       username: new_username,
       mail: new_mail,
       img_name: picture,
+      password: "",
       address_id: {
         UUID: userImport.address_id.UUID,
         address_line_1: new_address_line_1,
@@ -159,6 +163,12 @@
       .post("update_userV2.php", userToBeUpdated)
       .then((res) => {
         editMode = false;
+        if ((res.data = true)) {
+          alert("Bruger opdateret");
+          getUser();
+        } else {
+          alert("Ukendt fejl! Bruger ikke opdateret");
+        }
       })
       .catch((err) => {
         alert("Felf! " + err);
@@ -166,9 +176,16 @@
   }
 
   function toggleEditMode() {
-    if (user.role_id <= role_id) {
+    console.log(
+      user.role_id.authorization_level_id,
+      userImport.role_id.authorization_level_id
+    );
+    if (
+      user.role_id.authorization_level_id <=
+      userImport.role_id.authorization_level_id
+    ) {
       alert(
-        `Du skal have højre rettighedder for at redigere denne bruger. Du har level ${user.role_id} rettighedder og brugeren har level ${role_id}.`
+        `Du skal have højre rettighedder for at redigere denne bruger. Du har level ${user.role_id.authorization_level_id} rettighedder og brugeren har level ${userImport.role_id.authorization_level_id}.`
       );
       return;
     }
@@ -192,6 +209,24 @@
   }
   function handleFileDrop(event) {
     picture = event.detail;
+  }
+  function deleteUser() {
+    if (confirm("Er du sikker på at du vil slette denne bruger?")) {
+      axios
+        .post("delete_user.php", {
+          UUID: userImport.UUID,
+          address_id: userImport.address_id.UUID,
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data == true) {
+            alert("Bruger slettet. ");
+            window.location.href = "/brugere";
+          } else {
+            alert("Ukendt fejl! Bruger ikke slettet");
+          }
+        });
+    }
   }
 </script>
 
@@ -223,6 +258,7 @@
         {/if}
       </div>
       {#if editMode}
+        <button id="delete" on:click={deleteUser}>Slet bruger</button>
         <DropZone on:message={handleFileDrop} />
       {/if}
     </div>
@@ -332,9 +368,11 @@
               bind:value={new_role_id}
             >
               {#each roles as role}
-                <option selected={role.UUID === role_id} value={role.UUID}
-                  >{role.name}</option
-                >
+                {#if role.level < user.role_id.authorization_level_id}
+                  <option selected={role.UUID === role_id} value={role.UUID}
+                    >{role.name}</option
+                  >
+                {/if}
               {/each}
             </select>
           {/if}
@@ -390,6 +428,11 @@
     width: 100%;
     gap: 0.5rem;
     justify-content: space-between;
+  }
+  #delete {
+    min-height: 32px;
+    background: var(--s);
+    color: #fff;
   }
   select {
     width: 100%;

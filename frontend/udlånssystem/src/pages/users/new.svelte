@@ -3,8 +3,9 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import type { UserModel } from "../../types/userModel";
-
+  import validateInputs from "../../services/validateInputs.js";
   import { currentUser } from "../../services/login";
+  import { getData } from "../../data/data";
   //this is the id of the user to be edited
 
   $: user = $currentUser;
@@ -18,6 +19,7 @@
 
   let new_name;
   let new_username;
+  let new_password;
   let new_mail;
   let new_address_line_1;
   let new_address_line_2;
@@ -26,27 +28,18 @@
   let new_role_id;
   let new_education_id;
 
-  function doseMach(ojb1, ojb2) {
-    //find out if two objects are the same
-    let keys1 = Object.keys(ojb1);
-    let keys2 = Object.keys(ojb2);
-    if (keys1.length !== keys2.length) return false;
-    for (let key of keys1) {
-      if (ojb1[key] !== ojb2[key]) return false;
-    }
-    return true;
-  }
   //get all data
   onMount(async () => {
     try {
-      roles = await axios
-        .post("roles.php", { role_id: user.role_id })
-        .then((res) => {
-          return res.data;
-        });
+      roles = await getData("roles_view").then((res) => {
+        new_role_id = res[0].UUID;
 
-      educations = await axios.get("educations.php").then((res) => {
-        return res.data;
+        return res;
+      });
+
+      educations = await getData("educations").then((res) => {
+        new_education_id = res[0].UUID;
+        return res;
       });
     } catch (error) {
       console.log(error);
@@ -54,12 +47,17 @@
   });
 
   function handleCreateUser() {
-    let userToBeUpdated: UserModel = {
+    if (!validateInputs()) {
+      alert("Udfyld alle felter");
+      return;
+    }
+    let userToBeCreated: UserModel = {
       UUID: null,
       name: new_name,
       username: new_username,
       mail: new_mail,
       img_name: picture,
+      password: new_password,
       address_id: {
         UUID: null,
         address_line_1: new_address_line_1,
@@ -70,11 +68,15 @@
       role_id: new_role_id,
       education_id: new_education_id,
     };
-    console.log(userToBeUpdated);
+    console.log(userToBeCreated);
     axios
-      .post("update_userV2.php", userToBeUpdated)
+      .post("update_userV2.php", userToBeCreated)
       .then((res) => {
-        console.log(res);
+        if (res.data == true) {
+          alert("Bruger Oprettet.");
+        } else {
+          alert("Ukendt fejl! Bruger ikke opdateret");
+        }
         //tell the user that the user was updated
       })
       .catch((err) => {
@@ -139,6 +141,17 @@
           bind:value={new_username}
           class="text"
           type="text"
+          required
+        />
+      </div>
+      <div class="question">
+        <label for="a4">Adgangskode<span>*</span></label>
+        <input
+          id="a4"
+          autocomplete="off"
+          bind:value={new_password}
+          class="text"
+          type="password"
           required
         />
       </div>

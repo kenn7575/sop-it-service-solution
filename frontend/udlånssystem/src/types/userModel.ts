@@ -8,7 +8,7 @@ export class UserModel {
   username: string;
   name: string;
   mail: string;
-
+  password?: string;
   img_name: string;
 
   //objects

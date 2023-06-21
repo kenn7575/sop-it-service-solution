@@ -2,6 +2,7 @@
   import profilePic from "../../../../mappePaaServeren/profile.png";
   import pic from "../../../../mappePaaServeren/gulerodder.png";
   import { currentUser } from "../services/login";
+  import { logout } from "../services/login";
 
   $: user = $currentUser;
 </script>
@@ -9,10 +10,7 @@
 <div class="content">
   <div class="info">
     {#if user}
-      <img
-        src={user.img_name ? pic : profilePic}        
-        alt="profilePic"
-      />
+      <img src={user.img_name ? pic : profilePic} alt="profilePic" />
     {:else}
       <img src={profilePic} alt="" />
     {/if}
@@ -28,7 +26,7 @@
   </div>
 
   <div class="more">
-    <i class="fa-solid fa-ellipsis-vertical" />
+    <i on:click={logout} class="fa-solid fa-arrow-right-from-bracket" />
   </div>
 </div>
 
@@ -72,5 +70,8 @@
     color: var(--text1);
     font-weight: 500;
     font-size: 1.1rem;
+  }
+  i {
+    cursor: pointer;
   }
 </style>
