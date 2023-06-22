@@ -23,6 +23,8 @@
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
+    console.log(inputDataProducts);
+    // inputDataProducts = inputDataProducts.slice(0, 10);
     departments = await getData("departments");
   });
 

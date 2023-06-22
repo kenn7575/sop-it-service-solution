@@ -22,13 +22,17 @@
   import { path } from "../../stores/pathStore";
 </script>
 
-<div class="table">
-  <Table
-    {inputData}
-    buttonDestination={"brugere/new"}
-    on:message={handleRowClick}
-  />
-</div>
+{#if inputData.length > 0}
+  <div class="table">
+    <Table
+      {inputData}
+      buttonDestination={"brugere/new"}
+      on:message={handleRowClick}
+    />
+  </div>
+{:else}
+  <p>loading</p>
+{/if}
 
 <style>
   .table {

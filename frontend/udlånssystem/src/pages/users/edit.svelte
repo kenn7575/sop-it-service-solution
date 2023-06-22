@@ -7,6 +7,7 @@
   import { getData } from "../../data/data";
   import validateInputs from "../../services/validateInputs.js";
   import doseObjectsMach from "../../services/doseObjectsMach.js";
+  import deleteItem from "../../services/deleteItemFromDB";
 
   //this is the id of the user to be edited
   export let id;
@@ -22,7 +23,7 @@
   let roles = [];
   let educations = [];
 
-  let userImport: UserModel;
+  let importData: UserModel;
 
   let name;
   let username;
@@ -64,14 +65,14 @@
     }
   });
   async function getUser() {
-    userImport = await axios
-      .get("user_data.php", { params: { UUID: id } })
+    importData = await axios
+      .get("get_data.php", { params: { UUID: id, table: "users" } })
       .then((res) => {
         return res.data;
       });
 
-    if (userImport.address_id === null)
-      userImport.address_id = {
+    if (importData.address_id === null)
+      importData.address_id = {
         UUID: null,
         address_line_1: null,
         address_line_2: null,
@@ -79,7 +80,7 @@
         postal_code: null,
       };
 
-    asignValuesToUser(userImport);
+    asignValuesToUser(importData);
     asignValueToNewUser();
   }
 
@@ -106,7 +107,19 @@
     new_role_id = role_id;
     new_education_id = education_id;
   }
-  function handleUserUpdate() {
+  function resetPage() {
+    new_name = name;
+    new_username = username;
+    new_mail = mail;
+    new_address_line_1 = address_line_1;
+    new_address_line_2 = address_line_2;
+    new_city = city;
+    new_postal_code = postal_code;
+    new_role_id = role_id;
+    new_education_id = education_id;
+    picture = "";
+  }
+  function handleUpdate() {
     if (!validateInputs()) {
       alert("Udfyld alle felter");
       return;
@@ -142,15 +155,15 @@
       return;
     }
 
-    let userToBeUpdated: UserModel = {
-      UUID: userImport.UUID,
+    let DataToBeUpdated: UserModel = {
+      UUID: importData.UUID,
       name: new_name,
       username: new_username,
       mail: new_mail,
       img_name: picture,
       password: "",
       address_id: {
-        UUID: userImport.address_id.UUID,
+        UUID: importData.address_id.UUID,
         address_line_1: new_address_line_1,
         address_line_2: new_address_line_2,
         city: new_city,
@@ -159,8 +172,9 @@
       role_id: new_role_id,
       education_id: new_education_id,
     };
+    console.log(DataToBeUpdated);
     axios
-      .post("update_userV2.php", userToBeUpdated)
+      .post("update_userV2.php", DataToBeUpdated)
       .then((res) => {
         editMode = false;
         if ((res.data = true)) {
@@ -171,37 +185,22 @@
         }
       })
       .catch((err) => {
-        alert("Felf! " + err);
+        alert("Fejl! " + err);
       });
   }
 
   function toggleEditMode() {
-    console.log(
-      user.role_id.authorization_level_id,
-      userImport.role_id.authorization_level_id
-    );
+    //check if user has the right authorization level to edit this user
     if (
       user.role_id.authorization_level_id <=
-      userImport.role_id.authorization_level_id
+      importData.role_id.authorization_level_id
     ) {
       alert(
-        `Du skal have højre rettighedder for at redigere denne bruger. Du har level ${user.role_id.authorization_level_id} rettighedder og brugeren har level ${userImport.role_id.authorization_level_id}.`
+        `Du skal have højre rettighedder for at redigere denne bruger. Du har level ${user.role_id.authorization_level_id} rettighedder og brugeren har level ${importData.role_id.authorization_level_id}.`
       );
       return;
     }
     editMode = !editMode;
-  }
-  function resetPage() {
-    new_name = name;
-    new_username = username;
-    new_mail = mail;
-    new_address_line_1 = address_line_1;
-    new_address_line_2 = address_line_2;
-    new_city = city;
-    new_postal_code = postal_code;
-    new_role_id = role_id;
-    new_education_id = education_id;
-    picture = "";
   }
 
   function clearPicture() {
@@ -210,27 +209,19 @@
   function handleFileDrop(event) {
     picture = event.detail;
   }
-  function deleteUser() {
-    if (confirm("Er du sikker på at du vil slette denne bruger?")) {
-      axios
-        .post("delete_user.php", {
-          UUID: userImport.UUID,
-          address_id: userImport.address_id.UUID,
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res.data == true) {
-            alert("Bruger slettet. ");
-            window.location.href = "/brugere";
-          } else {
-            alert("Ukendt fejl! Bruger ikke slettet");
-          }
-        });
-    }
+  function handleDelete() {
+    deleteItem(
+      "delete_user.php",
+      {
+        UUID: importData.UUID,
+        address_id: importData.address_id.UUID,
+      },
+      "/brugere"
+    );
   }
 </script>
 
-{#if userImport}
+{#if importData}
   <div class="content">
     <div class="image-upload">
       <img
@@ -252,13 +243,13 @@
           on:click={resetPage}>Annuller</button
         >
         {#if editMode}
-          <button on:click={handleUserUpdate}>Gem</button>
+          <button on:click={handleUpdate}>Gem</button>
         {:else}
           <button on:click={toggleEditMode}>Rediger</button>
         {/if}
       </div>
       {#if editMode}
-        <button id="delete" on:click={deleteUser}>Slet bruger</button>
+        <button id="delete" on:click={handleDelete}>Slet bruger</button>
         <DropZone on:message={handleFileDrop} />
       {/if}
     </div>

@@ -1,14 +1,10 @@
 <script lang="ts">
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
-  import axios from "axios";
   import type { UserModel } from "../../types/userModel";
   import validateInputs from "../../services/validateInputs.js";
-  import { currentUser } from "../../services/login";
   import { getData } from "../../data/data";
-  //this is the id of the user to be edited
-
-  $: user = $currentUser;
+  import createUserInDB from "../../services/createUserInDB.js";
 
   //the picture to be uploaded
   let picture;
@@ -46,7 +42,7 @@
     }
   });
 
-  function handleCreateUser() {
+  function handleCreate() {
     if (!validateInputs()) {
       alert("Udfyld alle felter");
       return;
@@ -69,19 +65,7 @@
       education_id: new_education_id,
     };
     console.log(userToBeCreated);
-    axios
-      .post("update_userV2.php", userToBeCreated)
-      .then((res) => {
-        if (res.data == true) {
-          alert("Bruger Oprettet.");
-        } else {
-          alert("Ukendt fejl! Bruger ikke opdateret");
-        }
-        //tell the user that the user was updated
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
+    createUserInDB(userToBeCreated, "/users");
   }
 
   function clearPicture() {
@@ -113,7 +97,7 @@
         }}>Annuller</button
       >
 
-      <button on:click={handleCreateUser}>Opret</button>
+      <button on:click={handleCreate}>Opret</button>
     </div>
 
     <DropZone on:message={handleFileDrop} />

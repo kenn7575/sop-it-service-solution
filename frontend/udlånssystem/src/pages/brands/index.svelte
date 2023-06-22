@@ -8,6 +8,7 @@
 
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
+
   $: currentPath = $path;
   function handleRowClick(event) {
     let id = event.detail.UUID;
@@ -18,13 +19,26 @@
   }
 
   onMount(async () => {
-    inputData = await getData("brands");
+    inputData = await axios
+      .get("get_data.php", { params: { table: "brands" } })
+      .then((res) => {
+        console.log(res);
+        return res.data;
+      });
   });
 </script>
 
-<div class="table">
-  <Table {inputData} on:message={handleRowClick} />
-</div>
+{#if inputData}
+  <div class="table">
+    <Table
+      buttonDestination={"brands/new"}
+      {inputData}
+      on:message={handleRowClick}
+    />
+  </div>
+{:else}
+  <p>loading</p>
+{/if}
 
 <style>
   .table {

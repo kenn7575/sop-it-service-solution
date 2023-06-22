@@ -17,7 +17,7 @@
   import Products from "./pages/products/index.svelte";
   import Dashboard from "./pages/dashboard/index.svelte";
   import Brands from "./pages/brands/index.svelte";
-  import CategoriesGroups from "./pages/categories/index.svelte";
+  import CategoriesGroups from "./pages/categoryGroups/index.svelte";
   import Locations from "./pages/locations/index.svelte";
   import ProductTypes from "./pages/productTypes/index.svelte";
   import Help from "./pages/help/index.svelte";
@@ -31,7 +31,7 @@
   import usersEdit from "./pages/users/edit.svelte";
   import productsEdit from "./pages/products/edit.svelte";
   import brandsEdit from "./pages/brands/edit.svelte";
-  import categoriesEdit from "./pages/categories/edit.svelte";
+  import categoriesEdit from "./pages/categoryGroups/edit.svelte";
   import locationsEdit from "./pages/locations/edit.svelte";
   import productTypesEdit from "./pages/productTypes/edit.svelte";
   import loansEdit from "./pages/loans/edit.svelte";
@@ -40,7 +40,7 @@
   import usersNew from "./pages/users/new.svelte";
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
-  import categoriesNew from "./pages/categories/new.svelte";
+  import categoriesNew from "./pages/categoryGroups/new.svelte";
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
@@ -110,10 +110,11 @@
 
           <!-- dynsmic routes edit -->
           <Route path="brugere/:id" component={usersEdit} />
+          <Route path="brands/:id" component={brandsEdit} />
+          <Route path="produktkategorier/:id" component={categoriesEdit} />
+          <Route path="kategoriGrupper/:id" component={categoriesEdit} />
 
           <Route path="produkter/edit/:id" component={productsEdit} />
-          <Route path="brands/edit/:id" component={brandsEdit} />
-          <Route path="produktkategorier/edit/:id" component={categoriesEdit} />
           <Route path="lokaliteter/edit/:id" component={locationsEdit} />
           <Route path="produkttyper/edit/:id" component={productTypesEdit} />
           <Route path="udlaan/edit/:id" component={loansEdit} />
