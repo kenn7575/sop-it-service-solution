@@ -174,7 +174,7 @@
     };
     console.log(DataToBeUpdated);
     axios
-      .post("update_userV2.php", DataToBeUpdated)
+      .post("upsert_user.php", DataToBeUpdated)
       .then((res) => {
         editMode = false;
         if ((res.data = true)) {

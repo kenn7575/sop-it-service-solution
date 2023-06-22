@@ -60,7 +60,7 @@
     };
     console.log(DataToBeUpdated);
     axios
-      .post("update_data.php", { data: DataToBeUpdated, table: "brands" })
+      .post("upsert_data.php", { data: DataToBeUpdated, table: "brands" })
       .then((res) => {
         editMode = false;
         if ((res.data = true)) {
