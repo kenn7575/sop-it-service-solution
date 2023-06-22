@@ -12,6 +12,7 @@ $column = $conn->query("SELECT * FROM `$table` $UUID_query");
 if ($column->num_rows > 1) {
     $columns = array();
     while($row = $column->fetch_assoc()) {
+        $row = (object) $row;
         nested_objects($row, $conn);
         array_push($columns, $row);
     }

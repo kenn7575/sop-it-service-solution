@@ -1,7 +1,7 @@
 import type { categoryModel } from "./categoryModel";
 import type { brandModel } from "./brandModel";
 
-export class productMpdel {
+export class productModel {
   //fields
   UUID: number;
   name: string;

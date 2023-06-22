@@ -3,8 +3,8 @@
   import axios from "axios";
   import validateInputs from "../../services/validateInputs.js";
   import doseObjectsMach from "../../services/doseObjectsMach.js";
-  import type { brandModel } from "../../types/brandModel";
-  import deleteItem from "../../services/deleteItemFromDB";
+  import type { brandModel } from "../../types/brandModel.js";
+  import deleteItem from "../../services/deleteItemFromDB.js";
 
   //this is the id of the brand to be edited
   export let id;

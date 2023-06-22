@@ -14,4 +14,4 @@ upsert($table, $data, $conn);
 
  echo json_encode($result, JSON_PRETTY_PRINT);
 
-} catch(PDOException $e) { die("Fejl"); }
+} catch (error $e) { echo json_encode(false); }

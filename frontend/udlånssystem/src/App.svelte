@@ -114,9 +114,9 @@
           <Route path="produktkategorier/:id" component={categoriesEdit} />
           <Route path="kategoriGrupper/:id" component={categoriesEdit} />
 
-          <Route path="produkter/edit/:id" component={productsEdit} />
-          <Route path="lokaliteter/edit/:id" component={locationsEdit} />
-          <Route path="produkttyper/edit/:id" component={productTypesEdit} />
+          <Route path="produkter/:id" component={productsEdit} />
+          <Route path="lokaliteter/:id" component={locationsEdit} />
+          <Route path="produkttyper/:id" component={productTypesEdit} />
           <Route path="udlaan/edit/:id" component={loansEdit} />
 
           <!-- new routes -->

@@ -4,7 +4,9 @@ function nested_objects($column, $conn) {
     foreach ($column as $key => $value) {
         if (substr($key, -3) == "_id" && isset($value)) {
         $table_name = substr($key, 0, -3);
-        if (substr($table_name, -1) == "s") { $table_name = $table_name . "es"; } else { $table_name = $table_name . "s"; }
+        if (substr($table_name, -1) == "s") { $table_name = $table_name . "e"; }
+        if (substr($table_name, -1) == "y") { $table_name = substr($table_name, 0, -1) . "ie"; }
+        $table_name = $table_name . "s";
         $column->$key = $conn->query("SELECT * FROM `$table_name` WHERE `UUID` = $value")->fetch_object();
         }
     }
