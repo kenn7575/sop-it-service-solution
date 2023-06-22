@@ -1,17 +1,13 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
-  import axios from "axios";
   import { onMount } from "svelte";
   import { getData } from "../../data/data";
 
   let inputData = [[]];
 
-  onMount(async () => {
-    inputData = await getData("zones");
-  });
-
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
+
   $: currentPath = $path;
   function handleRowClick(event) {
     let id = event.detail.UUID;
@@ -20,11 +16,23 @@
       return `${currentPath}/${id}`;
     });
   }
+
+  onMount(async () => {
+    inputData = await getData("category_groups");
+  });
 </script>
 
-<div class="table">
-  <Table {inputData} on:message={handleRowClick} />
-</div>
+{#if inputData}
+  <div class="table">
+    <Table
+      buttonDestination={"kategorigrupper/new"}
+      {inputData}
+      on:message={handleRowClick}
+    />
+  </div>
+{:else}
+  <p>loading</p>
+{/if}
 
 <style>
   .table {

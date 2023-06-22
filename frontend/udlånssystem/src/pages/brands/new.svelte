@@ -1,7 +1,7 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
   import type { brandModel } from "../../types/brandModel";
-  import createUserInDB from "../../services/createUserInDB.js";
+  import createDataInDB from "../../services/createDataInDB.js";
 
   let new_name;
 
@@ -15,7 +15,7 @@
       UUID: null,
       name: new_name,
     };
-    createUserInDB(itemToBeUpdated, "/brands");
+    createDataInDB("brands", itemToBeUpdated, "/brands");
   }
 </script>
 

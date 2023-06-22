@@ -17,6 +17,7 @@
   import Products from "./pages/products/index.svelte";
   import Dashboard from "./pages/dashboard/index.svelte";
   import Brands from "./pages/brands/index.svelte";
+  import Categories from "./pages/categories/index.svelte";
   import CategoriesGroups from "./pages/categoryGroups/index.svelte";
   import Locations from "./pages/locations/index.svelte";
   import ProductTypes from "./pages/productTypes/index.svelte";
@@ -31,7 +32,8 @@
   import usersEdit from "./pages/users/edit.svelte";
   import productsEdit from "./pages/products/edit.svelte";
   import brandsEdit from "./pages/brands/edit.svelte";
-  import categoriesEdit from "./pages/categoryGroups/edit.svelte";
+  import categoriesEdit from "./pages/categories/edit.svelte";
+  import categoryGroupsEdit from "./pages/categoryGroups/edit.svelte";
   import locationsEdit from "./pages/locations/edit.svelte";
   import productTypesEdit from "./pages/productTypes/edit.svelte";
   import loansEdit from "./pages/loans/edit.svelte";
@@ -41,6 +43,7 @@
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
   import categoriesNew from "./pages/categoryGroups/new.svelte";
+  import categoryGroupsNew from "./pages/categoryGroups/new.svelte";
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
@@ -100,7 +103,8 @@
           <Route path="dashboard" component={Dashboard} />
           <Route path="produkter" component={Products} />
           <Route path="brands" component={Brands} />
-          <Route path="produktkategorier" component={CategoriesGroups} />
+          <Route path="kategorigrupper" component={CategoriesGroups} />
+          <Route path="kategorier" component={Categories} />
           <Route path="lokaliteter" component={Locations} />
           <Route path="produkttyper" component={ProductTypes} />
           <Route path="notifikationer" component={Notifications} />
@@ -111,9 +115,8 @@
           <!-- dynsmic routes edit -->
           <Route path="brugere/:id" component={usersEdit} />
           <Route path="brands/:id" component={brandsEdit} />
-          <Route path="produktkategorier/:id" component={categoriesEdit} />
-          <Route path="kategoriGrupper/:id" component={categoriesEdit} />
-
+          <Route path="kategorier/:id" component={categoriesEdit} />
+          <Route path="kategorigrupper/:id" component={categoryGroupsEdit} />
           <Route path="produkter/edit/:id" component={productsEdit} />
           <Route path="lokaliteter/edit/:id" component={locationsEdit} />
           <Route path="produkttyper/edit/:id" component={productTypesEdit} />
@@ -123,7 +126,8 @@
           <Route path="brugere/new" component={usersNew} />
           <Route path="produkter/new" component={productsNew} />
           <Route path="brands/new" component={brandsNew} />
-          <Route path="produktkategorier/new" component={categoriesNew} />
+          <Route path="kategorier/new" component={categoriesNew} />
+          <Route path="kategorigrupper/new" component={categoryGroupsNew} />
           <Route path="lokaliteter/new" component={locationsNew} />
           <Route path="produkttyper/new" component={productTypesNew} />
           <Route path="udlaan/new" component={loansNew} />

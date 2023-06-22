@@ -111,7 +111,7 @@
         {/if}
       </div>
       {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet bruger</button>
+        <button id="delete" on:click={handleDelete}>Slet brand</button>
       {/if}
     </div>
 
@@ -135,22 +135,6 @@
 {/if}
 
 <style>
-  button#clear-picture {
-    position: absolute;
-    width: 4rem;
-    height: 4rem;
-    right: 0;
-    font-size: 2rem;
-    border-radius: 50%;
-    background: var(--s);
-    border: none;
-    transform: translateX(-40px);
-    cursor: pointer;
-    outline: 4px solid var(--bg2);
-  }
-  #clear-picture:focus {
-    outline: 4px solid var(--text1);
-  }
   .hidden {
     display: none;
   }
@@ -165,23 +149,8 @@
     background: var(--s);
     color: #fff;
   }
-  select {
-    width: 100%;
-    background: transparent;
-    color: var(--text1);
-    height: 40px;
-    border: var(--text1) 1px solid;
-    border-radius: 10px;
-    background: var(--bg1);
-    font-size: 1rem;
-    padding: 10px 15px;
-  }
-  input.text:disabled,
-  select:disabled {
-    color: var(--text2) !important;
-    opacity: 1;
-  }
 
+  input.text:disabled,
   .content {
     height: 100%;
     box-sizing: border-box;
@@ -189,12 +158,7 @@
     display: flex;
     gap: 1rem;
   }
-  img {
-    max-width: 90%;
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-  }
+
   .image-upload {
     width: max(35%, 400px);
     display: flex;
@@ -250,28 +214,6 @@
     transform: translate(-50%, 0);
   }
 
-  form button {
-    margin-top: 35px;
-    background-color: transparent;
-    border: 2px solid var(--text1);
-    line-height: 0;
-    font-size: 17px;
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 20px 15px;
-    border-radius: 60px;
-    color: var(--text1);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    position: relative;
-    z-index: 1;
-  }
-  form button:hover,
-  form button:focus {
-    color: #fff;
-    background-color: var(--p);
-  }
-
   form .question label {
     transform-origin: left center;
     color: var(--text1);
@@ -310,10 +252,5 @@
     border: 2px solid var(--i);
     background: var(--bg2);
     color: var(--text1);
-  }
-
-  form .question .error {
-    border-color: var(--s) !important;
-    color: var(--s) !important;
   }
 </style>

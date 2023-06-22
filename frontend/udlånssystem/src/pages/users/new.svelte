@@ -4,7 +4,9 @@
   import type { UserModel } from "../../types/userModel";
   import validateInputs from "../../services/validateInputs.js";
   import { getData } from "../../data/data";
-  import createUserInDB from "../../services/createUserInDB.js";
+  import axios from "axios";
+  import { path } from "../../stores/pathStore";
+  import { navigate } from "svelte-routing";
 
   //the picture to be uploaded
   let picture;
@@ -65,7 +67,23 @@
       education_id: new_education_id,
     };
     console.log(userToBeCreated);
-    createUserInDB(userToBeCreated, "/users");
+    axios
+      .post("upsert_user.php", userToBeCreated)
+      .then((res) => {
+        if (res.data == true) {
+          alert("Bruger Oprettet.");
+          navigate("/brugere");
+          path.update(() => {
+            return "/brugere";
+          });
+        } else {
+          alert("Ukendt fejl! Bruger ikke opdateret");
+        }
+        //tell the user that the user was updated
+      })
+      .catch((err) => {
+        alert("Felf! " + err);
+      });
   }
 
   function clearPicture() {

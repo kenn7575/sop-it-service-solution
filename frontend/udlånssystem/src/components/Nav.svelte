@@ -43,9 +43,14 @@
     <NavMenu
       buttons={[
         {
-          text: "Produktkategorier",
+          text: "Kategorier",
           icon: "fa-solid fa-tag",
-          destination: "/produktkategorier",
+          destination: "/kategorier",
+        },
+        {
+          text: "Kategorigrupper",
+          icon: "fa-solid fa-tag",
+          destination: "/kategorigrupper",
         },
         {
           text: "Produkttyper",
