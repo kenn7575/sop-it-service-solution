@@ -1,7 +1,7 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
   import type { productModel } from "../../types/productModel.js";
-  import createUserInDB from "../../services/createUserInDB.js";
+  import createDataInDB from "../../services/createDataInDB.js";
 
   let new_name;
 
@@ -21,7 +21,7 @@
       image_name: null,
       product_id_prefix: null
     };
-    createUserInDB(itemToBeUpdated, "/produkttyper");
+    createDataInDB(itemToBeUpdated, "/produkttyper");
   }
 </script>
 
