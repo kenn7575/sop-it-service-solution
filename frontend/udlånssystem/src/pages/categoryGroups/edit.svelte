@@ -104,7 +104,7 @@
 
 {#if importData}
   <div class="content">
-    <div class="image-upload">
+    <div class="control-panel">
       <div class="buttons">
         <button
           on:click={toggleEditMode}
@@ -146,47 +146,11 @@
 {/if}
 
 <style>
-  .buttons {
-    display: flex;
-    width: 100%;
-    gap: 0.5rem;
-    justify-content: space-between;
-  }
-  #delete {
-    min-height: 32px;
-    background: var(--s);
-    color: #fff;
-  }
-
   .content {
     height: 100%;
     box-sizing: border-box;
     padding: 2rem;
     display: flex;
     gap: 1rem;
-  }
-
-  .image-upload {
-    width: max(35%, 400px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    background-color: var(--bg2);
-    border-radius: 10px;
-    padding: 1rem;
-    position: relative;
-  }
-
-  button {
-    width: 100%;
-    height: 2rem;
-    color: var(--text1);
-    background: transparent;
-    border: 1px solid var(--text1);
-    border-radius: 10px;
-  }
-  button:disabled {
-    opacity: 0.5;
   }
 </style>
