@@ -19,9 +19,13 @@
       date_created: null,
       date_updated: null,
       image_name: null,
-      product_id_prefix: null
+      product_id_prefix: null,
     };
     createDataInDB(itemToBeUpdated, "/produkttyper");
+  }
+  function handleSubmit(event) {
+    event.preventDefault();
+    handleCreate();
   }
 </script>
 
@@ -35,7 +39,7 @@
   </div>
 
   <div class="form">
-    <form id="user-form">
+    <form on:submit={handleSubmit} id="user-form">
       <div class="question">
         <label for="a2">Navn <span>*</span></label>
         <input

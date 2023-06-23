@@ -17,6 +17,10 @@
     };
     createDataInDB("category_groups", itemToBeUpdated, "/kategorigrupper");
   }
+  function handleSubmit(event) {
+    event.preventDefault();
+    handleCreate();
+  }
 </script>
 
 <div class="content">
@@ -29,7 +33,7 @@
   </div>
 
   <div class="form">
-    <form id="user-form">
+    <form on:submit={handleSubmit} id="user-form">
       <div class="question">
         <label for="a2">Navn <span>*</span></label>
         <input

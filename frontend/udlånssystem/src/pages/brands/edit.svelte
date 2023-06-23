@@ -93,6 +93,10 @@
       "/brands"
     );
   }
+  function handleSubmit(event) {
+    event.preventDefault();
+    handleUpdate();
+  }
 </script>
 
 {#if importData}
@@ -115,7 +119,7 @@
       {/if}
     </div>
 
-    <div class="form">
+    <div on:submit={handleSubmit} class="form">
       <form id="user-form">
         <div class="question">
           <label for="a2">Navn <span class:hidden={!editMode}>*</span></label>
