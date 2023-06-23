@@ -5,8 +5,9 @@
   import doseObjectsMach from "../../services/doseObjectsMach.js";
   import type { productModel } from "../../types/productModel.js";
   import deleteItem from "../../services/deleteItemFromDB.js";
+  import createDataInDB from "../../services/createDataInDB.js";
 
-  //this is the id of the brand to be edited
+  //this is the id of the product to be edited
   export let id;
 
   //if the page is in edit mode or read only
@@ -54,8 +55,8 @@
       alert("Ingen ændringer");
       return;
     }
-    let itemToBeUpdated: productModel = {
-      UUID: null,
+    let DataToBeUpdated: productModel = {
+      UUID: id,
       name: new_name,
       brand_id: null,
       category_id: null,
@@ -65,20 +66,7 @@
       product_id_prefix: null,
     };
     console.log(DataToBeUpdated);
-    axios
-      .post("upsert_data.php", { data: DataToBeUpdated, table: "products" })
-      .then((res) => {
-        editMode = false;
-        if ((res.data = true)) {
-          alert("Opdateret");
-          importDataFromDB();
-        } else {
-          alert("Ukendt fejl! Indholdet er ikke opdateret");
-        }
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
+    createDataInDB("products", DataToBeUpdated, "/produkttyper");
   }
 
   function toggleEditMode() {
