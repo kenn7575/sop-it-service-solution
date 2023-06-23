@@ -6,5 +6,5 @@ export class categoryModel {
   name: string;
 
   //objects
-  category_group_id: categoryGroupModel;
+  category_group_id: number;
 }

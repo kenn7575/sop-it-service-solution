@@ -42,7 +42,7 @@
   import usersNew from "./pages/users/new.svelte";
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
-  import categoriesNew from "./pages/categoryGroups/new.svelte";
+  import categoriesNew from "./pages/categories/new.svelte";
   import categoryGroupsNew from "./pages/categoryGroups/new.svelte";
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
