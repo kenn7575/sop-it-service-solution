@@ -77,6 +77,13 @@
     new_name = name;
   }
 
+  window.addEventListener("keydown", function (e) {
+    if (e.key == "Escape") {
+      resetPage();
+      toggleEditMode();
+    }
+  });
+
   function handleDelete() {
     deleteItem(
       "delete_data.php",
