@@ -1,4 +1,4 @@
-import type { productMpdel } from "./productModel";
+import type { productModel } from "./productModel";
 import type { productStatusModel } from "./productStatusModel";
 import type { storageLocationModel } from "./storageLocationModel";
 
@@ -9,7 +9,7 @@ export class itemModel {
   date_updated: string;
 
   //objects
-  product_staus_id: productStatusModel;
-  product_id: productMpdel;
+  product_status_id: productStatusModel;
+  product_id: productModel;
   storage_location_id: storageLocationModel;
 }

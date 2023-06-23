@@ -16,8 +16,8 @@
   //imported Data
   let importData: itemModel;
 
-  let name;
-  let new_name;
+  let product_status_id;
+  let new_product_status_id;
 
   //get all data
   onMount(async () => {
@@ -34,16 +34,18 @@
         return res.data;
       });
 
-    asignValuesToUser(importData);
-    asignValueToNewUser();
+    asignValuesToElement(importData);
+    asignValueToNewElement();
   }
 
-  function asignValuesToUser(importUser) {
-    name = importUser.name;
+  function asignValuesToElement(importElement: itemModel) {
+    product_status_id = importElement.product_status_id;
+    console.log(importElement);
+    
   }
 
-  function asignValueToNewUser() {
-    new_name = name;
+  function asignValueToNewElement() {
+    new_product_status_id = product_status_id.UUID;
   }
 
   function handleUpdate() {
@@ -51,7 +53,7 @@
       alert("Udfyld alle felter");
       return;
     }
-    if (doseObjectsMach({ name }, { name: new_name })) {
+    if (doseObjectsMach({ product_status_id }, { product_status_id: new_product_status_id })) {
       alert("Ingen ændringer");
       return;
     }
@@ -60,7 +62,7 @@
       date_created: null,
       date_updated: null,
       storage_location_id: null,
-      product_staus_id: null,
+      product_status_id: null,
       product_id: null
     };
     console.log(DataToBeUpdated);
@@ -72,7 +74,7 @@
   }
 
   function resetPage() {
-    new_name = name;
+    new_product_status_id = product_status_id;
   }
 
   window.addEventListener("keydown", function (e) {
@@ -117,12 +119,12 @@
     <div class="form">
       <form id="user-form">
         <div class="question">
-          <label for="a2">Navn <span class:hidden={!editMode}>*</span></label>
+          <label for="a2">Status <span class:hidden={!editMode}>*</span></label>
           <input
             id="a2"
             disabled={!editMode}
             autocomplete="off"
-            bind:value={new_name}
+            bind:value={new_product_status_id}
             class="text"
             type="text"
             required

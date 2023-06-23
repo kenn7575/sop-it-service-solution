@@ -16,7 +16,7 @@
       date_created: null,
       date_updated: null,
       storage_location_id: null,
-      product_staus_id: null,
+      product_status_id: null,
       product_id: null
     };
     createDataInDB(itemToBeUpdated, "/produkttyper");
