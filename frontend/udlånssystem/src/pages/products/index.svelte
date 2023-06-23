@@ -2,13 +2,12 @@
   import Table from "../../components/table.svelte";
   import axios from "axios";
   import { onMount } from "svelte";
-
   import { getData } from "../../data/data";
 
   let inputData = [[]];
 
   onMount(async () => {
-    inputData = await getData("available_products_view");
+    inputData = await getData("items_view")
   });
 
   import { path } from "../../stores/pathStore";
@@ -23,13 +22,17 @@
   }
 </script>
 
-<div class="table">
-  <Table
-    {inputData}
-    buttonDestination="produkter/new"
-    on:message={handleRowClick}
-  />
-</div>
+{#if inputData}
+  <div class="table">
+    <Table
+      buttonDestination={"produkttyper/new"}
+      {inputData}
+      on:message={handleRowClick}
+    />
+  </div>
+{:else}
+  <p>loading</p>
+{/if}
 
 <style>
   .table {
