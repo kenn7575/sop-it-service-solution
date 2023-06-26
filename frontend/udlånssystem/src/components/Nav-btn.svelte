@@ -19,7 +19,7 @@
 
 <button
   on:click={handleClick}
-  disabled={stripPath(currentPath, 1) === destination}
+  
   class:selected={stripPath(currentPath, 1) === destination}
 >
   <div class="flex">
@@ -37,10 +37,11 @@
     padding: 0.7rem 1rem;
     border-radius: 10px;
     transition: background-color 100ms ease-in-out;
+    cursor: pointer;
   }
   button:hover:not(.selected) {
     background-color: var(--bg2);
-    cursor: pointer;
+    
     box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
       rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
       rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;

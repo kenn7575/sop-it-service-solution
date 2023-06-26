@@ -12,6 +12,7 @@
     <div class="watermark">
       <img src={logo} alt="logo" />
       <div class="text">
+        <h3>v1.0.0-beta</h3>
         <h1>Udlånssystem</h1>
         <h2>
           By <a target="_blank" href="https://github.com/kenn7575">Kenni</a> &
@@ -157,7 +158,14 @@
     font-size: 1.75rem;
     font-weight: 500;
   }
+  h3{
+    font-size: 1rem;
+    color: var(--text2);
+    font-weight: 300;
+    text-decoration: none;
+  }
   h2,
+
   a {
     font-size: 1rem;
     color: var(--text2);
