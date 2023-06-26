@@ -16,10 +16,10 @@ if (isset($address)) {
     else { $data->address_id = $conn->insert_id; }
 }
 
-upsert("users", $data, $conn);
+if (upsert("users", $data, $conn) == false) die(false);
 
- $result = $conn->query("COMMIT;");
+$result = $conn->query("COMMIT;");
 
- echo json_encode($result, JSON_PRETTY_PRINT);
+echo json_encode($result, JSON_PRETTY_PRINT);
 
 } catch (error $e) { echo json_encode(false); }
