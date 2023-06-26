@@ -26,7 +26,6 @@
       alert("Udfyld alle felter");
       return;
     }
-
     let itemToBeUpdated: categoryModel = {
       UUID: null,
       name: new_name,

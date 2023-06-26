@@ -35,13 +35,19 @@
 
   //scroll to element when menu is opened
   function scrollIntoView(classname) {
+    console.log("scrolling to", classname);
     setTimeout(() => {
-      const el = document.querySelector("#" + classname);
-      if (!el) return;
+      const el = document.getElementById(classname);
+      if (!el) {
+        console.log("element not found");
+        return;
+      }
+      console.log("scrolling to ", classname);
+
       el.scrollIntoView({
         behavior: "smooth",
       });
-    }, 1);
+    }, 10);
   }
 </script>
 
@@ -66,7 +72,7 @@
       <button
         class:selected={currentPath === button.destination}
         class="selected"
-        id="{button.text} disable-focus"
+        id={button.text}
         on:click={() => {
           handleNavClick(button.destination);
         }}

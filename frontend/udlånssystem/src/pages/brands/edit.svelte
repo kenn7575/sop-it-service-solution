@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import validateInputs from "../../services/validateInputs.js";
-  import doseObjectsMach from "../../services/doseObjectsMach.js";
+  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import type { brandModel } from "../../types/brandModel.js";
   import deleteItem from "../../services/deleteItemFromDB.js";
 
@@ -50,7 +50,7 @@
       alert("Udfyld alle felter");
       return;
     }
-    if (doseObjectsMach({ name }, { name: new_name })) {
+    if (doesObjectsMatch({ name }, { name: new_name })) {
       alert("Ingen ændringer");
       return;
     }

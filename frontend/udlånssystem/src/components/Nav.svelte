@@ -1,6 +1,6 @@
 <script>
   import logo from "../../public/logo.png";
-  import SearchInput from "./SearchInput.svelte";
+  import SearchInput from "./searchInput.svelte";
   import NavBtn from "./Nav-btn.svelte";
   import NavMenu from "./Nav-menu.svelte";
   import Toggle from "./toggle.svelte";
@@ -38,7 +38,8 @@
       text="Produkter"
       icon="fa-solid fa-bag-shopping"
     />
-    <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" />
+    <!-- TODO: build chat so that the 2 departments can communicate with eachother -->
+    <!-- <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" /> -->
 
     <NavMenu
       buttons={[

@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import validateInputs from "../../services/validateInputs.js";
-  import doseObjectsMach from "../../services/doseObjectsMach.js";
+  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import type { itemModel } from "../../types/itemModel.js";
   import deleteItem from "../../services/deleteItemFromDB.js";
   import createDataInDB from "../../services/createDataInDB.js";
@@ -41,7 +41,6 @@
   function asignValuesToElement(importElement: itemModel) {
     product_status_id = importElement.product_status_id;
     console.log(importElement);
-    
   }
 
   function asignValueToNewElement() {
@@ -53,7 +52,12 @@
       alert("Udfyld alle felter");
       return;
     }
-    if (doseObjectsMach({ product_status_id }, { product_status_id: new_product_status_id })) {
+    if (
+      doesObjectsMatch(
+        { product_status_id },
+        { product_status_id: new_product_status_id }
+      )
+    ) {
       alert("Ingen ændringer");
       return;
     }
@@ -63,7 +67,7 @@
       date_updated: null,
       storage_location_id: null,
       product_status_id: null,
-      product_id: null
+      product_id: null,
     };
     console.log(DataToBeUpdated);
     createDataInDB("items", DataToBeUpdated, "/produkter");
