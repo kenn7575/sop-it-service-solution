@@ -3,13 +3,17 @@
   export let label;
   export let type = "text";
   export let binding;
+  export let required = true;
   $: console.log(binding);
 </script>
 
 <div class="question">
-  <label
-    >{label} <span class="required-tag" class:hidden={!editMode}>*</span></label
-  >
+  <label for="text">
+    {label} 
+    {#if required}
+    <span class="required-tag" class:hidden={!editMode}>*</span>
+    {/if}
+   </label>
   {#if type === "text"}
     <input
       autocomplete="off"
@@ -17,7 +21,7 @@
       bind:value={binding}
       class="text"
       type="text"
-      required
+      {required}
     />
   {:else if type === "number"}
     <input
@@ -26,7 +30,7 @@
       bind:value={binding}
       class="text"
       type="number"
-      required
+      {required}
     />
   {:else if type === "password"}
     <input
@@ -35,7 +39,7 @@
       bind:value={binding}
       class="text"
       type="password"
-      required
+      {required}
     />
   {/if}
 </div>

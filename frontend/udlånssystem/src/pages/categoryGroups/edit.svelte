@@ -3,7 +3,7 @@
   import axios from "axios";
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import deleteItem from "../../services/deleteItemFromDB";
+  import deleteItem from "../../data/delete.js";
   import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
 
   //this is the id of the brand to be edited

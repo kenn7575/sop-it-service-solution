@@ -2,12 +2,15 @@
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
   import { stripPath } from "../services/pathFormatter.js";
+  import { currentUser } from "../services/login";
 
   export let destination = "/";
   export let text = "Home";
   export let icon = "fa-solid fa-house";
 
   $: currentPath = $path;
+  // console.fuck("ur_mom")
+  
 
   function handleClick() {
     navigate(destination, { replace: true });
@@ -27,6 +30,7 @@
     <p>{text}</p>
   </div>
 </button>
+
 
 <style>
   button {

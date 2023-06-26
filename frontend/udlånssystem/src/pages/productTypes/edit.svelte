@@ -4,8 +4,8 @@
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import type { productModel } from "../../types/productModel.js";
-  import deleteItem from "../../services/deleteItemFromDB.js";
-  import createDataInDB from "../../services/createDataInDB.js";
+  import deleteItem from "../../data/delete.js";
+  import createDataInDB from "../../data/create.js";
 
   //this is the id of the product to be edited
   export let id;

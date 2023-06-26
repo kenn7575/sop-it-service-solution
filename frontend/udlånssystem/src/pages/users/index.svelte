@@ -1,7 +1,7 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
   import { onMount } from "svelte";
-  import { getData } from "../../data/data";
+  import { getData } from "../../data/retrieve";
   import { navigate } from "svelte-routing";
   $: currentPath = $path;
 

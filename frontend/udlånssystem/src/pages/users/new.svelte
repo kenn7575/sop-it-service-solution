@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import type { UserModel } from "../../types/userModel";
   import validateInputs from "../../services/validateInputs.js";
-  import { getData } from "../../data/data";
+  import { getData } from "../../data/retrieve";
   import axios from "axios";
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";

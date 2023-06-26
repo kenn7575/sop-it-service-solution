@@ -2,7 +2,7 @@ import axios from "axios";
 import { navigate } from "svelte-routing";
 import { path } from "../stores/pathStore";
 
-export default function createDataInDB(table, importData, redirect) {
+export default function createItem(table, importData, redirect) {
   axios
     .post("upsert_data.php", { data: importData, table: table })
     .then((res) => {

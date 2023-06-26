@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export async function getData(table, UUID) {
+export async function retrieveItem(table, UUID) {
   var { data } = await axios.get("", { params: { table: table, UUID: UUID } });
 
-    return data;
+  return data;
 }

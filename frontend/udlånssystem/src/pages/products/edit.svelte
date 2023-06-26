@@ -4,7 +4,7 @@
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import type { itemModel } from "../../types/itemModel.js";
-  import deleteItem from "../../services/deleteItemFromDB.js";
+  import deleteItem from "../../data/delete.js";
   import createDataInDB from "../../services/createDataInDB.js";
 
   //this is the id of the item to be edited

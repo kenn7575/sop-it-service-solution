@@ -2,7 +2,7 @@
   //General
   import Table from "../../components/table.svelte";
   import TableSimplified from "../../components/table-simplified.svelte";
-  import { getData } from "../../data/data";
+  import { getData } from "../../data/retrieve";
   import { onMount } from "svelte";
 
   //Data to be sent
@@ -23,7 +23,6 @@
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
-    console.log(inputDataProducts);
     // inputDataProducts = inputDataProducts.slice(0, 10);
     departments = await getData("departments");
   });
@@ -33,7 +32,6 @@
 
   //Users
   function handleUserSelection(event) {
-    console.log(event.detail);
     user = event.detail;
     page++;
   }

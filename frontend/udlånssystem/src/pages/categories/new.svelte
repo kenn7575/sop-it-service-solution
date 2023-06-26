@@ -3,7 +3,7 @@
   import createDataInDB from "../../services/createDataInDB.js";
   import type { categoryModel } from "../../types/categoryModel.js";
   import { onMount } from "svelte";
-  import { getData } from "../../data/data";
+  import { getData } from "../../data/retrieve.js";
 
   let categoryGroups;
 

@@ -1,7 +1,7 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
   import { onMount } from "svelte";
-  import { getData } from "../../data/data";
+  import { getData } from "../../data/retrieve";
   import goToPath from "../../services/goToPath";
 
   let inputData = [[]];
@@ -9,10 +9,11 @@
   import { path } from "../../stores/pathStore";
 
 
-  $: currentPath = $path;
+
   function handleRowClick(event) {
+    console.log(event.detail.UUID);
     let id = event.detail.UUID;
-    goToPath(`${currentPath}/${id}`)
+    goToPath(`${$path}/${id}`)
   }
 
   onMount(async () => {
@@ -23,7 +24,7 @@
 {#if inputData}
   <div class="table">
     <Table
-      buttonDestination={"kategorier/new"}
+      buttonDestination={`${$path}/new`}
       {inputData}
       on:message={handleRowClick}
     />

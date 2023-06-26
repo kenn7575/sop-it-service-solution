@@ -4,13 +4,12 @@
   import axios from "axios";
   import type { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
-  import { getData } from "../../data/data";
+  import { getData } from "../../data/retrieve";
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import deleteItem from "../../services/deleteItemFromDB";
+  import deleteItem from "../../data/delete";
   import togggleEditMode from "../../services/toggleEditMode";
   import TextQuestion from "../../components/textQuestion.svelte";
-  import NumberQuestion from "../../components/numberQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
   export let id; //this is the id of the user to be edited
 
@@ -209,6 +208,7 @@
           bind:binding={new_address_line_2}
           label="Etage mm."
           {editMode}
+          required={false}
         />
         <TextQuestion bind:binding={new_city} label="By" {editMode} />
         <TextQuestion

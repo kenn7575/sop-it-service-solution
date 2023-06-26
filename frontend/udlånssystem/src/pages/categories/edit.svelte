@@ -3,9 +3,10 @@
   import axios from "axios";
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import deleteItem from "../../services/deleteItemFromDB";
-  import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
-  import { getData } from "../../data/data";
+  import deleteItem from "../../data/delete.js";
+
+  import { getData } from "../../data/retrieve.js";
+  import type { categoryModel } from "../../types/categoryModel.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -14,7 +15,7 @@
   let editMode = false;
 
   //imported Data
-  let importData: categoryGroupModel;
+  let importData: categoryModel;
   let categoryGroups;
 
   let name;
@@ -65,19 +66,20 @@
       alert("Ingen ændringer");
       return;
     }
-    let DataToBeUpdated: categoryGroupModel = {
+    let DataToBeUpdated: categoryModel = {
       UUID: importData.UUID,
       name: new_name,
+      category_group_id: new_category_group_id,
     };
     console.log(DataToBeUpdated);
     axios
       .post("upsert_data.php", {
         data: DataToBeUpdated,
-        table: "category_groups",
+        table: "categories",
       })
       .then((res) => {
         editMode = false;
-        if ((res.data = true)) {
+        if ((res.data == true)) {
           alert("Opdateret");
           importDataFromDB();
         } else {

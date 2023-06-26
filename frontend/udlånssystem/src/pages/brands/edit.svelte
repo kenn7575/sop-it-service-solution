@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import axios from "axios";
-  import validateInputs from "../../services/validateInputs.js";
-  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import type { brandModel } from "../../types/brandModel.js";
-  import deleteItem from "../../services/deleteItemFromDB.js";
+  import { brandModel } from "../../types/brandModel.js";
+  import deleteItem from "../../data/delete.js";
+  import update from "../../data/update.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import FormEditPanel from "../../components/form-edit-panel.svelte";
 
   //this is the id of the brand to be edited
   export let id;
@@ -14,11 +15,8 @@
 
   //imported Data
   let importData: brandModel;
+  let exportData: brandModel;
 
-  let name;
-  let new_name;
-
-  //get all data
   onMount(async () => {
     try {
       importDataFromDB();
@@ -27,62 +25,20 @@
     }
   });
   async function importDataFromDB() {
-    importData = await axios
-      .get("get_data.php", { params: { UUID: id, table: "brands" } })
-      .then((res) => {
-        return res.data;
-      });
-
-    asignValuesToUser(importData);
-    asignValueToNewUser();
+    const { data } = await axios.get("get_data.php", {
+      params: { UUID: id, table: "brands" },
+    });
+    exportData = new brandModel({ ...data });
+    importData = new brandModel({ ...data });
   }
-
-  function asignValuesToUser(importUser) {
-    name = importUser.name;
+  async function handleUpdate() {
+    update(importData, exportData, "brands").then((res) => {
+      console.log(res);
+      if (res) {
+        importDataFromDB();
+      }
+    });
   }
-
-  function asignValueToNewUser() {
-    new_name = name;
-  }
-
-  function handleUpdate() {
-    if (!validateInputs()) {
-      alert("Udfyld alle felter");
-      return;
-    }
-    if (doesObjectsMatch({ name }, { name: new_name })) {
-      alert("Ingen ændringer");
-      return;
-    }
-    let DataToBeUpdated: brandModel = {
-      UUID: importData.UUID,
-      name: new_name,
-    };
-    console.log(DataToBeUpdated);
-    axios
-      .post("upsert_data.php", { data: DataToBeUpdated, table: "brands" })
-      .then((res) => {
-        editMode = false;
-        if ((res.data = true)) {
-          alert("Opdateret");
-          importDataFromDB();
-        } else {
-          alert("Ukendt fejl! Indholdet er ikke opdateret");
-        }
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
-  }
-
-  function toggleEditMode() {
-    editMode = !editMode;
-  }
-
-  function resetPage() {
-    new_name = name;
-  }
-
   function handleDelete() {
     deleteItem(
       "delete_data.php",
@@ -93,49 +49,27 @@
       "/brands"
     );
   }
-  function handleSubmit(event) {
-    event.preventDefault();
-    handleUpdate();
-  }
 </script>
 
 {#if importData}
   <div class="content">
-    <div class="control-panel">
-      <div class="buttons">
-        <button
-          on:click={toggleEditMode}
-          disabled={!editMode}
-          on:click={resetPage}>Annuller</button
-        >
-        {#if editMode}
-          <button on:click={handleUpdate}>Gem</button>
-        {:else}
-          <button on:click={toggleEditMode}>Rediger</button>
-        {/if}
-      </div>
-      {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet brand</button>
-      {/if}
-    </div>
-
-    <div on:submit={handleSubmit} class="form">
+    <FormEditPanel
+      on:reset={() => {
+        importDataFromDB();
+      }}
+      on:delete={handleDelete}
+      on:update={handleUpdate}
+      bind:editMode
+    />
+    <div
+      on:submit={(e) => {
+        e.preventDefault;
+        handleUpdate();
+      }}
+      class="form"
+    >
       <form id="user-form">
-        <div class="question">
-          <label for="a2"
-            >Navn <span class="required-tag" class:hidden={!editMode}>*</span
-            ></label
-          >
-          <input
-            id="a2"
-            disabled={!editMode}
-            autocomplete="off"
-            bind:value={new_name}
-            class="text"
-            type="text"
-            required
-          />
-        </div>
+        <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
       </form>
     </div>
   </div>
