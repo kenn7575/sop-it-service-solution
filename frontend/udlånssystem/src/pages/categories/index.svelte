@@ -17,7 +17,7 @@
   }
 
   onMount(async () => {
-    inputData = await getData("categories");
+    inputData = await getData("categories_view");
   });
 </script>
 

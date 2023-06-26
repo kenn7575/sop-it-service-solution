@@ -51,7 +51,15 @@ if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {
     array_push($list, $row);
   }
-} else { array_push($list, ['no results'=>'0']); }
+} else {
+  $list = array();
+  $columns = explode(", ", $columns);
+  foreach ($columns as $column) {
+    $column = substr($column, 1, -1);
+    $list[0][$column] = "";
+  }
+  // array_push($list, ['Ingen resultater'=>'']);
+}
     
 if ($list != null) {
   echo json_encode($list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);

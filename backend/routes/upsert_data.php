@@ -10,8 +10,11 @@ $conn->query("START TRANSACTION;");
 
 upsert($table, $data, $conn);
 
- $result = $conn->query("COMMIT;");
+$result = $conn->query("COMMIT;");
 
- echo json_encode($result, JSON_PRETTY_PRINT);
+echo json_encode($result, JSON_PRETTY_PRINT);
 
-} catch (error $e) { echo json_encode(false); }
+} catch (error $e) {
+    writeToLog($e->getMessage());
+    die(json_encode(false));
+}
