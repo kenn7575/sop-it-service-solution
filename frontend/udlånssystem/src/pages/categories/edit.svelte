@@ -103,9 +103,9 @@
       "delete_data.php",
       {
         UUID: importData.UUID,
-        table: "category_groups",
+        table: "categories",
       },
-      "/kategorigrupper"
+      "/kategorier"
     );
   }
   function handleSubmit(event) {

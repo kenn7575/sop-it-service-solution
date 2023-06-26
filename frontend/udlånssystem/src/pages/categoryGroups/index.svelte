@@ -29,6 +29,7 @@
       {inputData}
       on:message={handleRowClick}
     />
+    
   </div>
 {:else}
   <p>loading</p>
