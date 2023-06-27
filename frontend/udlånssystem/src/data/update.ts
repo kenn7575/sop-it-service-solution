@@ -1,9 +1,9 @@
 import doesObjectsMatch from "../services/doesObjectsMatch";
 import axios from "axios";
 export default async function updateItem(
-  importData,
-  exportData,
-  table
+  importData: object,
+  exportData: any, //typescript class instance with validateUpdate() method
+  table: string
 ): Promise<boolean> {
   if (doesObjectsMatch(importData, exportData)) {
     alert("Ingen ændringer");
