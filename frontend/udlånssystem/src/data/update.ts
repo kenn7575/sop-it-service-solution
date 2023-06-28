@@ -13,9 +13,9 @@ export default async function updateItem(
     alert("Udfyld alle felter");
     return false;
   }
-  console.log("Updating " + table + " with data: ", exportData);
+  console.log("Updating " + table + " with data: ", {...exportData});
   return await axios
-    .post("upsert_data.php", { data: exportData, table: table })
+    .post("upsert_data.php", { data: {...exportData}, table: table })
     .then((res) => {
       console.log("Response: ", res);
       if (res.data == true) {

@@ -6,5 +6,11 @@ export class categoryModel {
   name: string;
 
   //objects
-  category_group_id: number;
+  category_group_id: categoryGroupModel;
+
+  constructor(json: any) {
+    this.UUID = json.UUID;
+    this.name = json.name;
+    this.category_group_id = json.category_group_id;
+  }
 }

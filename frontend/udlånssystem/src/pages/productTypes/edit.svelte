@@ -63,8 +63,11 @@
       date_created: null,
       date_updated: null,
       image_name: null,
-      product_id_prefix: null,
+      validateImport: function (): boolean { throw new Error("Function not implemented.") },
+      validateExport: function (): boolean { throw new Error("Function not implemented.") }
     };
+    delete DataToBeUpdated.validateImport;
+    delete DataToBeUpdated.validateExport;
     console.log(DataToBeUpdated);
     createDataInDB("products", DataToBeUpdated, "/produkttyper");
   }
@@ -91,7 +94,7 @@
         UUID: importData.UUID,
         table: "products",
       },
-      "/producttypes"
+      "/produkttyper"
     );
   }
   function handleSubmit(event) {

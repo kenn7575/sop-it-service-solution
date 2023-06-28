@@ -1,10 +1,10 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
   import { onMount } from "svelte";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
   import goToPath from "../../services/goToPath";
 
-  let inputData = [[]];
+  let inputData = [{}];
 
   import { path } from "../../stores/pathStore";
 

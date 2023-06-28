@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import axios from "axios";
-  import validateInputs from "../../services/validateInputs.js";
-  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
+  import { categoryModel } from "../../types/categoryModel.js";
   import deleteItem from "../../data/delete.js";
-
-  import { getData } from "../../data/retrieve.js";
-  import type { categoryModel } from "../../types/categoryModel.js";
+  import update from "../../data/update.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import FormEditPanel from "../../components/form-edit-panel.svelte";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
+  import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
+  import getData from "../../data/retrieve.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -16,90 +18,37 @@
 
   //imported Data
   let importData: categoryModel;
-  let categoryGroups;
+  let exportData: categoryModel;
 
-  let name;
-  let category_group_id;
+  let category_groups: categoryGroupModel[] = [];
 
-  let new_name;
-  let new_category_group_id;
+  $: console.log(importData, exportData);
 
-  //get all data
   onMount(async () => {
     try {
       importDataFromDB();
-      categoryGroups = await getData("category_groups").then((res) => {
-        new_category_group_id = res[0].UUID;
-
-        return res;
-      });
     } catch (error) {
       console.log(error);
     }
+    category_groups = await getData("category_groups");
   });
+
   async function importDataFromDB() {
-    importData = await axios
-      .get("get_data.php", { params: { UUID: id, table: "categories" } })
-      .then((res) => {
-        console.log(res);
-        return res.data;
-      });
-
-    asignValuesToUser(importData);
-    asignValueToNewUser();
+    const { data } = await axios.get("get_data.php", {
+      params: { UUID: id, table: "categories" },
+    });
+    
+    exportData = new categoryModel(JSON.parse(JSON.stringify(data) ));
+    importData = new categoryModel(JSON.parse(JSON.stringify(data) ));
   }
 
-  function asignValuesToUser(importUser) {
-    name = importUser.name;
+  async function handleUpdate() {
+    update(importData, exportData, "categories").then((res) => {
+      if (res) {
+        importDataFromDB();
+      }
+    });
   }
-
-  function asignValueToNewUser() {
-    new_name = name;
-  }
-
-  function handleUpdate() {
-    if (!validateInputs()) {
-      alert("Udfyld alle felter");
-      return;
-    }
-    if (doesObjectsMatch({ name }, { name: new_name })) {
-      alert("Ingen ændringer");
-      return;
-    }
-    let DataToBeUpdated: categoryModel = {
-      UUID: importData.UUID,
-      name: new_name,
-      category_group_id: new_category_group_id,
-    };
-    console.log(DataToBeUpdated);
-    axios
-      .post("upsert_data.php", {
-        data: DataToBeUpdated,
-        table: "categories",
-      })
-      .then((res) => {
-        editMode = false;
-        if ((res.data == true)) {
-          alert("Opdateret");
-          importDataFromDB();
-        } else {
-          alert("Ukendt fejl! Indholdet er ikke opdateret");
-        }
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
-  }
-
-  function toggleEditMode() {
-    editMode = !editMode;
-  }
-
-  function resetPage() {
-    new_name = name;
-    new_category_group_id = category_group_id;
-  }
-
   function handleDelete() {
     deleteItem(
       "delete_data.php",
@@ -110,73 +59,37 @@
       "/kategorier"
     );
   }
-  function handleSubmit(event) {
-    event.preventDefault();
-    handleUpdate();
-  }
 </script>
 
-{#if importData && categoryGroups}
+{#if importData && category_groups}
   <div class="content">
-    <div class="control-panel">
-      <div class="buttons">
-        <button
-          on:click={toggleEditMode}
-          disabled={!editMode}
-          on:click={resetPage}>Annuller</button
-        >
-        {#if editMode}
-          <button on:click={handleUpdate}>Gem</button>
-        {:else}
-          <button on:click={toggleEditMode}>Rediger</button>
-        {/if}
-      </div>
-      {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet kattegorigruppe</button
-        >
-      {/if}
-    </div>
-
-    <div class="form">
-      <form on:submit={handleSubmit} id="user-form">
-        <div class="question">
-          <label for="a2"
-            >Navn <span class="required-tag" class:hidden={!editMode}>*</span
-            ></label
-          >
-          <input
-            id="a2"
-            disabled={!editMode}
-            autocomplete="off"
-            bind:value={new_name}
-            class="text"
-            type="text"
-            required
-          />
-        </div>
-        <div class="question">
-          <label for="a11"
-            >Kategorigruppe<span class="required-tag" class:hidden={!editMode}
-              >*</span
-            ></label
-          >
-
-          <select
-            disabled={!editMode}
-            id="a11"
-            required
-            form="user-form"
-            bind:value={new_category_group_id}
-          >
-            {#each categoryGroups as categoryGroup}
-              <option
-                selected={new_category_group_id === categoryGroup.UUID}
-                value={categoryGroup.UUID}>{categoryGroup.name}</option
-              >
-            {/each}
-          </select>
-        </div>
+    <FormEditPanel
+      on:reset={() => {
+        importDataFromDB();
+      }}
+      on:delete={handleDelete}
+      on:update={handleUpdate}
+      bind:editMode
+    />
+    <div
+      on:submit={(e) => {
+        e.preventDefault;
+        handleUpdate();
+      }}
+      class="form"
+    >
+      {#if category_groups && exportData}
+      <form id="user-form">
+        <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
+        <SelectQuestion
+          bind:binding={exportData.category_group_id}
+          label="Kategori"
+          {editMode}
+          options={category_groups}
+          match={exportData.category_group_id.UUID}
+        />
       </form>
+      {/if}
     </div>
   </div>
 {/if}

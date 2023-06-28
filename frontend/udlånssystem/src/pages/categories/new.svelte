@@ -1,9 +1,9 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
-  import createDataInDB from "../../services/createDataInDB.js";
+  import createDataInDB from "../../data/create";
   import type { categoryModel } from "../../types/categoryModel.js";
   import { onMount } from "svelte";
-  import { getData } from "../../data/retrieve.js";
+  import getData from "../../data/retrieve.js";
 
   let categoryGroups;
 

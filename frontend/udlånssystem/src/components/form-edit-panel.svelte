@@ -44,3 +44,10 @@
     <button id="delete" on:click={handleDelete}>Slet brand</button>
   {/if}
 </div>
+
+<style>
+  button:hover {
+    background-color: #5b596e;
+    scale: 0.98;
+  }
+</style>

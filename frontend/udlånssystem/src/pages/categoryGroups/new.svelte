@@ -1,6 +1,6 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
-  import createDataInDB from "../../services/createDataInDB.js";
+  import createDataInDB from "../../data/create";
   import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
 
   let new_name;

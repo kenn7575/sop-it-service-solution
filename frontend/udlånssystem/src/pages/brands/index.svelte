@@ -1,10 +1,10 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
-  import axios from "axios";
   import { onMount } from "svelte";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
+  import axios from "axios";
 
-  let inputData = [[]];
+  let inputData = [{}];
 
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";

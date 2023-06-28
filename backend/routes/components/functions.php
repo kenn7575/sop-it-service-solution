@@ -33,9 +33,17 @@ function upsert($table, $data, $conn) {
     $data_insert_keys_string = implode(", ", $data_insert_keys_list);
     $data_insert_values_string = implode(", ", $data_insert_values_list);
     $data_update_string = implode(", ", $data_update_list);
+
+    $query_string =
+    "INSERT INTO `$table` ($data_insert_keys_string)
+    VALUES ($data_insert_values_string)
+    ON DUPLICATE KEY UPDATE $data_update_string; ";
+
     try {
-    $conn->query("INSERT INTO `$table` ($data_insert_keys_string) VALUES ($data_insert_values_string) ON DUPLICATE KEY UPDATE $data_update_string");
-    } catch (Exception $e) { writeToLog($e); return $e;}
+    $conn->query($query_string);
+    } catch (Exception $e) { return $e; }
+
+    return true;
 }
 
 function writeToLog($data) {

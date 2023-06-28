@@ -1,7 +1,7 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
   import { onMount } from "svelte";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
   import { navigate } from "svelte-routing";
   $: currentPath = $path;
 
@@ -13,7 +13,7 @@
     });
   }
 
-  let inputData = [[]];
+  let inputData = [{}];
 
   onMount(async () => {
     inputData = await getData("users_view");

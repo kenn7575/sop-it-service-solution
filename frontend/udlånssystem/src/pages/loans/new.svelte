@@ -2,7 +2,7 @@
   //General
   import Table from "../../components/table.svelte";
   import TableSimplified from "../../components/table-simplified.svelte";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
   import { onMount } from "svelte";
 
   //Data to be sent
@@ -15,11 +15,12 @@
   let loanType;
   let location;
   let employee;
+  let info
 
   //data
-  let inputDataUser = [[]]; //get data onMount
-  let inputDataProducts = [[]]; //get data onMount
-  let departments = []; //get data onMount
+  let inputDataUser = [{}]; //get data onMount
+  let inputDataProducts = [{}]; //get data onMount
+  let departments = [{}]; //get data onMount
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");

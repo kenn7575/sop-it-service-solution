@@ -5,7 +5,7 @@
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import type { itemModel } from "../../types/itemModel.js";
   import deleteItem from "../../data/delete.js";
-  import createDataInDB from "../../services/createDataInDB.js";
+  import createDataInDB from "../../data/create";
 
   //this is the id of the item to be edited
   export let id;

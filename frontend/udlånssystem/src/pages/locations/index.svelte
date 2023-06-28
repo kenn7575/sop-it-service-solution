@@ -2,9 +2,9 @@
   import Table from "../../components/table.svelte";
   import axios from "axios";
   import { onMount } from "svelte";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
 
-  let inputData = [[]];
+  let inputData = [{}];
 
   onMount(async () => {
     inputData = await getData("storage_locations");

@@ -4,7 +4,7 @@
   import axios from "axios";
   import type { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import deleteItem from "../../data/delete";
@@ -21,8 +21,8 @@
   let picture;
 
   //imported Data
-  let roles = [];
-  let educations = [];
+  let roles;
+  let educations;
   let importData: UserModel;
 
   let new_name;
@@ -133,15 +133,12 @@
         alert("Fejl! " + err);
       });
   }
-  function handleEditMode() {
-    editMode = togggleEditMode(user, importData, editMode);
-  }
-  function clearPicture() {
-    picture = "";
-  }
-  function handleFileDrop(event) {
-    picture = event.detail;
-  }
+  function handleEditMode() { editMode = togggleEditMode(user, importData, editMode); }
+
+  function clearPicture() { picture = ""; }
+  
+  function handleFileDrop(event: any) { picture = event.detail; }
+
   function handleDelete() {
     deleteItem(
       "delete_user.php",
@@ -152,7 +149,7 @@
       "/brugere"
     );
   }
-  function handleSubmit(event) {
+  function handleSubmit(event: Event) {
     event.preventDefault();
     handleUpdate();
   }

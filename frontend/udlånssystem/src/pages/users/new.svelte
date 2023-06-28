@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import type { UserModel } from "../../types/userModel";
   import validateInputs from "../../services/validateInputs.js";
-  import { getData } from "../../data/retrieve";
+  import getData from "../../data/retrieve";
   import axios from "axios";
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
@@ -70,6 +70,7 @@
     axios
       .post("upsert_user.php", userToBeCreated)
       .then((res) => {
+        console.log(res);
         if (res.data == true) {
           alert("Bruger Oprettet.");
           navigate("/brugere");

@@ -1,7 +1,7 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
   import type { productModel } from "../../types/productModel.js";
-  import createDataInDB from "../../services/createDataInDB.js";
+  import createDataInDB from "../../data/create";
 
   let new_name;
 
@@ -19,9 +19,12 @@
       date_created: null,
       date_updated: null,
       image_name: null,
-      product_id_prefix: null,
+      validateImport: function (): boolean { throw new Error("Function not implemented.") },
+      validateExport: function (): boolean { throw new Error("Function not implemented.") }
     };
-    createDataInDB(itemToBeUpdated, "/produkttyper");
+    delete itemToBeUpdated.validateImport;
+    delete itemToBeUpdated.validateExport;
+    createDataInDB("products", itemToBeUpdated, "/produkttyper");
   }
   function handleSubmit(event) {
     event.preventDefault();
