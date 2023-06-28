@@ -22,8 +22,6 @@
 
   let category_groups: categoryGroupModel[] = [];
 
-  $: console.log(importData, exportData);
-
   onMount(async () => {
     try {
       importDataFromDB();

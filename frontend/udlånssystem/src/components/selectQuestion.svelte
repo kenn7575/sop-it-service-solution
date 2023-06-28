@@ -2,6 +2,8 @@
 <!-- it took almost a week to get it to work. -->
 <!-- 70 201 201 - numeret til livlinien. du for brug for det. -->
 <script>
+// @ts-nocheck
+
   export let editMode = false;
   export let label;
   export let binding;
