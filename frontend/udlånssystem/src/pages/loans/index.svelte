@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import getData from "../../data/retrieve";
 
-  let inputData = [{}];
+  let inputData = [[]];
 
   onMount(async () => {
     inputData = await getData("loans_view");

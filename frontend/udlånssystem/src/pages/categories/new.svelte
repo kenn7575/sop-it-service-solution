@@ -1,6 +1,6 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
-  import createDataInDB from "../../data/create";
+  import createItem from "../../data/create.js";
   import type { categoryModel } from "../../types/categoryModel.js";
   import { onMount } from "svelte";
   import getData from "../../data/retrieve.js";
@@ -31,7 +31,7 @@
       name: new_name,
       category_group_id: new_category_group_id,
     };
-    createDataInDB("categories", itemToBeUpdated, "/kategorier");
+    createItem("categories", itemToBeUpdated, "/kategorier");
   }
   function handleSubmit(event) {
     event.preventDefault();
