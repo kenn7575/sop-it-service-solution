@@ -1,5 +1,11 @@
 <?php
 
+function writeToLog($data) {
+    $file = fopen("text.log", "a");
+    fwrite($file, $data);
+    fclose($file);
+}
+
 function addSuffix($table_name) {
     $exceptions = ["product_status"];
 
@@ -44,10 +50,4 @@ function upsert($table, $data, $conn) {
     } catch (Exception $e) { return $e; }
 
     return true;
-}
-
-function writeToLog($data) {
-    $file = fopen("text.log", "a");
-    fwrite($file, $data);
-    fclose($file);
 }

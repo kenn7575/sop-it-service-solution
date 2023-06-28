@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   export let editMode = false;
   export let label;
   export let binding;
@@ -19,11 +21,11 @@
     id="a10"
     required
     form="user-form"
-    on:change={(e) => {binding = e.target.value}}
+    on:change={(e) => binding = e.target.value}
   >
     {#each options as option}
       <!-- {#if role.level < user.role_id.authorization_level_id} -->
-      <option selected={option.UUID == match} value={option}
+      <option selected={option.UUID == match} value={JSON.stringify(option)}
         >{option.name}
         </option
       >

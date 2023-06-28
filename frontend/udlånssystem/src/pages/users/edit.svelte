@@ -118,8 +118,9 @@
       alert("Ingen ændringer");
       return;
     }
+    console.log(DataToBeUpdated);
     axios
-      .post("upsert_user.php", DataToBeUpdated)
+      .post("upsert_user.php", {data: DataToBeUpdated})
       .then((res) => {
         editMode = false;
         if ((res.data = true)) {
