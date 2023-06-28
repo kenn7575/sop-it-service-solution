@@ -6,6 +6,7 @@
   import type { itemModel } from "../../types/itemModel.js";
   import deleteItem from "../../data/delete.js";
   import createDataInDB from "../../data/create";
+  import retrieveItems from "../../data/retrieve";
 
   //this is the id of the item to be edited
   export let id;
@@ -15,6 +16,7 @@
 
   //imported Data
   let importData: itemModel;
+  let exportData: itemModel;
 
   let product_status_id;
   let new_product_status_id;
@@ -28,11 +30,7 @@
     }
   });
   async function importDataFromDB() {
-    importData = await axios
-      .get("get_data.php", { params: { UUID: id, table: "items" } })
-      .then((res) => {
-        return res.data;
-      });
+    let data = await retrieveItems("get_data.php");
 
     asignValuesToElement(importData);
     asignValueToNewElement();
