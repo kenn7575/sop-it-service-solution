@@ -4,16 +4,15 @@
   export let type = "text";
   export let binding;
   export let required = true;
-  $: console.log(binding);
 </script>
 
 <div class="question">
   <label for="text">
-    {label} 
+    {label}
     {#if required}
-    <span class="required-tag" class:hidden={!editMode}>*</span>
+      <span class="required-tag" class:hidden={!editMode}>*</span>
     {/if}
-   </label>
+  </label>
   {#if type === "text"}
     <input
       autocomplete="off"

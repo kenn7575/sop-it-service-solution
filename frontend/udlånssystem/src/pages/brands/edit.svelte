@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import { brandModel } from "../../types/brandModel.js";
+  import retrieveItem from "../../data/retrieve.js";
   import deleteItem from "../../data/delete.js";
   import update from "../../data/update.js";
   import TextQuestion from "../../components/textQuestion.svelte";
@@ -25,7 +26,7 @@
     }
   });
   async function importDataFromDB() {
-    const { data } = await axios.get("get_data.php", {
+    const { data } = await axios("get_data.php", {
       params: { UUID: id, table: "brands" },
     });
     exportData = new brandModel({ ...data });
