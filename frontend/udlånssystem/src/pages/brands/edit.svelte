@@ -7,6 +7,7 @@
   import update from "../../data/update.js";
   import TextQuestion from "../../components/textQuestion.svelte";
   import FormEditPanel from "../../components/form-edit-panel.svelte";
+  import goToPath from "../../services/goToPath.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -57,6 +58,9 @@
     <FormEditPanel
       on:reset={() => {
         importDataFromDB();
+      }}
+      on:cancel={() => {
+        goToPath("/brands");
       }}
       on:delete={handleDelete}
       on:update={handleUpdate}

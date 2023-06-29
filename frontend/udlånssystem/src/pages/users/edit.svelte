@@ -12,6 +12,7 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
   import updateItem from "./update";
+
   export let id; //this is the id of the user to be edited
 
   $: user = $currentUser; // the current user - used to check if the user has the right authorization level to edit this user
@@ -178,6 +179,7 @@
           {editMode}
         />
         <TextQuestion
+          type="number"
           bind:binding={exportData.address_id.postal_code}
           label="Postnummer"
           {editMode}

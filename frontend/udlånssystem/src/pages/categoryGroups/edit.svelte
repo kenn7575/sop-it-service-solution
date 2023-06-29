@@ -4,7 +4,11 @@
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import deleteItem from "../../data/delete.js";
-  import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
+  import { categoryGroupModel } from "../../types/categoryGroupModel.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import FormEditPanel from "../../components/form-edit-panel.svelte";
+  import goToPath from "../../services/goToPath.js";
+  import updateItem from "../../data/update.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -14,9 +18,7 @@
 
   //imported Data
   let importData: categoryGroupModel;
-
-  let name;
-  let new_name;
+  let exportData: categoryGroupModel;
 
   //get all data
   onMount(async () => {
@@ -27,22 +29,11 @@
     }
   });
   async function importDataFromDB() {
-    importData = await axios
-      .get("get_data.php", { params: { UUID: id, table: "category_groups" } })
-      .then((res) => {
-        return res.data;
-      });
-
-    asignValuesToUser(importData);
-    asignValueToNewUser();
-  }
-
-  function asignValuesToUser(importUser) {
-    name = importUser.name;
-  }
-
-  function asignValueToNewUser() {
-    new_name = name;
+    const { data } = await axios("get_data.php", {
+      params: { UUID: id, table: "category_groups" },
+    });
+    exportData = new categoryGroupModel({ ...data });
+    importData = new categoryGroupModel({ ...data });
   }
 
   function handleUpdate() {
@@ -50,40 +41,17 @@
       alert("Udfyld alle felter");
       return;
     }
-    if (doesObjectsMatch({ name }, { name: new_name })) {
+    console.log(importData, exportData);
+    if (doesObjectsMatch(importData, exportData)) {
       alert("Ingen ændringer");
       return;
     }
-    let DataToBeUpdated: categoryGroupModel = {
-      UUID: importData.UUID,
-      name: new_name,
-    };
-    console.log(DataToBeUpdated);
-    axios
-      .post("upsert_data.php", {
-        data: DataToBeUpdated,
-        table: "category_groups",
-      })
-      .then((res) => {
-        editMode = false;
-        if ((res.data = true)) {
-          alert("Opdateret");
-          importDataFromDB();
-        } else {
-          alert("Ukendt fejl! Indholdet er ikke opdateret");
-        }
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
-  }
 
-  function toggleEditMode() {
-    editMode = !editMode;
-  }
-
-  function resetPage() {
-    new_name = name;
+    updateItem(importData, exportData, "category_groups").then((res) => {
+      if (res) {
+        importDataFromDB();
+      }
+    });
   }
 
   function handleDelete() {
@@ -104,42 +72,24 @@
 
 {#if importData}
   <div class="content">
-    <div class="control-panel">
-      <div class="buttons">
-        <button
-          on:click={toggleEditMode}
-          disabled={!editMode}
-          on:click={resetPage}>Annuller</button
-        >
-        {#if editMode}
-          <button on:click={handleUpdate}>Gem</button>
-        {:else}
-          <button on:click={toggleEditMode}>Rediger</button>
-        {/if}
-      </div>
-      {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet kattegorigruppe</button
-        >
-      {/if}
-    </div>
+    <FormEditPanel
+      on:cancel={() => {
+        goToPath("/kategorigrupper");
+      }}
+      on:reset={importDataFromDB}
+      on:delete={handleDelete}
+      on:update={handleUpdate}
+      bind:editMode
+    />
 
     <div class="form">
       <form on:submit={handleSubmit} id="user-form">
-        <div class="question">
-          <label class="required-tag" for="a2"
-            >Navn <span class="required-tag" class:hidden={!editMode}>*</span
-            ></label
-          >
-          <input
-            id="a2"
-            disabled={!editMode}
-            autocomplete="off"
-            bind:value={new_name}
-            class="text"
-            type="text"
-            required
-          />
-        </div>
+        <TextQuestion
+          bind:binding={exportData.name}
+          label="Navn"
+          required
+          {editMode}
+        />
       </form>
     </div>
   </div>
