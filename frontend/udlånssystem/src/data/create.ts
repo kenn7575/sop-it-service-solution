@@ -1,6 +1,5 @@
 import axios from "axios";
-import { navigate } from "svelte-routing";
-import { path } from "../stores/pathStore";
+import goToPath from "../services/goToPath";
 
 export default async function createItem(
   table: string,
@@ -8,12 +7,11 @@ export default async function createItem(
   redirect: string
 ) {
   return axios
-    .post("upsert_data.php", { data: importData, table: table })
+    .post("upsert_data.php", { data: { ...importData }, table: table })
     .then((res) => {
       if (res.data == true) {
         alert("Oprettet i databasen!");
-        navigate(redirect);
-        path.set(redirect);
+        goToPath(redirect);
         return true;
       } else {
         alert("Ukendt fejl! Indholdet er ikke oprettet.");

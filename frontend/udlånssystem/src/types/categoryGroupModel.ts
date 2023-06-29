@@ -6,4 +6,12 @@ export class categoryGroupModel {
   //fields
   UUID: number | null | undefined;
   name: string | null | undefined;
+
+  //validate
+  validateUpdate(): boolean {
+    return true;
+  }
+  validateCreate(): boolean {
+    return true;
+  }
 }

@@ -2,7 +2,6 @@
   export let editMode = false;
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
-  $: console.log(editMode);
   //create reset event
   function handleReset() {
     dispatch("reset");
@@ -41,7 +40,7 @@
     {/if}
   </div>
   {#if editMode}
-    <button id="delete" on:click={handleDelete}>Slet brand</button>
+    <button id="delete" on:click={handleDelete}>Slet</button>
   {/if}
 </div>
 
@@ -49,5 +48,9 @@
   button:hover {
     background-color: #5b596e;
     scale: 0.98;
+  }
+  #delete {
+    color: white;
+    background: #f85a40dd;
   }
 </style>
