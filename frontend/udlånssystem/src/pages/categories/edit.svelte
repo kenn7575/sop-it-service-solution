@@ -84,7 +84,7 @@
           label="Kategori"
           {editMode}
           options={category_groups}
-          match={exportData.category_group_id.UUID}
+          match={exportData.category_group_id}
         />
       </form>
       {/if}

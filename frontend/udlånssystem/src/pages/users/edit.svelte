@@ -75,29 +75,22 @@
     }
     //prepere data for comparison
 
-    console.log(exportData);
+    // console.log(exportData);
     if (doesObjectsMatch(importData, exportData)) {
       alert("Ingen ændringer");
       return;
     }
 
     updateItem(importData, exportData, "users").then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res) {
         getUser();
+        editMode = false;
       }
     });
   }
   function handleEditMode() {
     editMode = togggleEditMode(user, importData, editMode);
-  }
-
-  function clearPicture() {
-    picture = "";
-  }
-
-  function handleFileDrop(event: any) {
-    picture = event.detail;
   }
 
   function handleDelete() {
@@ -127,7 +120,7 @@
         alt="Profile picture"
       />
       {#if editMode && picture}
-        <button id="clear-picture" on:click={clearPicture}
+        <button id="clear-picture" on:click={() => {picture = ""}}
           ><i class="fa-solid fa-trash" /></button
         >
       {/if}
@@ -145,7 +138,7 @@
       </div>
       {#if editMode}
         <button id="delete" on:click={handleDelete}>Slet bruger</button>
-        <DropZone on:message={handleFileDrop} />
+        <DropZone on:message={(e) => {picture = e.detail}} />
       {/if}
     </div>
     <div class="form">
