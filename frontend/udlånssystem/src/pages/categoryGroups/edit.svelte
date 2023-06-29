@@ -50,6 +50,7 @@
     updateItem(importData, exportData, "category_groups").then((res) => {
       if (res) {
         importDataFromDB();
+        editMode = false;
       }
     });
   }

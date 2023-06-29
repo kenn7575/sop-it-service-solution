@@ -8,7 +8,9 @@ export default async function deleteItem(
   importData: object,
   redirect: string
 ): Promise<boolean> {
-  if (confirm("Er du sikker på at du vil slette denne bruger?")) {
+  if (
+    confirm("Er du sikker på at du vil slette dette indhold fra databasen?")
+  ) {
     return axios
       .post(destination, importData)
       .then((res) => {

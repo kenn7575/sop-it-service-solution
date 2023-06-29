@@ -1,9 +1,12 @@
 <script lang="ts">
   import validateInputs from "../../services/validateInputs.js";
-  import createDataInDB from "../../data/create";
-  import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
+  import createItem from "../../data/create";
+  import { categoryGroupModel } from "../../types/categoryGroupModel.js";
+  import FormNewPanel from "../../components/form-new-panel.svelte";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import goToPath from "../../services/goToPath.js";
 
-  let new_name;
+  let exportData = new categoryGroupModel({ name: "", UUID: null });
 
   function handleCreate() {
     if (!validateInputs()) {
@@ -11,11 +14,7 @@
       return;
     }
 
-    let itemToBeUpdated: categoryGroupModel = {
-      UUID: null,
-      name: new_name,
-    };
-    createDataInDB("category_groups", itemToBeUpdated, "/kategorigrupper");
+    createItem("category_groups", exportData, "/kategorigrupper");
   }
   function handleSubmit(event) {
     event.preventDefault();
@@ -24,27 +23,16 @@
 </script>
 
 <div class="content">
-  <div class="control-panel">
-    <div class="buttons">
-      <button>Annuller</button>
-
-      <button on:click={handleCreate}>Opret</button>
-    </div>
-  </div>
+  <FormNewPanel
+    on:cancel={() => {
+      goToPath("/kategorigrupper");
+    }}
+    on:create={handleCreate}
+  />
 
   <div class="form">
     <form on:submit={handleSubmit} id="user-form">
-      <div class="question">
-        <label for="a2">Navn <span class="required-tag">*</span></label>
-        <input
-          id="a2"
-          autocomplete="off"
-          bind:value={new_name}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
+      <TextQuestion bind:binding={exportData.name} label="Navn" required />
     </form>
   </div>
 </div>
