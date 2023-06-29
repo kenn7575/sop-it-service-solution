@@ -11,7 +11,7 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
 
-  let editMode = false; //if the page is in edit mode or read only
+  let editMode = true; //if the page is in edit mode or read only
 
   //the picture to be uploaded
   let picture;
@@ -20,10 +20,33 @@
   let roles = [];
   let educations = [];
 
-  let exportData: UserModel;
-  $: console.log(exportData);
+  let exportData: UserModel = {
+      UUID: null,
+      username: null,
+      name: null,
+      mail: null,
+      img_name: null,
+      address_id: {
+        UUID: null,
+        address_line_1: null,
+        address_line_2: null,
+        city: null,
+        postal_code: null,
+      },
+      role_id: {
+        UUID: null,
+        authorization_level_id: null,
+        name: null,
+      },
+      education_id: {
+        UUID: null,
+        name: null,
+      },
+      validateCreate: null,
+      validateUpdate: null
+    };
 
-  //get all data
+  
   onMount(async () => {
     try {
       roles = await getData("roles").then((res) => {
@@ -46,36 +69,11 @@
       alert("Udfyld alle felter");
       return;
     }
-    exportData = {
-      UUID: null,
-      username: "",
-      name: "",
-      mail: "",
-      img_name: "",
-      address_id: {},
-      role_id: {
-        UUID: null,
-        authorization_level_id: null,
-        name: null,
-      },
-      education_id: {
-        UUID: null,
-        name: null,
-      },
-      validateCreate: null,
-      validateUpdate: null
-    };
-
+    
     console.log(exportData);
-    createItem("users", { ...exportData }, "/users");
+    createItem("users", { ...exportData }, "/brugere");
   }
 
-  function clearPicture() {
-    picture = "";
-  }
-  function handleFileDrop(event) {
-    picture = event.detail;
-  }
   function handleSubmit(event) {
     event.preventDefault();
     handleCreate();
@@ -92,7 +90,7 @@
       alt="Profile picture"
     />
     {#if picture}
-      <button id="clear-picture" on:click={clearPicture}
+      <button id="clear-picture" on:click={() => {picture = ""}}
         ><i class="fa-solid fa-trash" /></button
       >
     {/if}
@@ -107,12 +105,12 @@
       <button on:click={handleCreate}>Opret</button>
     </div>
 
-    <DropZone on:message={handleFileDrop} />
+    <DropZone on:message={(event) => {picture = event.detail}} />
   </div>
 
   <div class="form">
     <form on:submit={handleSubmit} id="user-form">
-      <!-- <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
+      <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
       <TextQuestion
         bind:binding={exportData.username}
         label="Uni-login"
@@ -142,6 +140,7 @@
       <TextQuestion
         bind:binding={exportData.address_id.postal_code}
         label="Postnummer"
+        type="number"
         {editMode}
       />
       <SelectQuestion
@@ -156,7 +155,7 @@
         options={educations}
         label="Uddannelse"
         {editMode}
-      /> -->
+      />
     </form>
   </div>
 </div>
