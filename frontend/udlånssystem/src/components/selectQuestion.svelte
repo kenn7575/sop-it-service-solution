@@ -7,7 +7,7 @@
   export let editMode = false;
   export let label;
   export let binding;
-  export let match;
+  export let match = { UUID: 0, name: "" };
   export let options = [{ UUID: 0, name: "" }];
   $: console.log(match, options, binding);
 </script>

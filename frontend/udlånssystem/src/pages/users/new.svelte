@@ -7,6 +7,11 @@
   import axios from "axios";
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
+  import createItem from "./create";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
+
+  let editMode = false; //if the page is in edit mode or read only
 
   //the picture to be uploaded
   let picture;
@@ -15,30 +20,22 @@
   let roles = [];
   let educations = [];
 
-  let new_name;
-  let new_username;
-  let new_password;
-  let new_mail;
-  let new_address_line_1;
-  let new_address_line_2;
-  let new_city;
-  let new_postal_code;
-  let new_role_id;
-  let new_education_id;
+  let exportData: UserModel;
+  $: console.log(exportData);
 
   //get all data
   onMount(async () => {
     try {
-      roles = await getData("roles_view").then((res) => {
-        new_role_id = res[0].UUID;
-
+      roles = await getData("roles").then((res) => {
+        res.map((role) => (role.UUID = role.UUID.toString()));
         return res;
       });
 
       educations = await getData("educations").then((res) => {
-        new_education_id = res[0].UUID;
+        res.map((edu) => (edu.UUID = edu.UUID.toString()));
         return res;
       });
+
     } catch (error) {
       console.log(error);
     }
@@ -49,42 +46,28 @@
       alert("Udfyld alle felter");
       return;
     }
-    let userToBeCreated: UserModel = {
+    exportData = {
       UUID: null,
-      name: new_name,
-      username: new_username,
-      mail: new_mail,
-      img_name: picture,
-      password: new_password,
-      address_id: {
+      username: "",
+      name: "",
+      mail: "",
+      img_name: "",
+      address_id: {},
+      role_id: {
         UUID: null,
-        address_line_1: new_address_line_1,
-        address_line_2: new_address_line_2,
-        city: new_city,
-        postal_code: new_postal_code,
+        authorization_level_id: null,
+        name: null,
       },
-      role_id: new_role_id,
-      education_id: new_education_id,
+      education_id: {
+        UUID: null,
+        name: null,
+      },
+      validateCreate: null,
+      validateUpdate: null
     };
-    console.log(userToBeCreated);
-    axios
-      .post("upsert_user.php", userToBeCreated)
-      .then((res) => {
-        console.log(res);
-        if (res.data == true) {
-          alert("Bruger Oprettet.");
-          navigate("/brugere");
-          path.update(() => {
-            return "/brugere";
-          });
-        } else {
-          alert("Ukendt fejl! Bruger ikke opdateret");
-        }
-        //tell the user that the user was updated
-      })
-      .catch((err) => {
-        alert("Felf! " + err);
-      });
+
+    console.log(exportData);
+    createItem("users", { ...exportData }, "/users");
   }
 
   function clearPicture() {
@@ -101,6 +84,7 @@
 
 <div class="content">
   <div class="control-panel">
+    <!-- svelte-ignore a11y-img-redundant-alt -->
     <img
       src={picture
         ? picture
@@ -128,121 +112,51 @@
 
   <div class="form">
     <form on:submit={handleSubmit} id="user-form">
-      <div class="question">
-        <label for="a2">Navn <span class="required-tag">*</span></label>
-        <input
-          id="a2"
-          autocomplete="off"
-          bind:value={new_name}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
+      <!-- <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
+      <TextQuestion
+        bind:binding={exportData.username}
+        label="Uni-login"
+        {editMode}
+      />
+      <TextQuestion
+        bind:binding={exportData.mail}
+        label="E-mail"
+        {editMode}
+      />
+      <TextQuestion
+        bind:binding={exportData.address_id.address_line_1}
+        label="Vejnavn"
+        {editMode}
+      />
+      <TextQuestion
+        bind:binding={exportData.address_id.address_line_2}
+        label="Etage mm."
+        {editMode}
+        required={false}
+      />
+      <TextQuestion
+        bind:binding={exportData.address_id.city}
+        label="By"
+        {editMode}
+      />
+      <TextQuestion
+        bind:binding={exportData.address_id.postal_code}
+        label="Postnummer"
+        {editMode}
+      />
+      <SelectQuestion
+        bind:binding={exportData.role_id}
+        options={roles}
+        label="Bruger rolle"
+        {editMode}
+      />
 
-      <div class="question">
-        <label for="a4">Uni-login <span class="required-tag">*</span></label>
-        <input
-          id="a4"
-          autocomplete="off"
-          bind:value={new_username}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
-      <div class="question">
-        <label for="a4">Adgangskode<span class="required-tag">*</span></label>
-        <input
-          id="a4"
-          autocomplete="off"
-          bind:value={new_password}
-          class="text"
-          type="password"
-          required
-        />
-      </div>
-      <div class="question">
-        <label for="a5">E-mail <span class="required-tag">*</span></label>
-        <input
-          id="a5"
-          autocomplete="off"
-          bind:value={new_mail}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
-
-      <div class="question">
-        <label for="a6">Vejnavn <span class="required-tag">*</span></label>
-        <input
-          id="a6"
-          autocomplete="off"
-          bind:value={new_address_line_1}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
-      <div class="question">
-        <label for="a7">Etage mm.</label>
-        <input
-          id="a7"
-          autocomplete="off"
-          bind:value={new_address_line_2}
-          class="text"
-          type="text"
-        />
-      </div>
-      <div class="question">
-        <label for="a8">By <span class="required-tag">*</span></label>
-        <input
-          id="a8"
-          autocomplete="off"
-          bind:value={new_city}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
-      <div class="question">
-        <label for="a9">Postnummer <span class="required-tag">*</span></label>
-        <input
-          autocomplete="off"
-          bind:value={new_postal_code}
-          class="text"
-          id="a9"
-          type="number"
-          required
-        />
-      </div>
-      <div class="question">
-        <label for="a10">Bruger rolle <span class="required-tag">*</span></label
-        >
-        {#if roles}
-          <select id="a10" required form="user-form" bind:value={new_role_id}>
-            {#each roles as role}
-              <option value={role.UUID}>{role.name}</option>
-            {/each}
-          </select>
-        {/if}
-      </div>
-
-      <div class="question">
-        <label for="a11">Uddannelse<span class="required-tag">*</span></label>
-
-        <select
-          id="a11"
-          required
-          form="user-form"
-          bind:value={new_education_id}
-        >
-          {#each educations as education}
-            <option value={education.UUID}>{education.name}</option>
-          {/each}
-        </select>
-      </div>
+      <SelectQuestion
+        bind:binding={exportData.education_id}
+        options={educations}
+        label="Uddannelse"
+        {editMode}
+      /> -->
     </form>
   </div>
 </div>

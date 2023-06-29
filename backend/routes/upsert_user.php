@@ -2,7 +2,7 @@
 include "components/admin_db_conn.php";
 include "components/functions.php";
 
-try {
+// try {
 $data = (object) $_POST["data"];
 
 
@@ -26,7 +26,7 @@ $result = $conn->query("COMMIT;");
 
 echo json_encode($result, JSON_PRETTY_PRINT);
 
-} catch (error $e) {
-    writeToLog($e->getMessage());
-    echo json_encode(false);
-}
+// } catch (error $e) {
+//     writeToLog($e->getMessage());
+//     echo json_encode(false);
+// }

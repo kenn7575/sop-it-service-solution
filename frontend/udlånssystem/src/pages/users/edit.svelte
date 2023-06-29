@@ -190,27 +190,13 @@
           {editMode}
         />
 
-        <div class="question">
-          <label for="a11"
-            >Uddannelse<span class="required-tag" class:hidden={!editMode}
-              >*</span
-            ></label
-          >
-          <select
-            disabled={!editMode}
-            id="a11"
-            required
-            form="user-form"
-            bind:value={exportData.education_id.UUID}
-          >
-            {#each educations as education}
-              <option
-                selected={importData.education_id.UUID === education.UUID}
-                value={education.UUID}>{education.name}</option
-              >
-            {/each}
-          </select>
-        </div>
+        <SelectQuestion
+          bind:binding={exportData.education_id}
+          options={educations}
+          match={importData.education_id}
+          label="Uddannelse"
+          {editMode}
+        />
       </form>
     </div>
   </div>
