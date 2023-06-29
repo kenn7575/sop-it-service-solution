@@ -1,7 +1,6 @@
 SELECT
-  `c`.`UUID` AS `Kategori UUID`,
+  `c`.`UUID` AS `UUID`,
   `c`.`name` AS `Kategori Navn`,
-  `c`.`category_group_id` AS `Kategori gruppe id`,
   `cg`.`name` AS `Kategori gruppe navn`
 FROM
   (
