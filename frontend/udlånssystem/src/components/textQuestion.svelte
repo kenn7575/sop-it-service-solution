@@ -1,5 +1,5 @@
 <script>
-  export let editMode = false;
+  export let editMode = true;
   export let label;
   export let type = "text";
   export let binding;

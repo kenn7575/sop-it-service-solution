@@ -38,6 +38,7 @@
       console.log(res);
       if (res) {
         importDataFromDB();
+        editMode = false;
       }
     });
   }

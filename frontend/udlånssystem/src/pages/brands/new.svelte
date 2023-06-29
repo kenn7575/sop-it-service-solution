@@ -4,6 +4,7 @@
   import createItem from "../../data/create";
   import FormNewPanel from "../../components/form-new-panel.svelte";
   import goToPath from "../../services/goToPath";
+  import TextQuestion from "../../components/textQuestion.svelte";
 
   let exportData: brandModel = new brandModel({ name: "", UUID: null });
 
@@ -31,17 +32,7 @@
 
   <div class="form">
     <form on:submit={handleSubmit} id="user-form">
-      <div class="question">
-        <label for="a2">Navn <span class="required-tag">*</span></label>
-        <input
-          id="a2"
-          autocomplete="off"
-          bind:value={exportData.name}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
+      <TextQuestion bind:binding={exportData.name} label="Navn" required />
     </form>
   </div>
 </div>
