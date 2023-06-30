@@ -2,11 +2,17 @@
   import Table from "../../components/table.svelte";
   import axios from "axios";
   import { onMount } from "svelte";
-
-  let inputData = [[]];
-
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
+  import setPageTitle from "../../services/setPageTitle.js";
+
+  let page_name = "Brands";
+  let table = "brands";
+
+  setPageTitle.index(page_name);
+
+
+  let inputData = [[]];
 
   $: currentPath = $path;
   function handleRowClick(event) {

@@ -49,6 +49,7 @@
       }
     }
     const sortedData = data.sort((a, b) => {
+      if (a[columnKey] === undefined || b[columnKey] === undefined) return 0;
       const valueA = a[columnKey];
       const valueB = b[columnKey];
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;

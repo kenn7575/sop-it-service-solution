@@ -3,12 +3,15 @@
   import { onMount } from "svelte";
   import getData from "../../data/retrieve";
   import goToPath from "../../services/goToPath";
+  import { path } from "../../stores/pathStore";
+  import setPageTitle from "../../services/setPageTitle.js";
+
+  let page_name = "Kategorier";
+  let table = "categories";
+
+  setPageTitle.index(page_name);
 
   let inputData = [{}];
-
-  import { path } from "../../stores/pathStore";
-
-
 
   function handleRowClick(event) {
     console.log(event.detail.UUID);

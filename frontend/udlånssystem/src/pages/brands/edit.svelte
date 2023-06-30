@@ -19,22 +19,22 @@
   let importData: brandModel;
   let exportData: brandModel;
 
+  let table = "brands"
+  let page_name = "Brands"
+
   onMount(async () => {
-    try {
-      importDataFromDB();
-    } catch (error) {
-      console.log(error);
-    }
+    try { importDataFromDB() }
+    catch (error) { console.log(error) }
   });
+
   async function importDataFromDB() {
-    const { data } = await axios("get_data.php", {
-      params: { UUID: id, table: "brands" },
-    });
+    const { data } = await axios("get_data.php", { params: { UUID: id, table: table } } );
     exportData = new brandModel({ ...data });
     importData = new brandModel({ ...data });
   }
+
   async function handleUpdate() {
-    update(importData, exportData, "brands").then((res) => {
+    update(importData, exportData, table).then((res) => {
       console.log(res);
       if (res) {
         importDataFromDB();
@@ -42,17 +42,15 @@
       }
     });
   }
+
   function handleDelete() {
-    deleteItem(
-      "delete_data.php",
-      {
-        UUID: importData.UUID,
-        table: "brands",
-      },
-      "/brands"
-    );
+    deleteItem("delete_data.php", { UUID: importData.UUID, table: table}, `/${page_name.toLowerCase()}`);
   }
 </script>
+
+<svelte:head>
+  <title>{document.title} | {page_name} ~ {id}</title>
+</svelte:head>
 
 {#if importData}
   <div class="content">
@@ -61,7 +59,7 @@
         importDataFromDB();
       }}
       on:cancel={() => {
-        goToPath("/brands");
+        goToPath(`/${page_name.toLowerCase()}`);
       }}
       on:delete={handleDelete}
       on:update={handleUpdate}

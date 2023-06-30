@@ -6,7 +6,10 @@
   import goToPath from "../../services/goToPath";
   import TextQuestion from "../../components/textQuestion.svelte";
 
-  let exportData: brandModel = new brandModel({ name: "", UUID: null });
+  let exportData: brandModel = new brandModel({});
+
+  let table = "brands";
+  let page_name = "Brands";
 
   function handleCreate() {
     if (!validateInputs()) {
@@ -14,9 +17,9 @@
       return;
     }
     console.log(exportData);
-    createItem("brands", { ...exportData }, "/brands");
+    createItem(table, { ...exportData }, `/${page_name.toLowerCase()}`);
   }
-  function handleSubmit(event) {
+  function handleSubmit(event: Event) {
     event.preventDefault();
     handleCreate();
   }
@@ -25,7 +28,7 @@
 <div class="content">
   <FormNewPanel
     on:cancel={() => {
-      goToPath("/brands");
+      goToPath(`/${page_name.toLowerCase()}`);
     }}
     on:create={handleCreate}
   />
