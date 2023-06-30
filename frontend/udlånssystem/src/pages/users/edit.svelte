@@ -12,6 +12,7 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
   import updateItem from "./update";
+  import goToPath from "../../services/goToPath";
 
   export let id; //this is the id of the user to be edited
 
@@ -27,6 +28,7 @@
   let educations;
   let importData: UserModel;
   let exportData: UserModel;
+  $: console.log(importData, exportData);
 
   //get all data
   onMount(async () => {
@@ -63,11 +65,12 @@
         city: null,
         postal_code: null,
       };
-    resetPage();
+    handleReset();
   }
 
-  function resetPage() {
+  function handleReset() {
     exportData = new UserModel({ ...importData });
+    editMode = false;
   }
   function handleUpdate() {
     if (!validateInputs()) {
@@ -121,25 +124,43 @@
         alt="Profile picture"
       />
       {#if editMode && picture}
-        <button id="clear-picture" on:click={() => {picture = ""}}
-          ><i class="fa-solid fa-trash" /></button
+        <button
+          id="clear-picture"
+          on:click={() => {
+            picture = "";
+          }}><i class="fa-solid fa-trash" /></button
         >
       {/if}
       <div class="buttons">
-        <button
-          on:click={handleEditMode}
-          disabled={!editMode}
-          on:click={resetPage}>Annuller</button
-        >
         {#if editMode}
+          <button
+            on:click={() => {
+              editMode = !editMode;
+            }}
+            disabled={!editMode}
+            on:click={handleReset}>Annuller</button
+          >
           <button on:click={handleUpdate}>Gem</button>
         {:else}
-          <button on:click={handleEditMode}>Rediger</button>
+          <button
+            on:click={() => {
+              goToPath("/brugere");
+            }}>Tilbage</button
+          >
+          <button
+            on:click={() => {
+              editMode = !editMode;
+            }}>Rediger</button
+          >
         {/if}
       </div>
       {#if editMode}
         <button id="delete" on:click={handleDelete}>Slet bruger</button>
-        <DropZone on:message={(e) => {picture = e.detail}} />
+        <DropZone
+          on:message={(e) => {
+            picture = e.detail;
+          }}
+        />
       {/if}
     </div>
     <div class="form">
