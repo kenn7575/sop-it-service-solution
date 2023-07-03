@@ -32,7 +32,7 @@ function nested_objects($column, $conn) {
 function upsert($table, $data, $conn) {
     foreach ($data as $key => $value) {
         if (isset($value)) {
-            if (is_object($value) || substr($key, -3) == "_id") $value = $value["UUID"];
+            // if (is_object($value) || substr($key, -3) == "_id") $value = $value["UUID"];
             $data_insert_keys_list[] = "`$key`";
             $data_insert_values_list[] = "'$value'";
             $data_update_list[] = "`$key` = '$value'";

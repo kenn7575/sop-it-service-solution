@@ -7,8 +7,8 @@
   export let editMode = true;
   export let label;
   export let binding;
-  export let match = { UUID: 0, name: "" };
-  export let options = [{ UUID: 0, name: "" }];
+  export let match = 1;
+  export let options = [{ UUID: 1, name: "" }];
   // $: console.log(match, options, binding);
 </script>
 
@@ -27,7 +27,7 @@
   >
     {#each options as option}
       <option
-        selected={option.UUID == match.UUID}
+        selected={option.UUID == match}
         value={JSON.stringify(option)}
         >{option.name}
       </option>

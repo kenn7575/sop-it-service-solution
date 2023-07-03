@@ -10,11 +10,21 @@ $conn->query("START TRANSACTION;");
 
 upsert($table, $data, $conn);
 
-$result = $conn->query("COMMIT;");
+$rows_affected = $conn->affected_rows;
+$id = $conn->insert_id;
+
+$result = (object) [
+    "success" => $rows_affected > 0,
+    "id" => $id,
+    "data" => $data
+];
+
+$conn->query("COMMIT;");
 
 echo json_encode($result, JSON_PRETTY_PRINT);
 
 } catch (error $e) {
     writeToLog($e->getMessage());
+    $conn->query("ROLLBACK;");
     die(json_encode(false));
 }

@@ -11,7 +11,6 @@
 
   setPageTitle.index(page_name);
 
-
   let inputData = [[]];
 
   $: currentPath = $path;
