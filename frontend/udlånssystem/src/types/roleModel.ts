@@ -1,12 +1,8 @@
-import type { authorizationLevelModel } from "./authorizationLevelModel";
-
 export class RoleModel {
   //fields
   UUID: number;
   name: string;
-
-  //objects
-  authorization_level_id: authorizationLevelModel;
+  authorization_level_id: number;
 
   constructor(json: any) {
     this.UUID = json.UUID;

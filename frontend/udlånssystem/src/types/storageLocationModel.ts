@@ -1,5 +1,3 @@
-import type { zoneModel } from "./zoneModel";
-
 export class storageLocationModel {
   //fields
   UUID: number;
@@ -8,9 +6,7 @@ export class storageLocationModel {
   idle_since: string;
   img_name: string;
   date_updated: string;
-
-  //objects
-  zone_id: zoneModel;
+  zone_id: number;
 
   constructor(json: any) {
     this.UUID = json.UUID;

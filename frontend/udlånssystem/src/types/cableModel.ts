@@ -1,5 +1,3 @@
-import type { categoryModel } from "./categoryModel";
-
 export class cableModel {
   //fields
   UUID: number;
@@ -8,9 +6,7 @@ export class cableModel {
   name: string;
   amount_total: number;
   amount_lent: number;
-
-  //objects
-  category_id: categoryModel;
+  category_id: number;
 
   constructor(json: any) {
     this.UUID = json.UUID;

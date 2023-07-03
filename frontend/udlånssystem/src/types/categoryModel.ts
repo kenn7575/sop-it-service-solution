@@ -1,12 +1,8 @@
-import type { categoryGroupModel } from "./categoryGroupModel";
-
 export class categoryModel {
   //fields
   UUID: number;
   name: string;
-
-  //objects
-  category_group_id: categoryGroupModel | number | any;
+  category_group_id: number;
 
   constructor(json: any) {
     this.UUID = json.UUID;
