@@ -1,5 +1,4 @@
 <script lang="ts">
-  import validateInputs from "../../services/validateInputs";
   import { brandModel } from "../../types/brandModel";
   import createItem from "../../data/create";
   import FormNewPanel from "../../components/form-new-panel.svelte";
@@ -11,13 +10,23 @@
   let table = "brands";
   let page_name = "Brands";
 
-  function handleCreate() {
-    if (!validateInputs()) {
+  async function handleCreate() {
+    if (!exportData.validate()) {
       alert("Udfyld alle felter");
       return;
     }
     console.log(exportData);
-    createItem(table, { ...exportData }, `/${page_name.toLowerCase()}`);
+    const response: any = await createItem(
+      table,
+      { ...exportData },
+      `/${page_name.toLowerCase()}`
+    );
+    if (response && response.success) {
+      alert("Gemt");
+      goToPath(`/brands/${response.id}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
   function handleSubmit(event: Event) {
     event.preventDefault();

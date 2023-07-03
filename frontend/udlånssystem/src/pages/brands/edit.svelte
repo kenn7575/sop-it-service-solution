@@ -41,16 +41,20 @@
 
   async function handleUpdate(): Promise<any> {
     if (doesObjectsMatch(importData, exportData)) {
-      alert("no changes");
+      alert("Ingen ændringer");
       return;
     }
-    const data: any = await update(importData, exportData, table);
-    if (data && data.success) {
+    if (!exportData.validate()) {
+      alert("Udfyld alle felter");
+      return;
+    }
+    const response: any = await update(importData, exportData, table);
+    if (response && response.success) {
       importDataFromDB();
       editMode = false;
       alert("Changes saved");
     } else {
-      alert("Error 500 - something went wrong");
+      alert("Error 500 - Ukendt fejl");
     }
   }
 

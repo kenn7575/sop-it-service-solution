@@ -8,14 +8,8 @@ export class brandModel {
   }
 
   //validate
-  validateUpdate(): boolean {
-    if (this.UUID === undefined || this.UUID === null) return false;
-    if (this.name === undefined || this.name === null) return false;
-    return true;
-  }
-  validateCreate(): boolean {
-    if (this.name === undefined || this.name === null || this.name === "")
-      return false;
+  validate(): boolean {
+    if (!this.name) return false;
     return true;
   }
 }
