@@ -2,12 +2,12 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import { brandModel } from "../../types/brandModel.js";
-  import retrieveItem from "../../data/getData.js";
   import deleteItem from "../../data/delete.js";
   import update from "../../data/update.js";
   import TextQuestion from "../../components/textQuestion.svelte";
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import goToPath from "../../services/goToPath.js";
+  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -19,32 +19,47 @@
   let importData: brandModel;
   let exportData: brandModel;
 
-  let table = "brands"
-  let page_name = "Brands"
+  let table = "brands";
+  let page_name = "Brands";
 
   onMount(async () => {
-    try { importDataFromDB() }
-    catch (error) { console.log(error) }
+    try {
+      importDataFromDB();
+      console.log(importData);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   async function importDataFromDB() {
-    const { data } = await axios("get_data.php", { params: { UUID: id, table: table } } );
+    const { data } = await axios("get_data.php", {
+      params: { UUID: id, table: table },
+    });
     exportData = new brandModel({ ...data });
     importData = new brandModel({ ...data });
   }
 
-  async function handleUpdate() {
-    update(importData, exportData, table).then((res) => {
-      console.log(res);
-      if (res) {
-        importDataFromDB();
-        editMode = false;
-      }
-    });
+  async function handleUpdate(): Promise<any> {
+    if (doesObjectsMatch(importData, exportData)) {
+      alert("no changes");
+      return;
+    }
+    const data: any = await update(importData, exportData, table);
+    if (data && data.success) {
+      importDataFromDB();
+      editMode = false;
+      alert("Changes saved");
+    } else {
+      alert("Error 500 - something went wrong");
+    }
   }
 
   function handleDelete() {
-    deleteItem("delete_data.php", { UUID: importData.UUID, table: table}, `/${page_name.toLowerCase()}`);
+    deleteItem(
+      "delete_data.php",
+      { UUID: importData.UUID, table: table },
+      `/${page_name.toLowerCase()}`
+    );
   }
 </script>
 

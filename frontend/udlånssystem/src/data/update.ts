@@ -4,30 +4,30 @@ export default async function updateItem(
   importData: object,
   exportData: any, //typescript class instance with validateUpdate() method
   table: string
-): Promise<boolean> {
+): Promise<object> {
   if (doesObjectsMatch(importData, exportData)) {
     alert("Ingen ændringer");
-    return false;
+    return { success: false, data: "No changes", id: null };
   }
   if (!exportData.validateUpdate()) {
-    alert("Udfyld alle felter");
-    return false;
+    return { success: false, data: "Data not valid", id: null };
   }
-  console.log("Updating " + table + " with data: ", {...exportData});
-  return await axios
-    .post("upsert_data.php", { data: {...exportData}, table: table })
-    .then((res) => {
+  console.log("Updating " + table + " with data: ", { ...exportData });
+  const { data } = await axios
+    .post("upsert_data.php", { data: { ...exportData }, table: table })
+    .then((res: any) => {
       console.log("Response: ", res);
-      if (res.data == true) {
-        alert("Opdateret");
-        return true;
+      if (res?.success) {
+        return res;
       } else {
-        alert("Ukendt fejl! Indholdet er ikke opdateret");
-        return false;
+        return res;
       }
     })
     .catch((err) => {
       alert("Felf! " + err);
-      return false;
+      console.log("Error: ", err);
+      return { success: false, data: err, id: null };
     });
+  console.log("Data return: ", data);
+  return data;
 }
