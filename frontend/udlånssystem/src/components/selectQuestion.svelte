@@ -1,10 +1,10 @@
 <!-- ! good luck if this ever breaks! -->
 <!-- it took almost a week to get it to work. -->
-<!-- 70 201 201 - numeret til livlinien. du for brug for det. -->
+<!-- 70 201 201 - nummeret til livlinien. du for brug for det. -->
 <script>
 // @ts-nocheck
 
-  export let editMode = false;
+  export let editMode = true;
   export let label;
   export let binding;
   export let match = { UUID: 0, name: "" };

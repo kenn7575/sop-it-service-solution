@@ -18,12 +18,6 @@ model addresses {
   date_updated   DateTime @default(now()) @db.DateTime(0)
 }
 
-model authorization_level {
-  UUID  Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name  String @db.VarChar(255)
-  level Int
-}
-
 model brands {
   UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
   name String @db.VarChar(255)
@@ -112,16 +106,14 @@ model product_status {
 }
 
 model products {
-  UUID              Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name              String    @db.VarChar(255)
+  UUID              Int      @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String   @db.VarChar(255)
   brand_id          Int
   category_id       Int
-  amount            Int?
-  date_created      DateTime  @default(now()) @db.DateTime(0)
-  date_updated      DateTime? @db.DateTime(0)
-  product_id_prefix String?   @db.VarChar(50)
-  image_name        String?   @db.VarChar(50)
-  is_cable          Int?      @default(0) @db.TinyInt
+  date_created      DateTime @default(now()) @db.DateTime(0)
+  date_updated      DateTime @default(now()) @db.DateTime(0)
+  product_id_prefix String?  @db.VarChar(50)
+  image_name        String?  @db.VarChar(50)
 
   @@index([brand_id], map: "brand_id")
   @@index([category_id], map: "products_ibfk_2")
@@ -201,30 +193,23 @@ model cables {
   category_id  Int      @db.UnsignedInt
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model authorization_levels {
+  UUID  Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name  String @db.VarChar(255)
+  level Int
+}
+
 view available_products_view {
   UUID  Int     @id @default(0) @db.UnsignedInt
   Navn  String? @db.VarChar(255)
   Brand String? @db.VarChar(255)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view cables_view {
   ProductUUID Int    @id @default(0) @db.UnsignedInt
   Name        String @db.VarChar(255)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view category___category_groups {
-  Kategori_UUID        Int     @id @default(0) @map("Kategori UUID") @db.UnsignedInt
-  Kategori_Navn        String? @map("Kategori Navn") @db.VarChar(255)
-  Kategori_gruppe_id   Int     @map("Kategori gruppe id")
-  Kategori_gruppe_navn String? @map("Kategori gruppe navn") @db.VarChar(255)
-
-  @@map("category_&_category-groups")
-}
-
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view loans_view {
   UUID                  Int       @id @default(0) @db.UnsignedInt
   Dato_oprettet         DateTime  @default(now()) @map("Dato oprettet") @db.DateTime(0)
@@ -238,7 +223,6 @@ view loans_view {
   Laanetid__dage_       Int?      @map("Laanetid (dage)")
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view locations_view {
   UUID    Int     @id @default(0) @db.UnsignedInt
   Zone    String  @db.VarChar(255)
@@ -247,17 +231,14 @@ view locations_view {
   Lokale  String? @db.VarChar(255)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view products_view {
-  UUID           Int       @id @default(0) @db.UnsignedInt
-  Navn           String    @db.VarChar(255)
-  Antal          Int?
-  Dato_oprettet  DateTime  @default(now()) @map("Dato oprettet") @db.DateTime(0)
-  Dato_opdateret DateTime? @map("Dato opdateret") @db.DateTime(0)
-  image_name     String?   @map("image name") @db.VarChar(50)
+  UUID           Int      @id @default(0) @db.UnsignedInt
+  Navn           String   @db.VarChar(255)
+  Dato_oprettet  DateTime @default(now()) @map("Dato oprettet") @db.DateTime(0)
+  Dato_opdateret DateTime @default(now()) @map("Dato opdateret") @db.DateTime(0)
+  image_name     String?  @map("image name") @db.VarChar(50)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view users_view {
   UUID           Int      @id @default(0) @db.UnsignedInt
   Brugernavn     String   @db.VarChar(255)
@@ -268,7 +249,6 @@ view users_view {
   Rolle          String?  @db.VarChar(255)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view users_view_extended {
   UUID              Int     @id @default(0) @db.UnsignedInt
   Brugernavn        String  @db.VarChar(255)
@@ -280,4 +260,26 @@ view users_view_extended {
   Primaer_adresse   String? @map("Primaer adresse") @db.VarChar(255)
   Sekundaer_adresse String? @map("Sekundaer adresse") @db.VarChar(255)
   Rolle             String? @db.VarChar(255)
+}
+
+view categories_view {
+  UUID                 Int     @id @default(0) @db.UnsignedInt
+  Kategori_Navn        String? @map("Kategori Navn") @db.VarChar(255)
+  Kategori_gruppe_navn String? @map("Kategori gruppe navn") @db.VarChar(255)
+}
+
+view items_view {
+  UUID           Int       @id @default(0) @db.UnsignedInt
+  Navn           String?   @db.VarChar(255)
+  Status         String?   @db.VarChar(255)
+  Zone_id        Int?      @map("Zone id")
+  Dato_oprettet  DateTime  @default(now()) @map("Dato oprettet") @db.DateTime(0)
+  Dato_opdateret DateTime? @default(now()) @map("Dato opdateret") @db.DateTime(0)
+}
+
+view roles_view {
+  UUID    Int     @id @default(0) @db.UnsignedInt
+  name    String  @db.VarChar(255)
+  level   Int?
+  al_name String? @db.VarChar(255)
 }

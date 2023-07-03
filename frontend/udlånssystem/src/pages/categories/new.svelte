@@ -1,85 +1,63 @@
 <script lang="ts">
-  import validateInputs from "../../services/validateInputs.js";
-  import createItem from "../../data/create.js";
-  import type { categoryModel } from "../../types/categoryModel.js";
+  import validateInputs from "../../services/validateInputs";
+  import createItem from "../../data/create";
+  import FormNewPanel from "../../components/form-new-panel.svelte";
+  import goToPath from "../../services/goToPath";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
+  import { categoryModel } from "../../types/categoryModel.js";
+  import type { categoryGroupModel } from "../../types/categoryGroupModel";
   import { onMount } from "svelte";
   import getData from "../../data/retrieve.js";
+  import setPageTitle from "../../services/setPageTitle"
+  
+  let exportData: categoryModel = new categoryModel({});
+  
+  let table = "categories";
+  let page_name = "Kategorier";
 
-  let categoryGroups;
+  setPageTitle.new(page_name)
 
-  let new_name;
-  let new_category_group_id;
+  let categoryGroups: categoryGroupModel[] = [];
 
   onMount(async () => {
-    try {
-      categoryGroups = await getData("category_groups").then((res) => {
-        new_category_group_id = res[0].UUID;
-
-        return res;
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    try { importDataFromDB() }
+    catch (error) { console.log(error) }
   });
+
+  async function importDataFromDB() {
+    categoryGroups = await getData("category_groups")
+  }
+
   function handleCreate() {
     if (!validateInputs()) {
       alert("Udfyld alle felter");
       return;
     }
-    let itemToBeUpdated: categoryModel = {
-      UUID: null,
-      name: new_name,
-      category_group_id: new_category_group_id,
-    };
-    createItem("categories", itemToBeUpdated, "/kategorier");
+    console.log(exportData);
+    createItem(table, { ...exportData }, `/${page_name.toLowerCase()}`);
   }
-  function handleSubmit(event) {
+  function handleSubmit(event: Event) {
     event.preventDefault();
     handleCreate();
   }
 </script>
 
 <div class="content">
-  <div class="control-panel">
-    <div class="buttons">
-      <button>Annuller</button>
-
-      <button on:click={handleCreate}>Opret</button>
-    </div>
-  </div>
+  <FormNewPanel
+    on:cancel={() => {
+      goToPath(`/${page_name.toLowerCase()}`);
+    }}
+    on:create={handleCreate}
+  />
 
   <div class="form">
-    {#if categoryGroups}
-      <form on:submit={handleSubmit} id="user-form">
-        <div class="question">
-          <label for="a2">Navn<span class="requred-tag">*</span></label>
-          <input
-            id="a2"
-            autocomplete="off"
-            bind:value={new_name}
-            class="text"
-            type="text"
-            required
-          />
-        </div>
-        <div class="question">
-          <label class="requred-tag" for="a11"
-            >Kategorigruppe<span class="requred-tag">*</span></label
-          >
-
-          <select
-            id="a11"
-            required
-            form="user-form"
-            bind:value={new_category_group_id}
-          >
-            {#each categoryGroups as categoryGroup}
-              <option value={categoryGroup.UUID}>{categoryGroup.name}</option>
-            {/each}
-          </select>
-        </div>
-      </form>
-    {/if}
+    <form on:submit={handleSubmit} id="user-form">
+      <TextQuestion bind:binding={exportData.name} label="Navn" required />
+      <SelectQuestion
+      bind:binding={exportData.category_group_id} label="Kategori" options={categoryGroups}
+    />
+    </form>
   </div>
 </div>
 
