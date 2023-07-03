@@ -7,11 +7,8 @@ export class categoryGroupModel {
   UUID: number | null | undefined;
   name: string | null | undefined;
 
-  //validate
-  validateUpdate(): boolean {
-    return true;
-  }
-  validateCreate(): boolean {
+  validate(): boolean {
+    if (!this.name) return false;
     return true;
   }
 }

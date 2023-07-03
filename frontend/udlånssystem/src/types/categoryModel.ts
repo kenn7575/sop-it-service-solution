@@ -1,8 +1,8 @@
 export class categoryModel {
   //fields
-  UUID: number;
-  name: string;
-  category_group_id: number | any;
+  UUID: number | null | undefined;
+  name: string | null | undefined;
+  category_group_id: number | null | undefined;
 
   constructor(json: any) {
     this.UUID = json.UUID;
@@ -10,10 +10,9 @@ export class categoryModel {
     this.category_group_id = json.category_group_id;
   }
 
-  validateUpdate(): boolean {
-    return true;
-  }
-  validateCreate(): boolean {
+  validate(): boolean {
+    if (!this.name) return false;
+    if (!this.category_group_id) return false;
     return true;
   }
 }

@@ -25,11 +25,15 @@ export class UserModel {
   education_id: number;
   role_id: number;
 
-  //validate
-  validateUpdate(): boolean {
-    return true;
-  }
-  validateCreate(): boolean {
+  validate(): boolean {
+    if (!this.username) return false;
+    if (!this.name) return false;
+    if (!this.mail) return false;
+    if (!this.password) return false;
+    if (!this.img_name) return false;
+    if (!this.address_id) return false;
+    if (!this.education_id) return false;
+    if (!this.role_id) return false;
     return true;
   }
 }

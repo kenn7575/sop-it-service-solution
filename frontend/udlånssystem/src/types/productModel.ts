@@ -1,12 +1,12 @@
 export class productModel {
   //fields
-  UUID: number | undefined;
-  name: string | undefined;
-  date_created: string | undefined;
-  date_updated: string | undefined;
-  image_name: string | undefined;
-  category_id: number;
-  brand_id: number;
+  UUID: number | null | undefined;
+  name: string | null | undefined;
+  date_created: string | null | undefined;
+  date_updated: string | null | undefined;
+  image_name: string | null | undefined;
+  category_id: number | null | undefined;
+  brand_id: number | null | undefined;
 
   constructor(json: any) {
     this.UUID = json.UUID;
@@ -20,10 +20,7 @@ export class productModel {
 
   //validate fields
   validate(): boolean {
-    if (!this.UUID) return false;
     if (!this.name) return false;
-    if (!this.date_created) return false;
-    if (!this.date_updated) return false;
     if (!this.category_id) return false;
     if (!this.brand_id) return false;
     return true;
