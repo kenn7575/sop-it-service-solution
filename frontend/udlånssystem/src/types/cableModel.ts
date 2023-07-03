@@ -11,4 +11,14 @@ export class cableModel {
 
   //objects
   category_id: categoryModel;
+
+  constructor(json: any) {
+    this.UUID = json.UUID;
+    this.date_created = json.date_created;
+    this.date_updated = json.date_updated;
+    this.name = json.name;
+    this.amount_total = json.amount_total;
+    this.amount_lent = json.amount_lent;
+    this.category_id = json.category_id;
+  }
 }

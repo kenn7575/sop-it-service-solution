@@ -7,4 +7,10 @@ export class RoleModel {
 
   //objects
   authorization_level_id: authorizationLevelModel;
+
+  constructor(json: any) {
+    this.UUID = json.UUID;
+    this.name = json.name;
+    this.authorization_level_id = json.authorization_level_id;
+  }
 }

@@ -1,6 +1,6 @@
-import type { RoleModel } from "./roleModel";
-import type { EducationModel } from "./educationModel";
-import type { AddressModel } from "./addressModel";
+import { RoleModel } from "./roleModel";
+import { EducationModel } from "./educationModel";
+import { AddressModel } from "./addressModel";
 
 export class UserModel {
   constructor(json: any) {
@@ -9,9 +9,9 @@ export class UserModel {
     this.name = json.name;
     this.mail = json.mail;
     this.img_name = json.img_name;
-    this.address_id = json.address_id;
-    this.education_id = json.education_id;
-    this.role_id = json.role_id;
+    this.address_id = new AddressModel(json.address_id);
+    this.education_id = new EducationModel(json.education_id);
+    this.role_id = new RoleModel(json.role_id);
     if (json?.password) {
       this.password = json.password;
     }

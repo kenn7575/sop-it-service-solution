@@ -13,6 +13,16 @@ export class productModel {
   category_id: categoryModel;
   brand_id: brandModel;
 
+  constructor(json: any) {
+    this.UUID = json.UUID;
+    this.name = json.name;
+    this.date_created = json.date_created;
+    this.date_updated = json.date_updated;
+    this.image_name = json.image_name;
+    this.category_id = json.category_id;
+    this.brand_id = json.brand_id;
+  }
+
   //validate fields
   validateImport(): boolean {
     if (this.UUID === undefined || this.UUID === null) return false;

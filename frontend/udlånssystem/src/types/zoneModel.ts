@@ -8,4 +8,11 @@ export class zoneModel {
 
   //object
   building_id: buildingModel;
+
+  constructor(json: any) {
+    this.UUID = json.UUID;
+    this.name = json.name;
+    this.floor_lavel = json.floor_lavel;
+    this.building_id = json.building_id;
+  }
 }
