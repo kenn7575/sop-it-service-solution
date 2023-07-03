@@ -12,9 +12,15 @@ export class UserModel {
     this.address_id = new AddressModel(json.address_id);
     this.education_id = new EducationModel(json.education_id);
     this.role_id = new RoleModel(json.role_id);
-    if (json?.password) {
+    if (json.password) {
       this.password = json.password;
+    } else {
+      this.password = null;
     }
+
+    this.address_id = json.address_id
+      ? new AddressModel(json.address_id)
+      : null;
   }
   //fields
   UUID: number | null | undefined;
