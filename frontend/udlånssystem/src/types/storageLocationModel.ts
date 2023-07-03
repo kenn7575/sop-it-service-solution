@@ -1,12 +1,12 @@
 export class storageLocationModel {
   //fields
-  UUID: number;
-  kabinet: string;
-  shelf: string;
-  idle_since: string;
-  img_name: string;
-  date_updated: string;
-  zone_id: number;
+  UUID: number | null | undefined;
+  kabinet: string | null | undefined;
+  shelf: string | null | undefined;
+  idle_since: string | null | undefined;
+  img_name: string | null | undefined;
+  date_updated: string | null | undefined;
+  zone_id: number | null | undefined;
 
   constructor(json: any) {
     this.UUID = json.UUID;
@@ -16,5 +16,13 @@ export class storageLocationModel {
     this.img_name = json.img_name;
     this.date_updated = json.date_updated;
     this.zone_id = json.zone_id;
+  }
+  validate(): boolean {
+    if (!this.kabinet) return false;
+    if (!this.shelf) return false;
+    if (!this.idle_since) return false;
+    if (!this.img_name) return false;
+    if (!this.zone_id) return false;
+    return true;
   }
 }
