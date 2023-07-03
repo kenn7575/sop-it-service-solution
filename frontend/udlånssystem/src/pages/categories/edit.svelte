@@ -37,8 +37,8 @@
   async function importDataFromDB() {
     const { data } = await axios.get("get_data.php", { params: { UUID: id, table: table } });
     
-    exportData = new categoryModel(JSON.parse(JSON.stringify(data) ));
-    importData = new categoryModel(JSON.parse(JSON.stringify(data) ));
+    exportData = new categoryModel(JSON.parse(JSON.stringify(data)));
+    importData = new categoryModel(JSON.parse(JSON.stringify(data)));
     
     categoryGroups = await getData("category_groups");
   }
@@ -84,7 +84,7 @@
     <form id="user-form">
       <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
       <SelectQuestion
-        bind:binding={exportData.category_group_id.UUID} label="Kategori" {editMode}
+        bind:binding={exportData.category_group_id} label="Kategori" {editMode}
         options={categoryGroups}
         match={exportData.category_group_id}
       />
