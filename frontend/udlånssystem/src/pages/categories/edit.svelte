@@ -11,6 +11,7 @@
   import getData from "../../data/getData.js";
   import goToPath from "../../services/goToPath.js";
   import setPageTitle from "../../services/setPageTitle.js";
+  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -24,40 +25,59 @@
 
   let categoryGroups: categoryGroupModel[] = [];
 
-  let table = "categories"
-  let page_name = "Kategorier"
+  let table = "categories";
+  let page_name = "Kategorier";
 
-  setPageTitle.edit(page_name, id)
+  setPageTitle.edit(page_name, id);
 
   onMount(async () => {
-    try { importDataFromDB() }
-    catch (error) { console.log(error) }
+    try {
+      importDataFromDB();
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   async function importDataFromDB() {
-    const { data } = await axios.get("get_data.php", { params: { UUID: id, table: table } });
-    
+    const { data } = await axios.get("get_data.php", {
+      params: { UUID: id, table: table },
+    });
+
     exportData = new categoryModel(JSON.parse(JSON.stringify(data)));
     importData = new categoryModel(JSON.parse(JSON.stringify(data)));
-    
+
     categoryGroups = await getData("category_groups");
   }
 
   async function handleUpdate() {
-    if (typeof(exportData.category_group_id) == "object") {
+    if (doesObjectsMatch(importData, exportData)) {
+      alert("Ingen ændringer");
+      return;
+    }
+    if (typeof exportData.category_group_id == "object") {
       exportData.category_group_id = exportData.category_group_id.UUID;
     }
-    update(importData, exportData, table).then((res) => {
-      console.log(res);
-      if (res) {
-        importDataFromDB();
-        editMode = false;
-      }
-    });
+    if (!exportData.validate()) {
+      alert("Udfyld alle felter");
+      return;
+    }
+    const response: any = await update(importData, exportData, table);
+    console.log("test", response);
+    if (response && response.success) {
+      importDataFromDB();
+      editMode = false;
+      alert("Changes saved");
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
 
   function handleDelete() {
-    deleteItem("delete_data.php", { UUID: importData.UUID, table: table}, `/${page_name.toLowerCase()}`);
+    deleteItem(
+      "delete_data.php",
+      { UUID: importData.UUID, table: table },
+      `/${page_name.toLowerCase()}`
+    );
   }
 </script>
 
@@ -81,14 +101,16 @@
       }}
       class="form"
     >
-    <form id="user-form">
-      <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
-      <SelectQuestion
-        bind:binding={exportData.category_group_id} label="Kategori" {editMode}
-        options={categoryGroups}
-        match={exportData.category_group_id}
-      />
-    </form>
+      <form id="user-form">
+        <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
+        <SelectQuestion
+          bind:binding={exportData.category_group_id}
+          label="Kategori"
+          {editMode}
+          options={categoryGroups}
+          match={exportData.category_group_id}
+        />
+      </form>
     </div>
   </div>
 {/if}
