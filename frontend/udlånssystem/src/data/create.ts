@@ -1,26 +1,29 @@
 import axios from "axios";
-import goToPath from "../services/goToPath";
+import doesObjectsMatch from "../services/doesObjectsMatch";
 
 export default async function createItem(
   table: string,
-  importData: object,
+  exportData: any,
   redirect: string
 ) {
-  return axios
-    .post("upsert_data.php", { data: { ...importData }, table: table })
-    .then((res) => {
-      if (res.data.success == true) {
-        alert("Oprettet i databasen!");
-        goToPath(redirect);
-        return true;
-      } else {
-        alert("Ukendt fejl! Indholdet er ikke oprettet.");
-        console.log(res.data);
-        return false;
-      }
-    })
-    .catch((err) => {
-      alert("Felf! " + err);
-      return false;
-    });
+  try {
+    const { data } = await axios
+      .post("upsert_data.php", { data: { ...exportData }, table: table })
+      .then((res: any) => {
+        if (res?.success) {
+          return res;
+        } else {
+          return res;
+        }
+      })
+      .catch((err) => {
+        alert("Felf! " + err);
+        console.log("Error: ", err);
+        return { success: false, data: err, id: null };
+      });
+
+    return data;
+  } catch (err) {
+    alert("Application crashed: " + err);
+  }
 }

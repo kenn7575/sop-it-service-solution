@@ -5,6 +5,7 @@
   //create reset event
   function handleReset() {
     dispatch("reset");
+    editMode = !editMode;
   }
   //create update event
   function handleUpdate() {
@@ -22,13 +23,7 @@
 <div class="control-panel">
   <div class="buttons">
     {#if editMode}
-      <button
-        on:click={() => {
-          editMode = !editMode;
-        }}
-        disabled={!editMode}
-        on:click={handleReset}>Annuller</button
-      >
+      <button disabled={!editMode} on:click={handleReset}>Annuller</button>
       <button on:click={handleUpdate}>Gem</button>
     {:else}
       <button on:click={handleCancel}>Tilbage</button>
