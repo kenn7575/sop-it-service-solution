@@ -44,6 +44,9 @@
   }
 
   async function handleUpdate() {
+    if (typeof(exportData.category_group_id) == "object") {
+      exportData.category_group_id = exportData.category_group_id.UUID;
+    }
     update(importData, exportData, table).then((res) => {
       console.log(res);
       if (res) {
@@ -81,7 +84,7 @@
     <form id="user-form">
       <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
       <SelectQuestion
-        bind:binding={exportData.category_group_id} label="Kategori" {editMode}
+        bind:binding={exportData.category_group_id.UUID} label="Kategori" {editMode}
         options={categoryGroups}
         match={exportData.category_group_id}
       />
