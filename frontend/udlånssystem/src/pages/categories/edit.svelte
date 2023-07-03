@@ -8,7 +8,7 @@
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
   import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
-  import getData from "../../data/retrieve.js";
+  import getData from "../../data/getData.js";
   import goToPath from "../../services/goToPath.js";
   import setPageTitle from "../../services/setPageTitle.js";
 

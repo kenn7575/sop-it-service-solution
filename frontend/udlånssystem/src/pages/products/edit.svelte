@@ -6,7 +6,7 @@
   import type { itemModel } from "../../types/itemModel.js";
   import deleteItem from "../../data/delete.js";
   import createDataInDB from "../../data/create";
-  import retrieveItems from "../../data/retrieve";
+  import retrieveItems from "../../data/getData.js";
 
   //this is the id of the item to be edited
   export let id;

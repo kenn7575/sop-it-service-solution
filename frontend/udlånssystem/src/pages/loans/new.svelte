@@ -2,7 +2,7 @@
   //General
   import Table from "../../components/table.svelte";
   import TableSimplified from "../../components/table-simplified.svelte";
-  import getData from "../../data/retrieve";
+  import getData from "../../data/getData";
   import { onMount } from "svelte";
 
   //Data to be sent

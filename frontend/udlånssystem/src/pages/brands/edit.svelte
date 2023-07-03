@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import { brandModel } from "../../types/brandModel.js";
-  import retrieveItem from "../../data/retrieve.js";
+  import retrieveItem from "../../data/getData.js";
   import deleteItem from "../../data/delete.js";
   import update from "../../data/update.js";
   import TextQuestion from "../../components/textQuestion.svelte";

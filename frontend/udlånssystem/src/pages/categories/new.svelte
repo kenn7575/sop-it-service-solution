@@ -8,7 +8,7 @@
   import { categoryModel } from "../../types/categoryModel.js";
   import type { categoryGroupModel } from "../../types/categoryGroupModel";
   import { onMount } from "svelte";
-  import getData from "../../data/retrieve.js";
+  import getData from "../../data/getData.js";
   import setPageTitle from "../../services/setPageTitle"
   
   let exportData: categoryModel = new categoryModel({});

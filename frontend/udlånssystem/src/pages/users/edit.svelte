@@ -4,7 +4,7 @@
   import axios from "axios";
   import { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
-  import getData from "../../data/retrieve";
+  import getData from "../../data/getData";
   import validateInputs from "../../services/validateInputs.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import deleteItem from "../../data/delete";
