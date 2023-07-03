@@ -2,7 +2,7 @@ export class categoryModel {
   //fields
   UUID: number | null | undefined;
   name: string | null | undefined;
-  category_group_id: number | null | undefined;
+  category_group_id: number | null | undefined | any;
 
   constructor(json: any) {
     this.UUID = json.UUID;
