@@ -5,8 +5,8 @@
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
 
-  let table = "categories";
-  let page_name = "Kategorier";
+  let table = "category_groups";
+  let page_name = "KategoriGrupper";
 
   let inputData;
 

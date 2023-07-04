@@ -23,7 +23,7 @@
     );
     if (response && response.success) {
       alert("Gemt");
-      goToPath(`/brands/${response.id}`);
+      goToPath(`/${page_name.toLowerCase()}/${response.id}`);
     } else {
       alert("Error 500 - Ukendt fejl");
     }
