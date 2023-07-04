@@ -11,28 +11,41 @@
   import getData from "../../data/getData.js";
   
   let exportData: categoryModel = new categoryModel({});
-  
+
   let table = "categories";
   let page_name = "Kategorier";
 
   let categoryGroups: categoryGroupModel[] = [];
 
   onMount(async () => {
-    try { importDataFromDB() }
-    catch (error) { console.log(error) }
+    try {
+      importDataFromDB();
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   async function importDataFromDB() {
-    categoryGroups = await getData("category_groups")
+    categoryGroups = await getData("category_groups");
   }
 
-  function handleCreate() {
+  async function handleCreate() {
     if (!validateInputs()) {
       alert("Udfyld alle felter");
       return;
     }
     console.log(exportData);
-    createItem(table, { ...exportData }, `/${page_name.toLowerCase()}`);
+    const response: any = await createItem(
+      table,
+      { ...exportData },
+      `/${page_name.toLowerCase()}`
+    );
+    if (response && response.success) {
+      alert("Gemt");
+      goToPath(`/${page_name.toLowerCase()}/${response.id}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
   function handleSubmit(event: Event) {
     event.preventDefault();
@@ -52,8 +65,10 @@
     <form on:submit={handleSubmit} id="user-form">
       <TextQuestion bind:binding={exportData.name} label="Navn" required />
       <SelectQuestion
-      bind:binding={exportData.category_group_id} label="Kategori" options={categoryGroups}
-    />
+        bind:binding={exportData.category_group_id}
+        label="Kategori"
+        options={categoryGroups}
+      />
     </form>
   </div>
 </div>

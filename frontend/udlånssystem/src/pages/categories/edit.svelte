@@ -39,7 +39,13 @@
     const { data } = await axios.get("get_data.php", {
       params: { UUID: id, table: table },
     });
-
+    console.log(data);
+    // HOT FIX - if the data is not found, redirect to the index page
+    if (!data?.UUID) {
+      alert("Kunne ikke finde data");
+      goToPath(`/${page_name.toLowerCase()}`);
+      return;
+    }
     exportData = new categoryModel(JSON.parse(JSON.stringify(data)));
     importData = new categoryModel(JSON.parse(JSON.stringify(data)));
 
@@ -58,7 +64,7 @@
       alert("Udfyld alle felter");
       return;
     }
-    const response: any = await update(importData, exportData, table);
+    const response: any = await update(exportData, table);
     console.log("test", response);
     if (response && response.success) {
       importDataFromDB();
@@ -69,12 +75,19 @@
     }
   }
 
-  function handleDelete() {
-    deleteItem(
+  async function handleDelete() {
+    const response: any = await deleteItem(
       "delete_data.php",
       { UUID: importData.UUID, table: table },
       `/${page_name.toLowerCase()}`
     );
+    console.log(response);
+    if (response?.success) {
+      alert("Slettet");
+      goToPath(`/${page_name.toLowerCase()}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
 </script>
 

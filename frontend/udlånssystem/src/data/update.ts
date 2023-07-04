@@ -2,7 +2,6 @@ import doesObjectsMatch from "../services/doesObjectsMatch";
 import axios from "axios";
 
 export default async function updateItem(
-  importData: any,
   exportData: any, //typescript class instance with validateUpdate() method
   table: string
 ): Promise<object> {
