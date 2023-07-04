@@ -5,14 +5,14 @@
   import FormNewPanel from "../../components/form-new-panel.svelte";
   import goToPath from "../../services/goToPath.js";
   import TextQuestion from "../../components/textQuestion.svelte";
-  
+
   let exportData = new categoryGroupModel({ name: "", UUID: null });
-  
+
   let table = "category_groups";
   let page_name = "KategoriGrupper";
 
   async function handleCreate() {
-    if (!exportData.validate()) {
+    if (!validateInputs()) {
       alert("Udfyld alle felter");
       return;
     }
