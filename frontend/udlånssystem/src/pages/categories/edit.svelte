@@ -36,9 +36,8 @@
   });
 
   async function importDataFromDB() {
-    const { data } = await axios.get("get_data.php", {
-      params: { UUID: id, table: table },
-    });
+    let data = await getData(table, id)
+
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
       alert("Kunne ikke finde data");
@@ -116,7 +115,7 @@
           label="Kategori"
           {editMode}
           options={categoryGroups}
-          match={exportData.category_group_id}
+          match={ {UUID: exportData.category_group_id, name: ""} }
         />
       </form>
     </div>

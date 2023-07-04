@@ -60,11 +60,6 @@
           destination: "/produkttyper",
         },
         {
-          text: "Lokaliteter",
-          destination: "/lokaliteter",
-          icon: "fa-solid fa-location-dot",
-        },
-        {
           text: "Brands",
           destination: "/brands",
           icon: "fa-regular fa-copyright",
