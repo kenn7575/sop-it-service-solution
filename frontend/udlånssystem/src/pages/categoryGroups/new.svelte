@@ -17,11 +17,7 @@
       return;
     }
     console.log(exportData);
-    const response: any = await createItem(
-      table,
-      { ...exportData },
-      `/${page_name.toLowerCase()}`
-    );
+    const response: any = await createItem(table, { ...exportData });
     if (response && response.success) {
       alert("Gemt");
       goToPath(`/${page_name.toLowerCase()}/${response.id}`);

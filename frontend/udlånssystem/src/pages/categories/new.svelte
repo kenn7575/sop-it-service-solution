@@ -9,7 +9,7 @@
   import type { categoryGroupModel } from "../../types/categoryGroupModel";
   import { onMount } from "svelte";
   import getData from "../../data/getData.js";
-  
+
   let exportData: categoryModel = new categoryModel({});
 
   let table = "categories";
@@ -35,11 +35,7 @@
       return;
     }
     console.log(exportData);
-    const response: any = await createItem(
-      table,
-      { ...exportData },
-      `/${page_name.toLowerCase()}`
-    );
+    const response: any = await createItem(table, { ...exportData });
     if (response && response.success) {
       alert("Gemt");
       goToPath(`/${page_name.toLowerCase()}/${response.id}`);
