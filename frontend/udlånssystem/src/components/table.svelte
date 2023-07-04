@@ -50,8 +50,10 @@
     }
     const sortedData = data.sort((a, b) => {
       if (a[columnKey] === undefined || b[columnKey] === undefined) return 0;
-      const valueA = a[columnKey];
-      const valueB = b[columnKey];
+      let valueA = a[columnKey];
+      let valueB = b[columnKey];
+      valueA = typeof(valueA) === "string" ? valueA.toString().toLowerCase() : valueA
+      valueB = typeof(valueB) === "string" ? valueB.toString().toLowerCase() : valueB
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
     });
     if (!sortAscending) {
