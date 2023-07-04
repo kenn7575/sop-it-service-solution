@@ -35,6 +35,12 @@
     const { data } = await axios("get_data.php", {
       params: { UUID: id, table: table },
     });
+    // HOT FIX - if the data is not found, redirect to the index page
+    if (!data?.UUID) {
+      alert("Kunne ikke finde data");
+      goToPath(`/${page_name.toLowerCase()}`);
+      return;
+    }
     exportData = new brandModel({ ...data });
     importData = new brandModel({ ...data });
   }
@@ -48,7 +54,7 @@
       alert("Udfyld alle felter");
       return;
     }
-    const response: any = await update(importData, exportData, table);
+    const response: any = await update(exportData, table);
     if (response && response.success) {
       importDataFromDB();
       editMode = false;
@@ -58,12 +64,19 @@
     }
   }
 
-  function handleDelete() {
-    deleteItem(
+  async function handleDelete() {
+    const response: any = await deleteItem(
       "delete_data.php",
       { UUID: importData.UUID, table: table },
       `/${page_name.toLowerCase()}`
     );
+    console.log(response);
+    if (response?.success) {
+      alert("Slettet");
+      goToPath(`/${page_name.toLowerCase()}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
 </script>
 

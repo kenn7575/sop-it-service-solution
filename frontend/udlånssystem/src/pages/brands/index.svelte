@@ -24,7 +24,7 @@
 
   onMount(async () => {
     inputData = await axios
-      .get("get_data.php", { params: { table: "brands" } })
+      .get("get_data.php", { params: { table: table } })
       .then((res) => {
         console.log(res);
         return res.data;
@@ -35,7 +35,7 @@
 {#if inputData}
   <div class="table">
     <Table
-      buttonDestination={"brands/new"}
+      buttonDestination={`/${table}/new`}
       {inputData}
       on:message={handleRowClick}
     />

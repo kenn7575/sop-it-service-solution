@@ -47,6 +47,7 @@
   import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
+  import setPageTitle from "./services/setPageTitle";
 
   import "./axiosConfig.js";
 
