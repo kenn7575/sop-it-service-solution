@@ -19,11 +19,12 @@
       date_created: null,
       date_updated: null,
       image_name: null,
-      validateImport: function (): boolean { throw new Error("Function not implemented.") },
-      validateExport: function (): boolean { throw new Error("Function not implemented.") }
+      validate: function (): boolean {
+        throw new Error("Function not implemented.");
+      },
     };
-    delete itemToBeUpdated.validateImport;
-    delete itemToBeUpdated.validateExport;
+    delete itemToBeUpdated.validate;
+    delete itemToBeUpdated.validate;
     createDataInDB("products", itemToBeUpdated, "/produkttyper");
   }
   function handleSubmit(event) {

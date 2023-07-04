@@ -66,7 +66,7 @@
       <TextQuestion bind:binding={exportData.name} label="Navn" required />
       <SelectQuestion
         bind:binding={exportData.category_group_id}
-        label="Kategori"
+        label="Kategorigruppe"
         options={categoryGroups}
       />
     </form>
