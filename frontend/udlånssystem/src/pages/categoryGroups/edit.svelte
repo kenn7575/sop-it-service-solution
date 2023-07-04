@@ -31,12 +31,13 @@
   });
 
   async function importDataFromDB() {
-    const { data } = await axios("get_data.php", {
+    const { data } = await axios.get("get_data.php", {
       params: { UUID: id, table: table },
     });
+
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
-      alert("Kunne ikke finde data");
+      alert("Kunne ikke finde data" + data);
       goToPath(`/${page_name.toLowerCase()}`);
       return;
     }

@@ -39,7 +39,6 @@
     const { data } = await axios.get("get_data.php", {
       params: { UUID: id, table: table },
     });
-    console.log(data);
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
       alert("Kunne ikke finde data");
