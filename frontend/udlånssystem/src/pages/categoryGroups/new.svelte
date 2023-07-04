@@ -3,18 +3,31 @@
   import createItem from "../../data/create";
   import { categoryGroupModel } from "../../types/categoryGroupModel.js";
   import FormNewPanel from "../../components/form-new-panel.svelte";
-  import TextQuestion from "../../components/textQuestion.svelte";
   import goToPath from "../../services/goToPath.js";
-
+  import TextQuestion from "../../components/textQuestion.svelte";
+  
   let exportData = new categoryGroupModel({ name: "", UUID: null });
+  
+  let table = "category_groups";
+  let page_name = "KategoriGrupper";
 
-  function handleCreate() {
-    if (!validateInputs()) {
+  async function handleCreate() {
+    if (!exportData.validate()) {
       alert("Udfyld alle felter");
       return;
     }
-
-    createItem("category_groups", exportData, "/kategorigrupper");
+    console.log(exportData);
+    const response: any = await createItem(
+      table,
+      { ...exportData },
+      `/${page_name.toLowerCase()}`
+    );
+    if (response && response.success) {
+      alert("Gemt");
+      goToPath(`/${page_name.toLowerCase()}/${response.id}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
   function handleSubmit(event) {
     event.preventDefault();
@@ -25,7 +38,7 @@
 <div class="content">
   <FormNewPanel
     on:cancel={() => {
-      goToPath("/kategorigrupper");
+      goToPath(`/${page_name.toLowerCase()}`);
     }}
     on:create={handleCreate}
   />

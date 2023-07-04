@@ -5,6 +5,7 @@
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
   import setPageTitle from "../../services/setPageTitle.js";
+  import getData from "../../data/getData";
 
   let page_name = "Brands";
   let table = "brands";
@@ -23,12 +24,7 @@
   }
 
   onMount(async () => {
-    inputData = await axios
-      .get("get_data.php", { params: { table: table } })
-      .then((res) => {
-        console.log(res);
-        return res.data;
-      });
+    inputData = await getData("category_groups");
   });
 </script>
 
