@@ -20,9 +20,7 @@
     id="a10"
     required
     form="user-form"
-    on:change={(e) => {
-      binding = JSON.parse(e.target.value);
-    }}
+    on:change={(e) => { binding = JSON.parse(e.target.value) }}
   >
     {#each options as option}
       <option

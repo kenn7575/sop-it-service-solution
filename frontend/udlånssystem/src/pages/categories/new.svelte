@@ -18,16 +18,8 @@
   let categoryGroups: categoryGroupModel[] = [];
 
   onMount(async () => {
-    try {
-      importDataFromDB();
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
-  async function importDataFromDB() {
     categoryGroups = await getData("category_groups");
-  }
+  });
 
   async function handleCreate() {
     if (!validateInputs()) {

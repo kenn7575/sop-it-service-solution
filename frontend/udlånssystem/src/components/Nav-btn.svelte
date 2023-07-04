@@ -9,8 +9,6 @@
   export let icon = "fa-solid fa-house";
 
   $: currentPath = $path;
-  // console.fuck("ur_mom")
-  
 
   function handleClick() {
     navigate(destination, { replace: true });

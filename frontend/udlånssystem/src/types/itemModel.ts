@@ -18,7 +18,6 @@ export class itemModel {
   validate(): boolean {
     if (!this.product_status_id) return false;
     if (!this.product_id) return false;
-    if (!this.storage_location_id) return false;
     return true;
   }
 }

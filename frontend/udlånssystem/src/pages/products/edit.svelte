@@ -1,12 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import axios from "axios";
-  import validateInputs from "../../services/validateInputs.js";
-  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import type { itemModel } from "../../types/itemModel.js";
+  import { itemModel } from "../../types/itemModel.js";
   import deleteItem from "../../data/delete.js";
-  import createDataInDB from "../../data/create";
-  import retrieveItems from "../../data/getData.js";
+  import update from "../../data/update.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import FormEditPanel from "../../components/form-edit-panel.svelte";
+  import goToPath from "../../services/goToPath.js";
+  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
+  import getData from "../../data/getData.js";
+  import type { productStatusModel } from "../../types/productStatusModel.js";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
+  import type { storageLocationModel } from "../../types/storageLocationModel.js";
+  import type { productModel } from "../../types/productModel.js";
 
   //this is the id of the item to be edited
   export let id;
@@ -18,8 +24,24 @@
   let importData: itemModel;
   let exportData: itemModel;
 
-  let product_status_id;
-  let new_product_status_id;
+  let table = "items";
+  let page_name = "Produkter";
+
+  let product_status: productStatusModel[] = []
+  let products: productModel[] = []
+
+  async function importDataFromDB() {
+    let data = await getData(table, id)
+
+      // HOT FIX - if the data is not found, redirect to the index page
+      if (!data?.UUID) {
+      alert("Kunne ikke finde data" + data);
+      goToPath(`/${page_name.toLowerCase()}`);
+      return;
+    }
+    exportData = new itemModel({ ...data });
+    importData = new itemModel({ ...data });
+  }
 
   //get all data
   onMount(async () => {
@@ -28,295 +50,97 @@
     } catch (error) {
       console.log(error);
     }
+
+    product_status = await getData("product_status")
+    product_status.map(product => {return product.name = product.status_name})
+
+    products = await getData("products")
   });
-  async function importDataFromDB() {
-    let data = await retrieveItems("get_data.php");
 
-    asignValuesToElement(importData);
-    asignValueToNewElement();
-  }
-
-  function asignValuesToElement(importElement: itemModel) {
-    product_status_id = importElement.product_status_id;
-    console.log(importElement);
-  }
-
-  function asignValueToNewElement() {
-    new_product_status_id = product_status_id.UUID;
-  }
-
-  function handleUpdate() {
-    if (!validateInputs()) {
-      alert("Udfyld alle felter");
-      return;
-    }
-    if (
-      doesObjectsMatch(
-        { product_status_id },
-        { product_status_id: new_product_status_id }
-      )
-    ) {
+  async function handleUpdate(): Promise<any> {
+    if (doesObjectsMatch(importData, exportData)) {
       alert("Ingen ændringer");
       return;
     }
-    let DataToBeUpdated: itemModel = {
-      UUID: id,
-      date_created: null,
-      date_updated: null,
-      storage_location_id: null,
-      product_status_id: null,
-      product_id: null,
-    };
-    console.log(DataToBeUpdated);
-    createDataInDB("items", DataToBeUpdated, "/produkter");
-  }
-
-  function toggleEditMode() {
-    editMode = !editMode;
-  }
-
-  function resetPage() {
-    new_product_status_id = product_status_id;
-  }
-
-  window.addEventListener("keydown", function (e) {
-    if (e.key == "Escape") {
-      resetPage();
-      toggleEditMode();
+    if (!exportData.validate()) {
+      alert("Udfyld alle felter");
+      return;
     }
-  });
+    const response: any = await update(exportData, table);
+    if (response && response.success) {
+      importDataFromDB();
+      editMode = false;
+      alert("Changes saved");
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
+  }
 
-  function handleDelete() {
-    deleteItem(
+  async function handleDelete() {
+    const response: any = await deleteItem(
       "delete_data.php",
-      {
-        UUID: importData.UUID,
-        table: "items",
-      },
-      "/produkter"
+      { UUID: importData.UUID, table: table },
+      `/${page_name.toLowerCase()}`
     );
+    console.log(response);
+    if (response?.success) {
+      alert("Slettet");
+      goToPath(`/${page_name.toLowerCase()}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    handleUpdate();
   }
 </script>
 
 {#if importData}
   <div class="content">
-    <div class="image-upload">
-      <div class="buttons">
-        <button
-          on:click={toggleEditMode}
-          disabled={!editMode}
-          on:click={resetPage}>Annuller</button
-        >
-        {#if editMode}
-          <button on:click={handleUpdate}>Gem</button>
-        {:else}
-          <button on:click={toggleEditMode}>Rediger</button>
-        {/if}
-      </div>
-      {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet produkt</button>
-      {/if}
-    </div>
-
-    <div class="form">
+    <FormEditPanel
+      on:cancel={() => {
+        goToPath(`/${page_name.toLowerCase()}`);
+      }}
+      on:reset={importDataFromDB}
+      on:delete={handleDelete}
+      on:update={handleUpdate}
+      bind:editMode
+    />
+    <div
+      on:submit={(e) => {
+        e.preventDefault;
+        handleUpdate();
+      }}
+      class="form"
+    >
       <form id="user-form">
-        <div class="question">
-          <label for="a2">Status <span class:hidden={!editMode}>*</span></label>
-          <input
-            id="a2"
-            disabled={!editMode}
-            autocomplete="off"
-            bind:value={new_product_status_id}
-            class="text"
-            type="text"
-            required
-          />
-        </div>
+        <SelectQuestion
+        bind:binding={exportData.product_status_id}
+        label="Produkt status"
+        {editMode}
+        options={product_status}
+        match={ {UUID: exportData.product_status_id, name: ""} }
+      />
+        <SelectQuestion
+        bind:binding={exportData.product_id}
+        label="Produkt"
+        {editMode}
+        options={products}
+        match={ {UUID: exportData.product_id, name: ""} }
+      />
       </form>
     </div>
   </div>
 {/if}
 
 <style>
-  button#clear-picture {
-    position: absolute;
-    width: 4rem;
-    height: 4rem;
-    right: 0;
-    font-size: 2rem;
-    border-radius: 50%;
-    background: var(--s);
-    border: none;
-    transform: translateX(-40px);
-    cursor: pointer;
-    outline: 4px solid var(--bg2);
-  }
-  #clear-picture:focus {
-    outline: 4px solid var(--text1);
-  }
-  .hidden {
-    display: none;
-  }
-  .buttons {
-    display: flex;
-    width: 100%;
-    gap: 0.5rem;
-    justify-content: space-between;
-  }
-  #delete {
-    min-height: 32px;
-    background: var(--s);
-    color: #fff;
-  }
-  select {
-    width: 100%;
-    background: transparent;
-    color: var(--text1);
-    height: 40px;
-    border: var(--text1) 1px solid;
-    border-radius: 10px;
-    background: var(--bg1);
-    font-size: 1rem;
-    padding: 10px 15px;
-  }
-  input.text:disabled,
-  select:disabled {
-    color: var(--text2) !important;
-    opacity: 1;
-  }
-
   .content {
     height: 100%;
     box-sizing: border-box;
     padding: 2rem;
     display: flex;
     gap: 1rem;
-  }
-  img {
-    max-width: 90%;
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-  }
-  .image-upload {
-    width: max(35%, 400px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    background-color: var(--bg2);
-    border-radius: 10px;
-    padding: 1rem;
-    position: relative;
-  }
-  .form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
-  }
-  button {
-    width: 100%;
-    height: 2rem;
-    color: var(--text1);
-    background: transparent;
-    border: 1px solid var(--text1);
-    border-radius: 10px;
-  }
-  button:disabled {
-    opacity: 0.5;
-  }
-
-  span {
-    position: absolute;
-    transform: translate(5px, -5px);
-    color: var(--s);
-    font-size: 2rem;
-    font-weight: 400;
-  }
-
-  form {
-    position: relative;
-    display: inline-block;
-    max-width: 700px;
-
-    box-sizing: border-box;
-
-    background: transparent;
-    border-radius: 40px;
-
-    left: 50%;
-    -moz-transform: translate(-50%, 0);
-    -ms-transform: translate(-50%, 0);
-    -webkit-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
-  }
-
-  form button {
-    margin-top: 35px;
-    background-color: transparent;
-    border: 2px solid var(--text1);
-    line-height: 0;
-    font-size: 17px;
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 20px 15px;
-    border-radius: 60px;
-    color: var(--text1);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    position: relative;
-    z-index: 1;
-  }
-  form button:hover,
-  form button:focus {
-    color: #fff;
-    background-color: var(--p);
-  }
-
-  form .question label {
-    transform-origin: left center;
-    color: var(--text1);
-    font-weight: 300;
-    letter-spacing: 0.01em;
-    font-size: 1rem;
-    box-sizing: border-box;
-    padding: 10px 15px;
-    display: block;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .question {
-    margin-bottom: 1rem;
-  }
-  form .question input.text {
-    appearance: none;
-    background: none;
-    border: 1px solid var(--text1);
-    line-height: 0;
-    font-size: 17px;
-    width: 100%;
-    display: block;
-    box-sizing: border-box;
-    padding: 10px 15px;
-    border-radius: 10px;
-    color: var(--text1);
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    position: relative;
-    z-index: 1;
-  }
-
-  form .question input.text:focus {
-    outline: none;
-    border: 2px solid var(--i);
-    background: var(--bg2);
-    color: var(--text1);
-  }
-
-  form .question .error {
-    border-color: var(--s) !important;
-    color: var(--s) !important;
   }
 </style>

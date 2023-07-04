@@ -1,13 +1,14 @@
 export class productStatusModel {
   UUID: number | null | undefined;
+  name: string | null | undefined;
   status_name: string | null | undefined;
 
   constructor(json: any) {
     this.UUID = json.UUID;
-    this.status_name = json.status_name;
+    this.name = json.status_name;
   }
   validate(): boolean {
-    if (!this.status_name) return false;
+    if (!this.name) return false;
     return true;
   }
 }

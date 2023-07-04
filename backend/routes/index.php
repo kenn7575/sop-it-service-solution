@@ -38,29 +38,23 @@ $columns = $_GET['columns'] ?? $all_columns;
 
 $sql = "SELECT $columns FROM $table $UUID";
 
+$list = array();
+
 try {
 $result = $conn->query($sql);
 } catch (Exception $e) {
   echo json_encode([['error'=>$e->getMessage()]], JSON_PRETTY_PRINT); die();
 }
 
-$list = array();
-
-if ($result->num_rows > 0) {
+if ($result->num_rows > 1) {
   $list = array();
   while($row = $result->fetch_assoc()) {
     array_push($list, $row);
   }
-} else {
-  $list = array();
-  $columns = explode(", ", $columns);
-  foreach ($columns as $column) {
-    $column = substr($column, 1, -1);
-    $list[0][$column] = "";
-  }
-  // array_push($list, ['Ingen resultater'=>'']);
-}
-    
+} 
+else if ($result->num_rows == 1) { $list = $result->fetch_object(); }
+else { array_push($list, ['Ingen resultater'=>'']); }
+
 if ($list != null) {
   echo json_encode($list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 }

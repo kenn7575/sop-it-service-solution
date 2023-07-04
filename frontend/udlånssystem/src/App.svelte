@@ -19,7 +19,6 @@
   import Brands from "./pages/brands/index.svelte";
   import Categories from "./pages/categories/index.svelte";
   import CategoriesGroups from "./pages/categoryGroups/index.svelte";
-  import Locations from "./pages/locations/index.svelte";
   import ProductTypes from "./pages/productTypes/index.svelte";
   import Help from "./pages/help/index.svelte";
   import Notifications from "./pages/notifications/index.svelte";
@@ -34,7 +33,6 @@
   import brandsEdit from "./pages/brands/edit.svelte";
   import categoriesEdit from "./pages/categories/edit.svelte";
   import categoryGroupsEdit from "./pages/categoryGroups/edit.svelte";
-  import locationsEdit from "./pages/locations/edit.svelte";
   import productTypesEdit from "./pages/productTypes/edit.svelte";
   import loansEdit from "./pages/loans/edit.svelte";
 
@@ -44,10 +42,8 @@
   import brandsNew from "./pages/brands/new.svelte";
   import categoriesNew from "./pages/categories/new.svelte";
   import categoryGroupsNew from "./pages/categoryGroups/new.svelte";
-  import locationsNew from "./pages/locations/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
-  import setPageTitle from "./services/setPageTitle";
 
   import "./axiosConfig.js";
 
@@ -106,7 +102,6 @@
           <Route path="brands" component={Brands} />
           <Route path="kategorigrupper" component={CategoriesGroups} />
           <Route path="kategorier" component={Categories} />
-          <Route path="lokaliteter" component={Locations} />
           <Route path="produkttyper" component={ProductTypes} />
           <Route path="notifikationer" component={Notifications} />
           <Route path="chat" component={Chat} />
@@ -119,7 +114,6 @@
           <Route path="kategorier/:id" component={categoriesEdit} />
           <Route path="kategorigrupper/:id" component={categoryGroupsEdit} />
           <Route path="produkter/:id" component={productsEdit} />
-          <Route path="lokaliteter/:id" component={locationsEdit} />
           <Route path="produkttyper/:id" component={productTypesEdit} />
           <Route path="udlaan/edit/:id" component={loansEdit} />
 
@@ -129,7 +123,6 @@
           <Route path="brands/new" component={brandsNew} />
           <Route path="kategorier/new" component={categoriesNew} />
           <Route path="kategorigrupper/new" component={categoryGroupsNew} />
-          <Route path="lokaliteter/new" component={locationsNew} />
           <Route path="produkttyper/new" component={productTypesNew} />
           <Route path="udlaan/new" component={loansNew} />
         </div>
