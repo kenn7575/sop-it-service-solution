@@ -80,10 +80,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>{document.title} | {page_name} ~ {id}</title>
-</svelte:head>
-
 {#if importData}
   <div class="content">
     <FormEditPanel

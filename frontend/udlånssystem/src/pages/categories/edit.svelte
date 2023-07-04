@@ -10,7 +10,6 @@
   import type { categoryGroupModel } from "../../types/categoryGroupModel.js";
   import getData from "../../data/getData.js";
   import goToPath from "../../services/goToPath.js";
-  import setPageTitle from "../../services/setPageTitle.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
 
   //this is the id of the brand to be edited
@@ -27,8 +26,6 @@
 
   let table = "categories";
   let page_name = "Kategorier";
-
-  setPageTitle.edit(page_name, id);
 
   onMount(async () => {
     try {

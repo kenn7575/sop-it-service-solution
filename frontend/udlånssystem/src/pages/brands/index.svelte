@@ -4,13 +4,10 @@
   import { onMount } from "svelte";
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
-  import setPageTitle from "../../services/setPageTitle.js";
   import getData from "../../data/getData";
 
-  let page_name = "Brands";
   let table = "brands";
-
-  setPageTitle.index(page_name);
+  let page_name = "Brands";
 
   let inputData = [[]];
 
@@ -24,14 +21,14 @@
   }
 
   onMount(async () => {
-    inputData = await getData("category_groups");
+    inputData = await getData(table);
   });
 </script>
 
 {#if inputData}
   <div class="table">
     <Table
-      buttonDestination={`/${table}/new`}
+      buttonDestination={`${page_name.toLowerCase()}/new`}
       {inputData}
       on:message={handleRowClick}
     />
