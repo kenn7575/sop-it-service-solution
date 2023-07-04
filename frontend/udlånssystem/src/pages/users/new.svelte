@@ -21,30 +21,16 @@
   let educations = [];
 
   let exportData: UserModel = {
-      UUID: null,
-      username: null,
-      name: null,
-      mail: null,
-      img_name: null,
-      address_id: {
-        UUID: null,
-        address_line_1: null,
-        address_line_2: null,
-        city: null,
-        postal_code: null,
-      },
-      role_id: {
-        UUID: null,
-        authorization_level_id: null,
-        name: null,
-      },
-      education_id: {
-        UUID: null,
-        name: null,
-      },
-      validateCreate: null,
-      validateUpdate: null
-    };
+    UUID: null,
+    username: null,
+    name: null,
+    mail: null,
+    img_name: null,
+    address_id: null,
+    role_id: null,
+    education_id: null,
+    validate: function (): boolean { throw new Error("Function not implemented.") }
+  };
 
   
   onMount(async () => {

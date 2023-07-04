@@ -2,11 +2,13 @@
   import Table from "../../components/table.svelte";
   import { onMount } from "svelte";
   import getData from "../../data/getData";
-
-  let inputData;
-
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
+
+  let table = "categories";
+  let page_name = "Kategorier";
+
+  let inputData;
 
   $: currentPath = $path;
   function handleRowClick(event) {
@@ -18,14 +20,14 @@
   }
 
   onMount(async () => {
-    inputData = await getData("category_groups");
+    inputData = await getData(table);
   });
 </script>
 
 {#if inputData}
   <div class="table">
     <Table
-      buttonDestination={"kategorigrupper/new"}
+      buttonDestination={`${$path}/new`}
       {inputData}
       on:message={handleRowClick}
     />

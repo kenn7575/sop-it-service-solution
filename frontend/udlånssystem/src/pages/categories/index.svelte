@@ -4,12 +4,9 @@
   import getData from "../../data/getData";
   import goToPath from "../../services/goToPath";
   import { path } from "../../stores/pathStore";
-  import setPageTitle from "../../services/setPageTitle.js";
 
-  let page_name = "Kategorier";
   let table = "categories";
-
-  setPageTitle.index(page_name);
+  let page_name = "Kategorier";
 
   let inputData = [{}];
 
