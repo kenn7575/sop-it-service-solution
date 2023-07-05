@@ -14,7 +14,7 @@ $rows_affected = $conn->affected_rows;
 $id = $conn->insert_id;
 
 $result = (object) [
-    "success" => $rows_affected > 0,
+    "success" => true,
     "id" => $id,
     "data" => $data
 ];
@@ -26,5 +26,9 @@ echo json_encode($result, JSON_PRETTY_PRINT);
 } catch (error $e) {
     writeToLog($e->getMessage());
     $conn->query("ROLLBACK;");
-    die(json_encode(false));
+    die((object) [
+        "success" => false,
+        "id" => null,
+        "data" => null
+    ]);
 }
