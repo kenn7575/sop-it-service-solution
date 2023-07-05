@@ -14,11 +14,14 @@
   //import data
   export let inputData = [];
 
+  let headers = [{}]
+  $: if (inputData.length > 0) headers = inputData;
+
   //resort data every time inputData changes
   $: inputData && sortTable(inputData, sortColumn);
 
   //split data into tableData and tableHeadings
-  $: tableHeadings = Object.keys(inputData[0]);
+  $: tableHeadings = Object.keys(headers[0]);
   $: tableData = Object.values(inputData);
 
   let sortAscending = true; //used to determine if the table should be sorted ascending or descending

@@ -31,6 +31,7 @@ if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {    array_push($all_columns, $row["COLUMN_NAME"]);     } 
 }
 
+$all_columns_array = $all_columns;
 
 $all_columns = "`".implode("`, `", $all_columns)."`";
 
@@ -46,14 +47,23 @@ $result = $conn->query($sql);
   echo json_encode([['error'=>$e->getMessage()]], JSON_PRETTY_PRINT); die();
 }
 
-if ($result->num_rows > 1) {
+if (!$UUID == "") { $list = $result->fetch_object(); }
+
+else if ($result->num_rows > 0) {
   $list = array();
   while($row = $result->fetch_assoc()) {
     array_push($list, $row);
   }
-} 
-else if ($result->num_rows == 1) { $list = $result->fetch_object(); }
-else { array_push($list, ['Ingen resultater'=>'']); }
+}
+
+else {
+  $temp_object = new stdClass();
+  foreach ($all_columns_array as $column) {
+    $temp_object->$column = null;
+  }
+  array_push($list, $temp_object);
+}
+// else { array_push($list, ['Ingen resultater'=>'']); }
 
 if ($list != null) {
   echo json_encode($list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);

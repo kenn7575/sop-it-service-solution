@@ -1,17 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import axios from "axios";
   import { itemModel } from "../../types/itemModel.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
   import deleteItem from "../../data/delete.js";
   import update from "../../data/update.js";
-  import TextQuestion from "../../components/textQuestion.svelte";
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import goToPath from "../../services/goToPath.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import getData from "../../data/getData.js";
   import type { productStatusModel } from "../../types/productStatusModel.js";
-  import SelectQuestion from "../../components/selectQuestion.svelte";
-  import type { storageLocationModel } from "../../types/storageLocationModel.js";
   import type { productModel } from "../../types/productModel.js";
 
   //this is the id of the item to be edited
@@ -77,11 +75,7 @@
   }
 
   async function handleDelete() {
-    const response: any = await deleteItem(
-      "delete_data.php",
-      { UUID: importData.UUID, table: table },
-      `/${page_name.toLowerCase()}`
-    );
+    const response: any = await deleteItem( { UUID: importData.UUID, table: table } );
     console.log(response);
     if (response?.success) {
       alert("Slettet");
@@ -121,14 +115,14 @@
         label="Produkt status"
         {editMode}
         options={product_status}
-        match={ {UUID: exportData.product_status_id, name: ""} }
+        match={ {UUID: exportData.product_status_id} }
       />
         <SelectQuestion
         bind:binding={exportData.product_id}
         label="Produkt"
         {editMode}
         options={products}
-        match={ {UUID: exportData.product_id, name: ""} }
+        match={ {UUID: exportData.product_id} }
       />
       </form>
     </div>

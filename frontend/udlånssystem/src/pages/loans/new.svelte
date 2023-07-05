@@ -50,21 +50,14 @@
     let product = event.detail;
     if (inputDataProducts.length == 0) return;
 
-    products[0].moveToArray();
-    products.push(product);
-    products = products;
-    inputDataProducts = inputDataProducts.filter((item) => {
-      return item.UUID !== product.UUID;
-    });
+    products.push(inputDataProducts.splice(inputDataProducts.indexOf(product), 1)[0]);
+    products = products; inputDataProducts = inputDataProducts
   }
   function handleRemoveProduct(event) {
     //move product from products to inputDataProducts
     let product = event.detail;
-    inputDataProducts.push(product);
-    inputDataProducts = inputDataProducts;
-    products = products.filter((item) => {
-      return item.UUID !== product.UUID;
-    });
+    inputDataProducts.push(products.splice(products.indexOf(product), 1)[0]);
+    products = products; inputDataProducts = inputDataProducts
   }
 
   //info

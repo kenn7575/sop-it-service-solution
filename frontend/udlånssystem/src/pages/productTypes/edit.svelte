@@ -1,13 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import axios from "axios";
-  import validateInputs from "../../services/validateInputs.js";
-  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import type { productModel } from "../../types/productModel.js";
+  import { productModel } from "../../types/productModel.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
   import deleteItem from "../../data/delete.js";
-  import createDataInDB from "../../data/create.js";
+  import update from "../../data/update.js";
+  import FormEditPanel from "../../components/form-edit-panel.svelte";
+  import goToPath from "../../services/goToPath.js";
+  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
+  import getData from "../../data/getData.js";
+  import createItem from "../../data/create";
+  import { itemModel } from "../../types/itemModel.js";
+  import type { categoryModel } from "../../types/categoryModel.js";
+  import type { brandModel } from "../../types/brandModel.js";
 
-  //this is the id of the product to be edited
+
+  //this is the id of the item to be edited
   export let id;
 
   //if the page is in edit mode or read only
@@ -15,9 +23,26 @@
 
   //imported Data
   let importData: productModel;
+  let exportData: productModel;
 
-  let name;
-  let new_name;
+  let table = "products";
+  let page_name = "Produkttyper";
+
+  let categories: categoryModel[] = []
+  let brands: brandModel[] = []
+
+  async function importDataFromDB() {
+    let data = await getData(table, id)
+
+      // HOT FIX - if the data is not found, redirect to the index page
+      if (!data?.UUID) {
+      alert("Kunne ikke finde data" + data);
+      goToPath(`/${page_name.toLowerCase()}`);
+      return;
+    }
+    exportData = new productModel({ ...data });
+    importData = new productModel({ ...data });
+  }
 
   //get all data
   onMount(async () => {
@@ -26,120 +51,98 @@
     } catch (error) {
       console.log(error);
     }
+
+    categories = await getData("categories");
+    brands = await getData("brands");
   });
-  async function importDataFromDB() {
-    importData = await axios
-      .get("get_data.php", { params: { UUID: id, table: "products" } })
-      .then((res) => {
-        return res.data;
-      });
 
-    asignValuesToUser(importData);
-    asignValueToNewUser();
-  }
-
-  function asignValuesToUser(importUser) {
-    name = importUser.name;
-  }
-
-  function asignValueToNewUser() {
-    new_name = name;
-  }
-
-  function handleUpdate() {
-    if (!validateInputs()) {
-      alert("Udfyld alle felter");
-      return;
-    }
-    if (doesObjectsMatch({ name }, { name: new_name })) {
+  async function handleUpdate(): Promise<any> {
+    if (doesObjectsMatch(importData, exportData)) {
       alert("Ingen ændringer");
       return;
     }
-    let DataToBeUpdated: productModel = {
-      UUID: id,
-      name: new_name,
-      brand_id: null,
-      category_id: null,
-      date_created: null,
-      date_updated: null,
-      image_name: null,
-      validateImport: function (): boolean { throw new Error("Function not implemented.") },
-      validateExport: function (): boolean { throw new Error("Function not implemented.") }
-    };
-    delete DataToBeUpdated.validateImport;
-    delete DataToBeUpdated.validateExport;
-    console.log(DataToBeUpdated);
-    createDataInDB("products", DataToBeUpdated, "/produkttyper");
-  }
-
-  function toggleEditMode() {
-    editMode = !editMode;
-  }
-
-  function resetPage() {
-    new_name = name;
-  }
-
-  window.addEventListener("keydown", function (e) {
-    if (e.key == "Escape") {
-      resetPage();
-      toggleEditMode();
+    if (!exportData.validate()) {
+      alert("Udfyld alle felter");
+      return;
     }
-  });
-
-  function handleDelete() {
-    deleteItem(
-      "delete_data.php",
-      {
-        UUID: importData.UUID,
-        table: "products",
-      },
-      "/produkttyper"
-    );
+    const response: any = await update(exportData, table);
+    if (response && response.success) {
+      importDataFromDB();
+      editMode = false;
+      alert("Changes saved");
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
+
+  async function handleDelete() {
+    const response: any = await deleteItem({ UUID: importData.UUID, table: table });
+    console.log(response);
+    if (response?.success) {
+      alert("Slettet");
+      goToPath(`/${page_name.toLowerCase()}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     handleUpdate();
   }
+
+  async function handleCreateNewProduct(product_id: number) {
+    const item = new itemModel({ product_id: product_id })
+    
+    const response: any = await createItem( "items", item );
+    if (response && response.success) {
+      alert("Gemt");
+      goToPath(`/produkter/${response.id}`);
+    }
+  }
+  
 </script>
 
 {#if importData}
   <div class="content">
-    <div class="control-panel">
-      <div class="buttons">
+    <FormEditPanel
+      on:cancel={() => {
+        goToPath(`/${page_name.toLowerCase()}`);
+      }}
+      on:reset={importDataFromDB}
+      on:delete={handleDelete}
+      on:update={handleUpdate}
+      bind:editMode
+    />
+    <div
+      on:submit={(e) => {
+        e.preventDefault;
+        handleUpdate();
+      }}
+      class="form"
+    >
+      <form id="user-form">
+        <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
+        <SelectQuestion
+        bind:binding={exportData.category_id}
+        label="Kategori"
+        options={categories}
+        {editMode}
+        match={ {UUID: exportData.category_id} }
+      />
+      <SelectQuestion
+      bind:binding={exportData.brand_id}
+      label="Brand"
+      options={brands}
+      {editMode}
+      match={ {UUID: exportData.brand_id} }
+    />
         <button
-          on:click={toggleEditMode}
-          disabled={!editMode}
-          on:click={resetPage}>Annuller</button
-        >
-        {#if editMode}
-          <button on:click={handleUpdate}>Gem</button>
-        {:else}
-          <button on:click={toggleEditMode}>Rediger</button>
-        {/if}
-      </div>
-      {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet produkt</button>
-      {/if}
-    </div>
-
-    <div class="form">
-      <form on:submit={handleSubmit} id="user-form">
-        <div class="question">
-          <label for="a2"
-            >Navn <span class="required-tag" class:hidden={!editMode}>*</span
-            ></label
-          >
-          <input
-            id="a2"
-            disabled={!editMode}
-            autocomplete="off"
-            bind:value={new_name}
-            class="text"
-            type="text"
-            required
-          />
-        </div>
+          id="new_product"
+          type="button"
+          on:click={() => { handleCreateNewProduct( exportData.UUID) }}>
+          Tilføj nyt produkt ud fra produkttype
+      </button>
       </form>
     </div>
   </div>
@@ -152,5 +155,15 @@
     padding: 2rem;
     display: flex;
     gap: 1rem;
+  }
+
+  #new_product {
+    width: 100%;
+    min-height: 2rem;
+    height: 2rem;
+    color: var(--text1);
+    background: transparent;
+    border: 1px solid var(--text1);
+    border-radius: 10px;
   }
 </style>

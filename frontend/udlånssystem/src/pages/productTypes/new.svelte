@@ -1,60 +1,69 @@
 <script lang="ts">
-  import validateInputs from "../../services/validateInputs.js";
-  import type { productModel } from "../../types/productModel.js";
-  import createDataInDB from "../../data/create";
+  import { onMount } from "svelte";
+  import { productModel } from "../../types/productModel";
+  import createItem from "../../data/create";
+  import FormNewPanel from "../../components/form-new-panel.svelte";
+  import goToPath from "../../services/goToPath";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import type { categoryModel } from "../../types/categoryModel";
+  import type { brandModel } from "../../types/brandModel";
+  import getData from "../../data/getData";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
 
-  let new_name;
+  let exportData: productModel = new productModel({});
 
-  function handleCreate() {
-    if (!validateInputs()) {
+  let table = "products";
+  let page_name = "Produkttyper";
+
+  let categories: categoryModel[] = []
+  let brands: brandModel[] = []
+
+  onMount(async () => {
+    categories = await getData("categories");
+    brands = await getData("brands");
+  });
+
+  async function handleCreate() {
+    if (!exportData.validate()) {
       alert("Udfyld alle felter");
       return;
     }
-
-    let itemToBeUpdated: productModel = {
-      UUID: null,
-      name: new_name,
-      brand_id: null,
-      category_id: null,
-      date_created: null,
-      date_updated: null,
-      image_name: null,
-      validate: function (): boolean {
-        throw new Error("Function not implemented.");
-      },
-    };
-    delete itemToBeUpdated.validate;
-    delete itemToBeUpdated.validate;
-    createDataInDB("products", itemToBeUpdated, "/produkttyper");
+    console.log(exportData);
+    const response: any = await createItem(table, { ...exportData });
+    if (response && response.success) {
+      alert("Gemt");
+      goToPath(`/${page_name.toLowerCase()}/${response.id}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
-  function handleSubmit(event) {
+  function handleSubmit(event: Event) {
     event.preventDefault();
     handleCreate();
   }
 </script>
 
 <div class="content">
-  <div class="control-panel">
-    <div class="buttons">
-      <button>Annuller</button>
-
-      <button on:click={handleCreate}>Opret</button>
-    </div>
-  </div>
+  <FormNewPanel
+    on:cancel={() => {
+      goToPath(`/${page_name.toLowerCase()}`);
+    }}
+    on:create={handleCreate}
+  />
 
   <div class="form">
     <form on:submit={handleSubmit} id="user-form">
-      <div class="question">
-        <label for="a2">Navn <span class="required-tag">*</span></label>
-        <input
-          id="a2"
-          autocomplete="off"
-          bind:value={new_name}
-          class="text"
-          type="text"
-          required
-        />
-      </div>
+      <TextQuestion bind:binding={exportData.name} label="Navn" required />
+      <SelectQuestion
+      bind:binding={exportData.category_id}
+      label="Kategori"
+      options={categories}
+    />
+    <SelectQuestion
+    bind:binding={exportData.brand_id}
+    label="Brand"
+    options={brands}
+  />
     </form>
   </div>
 </div>

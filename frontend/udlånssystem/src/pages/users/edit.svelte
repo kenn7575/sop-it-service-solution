@@ -31,18 +31,8 @@
   let educations;
   let importData: UserModel;
   let exportData: UserModel;
-  let importAddress: AddressModel = new AddressModel({
-    city: "",
-    address_line_1: "",
-    address_line_2: "",
-    postal_code: 0,
-  });
-  let exportAddress: AddressModel = new AddressModel({
-    city: "",
-    address_line_1: "",
-    address_line_2: "",
-    postal_code: 0,
-  });
+  let importAddress: AddressModel = new AddressModel({});
+  let exportAddress: AddressModel = new AddressModel({});
 
   //get all data
   onMount(async () => {
@@ -239,7 +229,7 @@
         <SelectQuestion
           bind:binding={exportData.role_id}
           options={roles}
-          match={importData.role_id}
+          match={ {UUID: importData.role_id }}
           label="Bruger rolle"
           {editMode}
         />
@@ -247,7 +237,7 @@
         <SelectQuestion
           bind:binding={exportData.education_id}
           options={educations}
-          match={importData.education_id}
+          match={ {UUID: importData.education_id} }
           label="Uddannelse"
           {editMode}
         />
