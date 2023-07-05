@@ -4,6 +4,9 @@
   import { onMount } from "svelte";
   import getData from "../../data/getData";
 
+  let table = "products";
+  let page_name = "Produkttyper";
+
   let inputData = [{}];
 
   onMount(async () => {

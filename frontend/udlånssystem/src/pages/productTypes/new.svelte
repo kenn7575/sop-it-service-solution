@@ -25,7 +25,7 @@
     };
     delete itemToBeUpdated.validate;
     delete itemToBeUpdated.validate;
-    createDataInDB("products", itemToBeUpdated, "/produkttyper");
+    createDataInDB("products", itemToBeUpdated);
   }
   function handleSubmit(event) {
     event.preventDefault();
