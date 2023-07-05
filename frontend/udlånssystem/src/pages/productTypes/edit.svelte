@@ -11,6 +11,8 @@
   import getData from "../../data/getData.js";
   import createItem from "../../data/create";
   import { itemModel } from "../../types/itemModel.js";
+  import type { categoryModel } from "../../types/categoryModel.js";
+  import type { brandModel } from "../../types/brandModel.js";
 
 
   //this is the id of the item to be edited
@@ -25,6 +27,9 @@
 
   let table = "products";
   let page_name = "Produkttyper";
+
+  let categories: categoryModel[] = []
+  let brands: brandModel[] = []
 
   async function importDataFromDB() {
     let data = await getData(table, id)
@@ -46,6 +51,9 @@
     } catch (error) {
       console.log(error);
     }
+
+    categories = await getData("categories");
+    brands = await getData("brands");
   });
 
   async function handleUpdate(): Promise<any> {
@@ -115,6 +123,20 @@
     >
       <form id="user-form">
         <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
+        <SelectQuestion
+        bind:binding={exportData.category_id}
+        label="Kategori"
+        options={categories}
+        {editMode}
+        match={ {UUID: exportData.category_id} }
+      />
+      <SelectQuestion
+      bind:binding={exportData.brand_id}
+      label="Brand"
+      options={brands}
+      {editMode}
+      match={ {UUID: exportData.brand_id} }
+    />
         <button
           id="new_product"
           type="button"
