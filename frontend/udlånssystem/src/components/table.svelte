@@ -15,15 +15,15 @@
   export let inputData = [];
 
   let headers = [{}]
-  $: if (inputData.length > 0) headers = inputData;
+  $: if (inputData.length > 0) headers = inputData[0];
 
   //resort data every time inputData changes
   $: inputData && sortTable(inputData, sortColumn);
 
   //split data into tableData and tableHeadings
-  $: tableHeadings = Object.keys(headers[0]);
+  $: tableHeadings = Object.keys(headers);
   $: tableData = Object.values(inputData);
-
+ 
   let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
