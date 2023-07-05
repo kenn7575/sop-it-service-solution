@@ -8,20 +8,20 @@
   let user = {};
   let products = [];
   let returnDate = new Date();
-  let department;
   let loanType;
-  let location;
+  let locationOfUseId;
   let employee;
 
   //data
   let inputDataUser = [{}]; //get data onMount
   let inputDataProducts = [{}]; //get data onMount
-  let departments = [{}]; //get data onMount
+  let zones = [{}]; //get data onMount
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
     inputDataProducts = inputDataProducts.slice(0, 10); // for testing
-    departments = await getData("departments");
+    zones = await getData("zones");
+    console.log(zones);
   });
 
   //same page navigation
@@ -78,11 +78,9 @@
   let maxDate = new Date();
   maxDate.setMonth(minDate.getMonth() + 6);
 
-  $: console.log(returnDate);
-
   import { DateInput } from "date-picker-svelte";
   function validateInfo() {
-    if (!returnDate || !department || !loanType || !location || !employee) {
+    if (!returnDate || !locationOfUseId || !loanType || !employee) {
       return false;
     }
   }
@@ -190,11 +188,35 @@
         />
       </div>
       <div class="grid-item g2">
-        <h4>Afdeling</h4>
+        <h4>Låner typpe</h4>
         <hr />
-        <select name="Afdeling" id="Afdeling">
-          {#each departments as department}
-            <option value={department.UUID}>{department.Navn}</option>
+        <div class="options">
+          <div class="option">
+            <input
+              type="radio"
+              bind:group={loanType}
+              name="loantype"
+              value="1"
+            />
+            <label for="loantype">Til et lokale</label>
+          </div>
+          <div class="option">
+            <input
+              type="radio"
+              bind:group={loanType}
+              name="loantype"
+              value="2"
+            />
+            <label for="loantype">Til én person</label>
+          </div>
+        </div>
+      </div>
+      <div class="grid-item g3">
+        <h4>Lokaitet</h4>
+        <hr />
+        <select bind:value={locationOfUseId}>
+          {#each zones as zone}
+            <option value={zone.UUID}>{zone.name}</option>
           {/each}
         </select>
       </div>
@@ -205,15 +227,39 @@
 </div>
 
 <style>
+  input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    margin: 0 0.5rem;
+  }
+  select {
+    min-width: 10rem;
+    background: transparent;
+    color: var(--text1);
+    height: 40px;
+    border: var(--text1) 1px solid;
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 2rem 3rem;
     height: 100%;
+    padding: 1rem;
+  }
+  hr {
+    max-width: 30rem;
   }
   .grid-item {
-    background: #f002;
+    /* background: #f002; */
   }
   .g1 {
     grid-column: 1/2;
