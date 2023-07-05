@@ -63,13 +63,11 @@
       bind:binding={exportData.product_status_id}
       label="Produkt status"
       options={product_status}
-      match={ {UUID: exportData.product_status_id, name: ""} }
     />
       <SelectQuestion
       bind:binding={exportData.product_id}
       label="Produkt"
       options={products}
-      match={ {UUID: exportData.product_id, name: ""} }
     />
     </form>
   </div>

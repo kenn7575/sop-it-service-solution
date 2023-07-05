@@ -115,14 +115,14 @@
         label="Produkt status"
         {editMode}
         options={product_status}
-        match={ {UUID: exportData.product_status_id, name: ""} }
+        match={ {UUID: exportData.product_status_id} }
       />
         <SelectQuestion
         bind:binding={exportData.product_id}
         label="Produkt"
         {editMode}
         options={products}
-        match={ {UUID: exportData.product_id, name: ""} }
+        match={ {UUID: exportData.product_id} }
       />
       </form>
     </div>

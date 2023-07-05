@@ -115,7 +115,7 @@
           label="Kategori"
           {editMode}
           options={categoryGroups}
-          match={ {UUID: exportData.category_group_id, name: ""} }
+          match={ {UUID: exportData.category_group_id} }
         />
       </form>
     </div>
