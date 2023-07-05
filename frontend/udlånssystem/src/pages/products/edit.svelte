@@ -1,17 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import axios from "axios";
   import { itemModel } from "../../types/itemModel.js";
+  import TextQuestion from "../../components/textQuestion.svelte";
+  import SelectQuestion from "../../components/selectQuestion.svelte";
   import deleteItem from "../../data/delete.js";
   import update from "../../data/update.js";
-  import TextQuestion from "../../components/textQuestion.svelte";
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import goToPath from "../../services/goToPath.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import getData from "../../data/getData.js";
   import type { productStatusModel } from "../../types/productStatusModel.js";
-  import SelectQuestion from "../../components/selectQuestion.svelte";
-  import type { storageLocationModel } from "../../types/storageLocationModel.js";
   import type { productModel } from "../../types/productModel.js";
 
   //this is the id of the item to be edited

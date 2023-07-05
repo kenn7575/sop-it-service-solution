@@ -4,6 +4,9 @@
   import { onMount } from "svelte";
   import getData from "../../data/getData";
 
+  let table = "items_view";
+  let page_name = "Produkter";
+
   let inputData = [{}];
 
   onMount(async () => {
@@ -25,7 +28,7 @@
 {#if inputData}
   <div class="table">
     <Table
-      buttonDestination={"produkttyper/new"}
+      buttonDestination={"produkter/new"}
       {inputData}
       on:message={handleRowClick}
     />
