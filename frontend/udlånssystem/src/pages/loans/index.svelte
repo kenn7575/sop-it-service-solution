@@ -6,19 +6,17 @@
 
   let inputData = [[]];
 
+  let page_name = "Udlaan";
+
   onMount(async () => {
     inputData = await getData("loans_view");
+    console.log(inputData);
   });
 
-  import { path } from "../../stores/pathStore";
-  import { navigate } from "svelte-routing";
-  $: currentPath = $path;
+  import goToPath from "../../services/goToPath";
   function handleRowClick(event) {
     let id = event.detail.UUID;
-    navigate(`${currentPath}/${id}`);
-    path.update(() => {
-      return `${currentPath}/${id}`;
-    });
+    goToPath(`${page_name.toLowerCase()}/${id}`);
   }
 </script>
 

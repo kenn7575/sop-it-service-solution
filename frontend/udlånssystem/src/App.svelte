@@ -115,7 +115,7 @@
           <Route path="kategorigrupper/:id" component={categoryGroupsEdit} />
           <Route path="produkter/:id" component={productsEdit} />
           <Route path="produkttyper/:id" component={productTypesEdit} />
-          <Route path="udlaan/edit/:id" component={loansEdit} />
+          <Route path="udlaan/:id" component={loansEdit} />
 
           <!-- new routes -->
           <Route path="brugere/new" component={usersNew} />

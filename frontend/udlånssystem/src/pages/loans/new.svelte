@@ -5,17 +5,13 @@
   import getData from "../../data/getData";
   import { onMount } from "svelte";
 
-  //Data to be sent
-  let defaultDate = new Date();
-
   let user = {};
   let products = [];
-  let returnDate = defaultDate;
+  let returnDate = new Date();
   let department;
   let loanType;
   let location;
   let employee;
-  let info
 
   //data
   let inputDataUser = [{}]; //get data onMount
@@ -24,7 +20,7 @@
   onMount(async () => {
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
-    // inputDataProducts = inputDataProducts.slice(0, 10);
+    inputDataProducts = inputDataProducts.slice(0, 10); // for testing
     departments = await getData("departments");
   });
 
@@ -52,6 +48,9 @@
   function handleAddProduct(event) {
     //move product from inputDataProducts to products
     let product = event.detail;
+    if (inputDataProducts.length == 0) return;
+
+    products[0].moveToArray();
     products.push(product);
     products = products;
     inputDataProducts = inputDataProducts.filter((item) => {
@@ -71,23 +70,19 @@
   //info
 
   //now
-  let date = new Date();
-  //default date
 
-  date.setMonth(date.getMonth() + 1);
+  //default date
+  returnDate.setMonth(returnDate.getMonth() + 1);
   //create max date on 6 months
+  let minDate = new Date();
   let maxDate = new Date();
-  maxDate.setMonth(maxDate.getMonth() + 6);
+  maxDate.setMonth(minDate.getMonth() + 6);
+
+  $: console.log(returnDate);
 
   import { DateInput } from "date-picker-svelte";
   function validateInfo() {
-    if (
-      !info.returnDate ||
-      !info.department ||
-      !info.loanType ||
-      !info.location ||
-      !info.employee
-    ) {
+    if (!returnDate || !department || !loanType || !location || !employee) {
       return false;
     }
   }
@@ -181,6 +176,7 @@
       {/if}
     </div>
   {:else if page === 3}
+    <!-- ! Info -->
     <div class="grid">
       <div class="grid-item g1">
         <h4>Retur dato</h4>
@@ -190,7 +186,7 @@
           bind:value={returnDate}
           max={maxDate}
           format={"yyyy-MM-dd"}
-          min={date}
+          min={minDate}
         />
       </div>
       <div class="grid-item g2">
@@ -203,6 +199,8 @@
         </select>
       </div>
     </div>
+  {:else if page === 4}
+    <h1>Checkout</h1>
   {/if}
 </div>
 
