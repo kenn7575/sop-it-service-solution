@@ -46,13 +46,15 @@ $result = $conn->query($sql);
   echo json_encode([['error'=>$e->getMessage()]], JSON_PRETTY_PRINT); die();
 }
 
-if ($result->num_rows > 1) {
+if (!$UUID == "") { $list = $result->fetch_object(); }
+
+else if ($result->num_rows > 0) {
   $list = array();
   while($row = $result->fetch_assoc()) {
     array_push($list, $row);
   }
-} 
-else if ($result->num_rows == 1) { $list = $result->fetch_object(); }
+}
+
 else { array_push($list, ['Ingen resultater'=>'']); }
 
 if ($list != null) {
