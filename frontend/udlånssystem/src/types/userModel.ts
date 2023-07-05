@@ -38,10 +38,7 @@ export class UserModel {
       console.log("3");
       return false;
     }
-    if (!this.password) {
-      console.log("4");
-      return false;
-    }
+
     // if (!this.address_id) {
     //   console.log("5");
     //   return false;

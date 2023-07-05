@@ -229,7 +229,7 @@
         <SelectQuestion
           bind:binding={exportData.role_id}
           options={roles}
-          match={ {UUID: importData.role_id }}
+          match={{ UUID: importData.role_id }}
           label="Bruger rolle"
           {editMode}
         />
@@ -237,7 +237,7 @@
         <SelectQuestion
           bind:binding={exportData.education_id}
           options={educations}
-          match={ {UUID: importData.education_id} }
+          match={{ UUID: importData.education_id }}
           label="Uddannelse"
           {editMode}
         />

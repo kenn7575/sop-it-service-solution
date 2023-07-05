@@ -27,7 +27,7 @@
 
   let exportData: UserModel = new UserModel({});
   let exportAddress: AddressModel = new AddressModel({});
-  
+
   onMount(async () => {
     try {
       roles = await getData("roles").then((res) => {
@@ -39,21 +39,24 @@
         res.map((edu) => (edu.UUID = edu.UUID.toString()));
         return res;
       });
-
     } catch (error) {
       console.log(error);
     }
   });
 
   async function handleCreate() {
-    if (!validateInputs()) {
+    if (!exportData.validate()) {
+      alert("Udfyld alle felter");
+      return;
+    }
+    if (!exportData.password) {
       alert("Udfyld alle felter");
       return;
     }
     console.log(exportData);
-    const address_id = await createItem("addresses", { ...exportAddress })
+    const address_id = await createItem("addresses", { ...exportAddress });
     exportData.address_id = address_id.id;
-    const response: any = await createItem("users", { ...exportData })
+    const response: any = await createItem("users", { ...exportData });
     if (response && response.success) {
       alert("Gemt");
       goToPath(`/${page_name.toLowerCase()}/${response.id}`);
@@ -78,8 +81,11 @@
       alt="Profile picture"
     />
     {#if picture}
-      <button id="clear-picture" on:click={() => {picture = ""}}
-        ><i class="fa-solid fa-trash" /></button
+      <button
+        id="clear-picture"
+        on:click={() => {
+          picture = "";
+        }}><i class="fa-solid fa-trash" /></button
       >
     {/if}
 
@@ -93,7 +99,11 @@
       <button on:click={handleCreate}>Opret</button>
     </div>
 
-    <DropZone on:message={(event) => {picture = event.detail}} />
+    <DropZone
+      on:message={(event) => {
+        picture = event.detail;
+      }}
+    />
   </div>
 
   <div class="form">
@@ -105,26 +115,25 @@
         {editMode}
       />
       <TextQuestion
-        bind:binding={exportData.mail}
-        label="E-mail"
+        bind:binding={exportData.password}
+        label="Adgangskode"
         {editMode}
+        type="password"
       />
+      <TextQuestion bind:binding={exportData.mail} label="E-mail" {editMode} />
       <TextQuestion
         bind:binding={exportAddress.address_line_1}
         label="Vejnavn"
         {editMode}
       />
+
       <TextQuestion
         bind:binding={exportAddress.address_line_2}
         label="Etage mm."
         {editMode}
         required={false}
       />
-      <TextQuestion
-        bind:binding={exportAddress.city}
-        label="By"
-        {editMode}
-      />
+      <TextQuestion bind:binding={exportAddress.city} label="By" {editMode} />
       <TextQuestion
         bind:binding={exportAddress.postal_code}
         label="Postnummer"
