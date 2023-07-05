@@ -1,11 +1,7 @@
 import axios from "axios";
 import doesObjectsMatch from "../services/doesObjectsMatch";
 
-export default async function createItem(
-  table: string,
-  exportData: any,
-  redirect: string
-) {
+export default async function createItem(table: string, exportData: any) {
   try {
     const { data } = await axios
       .post("upsert_data.php", { data: { ...exportData }, table: table })

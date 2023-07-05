@@ -26,14 +26,34 @@ export class UserModel {
   role_id: number;
 
   validate(): boolean {
-    if (!this.username) return false;
-    if (!this.name) return false;
-    if (!this.mail) return false;
-    if (!this.password) return false;
-    if (!this.img_name) return false;
-    if (!this.address_id) return false;
-    if (!this.education_id) return false;
-    if (!this.role_id) return false;
+    if (!this.username) {
+      console.log("1");
+      return false;
+    }
+    if (!this.name) {
+      console.log("2");
+      return false;
+    }
+    if (!this.mail) {
+      console.log("3");
+      return false;
+    }
+    if (!this.password) {
+      console.log("4");
+      return false;
+    }
+    // if (!this.address_id) {
+    //   console.log("5");
+    //   return false;
+    // }
+    if (!this.education_id) {
+      console.log("6");
+      return false;
+    }
+    if (!this.role_id) {
+      console.log("7");
+      return false;
+    }
     return true;
   }
 }

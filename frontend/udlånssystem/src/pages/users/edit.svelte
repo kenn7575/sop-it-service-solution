@@ -5,16 +5,19 @@
   import { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
   import getData from "../../data/getData";
-  import validateInputs from "../../services/validateInputs.js";
+  import update from "../../data/update";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
   import deleteItem from "../../data/delete";
   import togggleEditMode from "../../services/toggleEditMode";
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
-  import updateItem from "./update";
   import goToPath from "../../services/goToPath";
+  import { AddressModel } from "../../types/addressModel";
 
   export let id; //this is the id of the user to be edited
+
+  let page_name = "Brugere";
+  let table = "users";
 
   $: user = $currentUser; // the current user - used to check if the user has the right authorization level to edit this user
 
@@ -28,7 +31,18 @@
   let educations;
   let importData: UserModel;
   let exportData: UserModel;
-  $: console.log(importData, exportData);
+  let importAddress: AddressModel = new AddressModel({
+    city: "",
+    address_line_1: "",
+    address_line_2: "",
+    postal_code: 0,
+  });
+  let exportAddress: AddressModel = new AddressModel({
+    city: "",
+    address_line_1: "",
+    address_line_2: "",
+    postal_code: 0,
+  });
 
   //get all data
   onMount(async () => {
@@ -43,69 +57,95 @@
         return res;
       });
 
-      getUser();
+      importDataFromDB();
     } catch (error) {
       console.log(error);
     }
   });
-  async function getUser() {
-    const { data } = await axios("get_data.php", {
-      params: { UUID: id, table: "users" },
-    });
-    delete data.password;
-    console.log(data, "data");
-    importData = new UserModel({ ...data });
-    exportData = new UserModel({ ...data });
-
-    if (importData.address_id === null)
-      importData.address_id = {
-        UUID: null,
-        address_line_1: null,
-        address_line_2: null,
-        city: null,
-        postal_code: null,
-      };
-    handleReset();
-  }
-
-  function handleReset() {
-    exportData = new UserModel({ ...importData });
-    editMode = false;
-  }
-  function handleUpdate() {
-    if (!validateInputs()) {
-      alert("Udfyld alle felter");
+  async function importDataFromDB() {
+    const userData = await getData(table, id);
+    console.log("user", userData);
+    if (!userData?.UUID) {
+      alert("Kunne ikke finde data" + userData);
+      goToPath(`/${page_name.toLowerCase()}`);
       return;
     }
-    //prepere data for comparison
+    // HOT FIX - if the data is not found, redirect to the index page
+    importData = new UserModel({ ...userData });
+    exportData = new UserModel({ ...userData });
 
-    // console.log(exportData);
-    if (doesObjectsMatch(importData, exportData)) {
+    if (userData.address_id) {
+      const addressData = await getData("addresses", importData.address_id);
+      console.log("address", addressData);
+      importAddress = new AddressModel({ ...addressData });
+      exportAddress = new AddressModel({ ...addressData });
+    }
+  }
+
+  async function handleReset() {
+    await importDataFromDB();
+    editMode = false;
+  }
+  async function handleUpdate() {
+    if (!exportData.validate()) {
+      alert("Udfyld alle felter, bruger");
+      return;
+    }
+    if (!exportAddress.validate()) {
+      alert("Udfyld alle felter, addresse");
+      return;
+    }
+    if (
+      doesObjectsMatch(importData, exportData) &&
+      doesObjectsMatch(importAddress, exportAddress)
+    ) {
       alert("Ingen ændringer");
       return;
     }
-
-    updateItem(importData, exportData, "users").then((res) => {
-      // console.log(res);
-      if (res) {
-        getUser();
+    const addressResponse: any = await update(exportAddress, "addresses");
+    if (addressResponse && addressResponse.success) {
+      //if the address is updated, update the user
+      console.log("address", addressResponse);
+      exportData.address_id = addressResponse.id;
+      const userResponse: any = await update(exportData, table);
+      if (userResponse && userResponse.success) {
+        importDataFromDB();
         editMode = false;
+        alert("Changes saved");
+      } else {
+        alert("Error 500 - Ukendt fejl under oprettelse af bruger");
       }
-    });
+    } else {
+      alert("Error 500 - Ukendt fejl under oprettelse af addresse");
+    }
   }
   function handleEditMode() {
     editMode = togggleEditMode(user, importData, editMode);
   }
 
-  function handleDelete() {
-    deleteItem(
-      "delete_user.php",
-      {
-        UUID: importData.UUID,
-        address_id: importData.address_id.UUID,
-      },
-      "/brugere"
-    );
+  async function handleDelete() {
+    const userResponse: any = await deleteItem({
+      UUID: importData.UUID,
+      table: table,
+    });
+    let addressResponse: any;
+    if (importData.address_id) {
+      addressResponse = await deleteItem({
+        UUID: importData.address_id,
+        table: "addresses",
+      });
+    } else {
+      addressResponse = { success: true };
+    }
+
+    if (userResponse?.success && addressResponse?.success) {
+      alert("Slettet");
+      goToPath(`/${page_name.toLowerCase()}`);
+    } else {
+      alert(
+        "Error 500 - Ukendt fejl" + userResponse.error + addressResponse.error
+      );
+    }
   }
   function handleSubmit(event: Event) {
     event.preventDefault();
@@ -176,28 +216,26 @@
           label="E-mail"
           {editMode}
         />
+
         <TextQuestion
-          bind:binding={exportData.address_id.address_line_1}
+          bind:binding={exportAddress.address_line_1}
           label="Vejnavn"
           {editMode}
         />
         <TextQuestion
-          bind:binding={exportData.address_id.address_line_2}
+          bind:binding={exportAddress.address_line_2}
           label="Etage mm."
           {editMode}
           required={false}
         />
-        <TextQuestion
-          bind:binding={exportData.address_id.city}
-          label="By"
-          {editMode}
-        />
+        <TextQuestion bind:binding={exportAddress.city} label="By" {editMode} />
         <TextQuestion
           type="number"
-          bind:binding={exportData.address_id.postal_code}
+          bind:binding={exportAddress.postal_code}
           label="Postnummer"
           {editMode}
         />
+
         <SelectQuestion
           bind:binding={exportData.role_id}
           options={roles}
