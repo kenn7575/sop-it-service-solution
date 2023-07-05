@@ -75,11 +75,7 @@
   }
 
   async function handleDelete() {
-    const response: any = await deleteItem(
-      "delete_data.php",
-      { UUID: importData.UUID, table: table },
-      `/${page_name.toLowerCase()}`
-    );
+    const response: any = await deleteItem( { UUID: importData.UUID, table: table } );
     console.log(response);
     if (response?.success) {
       alert("Slettet");

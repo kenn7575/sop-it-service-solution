@@ -34,8 +34,7 @@
     console.log(exportData);
     const response: any = await createItem(
       table,
-      { ...exportData },
-      `/${page_name.toLowerCase()}`
+      { ...exportData }
     );
     if (response && response.success) {
       alert("Gemt");
