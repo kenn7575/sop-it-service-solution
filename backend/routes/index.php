@@ -31,6 +31,7 @@ if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {    array_push($all_columns, $row["COLUMN_NAME"]);     } 
 }
 
+$all_columns_array = $all_columns;
 
 $all_columns = "`".implode("`, `", $all_columns)."`";
 
@@ -55,7 +56,14 @@ else if ($result->num_rows > 0) {
   }
 }
 
-else { array_push($list, ['Ingen resultater'=>'']); }
+else {
+  $temp_object = new stdClass();
+  foreach ($all_columns_array as $column) {
+    $temp_object->$column = null;
+  }
+  array_push($list, $temp_object);
+}
+// else { array_push($list, ['Ingen resultater'=>'']); }
 
 if ($list != null) {
   echo json_encode($list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);

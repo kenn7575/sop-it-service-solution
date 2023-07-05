@@ -1,17 +1,22 @@
 <script lang="ts">
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
-  import type { UserModel } from "../../types/userModel";
+  import { UserModel } from "../../types/userModel";
   import validateInputs from "../../services/validateInputs.js";
   import getData from "../../data/getData";
   import axios from "axios";
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
-  import createItem from "./create";
+  import createItem from "../../data/create";
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
+  import { AddressModel } from "../../types/addressModel";
+  import goToPath from "../../services/goToPath";
 
   let editMode = true; //if the page is in edit mode or read only
+
+  let page_name = "Brugere";
+  let table = "users";
 
   //the picture to be uploaded
   let picture;
@@ -20,18 +25,8 @@
   let roles = [];
   let educations = [];
 
-  let exportData: UserModel = {
-    UUID: null,
-    username: null,
-    name: null,
-    mail: null,
-    img_name: null,
-    address_id: null,
-    role_id: null,
-    education_id: null,
-    validate: function (): boolean { throw new Error("Function not implemented.") }
-  };
-
+  let exportData: UserModel = new UserModel({});
+  let exportAddress: AddressModel = new AddressModel({});
   
   onMount(async () => {
     try {
@@ -50,14 +45,21 @@
     }
   });
 
-  function handleCreate() {
+  async function handleCreate() {
     if (!validateInputs()) {
       alert("Udfyld alle felter");
       return;
     }
-    
     console.log(exportData);
-    createItem("users", { ...exportData }, "/brugere");
+    const address_id = await createItem("addresses", { ...exportAddress })
+    exportData.address_id = address_id.id;
+    const response: any = await createItem("users", { ...exportData })
+    if (response && response.success) {
+      alert("Gemt");
+      goToPath(`/${page_name.toLowerCase()}/${response.id}`);
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
 
   function handleSubmit(event) {
@@ -108,23 +110,23 @@
         {editMode}
       />
       <TextQuestion
-        bind:binding={exportData.address_id.address_line_1}
+        bind:binding={exportAddress.address_line_1}
         label="Vejnavn"
         {editMode}
       />
       <TextQuestion
-        bind:binding={exportData.address_id.address_line_2}
+        bind:binding={exportAddress.address_line_2}
         label="Etage mm."
         {editMode}
         required={false}
       />
       <TextQuestion
-        bind:binding={exportData.address_id.city}
+        bind:binding={exportAddress.city}
         label="By"
         {editMode}
       />
       <TextQuestion
-        bind:binding={exportData.address_id.postal_code}
+        bind:binding={exportAddress.postal_code}
         label="Postnummer"
         type="number"
         {editMode}
