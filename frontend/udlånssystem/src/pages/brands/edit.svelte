@@ -8,6 +8,7 @@
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import goToPath from "../../services/goToPath.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
+  import getData from "../../data/getData.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -32,9 +33,7 @@
   });
 
   async function importDataFromDB() {
-    const { data } = await axios("get_data.php", {
-      params: { UUID: id, table: table },
-    });
+    const data = await getData(table, id);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
