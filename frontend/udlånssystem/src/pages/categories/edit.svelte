@@ -11,19 +11,19 @@
   import getData from "../../data/getData.js";
   import goToPath from "../../services/goToPath.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
+  import type { productModel } from "../../types/productModel.js";
 
   //this is the id of the brand to be edited
   export let id;
 
-  //if the page is in edit mode or read only
-  let editMode = false;
-
-  //imported Data
+  //Define data for this page
   let importData: categoryModel;
   let exportData: categoryModel;
-
   let categoryGroups: categoryGroupModel[] = [];
+  let products: productModel[] = [];
 
+  //if the page is in edit mode or read only
+  let editMode = false;
   let table = "categories";
   let page_name = "Kategorier";
 
@@ -36,17 +36,21 @@
   });
 
   async function importDataFromDB() {
-    let data = await getData(table, id)
+    //get product data to see if the category is used
+    products = await getData("products");
 
-    // HOT FIX - if the data is not found, redirect to the index page
+    //get category data
+    const data = await getData(table, id);
+
+    //if the data is not found, redirect to the index page
     if (!data?.UUID) {
       alert("Kunne ikke finde data");
       goToPath(`/${page_name.toLowerCase()}`);
       return;
     }
+    //asign data
     exportData = new categoryModel(JSON.parse(JSON.stringify(data)));
     importData = new categoryModel(JSON.parse(JSON.stringify(data)));
-
     categoryGroups = await getData("category_groups");
   }
 
@@ -74,6 +78,21 @@
   }
 
   async function handleDelete() {
+    if (!confirm("Er du sikker på du vil slette?")) {
+      return;
+    }
+    if (products.some((product) => product.category_id == exportData.UUID)) {
+      //get count of products with this category
+      const count = products.filter(
+        (product) => product.category_id == exportData.UUID
+      ).length;
+      alert(
+        `Fejl! \nKan ikke slette denne kategori, fordi den bruges i ${count} ${
+          count > 1 ? "produkter" : "produkt"
+        }`
+      );
+      return;
+    }
     const response: any = await deleteItem({
       UUID: importData.UUID,
       table: table,
@@ -115,7 +134,7 @@
           label="Kategori"
           {editMode}
           options={categoryGroups}
-          match={ {UUID: exportData.category_group_id} }
+          match={{ UUID: exportData.category_group_id }}
         />
       </form>
     </div>

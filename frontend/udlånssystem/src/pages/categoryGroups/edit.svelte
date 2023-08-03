@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import axios from "axios";
   import { categoryGroupModel } from "../../types/categoryGroupModel.js";
   import deleteItem from "../../data/delete.js";
   import update from "../../data/update.js";
@@ -8,6 +7,8 @@
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import goToPath from "../../services/goToPath.js";
   import doesObjectsMatch from "../../services/doesObjectsMatch.js";
+  import getData from "../../data/getData.js";
+  import type { categoryModel } from "../../types/categoryModel.js";
 
   //this is the id of the brand to be edited
   export let id;
@@ -18,6 +19,8 @@
   //imported Data
   let importData: categoryGroupModel;
   let exportData: categoryGroupModel;
+
+  let categories: categoryModel[] = [];
 
   let table = "category_groups";
   let page_name = "Kategorigrupper";
@@ -31,9 +34,14 @@
   });
 
   async function importDataFromDB() {
-    const { data } = await axios.get("get_data.php", {
-      params: { UUID: id, table: table },
-    });
+    //get category data to see if the categoryGroup is used
+    categories = (await getData("categories").then((res) => {
+      res.map((role) => (role.UUID = role.UUID.toString()));
+      return res;
+    })) as categoryModel[];
+
+    //get categoryGroup data
+    const data = await getData(table, id);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
@@ -65,10 +73,27 @@
   }
 
   async function handleDelete() {
+    if (!confirm("Er du sikker på du vil slette denne kategorigruppe?")) {
+      return;
+    }
+    if (categories.find((cat) => cat.category_group_id == exportData.UUID)) {
+      //get count of categories in this categoryGroup
+      const count = categories.filter(
+        (cat) => cat.category_group_id == exportData.UUID
+      ).length;
+
+      alert(
+        `Fejl! \nKan ikke slette denne kategorigruppe, fordi den bruges i ${count} ${
+          count > 1 ? "kategorier" : "kategori"
+        }`
+      );
+      return;
+    }
     const response: any = await deleteItem({
       UUID: importData.UUID,
       table: table,
     });
+
     console.log(response);
     if (response?.success) {
       alert("Slettet");
