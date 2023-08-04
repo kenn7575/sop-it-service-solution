@@ -1,6 +1,5 @@
 <script lang="js">
   import Table from "../../components/table.svelte";
-  import axios from "axios";
   import { onMount } from "svelte";
   import { path } from "../../stores/pathStore";
   import { navigate } from "svelte-routing";
