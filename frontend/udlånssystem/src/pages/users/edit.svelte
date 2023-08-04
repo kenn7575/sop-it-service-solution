@@ -1,7 +1,7 @@
 <script lang="ts">
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
-  import axios from "axios";
+  import { DeleteUser } from "./delete";
   import { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
   import getData from "../../data/getData";
@@ -37,22 +37,24 @@
   //get all data
   onMount(async () => {
     try {
-      roles = await getData("roles").then((res) => {
-        res.map((role) => (role.UUID = role.UUID.toString()));
-        return res;
-      });
-
-      educations = await getData("educations").then((res) => {
-        res.map((edu) => (edu.UUID = edu.UUID.toString()));
-        return res;
-      });
-
       importDataFromDB();
     } catch (error) {
       console.log(error);
     }
   });
   async function importDataFromDB() {
+    //get data for dropdowns
+    roles = await getData("roles").then((res) => {
+      res.map((role) => (role.UUID = role.UUID.toString()));
+      return res;
+    });
+
+    educations = await getData("educations").then((res) => {
+      res.map((edu) => (edu.UUID = edu.UUID.toString()));
+      return res;
+    });
+
+    //get user data
     const userData = await getData(table, id);
     console.log("user", userData);
     if (!userData?.UUID) {
@@ -92,12 +94,17 @@
       alert("Ingen ændringer");
       return;
     }
+    // console.log("updating user Address with", exportAddress);
+
     const addressResponse: any = await update(exportAddress, "addresses");
     if (addressResponse && addressResponse.success) {
       //if the address is updated, update the user
-      console.log("address", addressResponse);
-      exportData.address_id = addressResponse.id;
+      // console.log("user Address update response", addressResponse);
+      exportData.address_id =
+        addressResponse.id > 0 ? addressResponse.id : exportAddress.UUID;
+      // console.log("assigning addressId and updating user with", exportData);
       const userResponse: any = await update(exportData, table);
+      // console.log("user update response", userResponse);
       if (userResponse && userResponse.success) {
         importDataFromDB();
         editMode = false;
@@ -114,27 +121,23 @@
   }
 
   async function handleDelete() {
-    const userResponse: any = await deleteItem({
-      UUID: importData.UUID,
-      table: table,
-    });
-    let addressResponse: any;
-    if (importData.address_id) {
-      addressResponse = await deleteItem({
-        UUID: importData.address_id,
-        table: "addresses",
-      });
-    } else {
-      addressResponse = { success: true };
-    }
+    if (
+      !confirm("Er du sikker på at du vil slette denne bruger fra databasen?")
+    )
+      return;
+    if (
+      !confirm(
+        "Du sleter også alle lån og ændre udlånte tings status til tilgængelig. \n er du sikker på at du vil fortætte?"
+      )
+    )
+      return;
+    const res = await DeleteUser(importData.UUID);
 
-    if (userResponse?.success && addressResponse?.success) {
+    if (res) {
       alert("Slettet");
       goToPath(`/${page_name.toLowerCase()}`);
     } else {
-      alert(
-        "Error 500 - Ukendt fejl" + userResponse.error + addressResponse.error
-      );
+      alert("Error 500 - Ukendt fejl");
     }
   }
   function handleSubmit(event: Event) {

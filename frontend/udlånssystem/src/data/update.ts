@@ -11,11 +11,7 @@ export default async function updateItem(
       .post("upsert_data.php", { data: { ...exportData }, table: table })
       .then((res: any) => {
         console.log("Response: ", res);
-        if (res?.success) {
-          return res;
-        } else {
-          return res;
-        }
+        return res;
       })
       .catch((err) => {
         alert("Felf! " + err);

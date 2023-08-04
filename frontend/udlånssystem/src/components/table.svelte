@@ -14,7 +14,7 @@
   //import data
   export let inputData = [];
 
-  let headers = [{}]
+  let headers = [{}];
   $: if (inputData.length > 0) headers = inputData[0];
 
   //resort data every time inputData changes
@@ -23,7 +23,7 @@
   //split data into tableData and tableHeadings
   $: tableHeadings = Object.keys(headers);
   $: tableData = Object.values(inputData);
- 
+
   let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
@@ -55,8 +55,10 @@
       if (a[columnKey] === undefined || b[columnKey] === undefined) return 0;
       let valueA = a[columnKey];
       let valueB = b[columnKey];
-      valueA = typeof(valueA) === "string" ? valueA.toString().toLowerCase() : valueA
-      valueB = typeof(valueB) === "string" ? valueB.toString().toLowerCase() : valueB
+      valueA =
+        typeof valueA === "string" ? valueA.toString().toLowerCase() : valueA;
+      valueB =
+        typeof valueB === "string" ? valueB.toString().toLowerCase() : valueB;
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
     });
     if (!sortAscending) {
@@ -183,7 +185,7 @@
   <!-- ! pagination -->
   <div class="koedsovs">
     <div class="pagination">
-      <button id="one" on:click={PageChangeDown}
+      <button id="one" on:click={PageChangeDown} name="previous"
         ><i class="fa-solid fa-angle-left" /></button
       >
       {#if page >= 2}
@@ -211,7 +213,7 @@
         >
       {/if}
 
-      <button id="seven" on:click={PageChangeUp}
+      <button id="seven" on:click={PageChangeUp} name="next"
         ><i class="fa-solid fa-angle-right" /></button
       >
     </div>

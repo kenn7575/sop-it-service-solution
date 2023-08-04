@@ -1,22 +1,49 @@
 <script lang="js">
   //General
+  import { translateMonth } from "../../services/translateMonth";
   import Table from "../../components/table.svelte";
   import TableSimplified from "../../components/table-simplified.svelte";
   import getData from "../../data/getData";
   import { onMount } from "svelte";
+  import axios from "axios";
+  import goToPath from "../../services/goToPath";
 
+  const page_name = "udlaan";
+  const table = "loans";
+
+  //data to be exported
   let user = {};
   let products = [];
   let returnDate = new Date();
   let loanType;
   let locationOfUseId;
   let employee;
+  $: loanLength = Math.round(
+    (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
+  );
+  $: user_id = user.UUID;
+  $: productIds = products.map((product) => product.UUID);
+  $: console.log({
+    user_id,
+    products,
+    returnDate,
+    loanType,
+    employee,
+    loanLength,
+  });
 
-  //data
+  //import data
+  let loanTypes = [
+    { name: "Til person", id: 2 },
+    { name: "Til lokale", id: 1 },
+  ]; //get data onMount
+  let personel = [{}]; //get data onMount
   let inputDataUser = [{}]; //get data onMount
   let inputDataProducts = [{}]; //get data onMount
   let zones = [{}]; //get data onMount
   onMount(async () => {
+    personel = await getData("personnel_users");
+
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
     inputDataProducts = inputDataProducts.slice(0, 10); // for testing
@@ -26,13 +53,14 @@
 
   //same page navigation
   export let page = 1;
+  let showDatePicker = true;
 
   //Users
   function handleUserSelection(event) {
     user = event.detail;
     page++;
   }
-  function userIsValid() {
+  function validateUser() {
     if (!user.UUID) return false;
     return true;
   }
@@ -50,14 +78,18 @@
     let product = event.detail;
     if (inputDataProducts.length == 0) return;
 
-    products.push(inputDataProducts.splice(inputDataProducts.indexOf(product), 1)[0]);
-    products = products; inputDataProducts = inputDataProducts
+    products.push(
+      inputDataProducts.splice(inputDataProducts.indexOf(product), 1)[0]
+    );
+    products = products;
+    inputDataProducts = inputDataProducts;
   }
   function handleRemoveProduct(event) {
     //move product from products to inputDataProducts
     let product = event.detail;
     inputDataProducts.push(products.splice(products.indexOf(product), 1)[0]);
-    products = products; inputDataProducts = inputDataProducts
+    products = products;
+    inputDataProducts = inputDataProducts;
   }
 
   //info
@@ -73,8 +105,36 @@
 
   import { DateInput } from "date-picker-svelte";
   function validateInfo() {
-    if (!returnDate || !locationOfUseId || !loanType || !employee) {
+    if (
+      returnDate === undefined ||
+      returnDate === undefined ||
+      !locationOfUseId ||
+      !loanType ||
+      !employee
+    ) {
       return false;
+    }
+    return true;
+  }
+
+  //checkout
+  async function createLoan() {
+    const loan = {
+      user_id,
+      loan_length: loanLength,
+      recipient_type_id: loanType,
+      location_of_use_id: locationOfUseId,
+      helpdesk_personel_id: employee,
+    };
+    console.log({ loan, products });
+
+    const { data } = await axios.post("create_loan.php", { loan, products });
+    if (data && data?.success && data?.id) {
+      alert("Gemt");
+
+      goToPath(`/${page_name.toLowerCase()}/${data.id}`);
+    } else {
+      alert("Error 500 - " + data?.data);
     }
   }
 </script>
@@ -86,8 +146,8 @@
         page = 1;
       }}
       class:current={1 === page}
-      class:invalid={page > 1 && !userIsValid()}
-      class:valid={page > 1 && userIsValid()}
+      class:invalid={page > 1 && !validateUser()}
+      class:valid={page > 1 && validateUser()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-user" />
@@ -130,7 +190,11 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        page = 4;
+        if (validateInfo() && validateProducts() && validateUser()) {
+          page = 4;
+        } else {
+          alert("Du kan ikke gå videre før alle felter er udfyldt");
+        }
       }}
       class:current={4 === page}
       class="page-nav-btn"
@@ -172,37 +236,34 @@
       <div class="grid-item g1">
         <h4>Retur dato</h4>
         <hr />
-        <DateInput
-          visible={true}
-          bind:value={returnDate}
-          max={maxDate}
-          format={"yyyy-MM-dd"}
-          min={minDate}
-        />
+        <div class="btn-group">
+          <DateInput
+            visible={showDatePicker}
+            bind:value={returnDate}
+            max={maxDate}
+            format={"yyyy-MM-dd"}
+            min={minDate}
+          />
+          <button
+            on:click={() => {
+              returnDate = maxDate;
+              showDatePicker = false;
+            }}
+            class="max-time-btn"
+            class:is-max={returnDate === maxDate}
+          >
+            max
+          </button>
+        </div>
       </div>
       <div class="grid-item g2">
         <h4>Låner typpe</h4>
         <hr />
-        <div class="options">
-          <div class="option">
-            <input
-              type="radio"
-              bind:group={loanType}
-              name="loantype"
-              value="1"
-            />
-            <label for="loantype">Til et lokale</label>
-          </div>
-          <div class="option">
-            <input
-              type="radio"
-              bind:group={loanType}
-              name="loantype"
-              value="2"
-            />
-            <label for="loantype">Til én person</label>
-          </div>
-        </div>
+        <select bind:value={loanType}>
+          {#each loanTypes as type}
+            <option value={type.id}>{type.name}</option>
+          {/each}
+        </select>
       </div>
       <div class="grid-item g3">
         <h4>Lokaitet</h4>
@@ -213,18 +274,45 @@
           {/each}
         </select>
       </div>
+      <div class="grid-item g3">
+        <h4>Medarbejder</h4>
+        <hr />
+        <select bind:value={employee}>
+          {#each personel as person}
+            <option value={person.UUID}>{person.name}</option>
+          {/each}
+        </select>
+      </div>
     </div>
   {:else if page === 4}
     <h1>Checkout</h1>
+
+    <ul>
+      <li>Bruger: {user.Brugernavn}</li>
+      <li>Produkter: {products.length}</li>
+      <li>
+        Retur dato: {returnDate.getFullYear()}
+        {translateMonth(returnDate.getMonth())}
+        {returnDate.getDate()}
+      </li>
+      <li>
+        Låner typpe: {loanTypes.find((o) => o.id === loanType).name ??
+          "Ikke sat"}
+      </li>
+      <li>Lokaitet: {zones.find((o) => o.UUID === locationOfUseId).name}</li>
+      <li>Medarbejder: {personel.find((o) => o.UUID === employee).name}</li>
+    </ul>
+    <button
+      class="create-btn"
+      on:click={createLoan}
+      disabled={!validateInfo || !validateProducts || !validateUser}
+    >
+      Opret
+    </button>
   {/if}
 </div>
 
 <style>
-  input[type="radio"] {
-    width: 1rem;
-    height: 1rem;
-    margin: 0 0.5rem;
-  }
   select {
     min-width: 10rem;
     background: transparent;
@@ -235,11 +323,7 @@
     font-size: 1rem;
     padding: 10px 15px;
   }
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -251,8 +335,9 @@
   hr {
     max-width: 30rem;
   }
-  .grid-item {
-    /* background: #f002; */
+  .btn-group {
+    display: flex;
+    gap: 1rem;
   }
   .g1 {
     grid-column: 1/2;
@@ -329,6 +414,22 @@
   .splitscreen {
     width: 100%;
     height: 100%;
+  }
+  .max-time-btn {
+    background: transparent;
+    border: 1px solid var(--text1);
+    border-radius: 5px;
+    padding: 0 1rem;
+    color: var(--text1);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .max-time-btn:hover {
+    background: var(--bg2);
+  }
+  .is-max,
+  .is-max:hover {
+    background: var(--p);
   }
   hr {
     margin: 0.5rem 0;

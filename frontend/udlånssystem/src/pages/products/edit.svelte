@@ -25,14 +25,14 @@
   let table = "items";
   let page_name = "Produkter";
 
-  let product_status: productStatusModel[] = []
-  let products: productModel[] = []
+  let product_status: productStatusModel[] = [];
+  let products: productModel[] = [];
 
   async function importDataFromDB() {
-    let data = await getData(table, id)
+    let data = await getData(table, id);
 
-      // HOT FIX - if the data is not found, redirect to the index page
-      if (!data?.UUID) {
+    // HOT FIX - if the data is not found, redirect to the index page
+    if (!data?.UUID) {
       alert("Kunne ikke finde data" + data);
       goToPath(`/${page_name.toLowerCase()}`);
       return;
@@ -49,10 +49,12 @@
       console.log(error);
     }
 
-    product_status = await getData("product_status")
-    product_status.map(product => {return product.name = product.status_name})
+    product_status = await getData("product_status");
+    product_status.map((product) => {
+      return (product.name = product.status_name);
+    });
 
-    products = await getData("products")
+    products = await getData("products");
   });
 
   async function handleUpdate(): Promise<any> {
@@ -75,7 +77,10 @@
   }
 
   async function handleDelete() {
-    const response: any = await deleteItem( { UUID: importData.UUID, table: table } );
+    const response: any = await deleteItem({
+      UUID: importData.UUID,
+      table: table,
+    });
     console.log(response);
     if (response?.success) {
       alert("Slettet");
@@ -110,20 +115,25 @@
       class="form"
     >
       <form id="user-form">
+        <TextQuestion
+          bind:binding={exportData.UUID}
+          label="ID"
+          editMode={false}
+        />
         <SelectQuestion
-        bind:binding={exportData.product_status_id}
-        label="Produkt status"
-        {editMode}
-        options={product_status}
-        match={ {UUID: exportData.product_status_id} }
-      />
+          bind:binding={exportData.product_status_id}
+          label="Produkt status"
+          {editMode}
+          options={product_status}
+          match={{ UUID: exportData.product_status_id }}
+        />
         <SelectQuestion
-        bind:binding={exportData.product_id}
-        label="Produkt"
-        {editMode}
-        options={products}
-        match={ {UUID: exportData.product_id} }
-      />
+          bind:binding={exportData.product_id}
+          label="Produkt"
+          {editMode}
+          options={products}
+          match={{ UUID: exportData.product_id }}
+        />
       </form>
     </div>
   </div>

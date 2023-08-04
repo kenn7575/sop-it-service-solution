@@ -23,6 +23,8 @@
   let table = "brands";
   let page_name = "Brands";
 
+  let products;
+
   onMount(async () => {
     try {
       importDataFromDB();
@@ -32,9 +34,15 @@
   });
 
   async function importDataFromDB() {
+    //get product data to see if the brand is used
+    products = await getData("products").then((res) => {
+      res.map((role) => (role.UUID = role.UUID.toString()));
+      return res;
+    });
+
+    //get brand data
     const data = await getData(table, id);
 
-    // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
       alert("Kunne ikke finde data");
       goToPath(`/${page_name.toLowerCase()}`);
@@ -64,11 +72,19 @@
   }
 
   async function handleDelete() {
+    if (!confirm("Er du sikker på du vil slette " + importData.name + "?")) {
+      return;
+    }
+
+    if (products.some((product) => product.brand_id === importData.UUID)) {
+      alert("Kan ikke slette brand da det er i brug");
+      return;
+    }
+
     const response: any = await deleteItem({
       UUID: importData.UUID,
       table: table,
     });
-    console.log(response);
     if (response?.success) {
       alert("Slettet");
       goToPath(`/${page_name.toLowerCase()}`);

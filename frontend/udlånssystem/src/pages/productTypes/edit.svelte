@@ -14,28 +14,31 @@
   import type { categoryModel } from "../../types/categoryModel.js";
   import type { brandModel } from "../../types/brandModel.js";
 
-
   //this is the id of the item to be edited
   export let id;
 
   //if the page is in edit mode or read only
   let editMode = false;
 
-  //imported Data
+  //Define data for this page
   let importData: productModel;
   let exportData: productModel;
+  let categories: categoryModel[] = [];
+  let brands: brandModel[] = [];
+  let products: itemModel[] = [];
 
   let table = "products";
   let page_name = "Produkttyper";
 
-  let categories: categoryModel[] = []
-  let brands: brandModel[] = []
-
   async function importDataFromDB() {
-    let data = await getData(table, id)
+    //get product data to see if the category is used
+    products = await getData("items");
 
-      // HOT FIX - if the data is not found, redirect to the index page
-      if (!data?.UUID) {
+    //get category data
+    let data = await getData(table, id);
+
+    // HOT FIX - if the data is not found, redirect to the index page
+    if (!data?.UUID) {
       alert("Kunne ikke finde data" + data);
       goToPath(`/${page_name.toLowerCase()}`);
       return;
@@ -76,7 +79,23 @@
   }
 
   async function handleDelete() {
-    const response: any = await deleteItem({ UUID: importData.UUID, table: table });
+    if (confirm("Er du sikker på du vil slette denne produkttype?") == false)
+      return;
+    if (products.some((product) => product.product_id == importData.UUID)) {
+      const count = products.filter(
+        (product) => product.product_id == importData.UUID
+      ).length;
+      alert(
+        `Fejl! \nKan ikke slette dennee produkttyppe, fordi den bruges i ${count} ${
+          count > 1 ? "produkter" : "produkt"
+        }`
+      );
+      return;
+    }
+    const response: any = await deleteItem({
+      UUID: importData.UUID,
+      table: table,
+    });
     console.log(response);
     if (response?.success) {
       alert("Slettet");
@@ -92,15 +111,14 @@
   }
 
   async function handleCreateNewProduct(product_id: number) {
-    const item = new itemModel({ product_id: product_id })
-    
-    const response: any = await createItem( "items", item );
+    const item = new itemModel({ product_id: product_id });
+
+    const response: any = await createItem("items", item);
     if (response && response.success) {
       alert("Gemt");
       goToPath(`/produkter/${response.id}`);
     }
   }
-  
 </script>
 
 {#if importData}
@@ -124,25 +142,28 @@
       <form id="user-form">
         <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
         <SelectQuestion
-        bind:binding={exportData.category_id}
-        label="Kategori"
-        options={categories}
-        {editMode}
-        match={ {UUID: exportData.category_id} }
-      />
-      <SelectQuestion
-      bind:binding={exportData.brand_id}
-      label="Brand"
-      options={brands}
-      {editMode}
-      match={ {UUID: exportData.brand_id} }
-    />
+          bind:binding={exportData.category_id}
+          label="Kategori"
+          options={categories}
+          {editMode}
+          match={{ UUID: exportData.category_id }}
+        />
+        <SelectQuestion
+          bind:binding={exportData.brand_id}
+          label="Brand"
+          options={brands}
+          {editMode}
+          match={{ UUID: exportData.brand_id }}
+        />
         <button
           id="new_product"
           type="button"
-          on:click={() => { handleCreateNewProduct( exportData.UUID) }}>
+          on:click={() => {
+            handleCreateNewProduct(exportData.UUID);
+          }}
+        >
           Tilføj nyt produkt ud fra produkttype
-      </button>
+        </button>
       </form>
     </div>
   </div>
