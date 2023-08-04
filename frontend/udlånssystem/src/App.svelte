@@ -5,6 +5,7 @@
     loginViaSession,
   } from "./services/login";
   import { Router, Route } from "svelte-routing";
+  import { barcodeStore, barcodeBuilder } from "./stores/barcodeStore";
 
   //login page
   import NotLoggedIn from "./pages/login/index.svelte";
@@ -77,7 +78,16 @@
 
 <svelte:window
   on:keydown|preventDefault={(e) => {
-    console.log(e);
+    barcodeBuilder.subscribe((val1) => {
+      if (e.key === "Enter") {
+        barcodeStore.update((val2) => {
+          console.log("code", val2);
+          return val2;
+        });
+      } else {
+        return val1 + e.key;
+      }
+    });
   }}
 />
 
