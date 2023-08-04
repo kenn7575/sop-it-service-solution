@@ -26,7 +26,6 @@
   onMount(async () => {
     try {
       importDataFromDB();
-      console.log(importData);
     } catch (error) {
       console.log(error);
     }

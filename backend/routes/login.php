@@ -1,19 +1,17 @@
 <?php
 include "components/admin_db_conn.php";
+include "components/functions.php";
 
 $username = $_POST['username'] ?? "";
 $password = $_POST['password'] ?? "";
 
 $user = $conn->query("SELECT * FROM `users` WHERE `username` = '$username'")->fetch_object();
 
-include "components/functions.php";
-nested_objects($user, $conn);
-
 if ($user == null || !password_verify($password, $user->password)) {
     die(json_encode(['message'=>'Invalid username or password', 'status'=>403], JSON_PRETTY_PRINT));
 }
 
-if ($user->role_id->UUID < 5) {
+if ($user->role_id < 5) {
     die(json_encode(['message'=>'Unauthorized', 'status'=>401], JSON_PRETTY_PRINT));
 }
 
