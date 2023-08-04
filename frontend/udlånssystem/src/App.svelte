@@ -75,6 +75,12 @@
   };
 </script>
 
+<svelte:window
+  on:keydown|preventDefault={(e) => {
+    console.log(e);
+  }}
+/>
+
 <!-- While in development disable login -->
 <!-- {#if true} -->
 {#if loggedIn}

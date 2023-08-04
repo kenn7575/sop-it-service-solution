@@ -5,6 +5,11 @@
   import TableSimplified from "../../components/table-simplified.svelte";
   import getData from "../../data/getData";
   import { onMount } from "svelte";
+  import axios from "axios";
+  import goToPath from "../../services/goToPath";
+
+  const page_name = "udlaan";
+  const table = "loans";
 
   //data to be exported
   let user = {};
@@ -13,6 +18,19 @@
   let loanType;
   let locationOfUseId;
   let employee;
+  $: loanLength = Math.round(
+    (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
+  );
+  $: user_id = user.UUID;
+  $: productIds = products.map((product) => product.UUID);
+  $: console.log({
+    user_id,
+    products,
+    returnDate,
+    loanType,
+    employee,
+    loanLength,
+  });
 
   //import data
   let loanTypes = [
@@ -98,6 +116,27 @@
     }
     return true;
   }
+
+  //checkout
+  async function createLoan() {
+    const loan = {
+      user_id,
+      loan_length: loanLength,
+      recipient_type_id: loanType,
+      location_of_use_id: locationOfUseId,
+      helpdesk_personel_id: employee,
+    };
+    console.log({ loan, products });
+
+    const { data } = await axios.post("create_loan.php", { loan, products });
+    if (data && data?.success && data?.id) {
+      alert("Gemt");
+
+      goToPath(`/${page_name.toLowerCase()}/${data.id}`);
+    } else {
+      alert("Error 500 - " + data?.data);
+    }
+  }
 </script>
 
 <div class="content">
@@ -151,7 +190,11 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        page = 4;
+        if (validateInfo() && validateProducts() && validateUser()) {
+          page = 4;
+        } else {
+          alert("Du kan ikke gå videre før alle felter er udfyldt");
+        }
       }}
       class:current={4 === page}
       class="page-nav-btn"
@@ -261,8 +304,11 @@
     </ul>
     <button
       class="create-btn"
+      on:click={createLoan}
       disabled={!validateInfo || !validateProducts || !validateUser}
-    />
+    >
+      Opret
+    </button>
   {/if}
 </div>
 
