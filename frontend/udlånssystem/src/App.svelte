@@ -77,7 +77,7 @@
 </script>
 
 <svelte:window
-  on:keydown|preventDefault={(e) => {
+  on:keydown={(e) => {
     barcodeBuilder.subscribe((val1) => {
       if (e.key === "Enter") {
         barcodeStore.update((val2) => {

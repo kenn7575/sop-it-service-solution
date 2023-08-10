@@ -36,7 +36,7 @@
   async function importDataFromDB() {
     //get product data to see if the brand is used
     products = await getData("products").then((res) => {
-      res.map((role) => (role.UUID = role.UUID.toString()));
+      res.map((product) => (product.UUID = product.UUID.toString()));
       return res;
     });
 
