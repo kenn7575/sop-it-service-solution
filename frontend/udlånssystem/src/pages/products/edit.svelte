@@ -11,6 +11,8 @@
   import getData from "../../data/getData.js";
   import type { productStatusModel } from "../../types/productStatusModel.js";
   import type { productModel } from "../../types/productModel.js";
+  import { barcodeStore } from "../../stores/barcodeStore.js";
+  $barcodeStore = ""; //reset the barcode store. This is to prevent automatic redirect on load
 
   //this is the id of the item to be edited
   export let id;
@@ -94,6 +96,8 @@
     event.preventDefault();
     handleUpdate();
   }
+  import { path } from "../../stores/pathStore.js";
+  $: console.log($path);
 </script>
 
 {#if importData}
