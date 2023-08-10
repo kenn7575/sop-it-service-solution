@@ -1,4 +1,39 @@
 <script lang="js">
+  import { barcodeStore, controlStore } from "../../stores/barcodeStore";
+  function handleBarcode(code) {
+    if (!$barcodeStore) return;
+
+    //check if barcode is being added or removed
+    if (!$controlStore) {
+      console.log("adding");
+      const product = inputDataProducts.find((o) => o.UUID == code);
+      //add
+      if (products.find((o) => o.UUID == code)) {
+        alert("Produktet er allerede tilføjet");
+        return;
+      }
+      if (!product) {
+        alert("Produktet findes ikke");
+        return;
+      }
+      handleAddProduct({ detail: product });
+    } else {
+      console.log("removing");
+      //remove
+      const product = products.find((o) => o.UUID == code);
+      if (!product) {
+        return;
+      }
+      if (inputDataProducts.find((o) => o.UUID == code)) {
+        return;
+      }
+      handleRemoveProduct({ detail: product });
+    }
+  }
+  $: handleBarcode($barcodeStore);
+  $: console.log($barcodeStore);
+  $: console.log("🚀 ~ file: new.svelte:23 ~ barcodeStore:", $controlStore);
+
   //General
   import { translateMonth } from "../../services/translateMonth";
   import Table from "../../components/table.svelte";
@@ -46,9 +81,8 @@
 
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
-    inputDataProducts = inputDataProducts.slice(0, 10); // for testing
+
     zones = await getData("zones");
-    console.log(zones);
   });
 
   //same page navigation
@@ -126,7 +160,6 @@
       location_of_use_id: locationOfUseId,
       helpdesk_personel_id: employee,
     };
-    console.log({ loan, products });
 
     const { data } = await axios.post("create_loan.php", { loan, products });
     if (data && data?.success && data?.id) {
@@ -219,16 +252,23 @@
       <div class="splitscreen">
         <Table on:message={handleAddProduct} inputData={inputDataProducts} />
       </div>
-      {#if products.length > 0}
-        <TableSimplified
-          on:message={handleRemoveProduct}
-          inputData={products}
-        />
-      {:else}
-        <div class="center">
-          <p>Tryk for at tilføje produkter</p>
-        </div>
-      {/if}
+      <div class="table-group">
+        {#if $controlStore}
+          <p style="color: var(--s)">Scanning mode: Fravælg</p>
+        {:else}
+          <p>Scanning mode: Tilføj</p>
+        {/if}
+        {#if products.length > 0}
+          <TableSimplified
+            on:message={handleRemoveProduct}
+            inputData={products}
+          />
+        {:else}
+          <div class="center">
+            <p>Tryk for at tilføje produkter</p>
+          </div>
+        {/if}
+      </div>
     </div>
   {:else if page === 3}
     <!-- ! Info -->
@@ -323,7 +363,9 @@
     font-size: 1rem;
     padding: 10px 15px;
   }
-
+  .table-group {
+    min-width: 50%;
+  }
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

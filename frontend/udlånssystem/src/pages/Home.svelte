@@ -15,6 +15,17 @@
     { once: true }
   );
   cheatCode();
+  import goToPath from "../services/goToPath";
+  import { barcodeStore, barcodeBuilderTimeOut } from "../stores/barcodeStore";
+  function handleBarcodeScan(value) {
+    if (!value) return;
+    if (Date.now() - $barcodeBuilderTimeOut > 1000) {
+      return;
+    }
+    goToPath(`/produkter/${value}`);
+  }
+  $: handleBarcodeScan($barcodeStore);
+  $: console.log($barcodeStore);
 </script>
 
 {#if cheatActive}

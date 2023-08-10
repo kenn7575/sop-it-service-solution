@@ -5,7 +5,12 @@
     loginViaSession,
   } from "./services/login";
   import { Router, Route } from "svelte-routing";
-  import { barcodeStore, barcodeBuilder } from "./stores/barcodeStore";
+  import {
+    barcodeStore,
+    barcodeBuilder,
+    barcodeBuilderTimeOut,
+    controlStore,
+  } from "./stores/barcodeStore";
 
   //login page
   import NotLoggedIn from "./pages/login/index.svelte";
@@ -74,22 +79,43 @@
       return window.location.pathname;
     });
   };
+  function handleKeyUp(e) {
+    if (e.key.toLowerCase() === "meta") {
+      $controlStore = false;
+      return;
+    }
+    console.log("🚀 ~ file: App.svelte:83 ~ handleKeyUp ~ e:", e);
+
+    // // $controlStore = false;
+  }
+  function handleKeyDown(e) {
+    if (e.key.toLowerCase() === "meta") {
+      $controlStore = true;
+      return;
+    }
+    if (e.key.toLowerCase() === "shift") {
+      return;
+    }
+    if (e.key === "Enter" || e.keyCode === 13) {
+      $barcodeStore = $barcodeBuilder;
+      // setTimeout(() => {
+      //   $controlStore = false;
+      // }, 100);
+    } else {
+      const now = new Date().getTime();
+
+      if (now - $barcodeBuilderTimeOut > 20) {
+        $barcodeStore = "";
+        $barcodeBuilder = e.key;
+      } else {
+        $barcodeBuilder = $barcodeBuilder + e.key;
+      }
+      $barcodeBuilderTimeOut = now;
+    }
+  }
 </script>
 
-<svelte:window
-  on:keydown|preventDefault={(e) => {
-    barcodeBuilder.subscribe((val1) => {
-      if (e.key === "Enter") {
-        barcodeStore.update((val2) => {
-          console.log("code", val2);
-          return val2;
-        });
-      } else {
-        return val1 + e.key;
-      }
-    });
-  }}
-/>
+<svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
 
 <!-- While in development disable login -->
 <!-- {#if true} -->

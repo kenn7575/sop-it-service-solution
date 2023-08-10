@@ -3,25 +3,33 @@
   import axios from "axios";
   import { onMount } from "svelte";
   import getData from "../../data/getData";
-
+  import {
+    barcodeStore,
+    barcodeBuilderTimeOut,
+  } from "../../stores/barcodeStore";
+  function handleBarcodeScan(value) {
+    if (!value) return;
+    if (Date.now() - $barcodeBuilderTimeOut > 1000) {
+      return;
+    }
+    goToPath(`/${page_name.toLowerCase()}/${value}`);
+  }
+  $: handleBarcodeScan($barcodeStore);
+  $: console.log($barcodeStore);
   let table = "items_view";
   let page_name = "Produkter";
 
   let inputData = [{}];
 
   onMount(async () => {
-    inputData = await getData("items_view")
+    inputData = await getData(table);
   });
 
-  import { path } from "../../stores/pathStore";
-  import { navigate } from "svelte-routing";
-  $: currentPath = $path;
+  import goToPath from "../../services/goToPath";
+
   function handleRowClick(event) {
     let id = event.detail.UUID;
-    navigate(`${currentPath}/${id}`);
-    path.update(() => {
-      return `${currentPath}/${id}`;
-    });
+    goToPath(`/${page_name.toLowerCase()}/${id}`);
   }
 </script>
 
