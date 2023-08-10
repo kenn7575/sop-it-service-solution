@@ -8,28 +8,7 @@ function writeToLog($data) {
     fclose($file);
 }
 
-function addSuffix($table_name) {
-    $exceptions = ["product_status"];
-
-    if (in_array($table_name, $exceptions)) return $table_name;
-    if (substr($table_name, -1) == "s") { $table_name = $table_name . "e"; }
-    if (substr($table_name, -1) == "y") { $table_name = substr($table_name, 0, -1) . "ie"; }
-    return $table_name = $table_name . "s";
-}
-
-function nested_objects($column, $conn) {
-    foreach ($column as $key => $value) {
-        if (substr($key, -3) == "_id" && isset($value)) {
-        $table_name = substr($key, 0, -3);
-        $table_name = addSuffix($table_name);
-        $column->$key = $conn->query("SELECT * FROM `$table_name` WHERE `UUID` = $value")->fetch_object();
-        }
-    }
-
-    return $column;
-}
-
-function upsert($table, $data, $conn) {
+function upsert($table, $data) {
     foreach ($data as $key => $value) {
         if (isset($value)) {
             // if (is_object($value) || substr($key, -3) == "_id") $value = $value["UUID"];
@@ -49,7 +28,8 @@ function upsert($table, $data, $conn) {
     ON DUPLICATE KEY UPDATE $data_update_string; ";
 
     try {
-    $conn->query($query_string);
+        global $conn;
+        $conn->query($query_string);
     } catch (Exception $e) { return $e; }
 
     return true;

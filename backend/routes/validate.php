@@ -1,5 +1,6 @@
 <?php
 include "components/admin_db_conn.php";
+include "components/functions.php";
 
 $token = $_POST['token'] ?? "";
 
@@ -23,10 +24,7 @@ if ($login_session == null) {
 
 $user = $conn->query("SELECT * FROM users WHERE username = '$login_session[username]'")->fetch_object();
 
-include "components/functions.php";
-nested_objects($user, $conn);
-
-if ($user->role_id->UUID < 5) {
+if ($user->role_id < 5) {
     die(json_encode(['message'=>'Unauthorized', 'status'=>401], JSON_PRETTY_PRINT));
 }
 
