@@ -4,6 +4,8 @@
 
   //import data
   export let inputData = [];
+  export let title = "Indkøbskurv";
+  export let disabled = false;
 
   //split data into tableData and tableHeadings
   $: tableHeadings = Object.keys(inputData[0]);
@@ -37,6 +39,7 @@
   const dispatch = createEventDispatcher();
 
   function forwardId(object) {
+    if (disabled) return;
     dispatch("message", object);
   }
   //log all state variables
@@ -47,10 +50,12 @@
 </script>
 
 <div class="content">
-  <h1>Indkøbskurv</h1>
+  {#if title}
+    <h1>{title}</h1>
+  {/if}
   <!-- ! table -->
   <div class="table">
-    <table>
+    <table class:disabled>
       <thead>
         <tr>
           {#each tableHeadings as heading}
@@ -61,6 +66,7 @@
       <tbody>
         {#each tableData as row, rowIndex}
           <tr
+            class:not-allowed={disabled}
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
               forwardId(row);
@@ -85,6 +91,12 @@
 
     width: 100%;
     overflow-y: auto;
+  }
+  .not-allowed {
+    cursor: not-allowed;
+  }
+  .disabled {
+    opacity: 0.75;
   }
 
   /* table */

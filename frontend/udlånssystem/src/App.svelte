@@ -171,7 +171,7 @@
           <Route path="produkttyper/new" component={productTypesNew} />
           <Route path="udlaan/new" component={loansNew} />
 
-          <Route path="udlaan/returner/:id" component={loanReturn} />
+          <Route path="udlaan/:id/returner" component={loanReturn} />
         </div>
       </main>
     </Router>

@@ -5,7 +5,6 @@
   import getData from "../../data/getData";
   import goToPath from "../../services/goToPath";
   import update from "../../data/update";
-  import deleteItem from "../../data/delete";
   import FormEditPanel from "../../components/form-edit-panel.svelte";
   import TextQuestion from "../../components/textQuestion.svelte";
   import { onMount } from "svelte";
@@ -13,7 +12,6 @@
 
   let importLoan: loanModel;
   let exportData: loanModel;
-  let itemsInLoan: itemModel[];
   let editMode = false;
 
   let table = "loans";
@@ -31,8 +29,6 @@
     const data = await getData(table, id);
     exportData = new loanModel({ ...data });
     importLoan = new loanModel({ ...data });
-
-    let itemsInLoan = await getData("items_in_loan");
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!importLoan?.UUID) {
@@ -62,7 +58,7 @@
   }
 
   async function handleReturn() {
-    goToPath(`/udlaan/returner/${id}`);
+    goToPath(`/udlaan/${id}/returner`);
   }
 
   function handleSubmit(event) {
@@ -73,6 +69,9 @@
 
 <div class="container">
   <FormEditPanel
+    loanReturnDate={exportData?.date_of_return
+      ? exportData?.date_of_return
+      : null}
     loanMode={true}
     on:cancel={() => {
       goToPath(`/${page_name.toLowerCase()}`);
