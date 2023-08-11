@@ -27,7 +27,7 @@
       autocomplete="off"
       disabled={!editMode}
       bind:value={binding}
-      class="text"
+      class={`text ${editMode ? "hover:disabled" : ""}`}
       type="number"
       {required}
     />

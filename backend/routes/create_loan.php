@@ -14,6 +14,8 @@ try {
 
     foreach ($items as $item) {
         $conn->query("UPDATE `items` SET `product_status_id` = '4' WHERE `UUID` = $item[UUID]");
+        $conn->query("DELETE FROM `storage_locations` WHERE `UUID` = $item[storage_location_id]");
+        $conn->query("UPDATE `items` SET `storage_location_id` = NULL WHERE `UUID` = $item[UUID]");
         (object) $item_in_loan = new stdClass();
         $item_in_loan->loan_id = $loan_id;
         $item_in_loan->item_id = $item['UUID'];

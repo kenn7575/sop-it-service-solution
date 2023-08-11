@@ -9,9 +9,12 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import { onMount } from "svelte";
   import doseObjectsMatch from "../../services/doesObjectsMatch";
+  import NumberQuestion from "../../components/numberQuestion.svelte";
 
   let importLoan: loanModel;
   let exportData: loanModel;
+  let itemsInLoan: itemModel[];
+  let loan_view: any;
   let editMode = false;
 
   let table = "loans";
@@ -29,6 +32,9 @@
     const data = await getData(table, id);
     exportData = new loanModel({ ...data });
     importLoan = new loanModel({ ...data });
+
+    let itemsInLoan = await getData("items_in_loan");
+    loan_view = await getData("loans_view_extended", id);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!importLoan?.UUID) {
@@ -65,6 +71,10 @@
     event.preventDefault();
     handleUpdate();
   }
+
+  $: loaner_textbox = loan_view?.loaner_name + " | " + loan_view?.loaner_id;
+  $: personel_textbox =
+    loan_view?.personel_name + " | " + loan_view?.personel_id;
 </script>
 
 <div class="container">
@@ -81,12 +91,30 @@
     on:update={handleUpdate}
     bind:editMode
   />
-  {#if exportData}
+  {#if exportData && loan_view}
     <div class="content">
       <form action="" id="loan-form">
         <TextQuestion
           bind:binding={exportData.UUID}
           label="ID"
+          editMode={false}
+        />
+        <NumberQuestion
+          bind:binding={exportData.loan_length}
+          label={`Lånetid | [${new Date(
+            new Date(exportData.date_created).getTime() +
+              exportData.loan_length * 24 * 60 * 60 * 1000
+          ).toLocaleString()}]`}
+          {editMode}
+        />
+        <TextQuestion
+          bind:binding={loaner_textbox}
+          label={`Låner | [UUID]`}
+          editMode={false}
+        />
+        <TextQuestion
+          bind:binding={personel_textbox}
+          label={`Personel | [UUID]`}
           editMode={false}
         />
       </form>
