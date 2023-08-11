@@ -1,7 +1,7 @@
 export class loanModel {
   UUID: number;
-  date_created: string;
-  date_updated: string;
+  date_created: Date;
+  date_updated: Date;
   date_of_return: string | null;
   location_of_use_id: number | null;
   user_id: number;
