@@ -19,7 +19,8 @@ export const formatPathToBreadcrumps = (path) => {
   //remove empty strings
   paths = paths.filter((p) => p !== "");
 
-  if (paths.length === 0) return [{ path: "Hjem", fullPath: "/" }];
+  if (paths.length === 0)
+    return [{ path: "Hjem", fullPath: "/", seperator: false }];
   // return list of object with path and full path
   return paths.map((p, i) => {
     return {
@@ -39,6 +40,8 @@ export const getLastPath = (inputPath) => {
 
   //remove empty strings
   paths = paths.filter((p) => p !== "");
+
+  if (paths.length == 0) return "";
 
   return paths[paths.length - 1];
 };

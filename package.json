@@ -5,7 +5,7 @@
     "dev": "cd frontend/udlånssystem && npm run dev",
     "host": "cd frontend/udlånssystem && npm run host",
     "serv": "cd backend/routes && concurrently \"php -S localhost:5000\" \"php -S 172.16.3.102:5000\"",
-    "test": "vitest"
+    "test": "cd backend/routes && npm run test"
   },
   "devDependencies": {
     "concurrently": "^8.1.0"
