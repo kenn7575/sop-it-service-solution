@@ -5,7 +5,7 @@
   import { navigate } from "svelte-routing";
   import getData from "../../data/getData";
 
-  let table = "brands";
+  let table = "brands_view";
   let page_name = "Brands";
 
   let inputData = [[]];
