@@ -1,4 +1,5 @@
 export function translateMonth(month: number) {
+  console.log(month);
   let months = [
     "Januar",
     "Februar",
@@ -13,5 +14,5 @@ export function translateMonth(month: number) {
     "November",
     "December",
   ];
-  return months[month - 1];
+  return months[month];
 }

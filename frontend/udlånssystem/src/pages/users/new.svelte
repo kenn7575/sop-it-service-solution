@@ -2,11 +2,7 @@
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
   import { UserModel } from "../../types/userModel";
-  import validateInputs from "../../services/validateInputs.js";
   import getData from "../../data/getData";
-  import axios from "axios";
-  import { path } from "../../stores/pathStore";
-  import { navigate } from "svelte-routing";
   import createItem from "../../data/create";
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
