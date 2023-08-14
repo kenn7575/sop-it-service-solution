@@ -5,12 +5,19 @@
   import getData from "../../data/getData";
 
   let inputData = [[]];
+  let constData = [[]];
 
-  let page_name = "Udlaan";
+  let page_name = "udlaan";
+
+  async function filterLoans(returned) { 
+      if (returned) { inputData = constData.filter(loan => loan.Returneret) }
+      else { inputData = constData.filter(loan => !loan.Returneret) }
+  }
 
   onMount(async () => {
-    inputData = await getData("loans_view");
-    console.log(inputData);
+    constData = await getData("loans_view");
+    inputData = [...constData];
+    filterLoans(false)
   });
 
   import goToPath from "../../services/goToPath";
@@ -21,9 +28,10 @@
 </script>
 
 <div class="table">
+  <input id="checkbox" type="checkbox" on:change={(e) => filterLoans(e.target.checked)} />
   <Table
     {inputData}
-    buttonDestination={"udlaan/new"}
+    buttonDestination={`${page_name}/new`}
     on:message={handleRowClick}
   />
 </div>
