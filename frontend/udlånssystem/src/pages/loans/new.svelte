@@ -1,13 +1,13 @@
 <script lang="js">
   import { barcodeStore, controlStore } from "../../stores/barcodeStore";
-  function handleBarcode(code) {
-    if (!$barcodeStore) return;
+  import { currentUser } from "../../services/login";
 
+  function handleBarcode(code) {
+    if (!$barcodeStore) return; //if barcode is empty
     //check if barcode is being added or removed
     if (!$controlStore) {
-      console.log("adding");
-      const product = inputDataProducts.find((o) => o.UUID == code);
       //add
+      const product = inputDataProducts.find((o) => o.UUID == code);
       if (products.find((o) => o.UUID == code)) {
         alert("Produktet er allerede tilføjet");
         return;
@@ -18,7 +18,6 @@
       }
       handleAddProduct({ detail: product });
     } else {
-      console.log("removing");
       //remove
       const product = products.find((o) => o.UUID == code);
       if (!product) {
@@ -31,8 +30,6 @@
     }
   }
   $: handleBarcode($barcodeStore);
-  $: console.log($barcodeStore);
-  $: console.log("🚀 ~ file: new.svelte:23 ~ barcodeStore:", $controlStore);
 
   //General
   import { translateMonth } from "../../services/translateMonth";
@@ -50,8 +47,8 @@
   let user = {};
   let products = [];
   let returnDate = new Date();
-  let loanType;
-  let locationOfUseId;
+  let loanType = 2;
+  let locationOfUseId = 1;
   let employee;
   $: loanLength = Math.round(
     (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
@@ -65,6 +62,7 @@
     loanType,
     employee,
     loanLength,
+    locationOfUseId,
   });
 
   //import data
@@ -78,10 +76,8 @@
   let zones = [{}]; //get data onMount
   onMount(async () => {
     personel = await getData("personnel_users");
-
     inputDataUser = await getData("users_view");
     inputDataProducts = await getData("available_products_view");
-
     zones = await getData("zones");
   });
 
@@ -128,8 +124,6 @@
 
   //info
 
-  //now
-
   //default date
   returnDate.setMonth(returnDate.getMonth() + 1);
   //create max date on 6 months
@@ -139,13 +133,20 @@
 
   import { DateInput } from "date-picker-svelte";
   function validateInfo() {
-    if (
-      returnDate === undefined ||
-      returnDate === undefined ||
-      !locationOfUseId ||
-      !loanType ||
-      !employee
-    ) {
+    if (returnDate === undefined) {
+      console.log("returnDate === undefined");
+      return false;
+    }
+    if (!locationOfUseId) {
+      console.log("!locationOfUseId");
+      return false;
+    }
+    if (!loanType) {
+      console.log("!loanType");
+      return false;
+    }
+    if (!employee) {
+      console.log("!employee");
       return false;
     }
     return true;
@@ -223,6 +224,7 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
+        console.log(validateInfo(), validateProducts(), validateUser());
         if (validateInfo() && validateProducts() && validateUser()) {
           page = 4;
         } else {
@@ -317,6 +319,7 @@
       <div class="grid-item g3">
         <h4>Medarbejder</h4>
         <hr />
+
         <select bind:value={employee}>
           {#each personel as person}
             <option value={person.UUID}>{person.name}</option>
@@ -325,34 +328,83 @@
       </div>
     </div>
   {:else if page === 4}
-    <h1>Checkout</h1>
-
-    <ul>
-      <li>Bruger: {user.Brugernavn}</li>
-      <li>Produkter: {products.length}</li>
-      <li>
-        Retur dato: {returnDate.getFullYear()}
-        {translateMonth(returnDate.getMonth())}
-        {returnDate.getDate()}
-      </li>
-      <li>
-        Låner typpe: {loanTypes.find((o) => o.id === loanType).name ??
-          "Ikke sat"}
-      </li>
-      <li>Lokaitet: {zones.find((o) => o.UUID === locationOfUseId).name}</li>
-      <li>Medarbejder: {personel.find((o) => o.UUID === employee).name}</li>
-    </ul>
-    <button
-      class="create-btn"
-      on:click={createLoan}
-      disabled={!validateInfo || !validateProducts || !validateUser}
-    >
-      Opret
-    </button>
+    <div class="wrapper">
+      <div class="chechout-container">
+        <div class="info-container">
+          <ul>
+            <li>Bruger: {user.Brugernavn}</li>
+            <li>Produkter: {products.length}</li>
+            <li>
+              Retur dato: {returnDate.getFullYear()}
+              {translateMonth(returnDate.getMonth())}
+              {returnDate.getDate()}
+            </li>
+            <li>
+              Låner typpe: {loanTypes.find((o) => o.id === loanType).name ??
+                "Ikke sat"}
+            </li>
+            <li>
+              Lokaitet: {zones.find((o) => o.UUID === locationOfUseId).name}
+            </li>
+            <li>
+              Medarbejder: {personel.find((o) => o.UUID === employee).name}
+            </li>
+          </ul>
+        </div>
+        <div class="table">
+          <TableSimplified inputData={products} title="" />
+        </div>
+      </div>
+      <div class="button-container">
+        <button
+          class="create-btn"
+          on:click={createLoan}
+          disabled={!validateInfo || !validateProducts || !validateUser}
+        >
+          Opret
+        </button>
+      </div>
+    </div>
   {/if}
 </div>
 
 <style>
+  .wrapper {
+    display: block;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+  }
+  .create-btn {
+    width: 300px;
+    min-height: 2rem;
+    height: 2rem;
+    color: var(--text1);
+    border: 1px solid var(--text1);
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+    background: var(--p);
+  }
+  .chechout-container {
+    display: flex;
+    margin-top: 2rem;
+    gap: 1rem;
+    height: min-content;
+  }
+  .info-container {
+    width: 50%;
+  }
+  .chechout-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: solid 1px var(--text1);
+    padding: 1rem;
+    border-radius: 15px;
+  }
   select {
     min-width: 10rem;
     background: transparent;

@@ -1,17 +1,24 @@
-class authorizationLevelModel {
-  UUID: number;
-  name: string;
-  level: number;
+class brainDamage {
+  brain: any;
+  iq: number;
+  constructor(json: any) {
+    this.brain = json;
+  }
+  getIQ() {
+    return this.iq;
+  }
+  setIQ(iq: number) {
+    this.iq = iq;
+  }
+  getBrain() {
+    return this.brain;
+  }
+  setBrain(brain: any) {
+    this.brain = brain;
+  }
+  damageBrain() {
+    for (let i = 0; i < this.iq; i++) {
+      this.iq--;
+    }
+  }
 }
-
-let test: authorizationLevelModel = {
-  UUID: 1,
-  name: "test",
-  level: 1,
-};
-
-let testClone = { ...test };
-
-testClone.UUID = 2;
-console.log(test, "test");
-console.log(testClone, "testClone");
