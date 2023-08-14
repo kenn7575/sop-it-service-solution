@@ -235,7 +235,7 @@
       class="page-nav-btn"
     >
       <i class="fa-solid fa-file-signature" />
-      <p>Gemmense</p>
+      <p>Gennemse</p>
     </button>
   </div>
 
@@ -299,7 +299,7 @@
         </div>
       </div>
       <div class="grid-item g2">
-        <h4>Låner typpe</h4>
+        <h4>Låner type</h4>
         <hr />
         <select bind:value={loanType}>
           {#each loanTypes as type}
@@ -308,7 +308,7 @@
         </select>
       </div>
       <div class="grid-item g3">
-        <h4>Lokaitet</h4>
+        <h4>Lokalitet</h4>
         <hr />
         <select bind:value={locationOfUseId}>
           {#each zones as zone}
@@ -340,11 +340,11 @@
               {returnDate.getDate()}
             </li>
             <li>
-              Låner typpe: {loanTypes.find((o) => o.id === loanType).name ??
+              Låner type: {loanTypes.find((o) => o.id === loanType).name ??
                 "Ikke sat"}
             </li>
             <li>
-              Lokaitet: {zones.find((o) => o.UUID === locationOfUseId).name}
+              Lokalitet: {zones.find((o) => o.UUID === locationOfUseId).name}
             </li>
             <li>
               Medarbejder: {personel.find((o) => o.UUID === employee).name}

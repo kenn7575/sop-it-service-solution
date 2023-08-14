@@ -120,7 +120,7 @@
       </form>
     </div>
   {:else}
-    loadaing...
+    loading...
   {/if}
 </div>
 

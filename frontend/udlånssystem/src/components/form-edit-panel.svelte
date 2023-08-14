@@ -45,7 +45,7 @@
     {:else}
       <p>Returneret ✅</p>
       <p>{loanReturnDate}</p>
-      <button id="" on:click={handleDelete}>Se datailjer </button>
+      <button id="" on:click={handleDelete}>Se detaljer </button>
     {/if}
   {/if}
 </div>
