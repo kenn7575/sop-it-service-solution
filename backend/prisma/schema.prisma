@@ -1,0 +1,285 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model addresses {
+  UUID           Int      @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  city           String?  @db.VarChar(255)
+  postal_code    String?  @db.Char(4)
+  address_line_1 String?  @db.VarChar(255)
+  address_line_2 String?  @db.VarChar(255)
+  date_created   DateTime @default(now()) @db.DateTime(0)
+  date_updated   DateTime @default(now()) @db.DateTime(0)
+}
+
+model brands {
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
+}
+
+model buildings {
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
+}
+
+model categories {
+  UUID              Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String? @db.VarChar(255)
+  category_group_id Int
+
+  @@index([category_group_id], map: "category_group_id")
+}
+
+model category_groups {
+  UUID Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name String? @db.VarChar(255)
+}
+
+model educations {
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
+}
+
+model items {
+  UUID                Int       @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  date_created        DateTime  @default(now()) @db.DateTime(0)
+  date_updated        DateTime? @default(now()) @db.DateTime(0)
+  storage_location_id Int?      @db.UnsignedInt
+  product_status_id   Int       @db.UnsignedInt
+  product_id          Int       @db.UnsignedInt
+
+  @@index([storage_location_id], map: "items_ibfk_1")
+  @@index([product_id], map: "product_id")
+  @@index([product_status_id], map: "product_status_id")
+}
+
+model items_in_loan {
+  UUID    Int @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  loan_id Int @db.UnsignedInt
+  item_id Int @db.UnsignedInt
+
+  @@index([item_id], map: "item_id")
+  @@index([loan_id], map: "loan_id")
+}
+
+model loans {
+  UUID                 Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  date_created         DateTime  @default(now()) @db.DateTime(0)
+  date_updated         DateTime  @default(now()) @db.DateTime(0)
+  date_of_return       DateTime? @db.DateTime(0)
+  location_of_use_id   Int?      @db.UnsignedInt
+  user_id              Int       @db.UnsignedInt
+  helpdesk_personel_id Int       @db.UnsignedInt
+  selfservice_case_id  Int?      @db.UnsignedInt
+  recipient_type_id    Int       @db.UnsignedInt
+  loan_length          Int?
+
+  @@index([helpdesk_personel_id], map: "helpdesk_personel_id")
+  @@index([location_of_use_id], map: "location_of_use_id")
+  @@index([recipient_type_id], map: "recipient_type_id")
+  @@index([selfservice_case_id], map: "selfservice_case_id")
+  @@index([user_id], map: "user_id")
+}
+
+model login_sessions {
+  UUID            Int      @id @default(autoincrement()) @db.UnsignedInt
+  username        String   @db.VarChar(255)
+  user_UUID       Int
+  expiration_date DateTime @db.DateTime(0)
+  token           String   @db.VarChar(255)
+}
+
+model pickup_locations {
+  UUID Int    @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
+}
+
+model product_status {
+  UUID        Int    @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  status_name String @db.VarChar(255)
+}
+
+model products {
+  UUID              Int      @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String   @db.VarChar(255)
+  brand_id          Int
+  category_id       Int
+  date_created      DateTime @default(now()) @db.DateTime(0)
+  date_updated      DateTime @default(now()) @db.DateTime(0)
+  product_id_prefix String?  @db.VarChar(50)
+  image_name        String?  @db.VarChar(50)
+
+  @@index([brand_id], map: "brand_id")
+  @@index([category_id], map: "products_ibfk_2")
+}
+
+model recipient_type {
+  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  NAME String @db.VarChar(255)
+}
+
+model roles {
+  UUID                   Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name                   String @db.VarChar(255)
+  authorization_level_id Int    @db.UnsignedInt
+
+  @@index([authorization_level_id], map: "authorization_level_id")
+}
+
+model selfservice_case {
+  UUID                       Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  delivery_location_id       Int?      @db.UnsignedInt
+  pickup_location_id         Int?      @db.UnsignedInt
+  distribution_date          DateTime  @db.DateTime(0)
+  estimated_time_consumption DateTime? @db.DateTime(0)
+
+  @@index([delivery_location_id], map: "delivery_location_id")
+  @@index([pickup_location_id], map: "pickup_location_id")
+}
+
+model storage_locations {
+  UUID         Int       @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  zone_id      Int
+  kabinet      String?   @db.VarChar(255)
+  shelf        String?   @db.VarChar(255)
+  idle_since   DateTime? @default(now()) @db.DateTime(0)
+  img_name     String?   @db.VarChar(255)
+  date_updated DateTime  @default(now()) @db.DateTime(0)
+
+  @@index([zone_id], map: "zone_id")
+}
+
+model users {
+  UUID         Int      @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  username     String   @db.VarChar(255)
+  password     String   @db.VarChar(255)
+  name         String   @db.VarChar(255)
+  mail         String   @db.VarChar(255)
+  is_ad_user   Boolean
+  date_created DateTime @default(now()) @db.DateTime(0)
+  date_updated DateTime @default(now()) @db.DateTime(0)
+  address_id   Int?     @db.UnsignedInt
+  education_id Int?     @db.UnsignedInt
+  role_id      Int?     @db.UnsignedInt
+  img_name     String?  @db.Text
+
+  @@index([address_id], map: "address_id")
+  @@index([education_id], map: "education_id")
+  @@index([role_id], map: "role_id")
+}
+
+model zones {
+  UUID        Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name        String @db.VarChar(255)
+  building_id Int
+  floor_level Int
+
+  @@index([building_id], map: "building_id")
+}
+
+model cables {
+  UUID         Int      @id @default(autoincrement()) @db.UnsignedInt
+  date_created DateTime @default(now()) @db.DateTime(0)
+  date_updated DateTime @default(now()) @db.DateTime(0)
+  name         String   @db.VarChar(100)
+  amount_total Int      @db.UnsignedInt
+  amount_lent  Int      @db.UnsignedInt
+  category_id  Int      @db.UnsignedInt
+}
+
+model authorization_levels {
+  UUID  Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name  String @db.VarChar(255)
+  level Int
+}
+
+view available_products_view {
+  UUID  Int     @id @default(0) @db.UnsignedInt
+  Navn  String? @db.VarChar(255)
+  Brand String? @db.VarChar(255)
+}
+
+view cables_view {
+  ProductUUID Int    @id @default(0) @db.UnsignedInt
+  Name        String @db.VarChar(255)
+}
+
+view loans_view {
+  UUID                  Int       @id @default(0) @db.UnsignedInt
+  Dato_oprettet         DateTime  @default(now()) @map("Dato oprettet") @db.DateTime(0)
+  Date_opdateret        DateTime  @default(now()) @map("Date opdateret") @db.DateTime(0)
+  Dato_retuneret        DateTime? @map("Dato retuneret") @db.DateTime(0)
+  Brugslokation_id      Int?      @map("Brugslokation id") @db.UnsignedInt
+  Bruger_ID             Int       @map("Bruger ID") @db.UnsignedInt
+  Helpdesk_personale_id Int       @map("Helpdesk personale id") @db.UnsignedInt
+  Selfservice_case_id   Int?      @map("Selfservice case id") @db.UnsignedInt
+  Recipent_type_id      Int       @map("Recipent type id") @db.UnsignedInt
+  Laanetid__dage_       Int?      @map("Laanetid (dage)")
+}
+
+view locations_view {
+  UUID    Int     @id @default(0) @db.UnsignedInt
+  Zone    String  @db.VarChar(255)
+  Etage   Int
+  Bygning Int?    @default(0) @db.UnsignedInt
+  Lokale  String? @db.VarChar(255)
+}
+
+view products_view {
+  UUID           Int      @id @default(0) @db.UnsignedInt
+  Navn           String   @db.VarChar(255)
+  Dato_oprettet  DateTime @default(now()) @map("Dato oprettet") @db.DateTime(0)
+  Dato_opdateret DateTime @default(now()) @map("Dato opdateret") @db.DateTime(0)
+  image_name     String?  @map("image name") @db.VarChar(50)
+}
+
+view users_view {
+  UUID           Int      @id @default(0) @db.UnsignedInt
+  Brugernavn     String   @db.VarChar(255)
+  Navn           String   @db.VarChar(255)
+  Dato_oprettet  DateTime @default(now()) @map("Dato oprettet") @db.DateTime(0)
+  Dato_opdateret DateTime @default(now()) @map("Dato opdateret") @db.DateTime(0)
+  Mail           String   @db.VarChar(255)
+  Rolle          String?  @db.VarChar(255)
+}
+
+view users_view_extended {
+  UUID              Int     @id @default(0) @db.UnsignedInt
+  Brugernavn        String  @db.VarChar(255)
+  Navn              String  @db.VarChar(255)
+  Mail              String  @db.VarChar(255)
+  Uddannelse        String? @db.VarChar(255)
+  By                String? @db.VarChar(255)
+  Postnummer        String? @db.Char(4)
+  Primaer_adresse   String? @map("Primaer adresse") @db.VarChar(255)
+  Sekundaer_adresse String? @map("Sekundaer adresse") @db.VarChar(255)
+  Rolle             String? @db.VarChar(255)
+}
+
+view categories_view {
+  UUID                 Int     @id @default(0) @db.UnsignedInt
+  Kategori_Navn        String? @map("Kategori Navn") @db.VarChar(255)
+  Kategori_gruppe_navn String? @map("Kategori gruppe navn") @db.VarChar(255)
+}
+
+view items_view {
+  UUID           Int       @id @default(0) @db.UnsignedInt
+  Navn           String?   @db.VarChar(255)
+  Status         String?   @db.VarChar(255)
+  Zone_id        Int?      @map("Zone id")
+  Dato_oprettet  DateTime  @default(now()) @map("Dato oprettet") @db.DateTime(0)
+  Dato_opdateret DateTime? @default(now()) @map("Dato opdateret") @db.DateTime(0)
+}
+
+view roles_view {
+  UUID    Int     @id @default(0) @db.UnsignedInt
+  name    String  @db.VarChar(255)
+  level   Int?
+  al_name String? @db.VarChar(255)
+}
