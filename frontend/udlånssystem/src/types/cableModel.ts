@@ -1,27 +1,29 @@
 export class cableModel {
   //fields
   UUID: number | null | undefined;
-  date_created: string | null | undefined;
-  date_updated: string | null | undefined;
-  name: string | null | undefined;
-  amount_total: number | null | undefined;
-  amount_lent: number | null | undefined;
-  category_id: number | null | undefined;
+  Oprettet: string | null | undefined;
+  Opdateret: string | null | undefined;
+  Navn: string | null | undefined;
+  Total: number | null | undefined;
+  Tilgaengeligt: number | null | undefined;
+  Kategori: number | null | undefined;
+  Lånt: number | null | undefined;
 
   constructor(json: any) {
     this.UUID = json.UUID;
-    this.date_created = json.date_created;
-    this.date_updated = json.date_updated;
-    this.name = json.name;
-    this.amount_total = json.amount_total;
-    this.amount_lent = json.amount_lent;
-    this.category_id = json.category_id;
+    this.Oprettet = json.date_created;
+    this.Opdateret = json.date_updated;
+    this.Navn = json.name;
+    this.Total = json.amount_total;
+    this.Tilgaengeligt = json.amount_lent;
+    this.Kategori = json.category_id;
+    this.Lånt = 0;
   }
   validate(): boolean {
-    if (!this.name) return false;
-    if (!this.amount_total) return false;
-    if (!this.amount_lent) return false;
-    if (!this.category_id) return false;
+    if (!this.Navn) return false;
+    if (!this.Total) return false;
+    if (!this.Tilgaengeligt) return false;
+    if (!this.Kategori) return false;
     return true;
   }
 }
