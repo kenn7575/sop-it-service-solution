@@ -1,4 +1,6 @@
 <script lang="js">
+// @ts-nocheck
+
   import Table from "../../components/table.svelte";
   import axios from "axios";
   import { onMount } from "svelte";

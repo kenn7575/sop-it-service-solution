@@ -50,6 +50,7 @@
   let loanType = 2;
   let locationOfUseId = 1;
   let employee;
+  let password;
   $: loanLength = Math.round(
     (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
   );
@@ -132,6 +133,7 @@
   maxDate.setMonth(minDate.getMonth() + 6);
 
   import { DateInput } from "date-picker-svelte";
+  import TextQuestion from "../../components/textQuestion.svelte";
   function validateInfo() {
     if (returnDate === undefined) {
       console.log("returnDate === undefined");
@@ -145,8 +147,9 @@
       console.log("!loanType");
       return false;
     }
-    if (!employee) {
-      console.log("!employee");
+    if (!password) {
+      console.log("!password");
+      console.log(password)
       return false;
     }
     return true;
@@ -159,8 +162,17 @@
       loan_length: loanLength,
       recipient_type_id: loanType,
       location_of_use_id: locationOfUseId,
-      helpdesk_personel_id: employee,
+      helpdesk_personel_id: $currentUser.UUID,
     };
+
+    const validatePassword = await axios.post("validate_password.php", {
+      password, user_password: $currentUser.password
+    }).then(res => res.data)
+
+    if (!validatePassword.success) {
+      alert("Forkert kode");
+      return;
+    }
 
     const { data } = await axios.post("create_loan.php", { loan, products });
     if (data && data?.success && data?.id) {
@@ -317,14 +329,9 @@
         </select>
       </div>
       <div class="grid-item g3">
-        <h4>Medarbejder</h4>
-        <hr />
-
-        <select bind:value={employee}>
-          {#each personel as person}
-            <option value={person.UUID}>{person.name}</option>
-          {/each}
-        </select>
+        <form>
+          <TextQuestion label="Kode" type="password" bind:binding={password} editMode={true}/>
+        </form>
       </div>
     </div>
   {:else if page === 4}
@@ -347,7 +354,7 @@
               Lokalitet: {zones.find((o) => o.UUID === locationOfUseId).name}
             </li>
             <li>
-              Medarbejder: {personel.find((o) => o.UUID === employee).name}
+              Medarbejder: {$currentUser.name}
             </li>
           </ul>
         </div>
