@@ -92,6 +92,7 @@
     // // $controlStore = false;
   }
   function handleKeyDown(e) {
+    if (!e.key) return;
     if (e.key.toLowerCase() === "meta") {
       $controlStore = true;
       return;
@@ -101,9 +102,6 @@
     }
     if (e.key === "Enter" || e.keyCode === 13) {
       $barcodeStore = $barcodeBuilder;
-      // setTimeout(() => {
-      //   $controlStore = false;
-      // }, 100);
     } else {
       const now = new Date().getTime();
 
