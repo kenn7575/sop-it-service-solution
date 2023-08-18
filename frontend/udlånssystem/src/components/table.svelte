@@ -18,7 +18,7 @@
   $: if (inputData.length > 0) headers = inputData[0];
 
   //resort data every time inputData changes
-  $: inputData && sortTable(inputData, sortColumn);
+  // $: inputData && sortTable(inputData, sortColumn);
 
   //split data into tableData and tableHeadings
   $: tableHeadings = Object.keys(headers);
