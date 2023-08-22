@@ -54,9 +54,6 @@
   $: loanLength = Math.round(
     (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
   );
-  $: user_id = user.UUID;
-  $: console.log(cables, importCables);
-
   //import data
   let loanTypes = [
     { name: "Til person", id: 2 },
@@ -66,18 +63,17 @@
   let importUsers = [{}]; //get data onMount
   let importProducts = [{}]; //get data onMount
   let importZones = [{}]; //get data onMount
-  let importCables = [{}]; //get data onMount
+  let importCables: cableModel[] = []; //get data onMount
+  let importCablesAvailable: cableModel[] = []; //get data onMount
   onMount(async () => {
     importPersonnels = await getData("personnel_users");
     importUsers = await getData("users_view");
     importProducts = await getData("available_products_view");
     importZones = await getData("importZones");
     importCables = (await getData("available_cables")).filter(
-      (ac) => ac.Tilgaengeligt >= 1
+      (ac) => ac.Tilgaengelige >= 1
     ) as cableModel[];
-    importCables.map((c) => {
-      return (c.Lånt = 0);
-    });
+    importCablesAvailable = [...importCables] as cableModel[];
   });
 
   //same page navigation
@@ -123,55 +119,70 @@
   //cabels
   //--------------------------------------------------------------------------------
   function validateCables() {
-    if (cables.length == 0) {
+    if (cables.length <= 0) {
       return false;
     }
     return true;
   }
   function handleAddCable(event) {
-    //move product from importProducts to products
-    let cable: cableModel = event.detail;
-    if (importCables.length == 0) return;
+    console.log(importCablesAvailable, "importCablesAvailable");
+    console.log(importCables, "importCables");
 
-    cable.Tilgaengeligt--;
-    cable.Lånt++;
+    let cableInput: cableModel = event.detail; //cable UUID reference
+    const cable = importCables.find(
+      (c) => c.UUID == cableInput.UUID
+    ) as cableModel; //cable object
+    console.log({ ...cable }, "cable");
 
-    const thisCable = cables.find((c) => c.UUID == cable.UUID);
-    var indexCable = cables.find((c) => c.UUID > cable.UUID);
+    if (importCablesAvailable.length == 0) return; //if no cables available
 
-    if (thisCable) {
-      if (cable.Tilgaengeligt == 0)
-        importCables.splice(
-          importCables.indexOf((i) => (i.UUID = cable.UUID)),
-          1
-        )[0];
+    //insert into cables
+    const cableFromCabels = cables.find(
+      (c) => c.UUID == cable.UUID
+    ) as cableModel;
+    console.log(cableFromCabels, "cableFromCabels");
+
+    if (cableFromCabels) {
+      cables.find((u) => u.UUID == cable.UUID).antal++;
     } else {
-      if (cable.Tilgaengeligt == 0)
-        cables.splice(
-          cables.indexOf(indexCable),
-          0,
-          importCables.splice(
-            importCables.indexOf((i) => (i.UUID = cable.UUID)),
-            1
-          )[0]
-        );
-      if (cable.Tilgaengeligt >= 1)
-        cables.splice(
-          cables.indexOf((i) => (i.UUID = indexCable.UUID)),
-          0,
-          cable
-        );
+      cables.push({
+        ...cable,
+        antal: 1,
+      });
+      delete cable.Tilgaengelige;
+      delete cable.Total;
     }
 
+    //remove from importCablesAvailable
+    const cableFromimportCablesAvailable = importCablesAvailable.find(
+      cable
+    ) as cableModel;
+    // ! why is this not working?
+
+    console.log(
+      cableFromimportCablesAvailable,
+      "cableFromimportCablesAvailable"
+    );
+
+    if (cableFromimportCablesAvailable.Tilgaengelige > 1) {
+      console.log("removing");
+      importCablesAvailable.splice(
+        importCablesAvailable.indexOf(cableFromimportCablesAvailable),
+        1
+      );
+    } else {
+      console.log("decrementing");
+      cableFromimportCablesAvailable.Tilgaengelige--;
+    }
     cables = cables;
-    importCables = importCables;
+    importCablesAvailable = importCablesAvailable;
   }
   function handleRemoveCable(event) {
     //move product from products to importProducts
     let cable = event.detail;
     if (cables.length == 0) return;
 
-    cable.Tilgaengeligt++;
+    cable.Tilgaengelige++;
     cable.Lånt--;
 
     const thisCable = importCables.find((c) => c.UUID == cable.UUID);
@@ -204,6 +215,7 @@
 
   import { DateInput } from "date-picker-svelte";
   import TextQuestion from "../../components/textQuestion.svelte";
+  import Index from "../login/index.svelte";
   function validateInfo() {
     if (returnDate === undefined) {
       console.log("returnDate === undefined");
@@ -381,11 +393,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddCable}
-            inputData={importCables.map((c) => {
-              const d = { ...c };
-              delete d.Lånt;
-              return d;
-            })}
+            inputData={importCablesAvailable}
           />
         </div>
         <div class="table-group">
@@ -400,7 +408,7 @@
               inputData={cables.map((c) => {
                 const d = { ...c };
                 delete d.Total;
-                delete d.Tilgaengeligt;
+                delete d.Tilgaengelige;
                 return d;
               })}
             />
