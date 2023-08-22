@@ -154,7 +154,7 @@
   </div>
 
   <!-- ! table -->
-  <div class="table">
+  <div class="table-container">
     <table>
       <thead>
         <tr>
@@ -303,7 +303,7 @@
     width: 100%;
     border-collapse: collapse;
   }
-  .table {
+  .table-container {
     width: 100%;
     overflow-y: auto;
   }
