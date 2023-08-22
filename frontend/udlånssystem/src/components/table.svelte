@@ -13,6 +13,7 @@
 
   //import data
   export let inputData = [];
+  export let exclude = [];
 
   let headers = [{}];
   $: if (inputData.length > 0) headers = inputData[0];
@@ -132,15 +133,17 @@
         </button>
         <div class="options" class:hidden={!dropdownOpen}>
           {#each tableHeadings as option, index}
-            <button
-              class="option-btn"
-              on:click={() => {
-                filterKey = option;
-                toggleDropdown();
-              }}
-            >
-              <p>{option}</p>
-            </button>
+            {#if !exclude.includes(option)}
+              <button
+                class="option-btn"
+                on:click={() => {
+                  filterKey = option;
+                  toggleDropdown();
+                }}
+              >
+                <p>{option}</p>
+              </button>
+            {/if}
           {/each}
         </div>
       </div>
@@ -159,9 +162,11 @@
       <thead>
         <tr>
           {#each tableHeadings as heading}
-            <th on:click={() => sortTable(tableDataFiltered, heading)}
-              >{heading}</th
-            >
+            {#if !exclude.includes(heading)}
+              <th on:click={() => sortTable(tableDataFiltered, heading)}
+                >{heading}</th
+              >
+            {/if}
           {/each}
         </tr>
       </thead>
@@ -173,8 +178,10 @@
               forwardId(row);
             }}
           >
-            {#each Object.values(row) as cell}
-              <td>{cell}</td>
+            {#each Object.entries(row) as [key, value]}
+              {#if !exclude.includes(key)}
+                <td>{value}</td>
+              {/if}
             {/each}
           </tr>
         {/each}
