@@ -23,7 +23,7 @@
 </script>
 
 {#if inputData.length > 0}
-  <div class="table">
+  <div class="table-container">
     <Table
       {inputData}
       buttonDestination={"brugere/new"}
@@ -35,7 +35,7 @@
 {/if}
 
 <style>
-  .table {
+  .table-container {
     width: 100%;
     height: 100%;
   }

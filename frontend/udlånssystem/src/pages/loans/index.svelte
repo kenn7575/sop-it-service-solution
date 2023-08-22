@@ -29,7 +29,7 @@
   }
 </script>
 
-<div class="table">
+<div class="table-container">
   <input id="checkbox" type="checkbox" on:change={(e) => filterLoans(e.target.checked)} />
   <Table
     {inputData}
@@ -39,7 +39,7 @@
 </div>
 
 <style>
-  .table {
+  .table-container {
     width: 100%;
     height: 100%;
   }

@@ -34,7 +34,7 @@
 </script>
 
 {#if inputData}
-  <div class="table">
+  <div class="table-container">
     <Table
       buttonDestination={"produkter/new"}
       {inputData}
@@ -46,7 +46,7 @@
 {/if}
 
 <style>
-  .table {
+  .table-container {
     width: 100%;
     height: 100%;
   }
