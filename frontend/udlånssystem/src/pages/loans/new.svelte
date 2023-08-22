@@ -73,7 +73,7 @@
     importProducts = await getData("available_products_view");
     importZones = await getData("importZones");
     importCables = (await getData("available_cables")).filter(
-      (ac) => ac.Tilgaengeligt >= 1
+      (ac) => ac.Tilgaengelige >= 1
     ) as cableModel[];
     importCables.map((c) => {
       return (c.Lånt = 0);
@@ -133,20 +133,20 @@
     let cable: cableModel = event.detail;
     if (importCables.length == 0) return;
 
-    cable.Tilgaengeligt--;
+    cable.Tilgaengelige--;
     cable.Lånt++;
 
     const thisCable = cables.find((c) => c.UUID == cable.UUID);
     var indexCable = cables.find((c) => c.UUID > cable.UUID);
 
     if (thisCable) {
-      if (cable.Tilgaengeligt == 0)
+      if (cable.Tilgaengelige == 0)
         importCables.splice(
           importCables.indexOf((i) => (i.UUID = cable.UUID)),
           1
         )[0];
     } else {
-      if (cable.Tilgaengeligt == 0)
+      if (cable.Tilgaengelige == 0)
         cables.splice(
           cables.indexOf(indexCable),
           0,
@@ -155,7 +155,7 @@
             1
           )[0]
         );
-      if (cable.Tilgaengeligt >= 1)
+      if (cable.Tilgaengelige >= 1)
         cables.splice(
           cables.indexOf((i) => (i.UUID = indexCable.UUID)),
           0,
@@ -171,7 +171,7 @@
     let cable = event.detail;
     if (cables.length == 0) return;
 
-    cable.Tilgaengeligt++;
+    cable.Tilgaengelige++;
     cable.Lånt--;
 
     const thisCable = importCables.find((c) => c.UUID == cable.UUID);
@@ -344,7 +344,7 @@
   <div class="main-content">
     {#if page === 1}
       <!-- ! User -->
-      <div class="table">
+      <div class="table-container">
         <Table
           inputData={importUsers}
           on:message={handleUserSelection}
@@ -381,11 +381,8 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddCable}
-            inputData={importCables.map((c) => {
-              const d = { ...c };
-              delete d.Lånt;
-              return d;
-            })}
+            inputData={importCables}
+            exclude={["Lånt"]}
           />
         </div>
         <div class="table-group">
@@ -397,12 +394,8 @@
           {#if cables.length > 0}
             <TableSimplified
               on:message={handleRemoveCable}
-              inputData={cables.map((c) => {
-                const d = { ...c };
-                delete d.Total;
-                delete d.Tilgaengeligt;
-                return d;
-              })}
+              inputData={cables}
+              
             />
           {:else}
             <div class="center">
@@ -491,7 +484,7 @@
               </li>
             </ul>
           </div>
-          <div class="table">
+          <div class="table-container">
             <TableSimplified inputData={products} title="" />
           </div>
         </div>
@@ -514,6 +507,7 @@
     display: flex;
     gap: 1rem;
     width: 100%;
+    height: 100%;
   }
   .splitscreen {
     width: 100%;
@@ -521,7 +515,6 @@
   }
   .main-content {
     max-height: calc(100vh - 8rem);
-    overflow: auto;
   }
   .wrapper {
     display: block;
@@ -608,8 +601,10 @@
     display: grid;
     grid-template-rows: 56px 1fr;
   }
-  .table {
+  .table-container {
     overflow: auto;
+    width: 100%;
+    height: 100%;
   }
   .page-nav-btn {
     display: flex;
