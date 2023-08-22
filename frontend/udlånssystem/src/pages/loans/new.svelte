@@ -54,9 +54,6 @@
   $: loanLength = Math.round(
     (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
   );
-  $: user_id = user.UUID;
-  $: console.log(cables, importCables);
-
   //import data
   let loanTypes = [
     { name: "Til person", id: 2 },
@@ -66,18 +63,17 @@
   let importUsers = [{}]; //get data onMount
   let importProducts = [{}]; //get data onMount
   let importZones = [{}]; //get data onMount
-  let importCables = [{}]; //get data onMount
+  let importCables: cableModel[] = []; //get data onMount
+  let importCablesAvailable: cableModel[] = []; //get data onMount
   onMount(async () => {
     importPersonnels = await getData("personnel_users");
     importUsers = await getData("users_view");
     importProducts = await getData("available_products_view");
     importZones = await getData("importZones");
     importCables = (await getData("available_cables")).filter(
-      (ac) => ac.Tilgaengelige >= 1
+      (ac) => ac.Tilgaengeligt >= 1
     ) as cableModel[];
-    importCables.map((c) => {
-      return (c.Lånt = 0);
-    });
+    importCablesAvailable = [...importCables] as cableModel[];
   });
 
   //same page navigation
@@ -123,21 +119,29 @@
   //cabels
   //--------------------------------------------------------------------------------
   function validateCables() {
-    if (cables.length == 0) {
+    if (cables.length <= 0) {
       return false;
     }
     return true;
   }
   function handleAddCable(event) {
-    //move product from importProducts to products
-    let cable: cableModel = event.detail;
-    if (importCables.length == 0) return;
+    console.log(importCablesAvailable, "importCablesAvailable");
+    console.log(importCables, "importCables");
+
+    let cableInput: cableModel = event.detail; //cable UUID reference
+    const cable = importCables.find(
+      (c) => c.UUID == cableInput.UUID
+    ) as cableModel; //cable object
+    console.log({ ...cable }, "cable");
 
     cable.Tilgaengelige--;
     cable.Lånt++;
 
-    const thisCable = cables.find((c) => c.UUID == cable.UUID);
-    var indexCable = cables.find((c) => c.UUID > cable.UUID);
+    //insert into cables
+    const cableFromCabels = cables.find(
+      (c) => c.UUID == cable.UUID
+    ) as cableModel;
+    console.log(cableFromCabels, "cableFromCabels");
 
     if (thisCable) {
       if (cable.Tilgaengelige == 0)
@@ -162,9 +166,8 @@
           cable
         );
     }
-
     cables = cables;
-    importCables = importCables;
+    importCablesAvailable = importCablesAvailable;
   }
   function handleRemoveCable(event) {
     //move product from products to importProducts
@@ -204,6 +207,7 @@
 
   import { DateInput } from "date-picker-svelte";
   import TextQuestion from "../../components/textQuestion.svelte";
+  import Index from "../login/index.svelte";
   function validateInfo() {
     if (returnDate === undefined) {
       console.log("returnDate === undefined");
