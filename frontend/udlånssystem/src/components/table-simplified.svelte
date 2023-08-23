@@ -55,7 +55,7 @@
     <h1>{title}</h1>
   {/if}
   <!-- ! table -->
-  <div class="table">
+  <div class="table-container">
     <table class:disabled>
       <thead>
         <tr>
@@ -109,8 +109,10 @@
     width: 100%;
     border-collapse: collapse;
   }
-  .table {
+  .table-container {
     width: 100%;
+    height: 100%;
+    max-height: 60vh;
     overflow-y: auto;
   }
   thead tr {
