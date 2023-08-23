@@ -10,35 +10,18 @@
   function login(e) {
     // console.log("is thsi running?");
     e.preventDefault();
-    // axios
-    //   .post("/login.php", { username: username, password: password })
-    //   .then((res) => {
-    //     if (res.status === 403) {
-    //       alert("Forkert brugernavn eller adgangskode");
-    //     }
-    //     console.log(res);
-    //     if (res.data.access_token) {
-    //       localStorage.setItem("token", res.data.access_token);
-    //       window.location.href = "/";
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    console.log("is this running?");
-    fetch("http://172.16.3.135:5000/login.php", {
-      method: "post",
-      headers: {
-        username: username,
-        password: password,
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        response.json();
+    axios
+      .post("/login.php", { username: username, password: password })
+      .then((res) => {
+        if (res.status === 403) {
+          alert("Forkert brugernavn eller adgangskode");
+        }
+        console.log(res);
+        if (res.data.access_token) {
+          localStorage.setItem("token", res.data.access_token);
+          window.location.href = "/";
+        }
       })
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
   }
 </script>
 

@@ -10,10 +10,6 @@
   async function login(e) {
     e.preventDefault();
     loginViaCredentials(username, password).then((res) => {
-      console.log(
-        "🚀 ~ file: Login.svelte:13 ~ loginViaCredentials ~ res:",
-        res
-      );
       if (res.status === 200) {
         currentUser.update(() => {
           return res.user;
