@@ -42,8 +42,12 @@
   import type { cableModel } from "../../types/cableModel";
   const page_name = "udlaan";
 
+  import type { zoneModel } from "../../types/zoneModel";
+  import type { productModel } from "../../types/productModel";
+  import type { UserModel } from "../../types/userModel";
+
   //data to be exported
-  let user = {};
+  let user: any = {};
   let products = [];
   let cables = [];
   let returnDate = new Date();
@@ -59,17 +63,17 @@
     { name: "Til person", id: 2 },
     { name: "Til lokale", id: 1 },
   ]; //get data onMount
-  let importPersonnels = [{}]; //get data onMount
-  let importUsers = [{}]; //get data onMount
-  let importProducts = [{}]; //get data onMount
-  let importZones = [{}]; //get data onMount
+  let importPersonnels: UserModel[] = []; //get data onMount
+  let importUsers: UserModel[] = []; //get data onMount
+  let importProducts: productModel[] = []; //get data onMount
+  let importZones: zoneModel[] = []; //get data onMount
   let importCables: cableModel[] = []; //get data onMount
   let importCablesAvailable: cableModel[] = []; //get data onMount
   onMount(async () => {
     importPersonnels = await getData("personnel_users");
     importUsers = await getData("users_view");
     importProducts = await getData("available_products_view");
-    importZones = await getData("importZones");
+    importZones = await getData("zones");
     importCables = (await getData("available_cables")).filter(
       (ac) => ac.Tilgaengelige >= 1
     ) as cableModel[];
@@ -205,7 +209,7 @@
   //--------------------------------------------------------------------------------
   async function createLoan() {
     const loan = {
-      user_id,
+      user_id: user.UUID,
       loan_length: loanLength,
       recipient_type_id: loanType,
       location_of_use_id: locationOfUseId,
