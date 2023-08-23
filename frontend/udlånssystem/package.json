@@ -28,7 +28,6 @@
     "@prisma/client": "^4.13.0",
     "axios": "^1.4.0",
     "date-picker-svelte": "^2.4.3",
-    "prisma": "^4.13.0",
     "pusher-js": "^8.0.2",
     "svelte-media-queries": "^1.5.4",
     "svelte-routing": "^1.6.0",
