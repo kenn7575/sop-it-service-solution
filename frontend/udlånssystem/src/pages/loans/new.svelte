@@ -71,9 +71,12 @@
     importProducts = await getData("available_products_view");
     importZones = await getData("importZones");
     importCables = (await getData("available_cables")).filter(
-      (ac) => ac.Tilgaengeligt >= 1
+      (ac) => ac.Tilgaengelige >= 1
     ) as cableModel[];
     importCablesAvailable = [...importCables] as cableModel[];
+    importCablesAvailable.map((c) => {
+      return c.Lånt = 0;
+    });
   });
 
   //same page navigation
@@ -125,49 +128,25 @@
     return true;
   }
   function handleAddCable(event) {
-    console.log(importCablesAvailable, "importCablesAvailable");
-    console.log(importCables, "importCables");
-
-    let cableInput: cableModel = event.detail; //cable UUID reference
-    const cable = importCables.find(
-      (c) => c.UUID == cableInput.UUID
-    ) as cableModel; //cable object
-    console.log({ ...cable }, "cable");
+    //move product from importProducts to products
+    let cable: cableModel = event.detail;
+    if (importCables.length == 0) return;
 
     cable.Tilgaengelige--;
-    cable.Lånt++;
+    cable.Lånt++; 
 
-    //insert into cables
-    const cableFromCabels = cables.find(
-      (c) => c.UUID == cable.UUID
-    ) as cableModel;
-    console.log(cableFromCabels, "cableFromCabels");
+    const thisCable = cables.find((c) => c.UUID == cable.UUID)
+    var indexCable = cables.find((c) => c.UUID > cable.UUID)
 
     if (thisCable) {
-      if (cable.Tilgaengelige == 0)
-        importCables.splice(
-          importCables.indexOf((i) => (i.UUID = cable.UUID)),
-          1
-        )[0];
+      if (cable.Tilgaengelige == 0) importCables.splice(importCables.indexOf(cable), 1)[0];
     } else {
-      if (cable.Tilgaengelige == 0)
-        cables.splice(
-          cables.indexOf(indexCable),
-          0,
-          importCables.splice(
-            importCables.indexOf((i) => (i.UUID = cable.UUID)),
-            1
-          )[0]
-        );
-      if (cable.Tilgaengelige >= 1)
-        cables.splice(
-          cables.indexOf((i) => (i.UUID = indexCable.UUID)),
-          0,
-          cable
-        );
+      if (cable.Tilgaengelige == 0) cables.splice(cables.indexOf(indexCable), 0, importCables.splice(importCables.indexOf(cable), 1)[0]);
+      if (cable.Tilgaengelige >= 1) cables.splice(cables.indexOf(indexCable), 0, cable)
     }
+    
     cables = cables;
-    importCablesAvailable = importCablesAvailable;
+    importCables = importCables;
   }
   function handleRemoveCable(event) {
     //move product from products to importProducts
@@ -177,21 +156,14 @@
     cable.Tilgaengelige++;
     cable.Lånt--;
 
-    const thisCable = importCables.find((c) => c.UUID == cable.UUID);
-    var indexCable = importCables.find((c) => c.UUID > cable.UUID);
-    console.log("index", importCables.indexOf(indexCable));
+    const thisCable = importCables.find((c) => c.UUID == cable.UUID)
+    var indexCable = importCables.find((c) => c.UUID > cable.UUID)
 
     if (thisCable) {
-      if (cable.Lånt == 0) cables.splice(cables.indexOf(cable), 1)[0];
+      if (cable.Lånt == 0) cables.splice(cables.indexOf(cable), 1)[0]
     } else {
-      if (cable.Lånt == 0)
-        importCables.splice(
-          importCables.indexOf(indexCable),
-          0,
-          cables.splice(cables.indexOf(cable), 1)[0]
-        );
-      if (cable.Lånt >= 1)
-        importCables.splice(importCables.indexOf(indexCable), 0, cable);
+      if (cable.Lånt == 0) importCables.splice(importCables.indexOf(indexCable), 0, cables.splice(cables.indexOf(cable), 1)[0]);
+      if (cable.Lånt >= 1) importCables.splice(importCables.indexOf(indexCable), 0, cable)
     }
 
     cables = cables;
@@ -399,7 +371,7 @@
             <TableSimplified
               on:message={handleRemoveCable}
               inputData={cables}
-              
+              exclude={["Total", "Tilgaengelige"]}
             />
           {:else}
             <div class="center">

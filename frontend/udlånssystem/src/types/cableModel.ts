@@ -5,6 +5,7 @@ export class cableModel {
   Total: number | null | undefined;
   Tilgaengelige: number | null | undefined;
   Kategori: number | null | undefined;
+  Lånt?: number | null | undefined;
 
   constructor(json: any) {
     this.UUID = json.UUID;
@@ -12,6 +13,7 @@ export class cableModel {
     this.Total = json.amount_total;
     this.Tilgaengelige = json.amount_lent;
     this.Kategori = json.category_id;
+    this.Lånt = 0;
   }
   validate(): boolean {
     if (!this.Navn) return false;

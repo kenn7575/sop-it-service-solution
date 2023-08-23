@@ -6,6 +6,7 @@
   export let inputData = [];
   export let title = "Indkøbskurv";
   export let disabled = false;
+  export let exclude = [];
 
   //split data into tableData and tableHeadings
   $: tableHeadings = Object.keys(inputData[0]);
@@ -59,7 +60,9 @@
       <thead>
         <tr>
           {#each tableHeadings as heading}
-            <th on:click={() => sortTable(heading)}>{heading}</th>
+            {#if !exclude.includes(heading)}
+              <th on:click={() => sortTable(heading)}>{heading}</th>
+            {/if}
           {/each}
         </tr>
       </thead>
@@ -72,8 +75,10 @@
               forwardId(row);
             }}
           >
-            {#each Object.values(row) as cell}
-              <td>{cell}</td>
+            {#each Object.entries(row) as [key, value]}
+              {#if !exclude.includes(key)}
+                <td>{value}</td>
+              {/if}
             {/each}
           </tr>
         {/each}
