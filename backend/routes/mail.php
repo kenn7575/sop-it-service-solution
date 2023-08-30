@@ -22,24 +22,51 @@ try {
     $mail->SMTPSecure = $env['MAIL_ENCRYPTION']; // Encryption (tls or ssl)
     $mail->Port = $env['MAIL_PORT']; // SMTP port
 
-    $mail_to = $_POST['mail_to'] ?? "";
-    $recipient = $_POST['recipient'] ?? "Elev";
+    // get loans that are overdue
 
-    // Recipients
-    $mail->setFrom($env['MAIL_FROM_ADDRESS'], $env['MAIL_FROM_NAME']);
-    $mail->addAddress($mail_to, $recipient);
+    $result = $conn->query(("SELECT * FROM `loans` WHERE `mail_sent` = '0'"))->fetch_all(MYSQLI_ASSOC);
 
-    // Content
-    $subject = $_POST['subject'] ?? 'Test mail';
-    $body = $_POST['body'] ?? '<p>Test body</p>';
+    $users_to_mailed = [];
 
-    $mail->isHTML(true); // Set email format to HTML
-    $mail->Subject = $subject;
-    $mail->Body = $body;
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    foreach ($result as $loan) {
+        $date_to_be_returned = date('Y-m-d', strtotime($loan['date_created'] . ' + ' . $loan['loan_length'] . ' days'));
+        $loan['date_to_be_returned'] = $date_to_be_returned;
 
-    $mail->send();
-    echo 'Email sent successfully';
+        $days_before_notice = $_POST['days_before_notice'] ?? 3;
+
+        if (date('Y-m-d', strtotime($date_to_be_returned . ' - ' . $days_before_notice . ' days')) == date('Y-m-d')) {
+            $user = $conn->query("SELECT * FROM `users` WHERE `UUID` = {$loan['user_id']}")->fetch_object();
+            $users_to_mailed[] = $user;
+
+            $conn->query("UPDATE `loans` SET `mail_sent` = 1 WHERE `UUID` = {$loan['UUID']}");
+        }
+    }
+
+    // die(json_encode($users_to_mailed, JSON_PRETTY_PRINT));
+
+    foreach ($users_to_mailed as $user) {
+
+        $mail_to = $user->mail;
+        $recipient_name = $user->name;
+    
+        $subject = 'Lån er tæt på udløbsdato';
+        $body = '<p>Kære elev <br> Et af dine lån er ved at løbe ud</p>';
+
+        // Recipients
+        $mail->setFrom($env['MAIL_FROM_ADDRESS'], $env['MAIL_FROM_NAME']);
+        $mail->addAddress($mail_to, $recipient_name);
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        $mail->AltBody = 'Mailen kunne ikke vises da HTML ikke er aktiveret.';
+
+        $mail->send();
+        // echo 'Email successfully sent to ' . $mail_to . ' (' . $recipient_name . ')';
+    }
+
+    res(200, count($users_to_mailed) . ' brugere har fået en mail om at deres lån er ved at udløbe');
 } catch (Exception $e) {
     echo "Email sending failed. Error: {$mail->ErrorInfo}";
 }

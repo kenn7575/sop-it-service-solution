@@ -37,17 +37,19 @@ function upsert($table, $data) {
 
 function res($code, $message) {
     $status = "";
+    $success = false;
 
-    if ($code >= 100 && $code < 200) { header("HTTP/1.1 $code Informational"); $status = 'info'; }
-    if ($code >= 200 && $code < 300) { header("HTTP/1.1 $code Success"); $status = 'success'; }
-    if ($code >= 300 && $code < 400) { header("HTTP/1.1 $code Redirection"); $status = 'redirect'; }
-    if ($code >= 400 && $code < 500) { header("HTTP/1.1 $code Client Error"); $status = 'error'; }
-    if ($code >= 500 && $code < 600) { header("HTTP/1.1 $code Server Error"); $status = 'error'; }
+    if ($code >= 100 && $code < 200) { header("HTTP/1.1 $code Informational"); $status = 'info'; $success = true; }
+    if ($code >= 200 && $code < 300) { header("HTTP/1.1 $code Success"); $status = 'success'; $success = true; }
+    if ($code >= 300 && $code < 400) { header("HTTP/1.1 $code Redirection"); $status = 'redirect'; $success = true; }
+    if ($code >= 400 && $code < 500) { header("HTTP/1.1 $code Client Error"); $status = 'error'; $success = false; }
+    if ($code >= 500 && $code < 600) { header("HTTP/1.1 $code Server Error"); $status = 'error'; $success = false; }
 
     die(json_encode(
             [
                 'code' => $code,
                 'status' => $status,
+                'success' => $success,
                 'message' => $message,
             ],
             JSON_PRETTY_PRINT
