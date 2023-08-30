@@ -7,8 +7,6 @@ $password = $_GET['password'] ?? "";
 $UUID = $_GET['UUID'] ?? "";
 if ($UUID != "") $UUID = "WHERE UUID = '$UUID'";
 
-if ($header != "test321" && $user != "guest") die("Unauthorized" . $header);
-
 try {
 $conn = new mysqli("127.0.0.1", $user, $password, "sop", '3306');
 } catch (Exception $e) {
