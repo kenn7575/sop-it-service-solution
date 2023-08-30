@@ -22,8 +22,6 @@ try {
     $mail->SMTPSecure = $env['MAIL_ENCRYPTION']; // Encryption (tls or ssl)
     $mail->Port = $env['MAIL_PORT']; // SMTP port
 
-    // get loans that are overdue
-
     $result = $conn->query(("SELECT * FROM `loans` WHERE `mail_sent` = '0'"))->fetch_all(MYSQLI_ASSOC);
 
     $users_to_mailed = [];
@@ -42,8 +40,6 @@ try {
         }
     }
 
-    // die(json_encode($users_to_mailed, JSON_PRETTY_PRINT));
-
     foreach ($users_to_mailed as $user) {
 
         $mail_to = $user->mail;
@@ -57,13 +53,14 @@ try {
         $mail->addAddress($mail_to, $recipient_name);
         
         // Content
+        $mail->CharSet = 'UTF-8'; // Set character encoding
+        $mail->Encoding = 'base64'; // Use base64 encoding for content
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $body;
         $mail->AltBody = 'Mailen kunne ikke vises da HTML ikke er aktiveret.';
 
         $mail->send();
-        // echo 'Email successfully sent to ' . $mail_to . ' (' . $recipient_name . ')';
     }
 
     res(200, count($users_to_mailed) . ' brugere har fået en mail om at deres lån er ved at udløbe');
