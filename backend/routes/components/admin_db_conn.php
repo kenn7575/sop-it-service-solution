@@ -2,7 +2,7 @@
 
 include "headers.php";
 
-if ($header != "test321") die("Unauthorized" . $header);
+if ($header != $env['AUTH']) die("Unauthorized");
 
 try {
 $conn = new mysqli("127.0.0.1", $env['ADMIN_USERNAME'], $env['ADMIN_PASSWORD'], "sop", '3306');

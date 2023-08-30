@@ -34,3 +34,22 @@ function upsert($table, $data) {
 
     return true;
 }
+
+function res($code, $message) {
+    $status = "";
+
+    if ($code >= 100 && $code < 200) { header("HTTP/1.1 $code Informational"); $status = 'info'; }
+    if ($code >= 200 && $code < 300) { header("HTTP/1.1 $code Success"); $status = 'success'; }
+    if ($code >= 300 && $code < 400) { header("HTTP/1.1 $code Redirection"); $status = 'redirect'; }
+    if ($code >= 400 && $code < 500) { header("HTTP/1.1 $code Client Error"); $status = 'error'; }
+    if ($code >= 500 && $code < 600) { header("HTTP/1.1 $code Server Error"); $status = 'error'; }
+
+    die(json_encode(
+            [
+                'code' => $code,
+                'status' => $status,
+                'message' => $message,
+            ],
+            JSON_PRETTY_PRINT
+        ));
+}

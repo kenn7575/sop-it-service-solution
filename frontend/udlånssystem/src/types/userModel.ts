@@ -5,7 +5,6 @@ export class UserModel {
     this.name = json.name;
     this.mail = json.mail;
     this.img_name = json.img_name;
-    this.address_id = json.address_id || null;
     this.education_id = json.education_id;
     this.role_id = json.role_id;
     if (json.password) {
@@ -21,7 +20,6 @@ export class UserModel {
   mail: string | null | undefined;
   password?: string | null | undefined;
   img_name: string | null | undefined;
-  address_id: number;
   education_id: number;
   role_id: number;
 
@@ -34,13 +32,8 @@ export class UserModel {
       console.log("2");
       return false;
     }
-    if (!this.mail) {
-      console.log("3");
-      return false;
-    }
-
-    // if (!this.address_id) {
-    //   console.log("5");
+    // if (!this.mail) {
+    //   console.log("3");
     //   return false;
     // }
     if (!this.education_id) {
