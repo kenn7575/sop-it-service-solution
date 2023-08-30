@@ -31,8 +31,10 @@
     goToPath(`${page_name.toLowerCase()}/${id}`);
   }
   async function handleSendMails() {
-    const res = await axios.post("mail.php", {}).then((res) => res.data);
-    if (res.data?.success) alert("Mails er sendt");
+    console.log("Sending mails");
+    const res = await axios.post("mail.php").then((res) => res.data);
+    console.log(res);
+    if (res?.success) alert(res.message);
   }
 </script>
 
@@ -44,10 +46,10 @@
   />
   <Table
     extraButton="Send mail til overskredne udlån"
-    on:action{handleSendMails}
     {inputData}
     buttonDestination={`${page_name}/new`}
     on:message={handleRowClick}
+    on:action={handleSendMails}
   />
 </div>
 
