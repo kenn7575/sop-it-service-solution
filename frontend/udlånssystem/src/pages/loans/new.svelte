@@ -79,7 +79,7 @@
     ) as cableModel[];
     importCablesAvailable = [...importCables] as cableModel[];
     importCablesAvailable.map((c) => {
-      return c.Lånt = 0;
+      return (c.Lånt = 0);
     });
   });
 
@@ -131,24 +131,40 @@
     }
     return true;
   }
+  function sum(list: number[]): number {
+    console.log("🚀 ~ file: new.svelte:135 ~ sum ~ list:", list);
+    let sum = 0;
+    for (let i = 0; i < list.length; i++) {
+      sum += list[i];
+    }
+    return sum;
+  }
+
   function handleAddCable(event) {
     //move product from importProducts to products
     let cable: cableModel = event.detail;
     if (importCables.length == 0) return;
 
     cable.Tilgaengelige--;
-    cable.Lånt++; 
+    cable.Lånt++;
 
-    const thisCable = cables.find((c) => c.UUID == cable.UUID)
-    var indexCable = cables.find((c) => c.UUID > cable.UUID)
+    const thisCable = cables.find((c) => c.UUID == cable.UUID);
+    var indexCable = cables.find((c) => c.UUID > cable.UUID);
 
     if (thisCable) {
-      if (cable.Tilgaengelige == 0) importCables.splice(importCables.indexOf(cable), 1)[0];
+      if (cable.Tilgaengelige == 0)
+        importCables.splice(importCables.indexOf(cable), 1)[0];
     } else {
-      if (cable.Tilgaengelige == 0) cables.splice(cables.indexOf(indexCable), 0, importCables.splice(importCables.indexOf(cable), 1)[0]);
-      if (cable.Tilgaengelige >= 1) cables.splice(cables.indexOf(indexCable), 0, cable)
+      if (cable.Tilgaengelige == 0)
+        cables.splice(
+          cables.indexOf(indexCable),
+          0,
+          importCables.splice(importCables.indexOf(cable), 1)[0]
+        );
+      if (cable.Tilgaengelige >= 1)
+        cables.splice(cables.indexOf(indexCable), 0, cable);
     }
-    
+
     cables = cables;
     importCables = importCables;
   }
@@ -160,14 +176,20 @@
     cable.Tilgaengelige++;
     cable.Lånt--;
 
-    const thisCable = importCables.find((c) => c.UUID == cable.UUID)
-    var indexCable = importCables.find((c) => c.UUID > cable.UUID)
+    const thisCable = importCables.find((c) => c.UUID == cable.UUID);
+    var indexCable = importCables.find((c) => c.UUID > cable.UUID);
 
     if (thisCable) {
-      if (cable.Lånt == 0) cables.splice(cables.indexOf(cable), 1)[0]
+      if (cable.Lånt == 0) cables.splice(cables.indexOf(cable), 1)[0];
     } else {
-      if (cable.Lånt == 0) importCables.splice(importCables.indexOf(indexCable), 0, cables.splice(cables.indexOf(cable), 1)[0]);
-      if (cable.Lånt >= 1) importCables.splice(importCables.indexOf(indexCable), 0, cable)
+      if (cable.Lånt == 0)
+        importCables.splice(
+          importCables.indexOf(indexCable),
+          0,
+          cables.splice(cables.indexOf(cable), 1)[0]
+        );
+      if (cable.Lånt >= 1)
+        importCables.splice(importCables.indexOf(indexCable), 0, cable);
     }
 
     cables = cables;
@@ -288,7 +310,7 @@
       <p>Kabler</p>
       {#if cables.length > 0}
         <span>|</span>
-        <span>{cables.length}</span>
+        <span>{sum(cables.map((c) => c.Lånt))}</span>
       {/if}
     </button>
     <i class="fa-solid fa-angles-right" />
@@ -465,8 +487,23 @@
             </ul>
           </div>
           <div class="table-container">
-            <TableSimplified inputData={products} title="" />
+            <TableSimplified
+              inputData={products}
+              title="Produkter"
+              disabled={true}
+              exclude={["Stor. Loc. ID"]}
+            />
           </div>
+          {#if cables.length > 0}
+            <div class="table-container">
+              <TableSimplified
+                inputData={cables}
+                title="Kabler"
+                disabled={true}
+                exclude={["Total", "Tilgaengelige"]}
+              />
+            </div>
+          {/if}
         </div>
         <div class="button-container">
           <button

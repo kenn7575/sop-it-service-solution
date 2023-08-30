@@ -2,15 +2,20 @@
   export let id;
   import { onMount } from "svelte";
   import getData from "../../data/getData";
-  import { loanModel } from "../../types/loanModel";
   import { itemsFromLoan } from "../../types/itemsFromLoan";
   import goToPath from "../../services/goToPath";
   import TableSimplified from "../../components/table-simplified.svelte";
+  import { cableFromLoan } from "../../types/cableFromLoan";
+
   let importItemsInLoanLent: itemsFromLoan[] = [];
   let importItemsInLoanAvailable: itemsFromLoan[] = [];
-
   let ItemsInLoanToReturn: itemsFromLoan[] = [];
-  let importLoan: loanModel;
+
+  let importCablesInLoanLent: cableFromLoan[] = [];
+  let importCablesInLoanAvailable: cableFromLoan[] = [];
+  let CablesInLoanToReturn: cableFromLoan[] = [];
+
+  $: console.log("importItemsInLoanLent", importItemsInLoanLent);
 
   let table = "items_from_loans";
   let page_name = "Udlaan/returner";
@@ -58,19 +63,27 @@
   $: handleBarcode($barcodeStore);
 
   async function importDataFromDB() {
-    const data = await getData(table);
+    const dataItems = await getData(table);
+    const dataCables = await getData("cables_from_loans");
+
     const items: itemsFromLoan[] = [];
-    data.map((element, index) => {
+    const cables: cableFromLoan[] = [];
+
+    dataItems.map((element, index) => {
       if (element.loan_id == id) {
-        items.push(new itemsFromLoan({ ...data[index] }));
+        items.push(new itemsFromLoan({ ...dataItems[index] }));
       }
     });
-    importItemsInLoanLent = items.filter((o) => !o.date_returned);
-    importItemsInLoanLent.map((o) => delete o.date_returned);
-    importItemsInLoanAvailable = items.filter((o) => o.date_returned);
+    dataCables.map((element, index) => {
+      if (element.loan_id == id) {
+        cables.push(new cableFromLoan({ ...dataCables[index] }));
+      }
+    });
+    importItemsInLoanLent = items.filter((o) => !o.Returneret);
+    importItemsInLoanAvailable = items.filter((o) => o.Returneret);
 
-    const importLoanData = await getData("loans", id);
-    const importLoan = new loanModel({ ...importLoanData });
+    importCablesInLoanLent = cables.filter((o) => o["Mængde lånt"] > 0);
+    importCablesInLoanAvailable = cables.filter((o) => !(o["Mængde lånt"] > 0));
   }
   function handleAddProduct(event) {
     //move product from inputDataProducts to products
@@ -86,6 +99,7 @@
     ItemsInLoanToReturn = ItemsInLoanToReturn;
     importItemsInLoanLent = importItemsInLoanLent;
   }
+
   function handleRemoveProduct(event) {
     //move product from products to inputDataProducts
     let product = event.detail;
@@ -95,21 +109,120 @@
     ItemsInLoanToReturn = ItemsInLoanToReturn;
     importItemsInLoanLent = importItemsInLoanLent;
   }
+
+  function handleAddCable(event) {
+    //move product from importProducts to products'
+    let cable = event.detail;
+    if (importCablesInLoanLent.length == 0) return;
+
+    cable["Mængde lånt"]--;
+    cable["Mængde returneret"]++;
+
+    const thisCable = CablesInLoanToReturn.find((c) => c.UUID == cable.UUID);
+    var indexCable = CablesInLoanToReturn.find((c) => c.UUID > cable.UUID);
+
+    if (thisCable) {
+      if (cable["Mængde lånt"] == 0)
+        importCablesInLoanLent.splice(
+          importCablesInLoanLent.indexOf(cable),
+          1
+        )[0];
+    } else {
+      if (cable["Mængde lånt"] == 0)
+        CablesInLoanToReturn.splice(
+          CablesInLoanToReturn.indexOf(indexCable),
+          0,
+          importCablesInLoanLent.splice(
+            importCablesInLoanLent.indexOf(cable),
+            1
+          )[0]
+        );
+      if (cable["Mængde lånt"] >= 1)
+        CablesInLoanToReturn.splice(
+          CablesInLoanToReturn.indexOf(indexCable),
+          0,
+          cable
+        );
+    }
+
+    CablesInLoanToReturn = CablesInLoanToReturn;
+    importCablesInLoanLent = importCablesInLoanLent;
+  }
+  function handleRemoveCable(event) {
+    //move product from products to importProducts
+    let cable = event.detail;
+    if (CablesInLoanToReturn.length == 0) return;
+
+    cable["Mængde lånt"]++;
+    cable["Mængde returneret"]--;
+
+    const thisCable = importCablesInLoanLent.find((c) => c.UUID == cable.UUID);
+    var indexCable = importCablesInLoanLent.find((c) => c.UUID > cable.UUID);
+
+    if (thisCable) {
+      if (cable["Mængde returneret"] == 0)
+        CablesInLoanToReturn.splice(CablesInLoanToReturn.indexOf(cable), 1)[0];
+    } else {
+      if (cable["Mængde returneret"] == 0)
+        importCablesInLoanLent.splice(
+          importCablesInLoanLent.indexOf(indexCable),
+          0,
+          CablesInLoanToReturn.splice(CablesInLoanToReturn.indexOf(cable), 1)[0]
+        );
+      if (cable["Mængde returneret"] >= 1)
+        importCablesInLoanLent.splice(
+          importCablesInLoanLent.indexOf(indexCable),
+          0,
+          cable
+        );
+    }
+
+    CablesInLoanToReturn = CablesInLoanToReturn;
+    importCablesInLoanLent = importCablesInLoanLent;
+  }
+
   function handleReturn() {
     const ids = ItemsInLoanToReturn.map((i) => i.UUID);
-    axios
-      .delete("/return_item.php", {
-        params: { ids },
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.data?.success) {
-          alert("Produkterne er returneret");
-          goToPath(`/udlaan`);
-        } else {
-          alert("Der skete en fejl");
-        }
+
+    if (ids.length > 0) {
+      axios
+        .delete("/return_item.php", {
+          params: { ids },
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data?.success) {
+            alert("Produkterne er returneret");
+            goToPath(`/udlaan`);
+          } else {
+            alert("Der skete en fejl");
+          }
+        });
+    }
+
+    if (CablesInLoanToReturn.length > 0) {
+      const cables = CablesInLoanToReturn.map((c) => {
+        return {
+          UUID: c.UUID,
+          amount: c["Mængde returneret"],
+        };
       });
+      axios
+        .delete("/return_cable.php", {
+          params: {
+            cables,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data?.success) {
+            alert("Kablerne er returneret");
+            goToPath(`/udlaan`);
+          } else {
+            alert("Der skete en fejl");
+          }
+        });
+    }
   }
   function handleAddAll() {
     ItemsInLoanToReturn = importItemsInLoanLent;
@@ -120,13 +233,16 @@
 <div class="overflow-y-scroll relative max-h-full pb-16">
   {#if ItemsInLoanToReturn.length != 0 || importItemsInLoanLent.length != 0}
     <div class="grid grid-cols-2 gap-4 max-h-half relative pt-16 mt-8 h-max">
-      <div class="h-full border-r-2 seperation absolute left-1/2" />
+      <div
+        class="h-full border-r-2 seperation seperation-1 absolute left-1/2"
+      />
       {#if importItemsInLoanLent?.length > 0}
         <div class="col-start-1">
           <TableSimplified
             on:message={handleAddProduct}
             inputData={importItemsInLoanLent}
             title=""
+            exclude={["date_returned", "loan_id"]}
           />
         </div>
       {/if}
@@ -136,6 +252,36 @@
             on:message={handleRemoveProduct}
             inputData={ItemsInLoanToReturn}
             title=""
+            exclude={["date_returned", "loan_id"]}
+          />
+        {:else}
+          <p class="text-center">Tryk på at vælge prokuter</p>
+        {/if}
+      </div>
+    </div>
+  {/if}
+  {#if CablesInLoanToReturn.length != 0 || importCablesInLoanLent.length != 0}
+    <div class="grid grid-cols-2 gap-4 max-h-half relative pt-16 mt-8 h-max">
+      <div
+        class="h-full border-r-2 seperation seperation-2 absolute left-1/2"
+      />
+      {#if importCablesInLoanLent?.length > 0}
+        <div class="col-start-1">
+          <TableSimplified
+            on:message={handleAddCable}
+            inputData={importCablesInLoanLent}
+            title=""
+            exclude={["date_returned", "loan_id"]}
+          />
+        </div>
+      {/if}
+      <div class="col-start-2">
+        {#if CablesInLoanToReturn?.length > 0}
+          <TableSimplified
+            on:message={handleRemoveCable}
+            inputData={CablesInLoanToReturn}
+            title=""
+            exclude={["date_returned", "loan_id"]}
           />
         {:else}
           <p class="text-center">Tryk på at vælge prokuter</p>
@@ -156,7 +302,7 @@
       <button
         on:click={handleReturn}
         id="return"
-        disabled={!ItemsInLoanToReturn.length}
+        disabled={!ItemsInLoanToReturn.length && !CablesInLoanToReturn.length}
       >
         returner valgte
       </button>
@@ -167,6 +313,16 @@
       <TableSimplified
         on:message={handleAddProduct}
         inputData={importItemsInLoanAvailable}
+        title=""
+        disabled={true}
+      />
+    {/if}
+    {#if importCablesInLoanAvailable.length > 0}
+      <h1 class="mt-16 text-xl">Returnerede kabler</h1>
+      <hr class="w-full" />
+      <TableSimplified
+        on:message={handleAddProduct}
+        inputData={importCablesInLoanAvailable}
         title=""
         disabled={true}
       />
@@ -210,7 +366,7 @@
   .seperation {
     border-color: var(--text1);
   }
-  .seperation::after {
+  .seperation-1::after {
     content: "Til retunering";
     position: absolute;
     width: max-content;
@@ -218,12 +374,28 @@
     left: 20px;
     z-index: 2;
   }
-  .seperation::before {
+  .seperation-1::before {
     content: "Udlånte produkter";
     position: absolute;
     top: 0;
     width: max-content;
     right: 20px;
+    z-index: 2;
+  }
+  .seperation-2::before {
+    content: "Udlånte kabler";
+    position: absolute;
+    top: 0;
+    width: max-content;
+    right: 20px;
+    z-index: 2;
+  }
+  .seperation-2::after {
+    content: "Til retunering";
+    position: absolute;
+    width: max-content;
+    top: 0;
+    left: 20px;
     z-index: 2;
   }
 </style>

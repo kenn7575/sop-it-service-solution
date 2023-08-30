@@ -5,10 +5,14 @@
   import { createEventDispatcher } from "svelte";
 
   export let buttonDestination = "";
+  export let extraButton = "";
 
   const dispatch = createEventDispatcher();
   function forwardId(object) {
     dispatch("message", object);
+  }
+  function handleExtraBttonClick() {
+    dispatch("action");
   }
 
   //import data
@@ -148,6 +152,11 @@
         </div>
       </div>
     </div>
+    {#if extraButton.length > 0}
+      <button class="extra-button" on:click={handleExtraBttonClick}
+        >{extraButton}</button
+      >
+    {/if}
     {#if buttonDestination}
       <button class="add-user" on:click={handleButtonClick}>
         <i class="fa-solid fa-plus" />
@@ -240,6 +249,13 @@
     border: 1px solid var(--text1);
     border-radius: 8px;
     font-size: 1rem;
+  }
+  .extra-button {
+    background: var(--bg2);
+    border: 1px solid var(--text1);
+    border-radius: 8px;
+    font-size: 1rem;
+    padding: 0rem 2rem;
   }
   .pagination button:not(.currentPage):hover {
     background: var(--bg3);
