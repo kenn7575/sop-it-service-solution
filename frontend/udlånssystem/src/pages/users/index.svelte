@@ -19,6 +19,13 @@
     inputData = await getData("users_view");
   });
 
+  import axios from "axios";
+
+  async function handleUpdateUsers() {
+    const { data } = await axios.put("ldap.php", {params: {username: "*"}})
+    alert(`${data} brugere opdateret`);
+  }
+
   import { path } from "../../stores/pathStore";
 </script>
 
@@ -28,6 +35,8 @@
       {inputData}
       buttonDestination={"brugere/new"}
       on:message={handleRowClick}
+      extraButton="Opdater brugere fra AD"
+      on:action={handleUpdateUsers}
     />
   </div>
 {:else}

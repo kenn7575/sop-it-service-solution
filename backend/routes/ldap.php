@@ -7,7 +7,7 @@ $ldap = ldap_connect($env['LDAP_HOST'], $env['LDAP_PORT']);
 
 if (!$ldap) { res(500, 'LDAP connection failed');
 } else {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') ldap_auth();
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') die(ldap_auth());
     if ($_SERVER['REQUEST_METHOD'] == 'GET') die(get_users());
     if ($_SERVER['REQUEST_METHOD'] == 'PUT') die(mergeUsers());
 }
@@ -33,8 +33,16 @@ function ldap_auth() {
 
     $user_cn = $user[0]['cn'][0];
 
-    if (@ldap_bind($ldap, $user_cn, $password)) res(200, 'Login successful');
-    else res(400, 'Invalid username or password');
+    // if (@ldap_bind($ldap, $user_cn, $password)) res(200, 'Login successful');
+    // else res(400, 'Invalid username or password');
+
+    if (@ldap_bind($ldap, $user_cn, $password)) return json_encode(array(
+        'username' => $username,
+        'name' => $user_cn,
+        'mail' => $username . '@uni-login.dk',
+        'is_ad_user' => true,
+    ));
+    else return null;
 
     ldap_unbind($ldap);
 }
