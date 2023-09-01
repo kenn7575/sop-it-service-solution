@@ -244,19 +244,18 @@
         user_password: $currentUser.password,
       })
       .then((res) => res.data);
-
     if (!validatePassword.success) {
       alert("Forkert kode");
       return;
     }
 
     const { data } = await axios.post("create_loan.php", { loan, products });
-    if (data && data?.success && data?.id) {
+    if (data && data?.success && data?.data) {
       alert("Gemt");
 
-      goToPath(`/${page_name.toLowerCase()}/${data.id}`);
+      goToPath(`/${page_name.toLowerCase()}/${data.data}`);
     } else {
-      alert("Error 500 - " + data?.data);
+      alert("Error 500 - " + data?.message);
     }
   }
 </script>

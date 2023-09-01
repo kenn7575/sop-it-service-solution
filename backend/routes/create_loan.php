@@ -24,20 +24,7 @@ try {
         upsert("items_in_loan", $item_in_loan, $conn);
     }
 
-    $result = (object) [
-        "success" => true,
-        "id" => $loan_id,
-        "data" => $conn->query("SELECT * FROM `loans` WHERE `UUID` = $loan_id")->fetch_object()
-    ];
-
     $conn->query("COMMIT;");
 
-} catch (error $e) {
-    $result =(object) [
-        "success" => false,
-        "id" => null,
-        "data" => "Fejl i oprettelse af lån"
-    ];
-}
-
-die(json_encode($result, JSON_PRETTY_PRINT));
+    res(200, "Lån oprettet", $loan_id);
+} catch (error $e) { res(500, "Fejl i oprettelse af lån", null); }

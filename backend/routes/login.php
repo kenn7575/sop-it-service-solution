@@ -12,19 +12,15 @@ if ($user == null || !password_verify($password, $user->password)) {
 }
 
 if ($user->role_id < 5) {
-    die(json_encode(['message'=>'Unauthorized', 'status'=>401], JSON_PRETTY_PRINT));
+    res(403, 'Forbidden');
+    // die(json_encode(['message'=>'Unauthorized', 'status'=>401], JSON_PRETTY_PRINT));
 }
 
 $user_hash = password_hash($user->username.$user->UUID, PASSWORD_DEFAULT);
-
-echo json_encode(
-    [
-        'message'=>$user_hash,
-        'status'=>200,
-        'user'=>json_encode($user, JSON_PRETTY_PRINT)
-    ], JSON_PRETTY_PRINT);
 
 $expiration_date = date('Y-m-d H:i:s', strtotime('+1 day'));
 
 $conn->query("DELETE FROM `login_sessions` WHERE `username` = '$user->username'");
 $conn->query("INSERT INTO `login_sessions` VALUES (null, '$user->username', '$user->UUID', '$expiration_date', '$user_hash')");
+
+res(200, $user_hash, $user);

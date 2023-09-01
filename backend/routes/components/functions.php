@@ -1,13 +1,5 @@
 <?php
 
-function writeToLog($data) {
-    $file = fopen("text.log", "a");
-    fwrite($file, $data."\n".date("Y-m-d H:i:s").", "
-    .print_r($_SERVER["SCRIPT_NAME"], true).", "
-    .__LINE__."\n\n");
-    fclose($file);
-}
-
 function upsert($table, $data) {
     foreach ($data as $key => $value) {
         if (isset($value)) {
@@ -35,23 +27,26 @@ function upsert($table, $data) {
     return true;
 }
 
-function res($code, $message) {
+function res($code, $message, $data = null) {
     $status = "";
     $success = false;
 
     if ($code >= 100 && $code < 200) { header("HTTP/1.1 $code Informational"); $status = 'info'; $success = true; }
     if ($code >= 200 && $code < 300) { header("HTTP/1.1 $code Success"); $status = 'success'; $success = true; }
     if ($code >= 300 && $code < 400) { header("HTTP/1.1 $code Redirection"); $status = 'redirect'; $success = true; }
-    if ($code >= 400 && $code < 500) { header("HTTP/1.1 $code Client Error"); $status = 'error'; $success = false; }
-    if ($code >= 500 && $code < 600) { header("HTTP/1.1 $code Server Error"); $status = 'error'; $success = false; }
+    if ($code >= 400 && $code < 500) { header("HTTP/1.1 200 Client Error"); $status = 'error'; $success = false; }
+    if ($code >= 500 && $code < 600) { header("HTTP/1.1 200 Server Error"); $status = 'error'; $success = false; }
 
-    die(json_encode(
-            [
-                'code' => $code,
-                'status' => $status,
-                'success' => $success,
-                'message' => $message,
-            ],
-            JSON_PRETTY_PRINT
-        ));
+    $response = json_encode(
+        [
+            'code' => $code,
+            'status' => $status,
+            'success' => $success,
+            'message' => $message,
+            'data' => $data
+        ],
+        JSON_PRETTY_PRINT
+    );
+
+    return die($response);
 }

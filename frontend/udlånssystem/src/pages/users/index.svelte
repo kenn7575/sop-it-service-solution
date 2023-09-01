@@ -23,7 +23,7 @@
 
   async function handleUpdateUsers() {
     const { data } = await axios.put("ldap.php", {params: {username: "*"}})
-    alert(`${data} brugere opdateret`);
+    alert(`${data.data} brugere opdateret`);
   }
 
   import { path } from "../../stores/pathStore";

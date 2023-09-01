@@ -32,9 +32,9 @@
   }
   async function handleSendMails() {
     console.log("Sending mails");
-    const res = await axios.post("mail.php").then((res) => res.data);
-    console.log(res);
-    if (res?.success) alert(res.message);
+    const { data } = await axios.post("mail.php");
+    console.log(data);
+    if (data?.success) alert(data.message);
   }
 </script>
 
@@ -44,6 +44,8 @@
     type="checkbox"
     on:change={(e) => filterLoans(e.target.checked)}
   />
+  <label for="checkbox">Vis kun afleverede lån</label>
+
   <Table
     extraButton="Send mail til overskredne udlån"
     {inputData}

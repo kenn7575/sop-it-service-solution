@@ -23,16 +23,13 @@ function ldap_auth() {
     $filter = "(sAMAccountName=$username)";
     $attr = array("cn");
     $result = @ldap_search($ldap, $env['LDAP_USERS'], $filter, $attr)
-    or die(res(500, 'LDAP search failed'));
+    or res(500, 'LDAP search failed');
 
     $user = ldap_get_entries($ldap, $result);
 
     if (empty($user) || empty($user[0]) || empty($user[0]['cn'])) res(400, 'User not found');
 
     $user_cn = $user[0]['cn'][0];
-
-    // if (@ldap_bind($ldap, $user_cn, $password)) res(200, 'Login successful');
-    // else res(400, 'Invalid username or password');
 
     if (@ldap_bind($ldap, $user_cn, $password)) return json_encode(array(
         'username' => $username,
@@ -41,8 +38,6 @@ function ldap_auth() {
         'is_ad_user' => true,
     ));
     else return null;
-
-    ldap_unbind($ldap);
 }
 
 function get_users() {
@@ -55,7 +50,7 @@ function get_users() {
     $filter = "(&(objectClass=person)(|(sAMAccountName=$unilogin)))";
     $attr = array("name", "mail", "sAMAccountName", "whencreated", "whenchanged");
     $result = @ldap_search($ldap, $env['LDAP_USERS'], $filter, $attr ?? "*")
-    or die(res(500, 'LDAP search failed'));
+    or res(500, 'LDAP search failed');
 
     $ldap_users = ldap_get_entries($ldap, $result);
 
@@ -73,7 +68,7 @@ function get_users() {
         );
     }
 
-    return json_encode($users, JSON_PRETTY_PRINT);
+    return res(200, 'Users found', $users);
 }
 
 function mergeUsers() {
@@ -98,5 +93,5 @@ function mergeUsers() {
     $conn->query("COMMIT");
   
     // return amount of affected rows
-    return json_encode($affected_rows);
+    return res(200, "Users merged", $affected_rows);
 }
