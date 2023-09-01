@@ -48,6 +48,7 @@
       return;
     }
     console.log(exportData);
+    exportData.mail ??= exportData.username + "@edu.sde.dk"
     const response: any = await createItem("users", { ...exportData });
     if (response && response.success) {
       alert("Gemt");
