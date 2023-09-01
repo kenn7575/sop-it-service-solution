@@ -249,7 +249,7 @@
       return;
     }
 
-    const { data } = await axios.post("create_loan.php", { loan, products });
+    const { data } = await axios.post("create_loan.php", { loan, products, cables });
     if (data && data?.success && data?.data) {
       alert("Gemt");
 
