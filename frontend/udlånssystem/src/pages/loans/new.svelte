@@ -445,7 +445,7 @@
           <hr />
           <select bind:value={locationOfUseId}>
             {#each importZones as zone}
-              <option value={zone.UUID}>{zone.name}</option>
+              <option class="dropdown-menu" value={zone.UUID}>{zone.name}</option>
             {/each}
           </select>
         </div>
@@ -687,5 +687,10 @@
   }
   span {
     color: var(--text2);
+  }
+
+  option {
+    background-color: var(--bg1);
+    color: var(--text1);
   }
 </style>
