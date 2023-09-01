@@ -11,8 +11,7 @@ export const validateSession = async (token) => {
   let data = axios
     .post(
       "validate.php",
-      { token: token },
-      { headers: { "Content-type": "application/x-www-form-urlencoded" } }
+      { token: token }
     )
     .then((res) => {
       return res.data;
