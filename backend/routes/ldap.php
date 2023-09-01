@@ -5,12 +5,10 @@ include 'components/admin_db_conn.php';
 
 $ldap = ldap_connect($env['LDAP_HOST'], $env['LDAP_PORT']);
 
-if (!$ldap) { res(500, 'LDAP connection failed');
-} else {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') die(ldap_auth());
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') die(get_users());
-    if ($_SERVER['REQUEST_METHOD'] == 'PUT') die(mergeUsers());
-}
+if (!$ldap) res(500, 'LDAP connection failed');
+if ($_SERVER['REQUEST_METHOD'] == 'POST') die(ldap_auth());
+if ($_SERVER['REQUEST_METHOD'] == 'GET') die(get_users());
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') die(mergeUsers());
 
 function ldap_auth() {
     global $ldap, $env;
