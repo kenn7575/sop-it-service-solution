@@ -2,7 +2,7 @@
 include "components/admin_db_conn.php";
 include "components/functions.php";
 
-$ids = $_GET["ids"] ?? die(json_encode(['message'=>'ids not set', 'status'=>400], JSON_PRETTY_PRINT));
+$ids = $_GET["ids"] ?? res(400, "No ids specified");
 
 $conn->query("START TRANSACTION;");
 
@@ -12,9 +12,4 @@ foreach ($ids as $id) {
 
 $conn->query("COMMIT;");
 
-$result = (object) [
-    "success" => true,
-    "data" => $ids
-];
-
-die(json_encode($result, JSON_PRETTY_PRINT));
+res(200, "Items returned", $ids);

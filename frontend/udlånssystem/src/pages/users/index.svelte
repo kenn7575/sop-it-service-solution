@@ -19,15 +19,24 @@
     inputData = await getData("users_view");
   });
 
+  import axios from "axios";
+
+  async function handleUpdateUsers() {
+    const { data } = await axios.put("ldap.php", {params: {username: "*"}})
+    alert(`${data.data} brugere opdateret`);
+  }
+
   import { path } from "../../stores/pathStore";
 </script>
 
 {#if inputData.length > 0}
-  <div class="table">
+  <div class="table-container">
     <Table
       {inputData}
       buttonDestination={"brugere/new"}
       on:message={handleRowClick}
+      extraButton="Opdater brugere fra AD"
+      on:action={handleUpdateUsers}
     />
   </div>
 {:else}
@@ -35,7 +44,7 @@
 {/if}
 
 <style>
-  .table {
+  .table-container {
     width: 100%;
     height: 100%;
   }

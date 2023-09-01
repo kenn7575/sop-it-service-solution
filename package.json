@@ -5,7 +5,8 @@
     "dev": "cd frontend/udlånssystem && npm run dev",
     "host": "cd frontend/udlånssystem && npm run host",
     "serv": "cd backend/routes && concurrently \"php -S localhost:5000\" \"php -S 172.16.3.102:5000\"",
-    "test": "cd backend/routes && npm run test"
+    "test": "cd backend/routes && npm run test",
+    "mysqldump": "cd C:/Program Files/MariaDB 10.11/bin && mysqldump -u root -p sop >C:/Users/nima0100/Desktop/test/test.sql"
   },
   "devDependencies": {
     "concurrently": "^8.1.0"

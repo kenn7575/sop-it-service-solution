@@ -13,11 +13,12 @@ export default async function createItem(table: string, exportData: any) {
         }
       })
       .catch((err) => {
-        alert("Felf! " + err);
+        alert("Fejl! " + err);
         console.log("Error: ", err);
         return { success: false, data: err, id: null };
       });
 
+    data.id = data?.data;
     return data;
   } catch (err) {
     alert("Application crashed: " + err);

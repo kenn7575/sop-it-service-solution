@@ -1,6 +1,6 @@
 <script>
   import logo from "../../public/logo.png";
-  import SearchInput from "./searchInput.svelte";
+  import SearchInput from "./SearchInput.svelte";
   import NavBtn from "./Nav-btn.svelte";
   import NavMenu from "./Nav-menu.svelte";
   import Toggle from "./toggle.svelte";
@@ -12,7 +12,7 @@
     <div class="watermark">
       <img src={logo} alt="logo" class="object-contain" />
       <div class="text">
-        <h3>v1.0.0-beta</h3>
+        <h3>v1.1.0-beta</h3>
         <h1>Udlånssystem</h1>
         <h2>
           By <a target="_blank" href="https://github.com/kenn7575">Kenni</a> &

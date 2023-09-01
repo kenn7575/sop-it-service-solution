@@ -4,6 +4,7 @@
   export let type = "text";
   export let binding;
   export let required = true;
+  export let placeholder = "";
 </script>
 
 <div class="question">
@@ -20,6 +21,7 @@
       bind:value={binding}
       class="text"
       type="text"
+      {placeholder}
       {required}
     />
   {:else if type === "number"}
@@ -29,6 +31,7 @@
       bind:value={binding}
       class={`text ${editMode ? "hover:disabled" : ""}`}
       type="number"
+      {placeholder}
       {required}
     />
   {:else if type === "password"}

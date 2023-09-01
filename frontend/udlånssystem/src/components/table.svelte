@@ -5,20 +5,25 @@
   import { createEventDispatcher } from "svelte";
 
   export let buttonDestination = "";
+  export let extraButton = "";
 
   const dispatch = createEventDispatcher();
   function forwardId(object) {
     dispatch("message", object);
   }
+  function handleExtraBttonClick() {
+    dispatch("action");
+  }
 
   //import data
   export let inputData = [];
+  export let exclude = [];
 
   let headers = [{}];
   $: if (inputData.length > 0) headers = inputData[0];
 
   //resort data every time inputData changes
-  $: inputData && sortTable(inputData, sortColumn);
+  // $: inputData && sortTable(inputData, sortColumn);
 
   //split data into tableData and tableHeadings
   $: tableHeadings = Object.keys(headers);
@@ -132,19 +137,26 @@
         </button>
         <div class="options" class:hidden={!dropdownOpen}>
           {#each tableHeadings as option, index}
-            <button
-              class="option-btn"
-              on:click={() => {
-                filterKey = option;
-                toggleDropdown();
-              }}
-            >
-              <p>{option}</p>
-            </button>
+            {#if !exclude.includes(option)}
+              <button
+                class="option-btn"
+                on:click={() => {
+                  filterKey = option;
+                  toggleDropdown();
+                }}
+              >
+                <p>{option}</p>
+              </button>
+            {/if}
           {/each}
         </div>
       </div>
     </div>
+    {#if extraButton.length > 0}
+      <button class="extra-button" on:click={handleExtraBttonClick}
+        >{extraButton}</button
+      >
+    {/if}
     {#if buttonDestination}
       <button class="add-user" on:click={handleButtonClick}>
         <i class="fa-solid fa-plus" />
@@ -154,14 +166,16 @@
   </div>
 
   <!-- ! table -->
-  <div class="table">
+  <div class="table-container">
     <table>
       <thead>
         <tr>
           {#each tableHeadings as heading}
-            <th on:click={() => sortTable(tableDataFiltered, heading)}
-              >{heading}</th
-            >
+            {#if !exclude.includes(heading)}
+              <th on:click={() => sortTable(tableDataFiltered, heading)}
+                >{heading}</th
+              >
+            {/if}
           {/each}
         </tr>
       </thead>
@@ -173,8 +187,10 @@
               forwardId(row);
             }}
           >
-            {#each Object.values(row) as cell}
-              <td>{cell}</td>
+            {#each Object.entries(row) as [key, value]}
+              {#if !exclude.includes(key)}
+                <td>{value}</td>
+              {/if}
             {/each}
           </tr>
         {/each}
@@ -233,6 +249,13 @@
     border: 1px solid var(--text1);
     border-radius: 8px;
     font-size: 1rem;
+  }
+  .extra-button {
+    background: var(--bg2);
+    border: 1px solid var(--text1);
+    border-radius: 8px;
+    font-size: 1rem;
+    padding: 0rem 2rem;
   }
   .pagination button:not(.currentPage):hover {
     background: var(--bg3);
@@ -303,7 +326,7 @@
     width: 100%;
     border-collapse: collapse;
   }
-  .table {
+  .table-container {
     width: 100%;
     overflow-y: auto;
   }

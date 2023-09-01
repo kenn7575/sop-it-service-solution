@@ -8,15 +8,13 @@ export const getSession = () => {
 };
 //validate session token
 export const validateSession = async (token) => {
-  let data = axios
+  let { data } = await axios
     .post(
       "validate.php",
-      { token: token },
-      { headers: { "Content-type": "application/x-www-form-urlencoded" } }
+      { token: token }
     )
-    .then((res) => {
-      return res.data;
-    });
+
+  data.user = data.data;
   return data;
 };
 
@@ -32,7 +30,7 @@ export const loginViaSession = async () => {
 
   let res = await validateSession(token);
 
-  if (res.status === 200) {
+  if (res.success) {
     currentUser.update((user) => {
       return res.user; //update current user
     });
@@ -54,9 +52,9 @@ export async function loginViaCredentials(username, password) {
     .then((res) => {
       console.log(res);
       output.message = res.data.message;
-      output.status = res.data.status;
-      if (res.data.status === 200) {
-        output.user = res.data.user;
+      output.status = res.data.code;
+      if (res.data.success) {
+        output.user = res.data.data;
       }
     })
     .catch((err) => {

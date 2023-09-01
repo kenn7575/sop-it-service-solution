@@ -12,7 +12,7 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
   import goToPath from "../../services/goToPath";
-  import { AddressModel } from "../../types/addressModel";
+
 
   export let id; //this is the id of the user to be edited
 
@@ -31,8 +31,6 @@
   let educations;
   let importData: UserModel;
   let exportData: UserModel;
-  let importAddress: AddressModel = new AddressModel({});
-  let exportAddress: AddressModel = new AddressModel({});
 
   //get all data
   onMount(async () => {
@@ -42,6 +40,7 @@
       console.log(error);
     }
   });
+  
   async function importDataFromDB() {
     //get data for dropdowns
     roles = await getData("roles").then((res) => {
@@ -65,57 +64,26 @@
     // HOT FIX - if the data is not found, redirect to the index page
     importData = new UserModel({ ...userData });
     exportData = new UserModel({ ...userData });
-
-    if (userData.address_id) {
-      const addressData = await getData("addresses", importData.address_id);
-      console.log("address", addressData);
-      importAddress = new AddressModel({ ...addressData });
-      exportAddress = new AddressModel({ ...addressData });
-    }
   }
-
+  
   async function handleReset() {
     await importDataFromDB();
     editMode = false;
   }
+
   async function handleUpdate() {
     if (!exportData.validate()) {
       alert("Udfyld alle felter, bruger");
       return;
     }
-    if (!exportAddress.validate()) {
-      alert("Udfyld alle felter, addresse");
-      return;
-    }
     if (
-      doesObjectsMatch(importData, exportData) &&
-      doesObjectsMatch(importAddress, exportAddress)
+      doesObjectsMatch(importData, exportData)
     ) {
       alert("Ingen ændringer");
       return;
     }
-    // console.log("updating user Address with", exportAddress);
-
-    const addressResponse: any = await update(exportAddress, "addresses");
-    if (addressResponse && addressResponse.success) {
-      //if the address is updated, update the user
-      // console.log("user Address update response", addressResponse);
-      exportData.address_id =
-        addressResponse.id > 0 ? addressResponse.id : exportAddress.UUID;
-      // console.log("assigning addressId and updating user with", exportData);
-      const userResponse: any = await update(exportData, table);
-      // console.log("user update response", userResponse);
-      if (userResponse && userResponse.success) {
-        importDataFromDB();
-        editMode = false;
-        alert("Changes saved");
-      } else {
-        alert("Error 500 - Ukendt fejl under oprettelse af bruger");
-      }
-    } else {
-      alert("Error 500 - Ukendt fejl under oprettelse af addresse");
-    }
   }
+
   function handleEditMode() {
     editMode = togggleEditMode(user, importData, editMode);
   }
@@ -140,6 +108,7 @@
       alert("Error 500 - Ukendt fejl");
     }
   }
+
   function handleSubmit(event: Event) {
     event.preventDefault();
     handleUpdate();
@@ -207,25 +176,6 @@
         <TextQuestion
           bind:binding={exportData.mail}
           label="E-mail"
-          {editMode}
-        />
-
-        <TextQuestion
-          bind:binding={exportAddress.address_line_1}
-          label="Vejnavn"
-          {editMode}
-        />
-        <TextQuestion
-          bind:binding={exportAddress.address_line_2}
-          label="Etage mm."
-          {editMode}
-          required={false}
-        />
-        <TextQuestion bind:binding={exportAddress.city} label="By" {editMode} />
-        <TextQuestion
-          type="number"
-          bind:binding={exportAddress.postal_code}
-          label="Postnummer"
           {editMode}
         />
 

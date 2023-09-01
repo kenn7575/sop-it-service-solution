@@ -6,7 +6,6 @@
   import createItem from "../../data/create";
   import TextQuestion from "../../components/textQuestion.svelte";
   import SelectQuestion from "../../components/selectQuestion.svelte";
-  import { AddressModel } from "../../types/addressModel";
   import goToPath from "../../services/goToPath";
 
   let editMode = true; //if the page is in edit mode or read only
@@ -22,7 +21,6 @@
   let educations = [];
 
   let exportData: UserModel = new UserModel({});
-  let exportAddress: AddressModel = new AddressModel({});
 
   onMount(async () => {
     try {
@@ -50,8 +48,7 @@
       return;
     }
     console.log(exportData);
-    const address_id = await createItem("addresses", { ...exportAddress });
-    exportData.address_id = address_id.id;
+    exportData.mail ??= exportData.username + "@edu.sde.dk"
     const response: any = await createItem("users", { ...exportData });
     if (response && response.success) {
       alert("Gemt");
@@ -105,37 +102,17 @@
   <div class="form">
     <form on:submit={handleSubmit} id="user-form">
       <TextQuestion bind:binding={exportData.name} label="Navn" {editMode} />
-      <TextQuestion
-        bind:binding={exportData.username}
-        label="Uni-login"
-        {editMode}
-      />
-      <TextQuestion
-        bind:binding={exportData.password}
-        label="Adgangskode"
-        {editMode}
-        type="password"
-      />
-      <TextQuestion bind:binding={exportData.mail} label="E-mail" {editMode} />
-      <TextQuestion
-        bind:binding={exportAddress.address_line_1}
-        label="Vejnavn"
-        {editMode}
-      />
+      <TextQuestion bind:binding={exportData.username} label="Uni-login" {editMode} />
+      <TextQuestion bind:binding={exportData.password} label="Adgangskode" {editMode} type="password" />
 
       <TextQuestion
-        bind:binding={exportAddress.address_line_2}
-        label="Etage mm."
+        bind:binding={exportData.mail}
+        label="E-mail (AD bliver brugt hvis ikke udfyldt)"
         {editMode}
         required={false}
-      />
-      <TextQuestion bind:binding={exportAddress.city} label="By" {editMode} />
-      <TextQuestion
-        bind:binding={exportAddress.postal_code}
-        label="Postnummer"
-        type="number"
-        {editMode}
-      />
+        placeholder={(exportData.username ?? "") + "@edu.sde.dk"}
+        />
+
       <SelectQuestion
         bind:binding={exportData.role_id}
         options={roles}
