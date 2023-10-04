@@ -86,8 +86,7 @@
         destination=""
         text="Feedback"
         icon="fa-solid fa-pen-to-square"
-      >
-      </NavBtn>
+      />
   </a>
     <div class="darkmode">
       <div class="text2">
