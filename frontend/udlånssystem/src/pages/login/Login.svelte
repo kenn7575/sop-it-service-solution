@@ -17,10 +17,8 @@
         //set session
         localStorage.setItem("session", res.message);
       }
-      if (res.status === 403)
-        errorMessages = "Forkert uni-login eller adgangskode";
-
-      if (res.status === 401) errorMessages = "Adgang nægtet";
+      if (res.status === 401) errorMessages = "Forkert unilogin eller adgangskode";
+      if (res.status === 403) errorMessages = "Adgang nægtet";
       if (res.status === 500) errorMessages = "Serveren problemer";
     });
   }
