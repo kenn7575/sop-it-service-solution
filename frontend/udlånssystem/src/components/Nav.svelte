@@ -30,54 +30,75 @@
         </div>
     </div>
 
-    <div class="section section2">
-        <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
-        <!-- <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" /> -->
-        <NavBtn
-            destination="/udlaan"
-            text="Udlån"
-            icon="fa-solid fa-file-signature"
-        />
+  <div class="section section2">
+    <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
+    <!-- <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" /> -->
+    <NavBtn
+      destination="/udlaan"
+      text="Udlån"
+      icon="fa-solid fa-file-signature"
+    />
 
-        <NavBtn
-            destination="/produkter"
-            text="Produkter"
-            icon="fa-solid fa-bag-shopping"
-        />
-        <NavBtn
-            destination="/produkttyper"
-            text="Produkttyper"
-            icon="fa-solid fa-barcode"
-        />
-        <!-- TODO: build chat so that the 2 departments can communicate with eachother -->
-        <!-- <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" /> -->
+    <NavBtn
+      destination="/produkter"
+      text="Produkter"
+      icon="fa-solid fa-bag-shopping"
+    />
+    <NavBtn
+      destination="/produkttyper"
+      text="Produkttyper"
+      icon="fa-solid fa-barcode"
+    />
+    <!-- TODO: build chat so that the 2 departments can communicate with eachother -->
+    <!-- <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" /> -->
 
-        <NavMenu
-            buttons={[
-                {
-                    text: "Kategorier",
-                    icon: "fa-solid fa-tag",
-                    destination: "/kategorier",
-                },
-                {
-                    text: "Kategorigrupper",
-                    icon: "fa-solid fa-tag",
-                    destination: "/kategorigrupper",
-                },
-                {
-                    text: "Brands",
-                    destination: "/brands",
-                    icon: "fa-regular fa-copyright",
-                },
-                {
-                    text: "Dashboard",
-                    icon: "fa-solid fa-chart-line",
-                    destination: "/dashboard ",
-                },
-            ]}
-            icon="fa-solid fa-ellipsis"
-            text="Mere"
-        />
+    <NavMenu
+      buttons={[
+        {
+          text: "Kategorier",
+          icon: "fa-solid fa-tag",
+          destination: "/kategorier",
+        },
+        {
+          text: "Kategorigrupper",
+          icon: "fa-solid fa-tag",
+          destination: "/kategorigrupper",
+        },
+        {
+          text: "Brands",
+          destination: "/brands",
+          icon: "fa-regular fa-copyright",
+        },
+        {
+          text: "Dashboard",
+          icon: "fa-solid fa-chart-line",
+          destination: "/dashboard ",
+        },
+      ]}
+      icon="fa-solid fa-ellipsis"
+      text="Mere"
+    />
+  </div>
+  <div class="section section3">
+    <hr />
+    <NavBtn
+      destination="/notifikationer"
+      text="Notifikationer"
+      icon="fa-solid fa-bell"
+    />
+    <a style="width: 100%" href="https://github.com/kenn7575/sop-it-service-solution/issues/new/choose" target="_blank">
+      <NavBtn
+        destination=""
+        text="Feedback"
+        icon="fa-solid fa-pen-to-square"
+      />
+  </a>
+    <div class="darkmode">
+      <div class="text2">
+        <i class="fa-solid fa-moon" />
+        <p>Dark mode</p>
+      </div>
+      <Toggle />
     </div>
     <div class="section section3">
         <hr />
