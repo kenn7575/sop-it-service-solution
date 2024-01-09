@@ -27,7 +27,7 @@
 
   <div class="section section2">
     <NavBtn destination="/" text="Hjem" icon="fa-solid fa-house" />
-    <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" />
+    <!-- <NavBtn destination="/brugere" text="Brugere" icon="fa-solid fa-user" /> -->
     <NavBtn
       destination="/udlaan"
       text="Udlån"
@@ -38,6 +38,11 @@
       destination="/produkter"
       text="Produkter"
       icon="fa-solid fa-bag-shopping"
+    />
+    <NavBtn
+      destination="/produkttyper"
+      text="Produkttyper"
+      icon="fa-solid fa-barcode"
     />
     <!-- TODO: build chat so that the 2 departments can communicate with eachother -->
     <!-- <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" /> -->
@@ -53,11 +58,6 @@
           text: "Kategorigrupper",
           icon: "fa-solid fa-tag",
           destination: "/kategorigrupper",
-        },
-        {
-          text: "Produkttyper",
-          icon: "fa-solid fa-barcode",
-          destination: "/produkttyper",
         },
         {
           text: "Brands",
