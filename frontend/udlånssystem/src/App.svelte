@@ -87,7 +87,7 @@
       $controlStore = false;
       return;
     }
-    console.log("🚀 ~ file: App.svelte:83 ~ handleKeyUp ~ e:", e);
+    // console.log("🚀 ~ file: App.svelte:83 ~ handleKeyUp ~ e:", e);
 
     // // $controlStore = false;
   }

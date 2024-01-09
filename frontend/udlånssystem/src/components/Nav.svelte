@@ -81,6 +81,13 @@
       text="Notifikationer"
       icon="fa-solid fa-bell"
     />
+    <a style="width: 100%" href="https://github.com/kenn7575/sop-it-service-solution/issues/new/choose" target="_blank">
+      <NavBtn
+        destination=""
+        text="Feedback"
+        icon="fa-solid fa-pen-to-square"
+      />
+  </a>
     <div class="darkmode">
       <div class="text2">
         <i class="fa-solid fa-moon" />

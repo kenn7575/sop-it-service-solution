@@ -1,20 +1,24 @@
 <?php
 include "components/admin_db_conn.php";
 include "components/functions.php";
+include "./ldap.php";
 
 $username = $_POST['username'] ?? "";
 $password = $_POST['password'] ?? "";
 
+$CurrentLDAPUser = ldap_auth($username, $password) ?? ldap_auth($username, $password, 'ADMINS');
+
+if ($CurrentLDAPUser) {
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $conn->query("INSERT INTO `users` (`username`, `password`, `name`, `is_ad_user`, `mail`, `role_id`)
+    VALUES ('$username', '$hashed_password', '$CurrentLDAPUser[name]', '1', '$CurrentLDAPUser[mail]', '$CurrentLDAPUser[role_id]')
+    ON DUPLICATE KEY UPDATE `password` = '$hashed_password', `role_id` = '$CurrentLDAPUser[role_id]'");
+}
+
 $user = $conn->query("SELECT * FROM `users` WHERE `username` = '$username'")->fetch_object();
 
-if ($user == null || !password_verify($password, $user->password)) {
-    die(json_encode(['message'=>'Invalid username or password', 'status'=>403], JSON_PRETTY_PRINT));
-}
-
-if ($user->role_id < 5) {
-    res(403, 'Forbidden');
-    // die(json_encode(['message'=>'Unauthorized', 'status'=>401], JSON_PRETTY_PRINT));
-}
+if ($user == null || !password_verify($password, $user->password)) res(401, 'Invalid username or password');
+if ($user->role_id < 5) res(403, 'Forbidden');
 
 $user_hash = password_hash($user->username.$user->UUID, PASSWORD_DEFAULT);
 

@@ -82,6 +82,14 @@
       alert("Ingen ændringer");
       return;
     }
+    const response: any = await update(exportData, table);
+    if (response && response.success) {
+      importDataFromDB();
+      editMode = false;
+      alert("Ændringer gemt");
+    } else {
+      alert("Error 500 - Ukendt fejl");
+    }
   }
 
   function handleEditMode() {
