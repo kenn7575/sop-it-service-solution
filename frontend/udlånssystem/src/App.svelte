@@ -139,7 +139,7 @@
           <Route path="hjem" component={Home} />
 
           <!-- pages index-->
-          <Route path="brugere" component={Users} />
+          <!-- <Route path="brugere" component={Users} /> -->
           <Route path="dashboard" component={Dashboard} />
           <Route path="produkter" component={Products} />
           <Route path="brands" component={Brands} />
@@ -152,7 +152,7 @@
           <Route path="help" component={Help} />
 
           <!-- dynsmic routes edit -->
-          <Route path="brugere/:id" component={usersEdit} />
+          <!-- <Route path="brugere/:id" component={usersEdit} /> -->
           <Route path="brands/:id" component={brandsEdit} />
           <Route path="kategorier/:id" component={categoriesEdit} />
           <Route path="kategorigrupper/:id" component={categoryGroupsEdit} />
@@ -161,7 +161,7 @@
           <Route path="udlaan/:id" component={loansEdit} />
 
           <!-- new routes -->
-          <Route path="brugere/new" component={usersNew} />
+          <!-- <Route path="brugere/new" component={usersNew} /> -->
           <Route path="produkter/new" component={productsNew} />
           <Route path="brands/new" component={brandsNew} />
           <Route path="kategorier/new" component={categoriesNew} />
