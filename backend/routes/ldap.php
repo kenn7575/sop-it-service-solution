@@ -1,7 +1,7 @@
 <?php
 include 'components/headers.php';
 
-$ldap = ldap_connect($env['LDAP_HOST'], $env['LDAP_PORT']);
+$ldap = ldap_connect($env['LDAP_HOST']);
 
 function ldap_auth($username = null, $password = null, $group = 'USERS') {
     global $ldap, $env;

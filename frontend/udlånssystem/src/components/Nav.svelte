@@ -20,9 +20,9 @@
         </h2>
       </div>
     </div>
-    <div class="search">
+    <!-- <div class="search">
       <SearchInput placeholder="Søg uni-login" />
-    </div>
+    </div> -->
   </div>
 
   <div class="section section2">
