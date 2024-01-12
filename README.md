@@ -24,10 +24,9 @@ The [issues](https://github.com/kenn7575/sop-it-service-solution/issues) page is
 For specific information about the technologies version, see the [package.json](https://github.com/kenn7575/sop-it-service-solution/blob/main/frontend/udl%C3%A5nssystem/package.json) for the front-end and the [composer.json](https://github.com/kenn7575/sop-it-service-solution/blob/main/backend/composer.lock) for the back-end.
 
 ### Structure
-The project is divided into 3 main folders:
+The project is divided into 2 main folders:
 - [backend](https://github.com/kenn7575/sop-it-service-solution/tree/main/backend) - The back-end of the project.
 - [frontend](https://github.com/kenn7575/sop-it-service-solution/tree/main/frontend) - The front-end of the project.
-- [mappePaaServeren](https://github.com/kenn7575/sop-it-service-solution/tree/main/mappePaaServeren) - The folder on the server, that images can be uploaded to (not implemented yet).
 
 ## Installation
 ### Prerequisites
@@ -91,3 +90,59 @@ MAIL_FROM_NAME="Udlånsystemets automatiske mail" ; Mail from name
 
 ## Congratulations!
 🎉 You now have the project up and running on your machine (hopefully). You can now start developing on the project.
+
+## Contributing guidelines
+👍 We welcome contributions to this project. To contribute, speak with a teacher and get the necessary permissions and secret variables. Then follow the steps below.
+
+### Fork the repository
+1. Press the fork button in the top right corner of the repository page.
+2. Choose your account as the destination for the fork.
+3. Clone the forked repository to your machine.
+> You need to have Git installed on your machine for this to work.
+
+### Create a new branch
+1. Open the repository in VS code.
+2. Press the branch button in the bottom left corner of VS code.
+3. Press the plus button to create a new branch.
+4. Name the branch after the feature you are working on.
+
+### Make changes
+1. Make the changes you want to make.
+2. Commit the changes to the branch you created.
+3. Push the changes to the branch you created.
+
+### Create a pull request
+1. Go to the original repository page.
+2. Press the pull request button.
+3. Press the new pull request button.
+4. Choose your forked repository as the source.
+5. Choose the branch you created as the source branch.
+6. Choose the main branch as the destination branch.
+7. Press the create pull request button.
+8. Name the pull request after the feature you are working on.
+9. Press the create pull request button.
+
+### Wait for approval
+1. Wait for a teacher or the repo owner to approve your pull request.
+2. If the pull request is not approved, make the necessary changes and push them to the branch you created.
+
+### Merge the pull request
+1. When the pull request is approved, press the merge pull request button.
+2. Press the confirm merge button.
+3. Press the delete branch button.
+
+### Congratulations!
+🎉 You have now contributed to the project. Your changes will be included in the next release of the project.
+
+### Rules for contributing
+#### ❌ **Danger zone** ❌
+- YOU ARE NOT ALLOWED TO PUSH SENSITIVE INFORMATION TO THE REPOSITORY.
+- YOU MUST NEVER EDIT GITHUB ACTIONS BECAUSE THEY CAN ACCESS SENSITIVE INFORMATION.
+- YOU MUST NEVER PUBLISH THE .env FILE TO THE REPOSITORY.
+
+#### ⚠️ **Branch security** ⚠️
+- You are not allowed to push directly to the main branch.
+- You are not allowed to merge your own pull requests.
+- You are not allowed to approve your own pull requests.
+
+If any of these rules are broken, the pull request will be denied. If you break rules of the danger zone, you will be permenly banned from this repo.
