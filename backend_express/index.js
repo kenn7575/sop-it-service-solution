@@ -12,9 +12,9 @@ app.set("json spaces", 4);
 app.use(cookieParser());
 
 app.use(async (req, res, next) => {
-    const { verifyToken } = require("./routes/auth")
+    const { authenticateUser } = require("./functions/auth")
 
-    verifyToken(req, res, next);
+    authenticateUser(req, res, next);
 });
 
 app.use("/api", require("./routes/getData"));
