@@ -30,6 +30,7 @@
       buttonDestination={`${$path}/new`}
       {inputData}
       on:message={handleRowClick}
+      filterKey="Navn"
     />
   </div>
 {:else}

@@ -219,11 +219,11 @@
       console.log("!loanType");
       return false;
     }
-    if (!password) {
-      console.log("!password");
-      console.log(password);
-      return false;
-    }
+    // if (!password) {
+    //   console.log("!password");
+    //   console.log(password);
+    //   return false;
+    // }
     return true;
   }
 
@@ -350,13 +350,14 @@
           inputData={importUsers}
           on:message={handleUserSelection}
           buttonDestination="/brugere/new"
+          filterKey="Brugernavn"
         />
       </div>
     {:else if page === 2}
       <!-- ! Products -->
       <div class="tables">
         <div class="splitscreen">
-          <Table on:message={handleAddProduct} inputData={importProducts} />
+          <Table on:message={handleAddProduct} inputData={importProducts} filterKey="Navn" />
         </div>
         <div class="table-group">
           {#if $controlStore}
@@ -384,6 +385,7 @@
             on:message={handleAddCable}
             inputData={importCables}
             exclude={["Lånt"]}
+            filterKey="Navn"
           />
         </div>
         <div class="table-group">
@@ -449,16 +451,6 @@
             {/each}
           </select>
         </div>
-        <div class="grid-item g3">
-          <form>
-            <TextQuestion
-              label="Kode"
-              type="password"
-              bind:binding={password}
-              editMode={true}
-            />
-          </form>
-        </div>
       </div>
     {:else if page === 5}
       <div class="wrapper">
@@ -505,6 +497,14 @@
           {/if}
         </div>
         <div class="button-container">
+          <form>
+            <TextQuestion
+              label="Skriv din kode"
+              type="password"
+              bind:binding={password}
+              editMode={true}
+            />
+          </form>
           <button
             class="create-btn"
             on:click={createLoan}
@@ -537,6 +537,7 @@
   }
   .button-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 2rem;

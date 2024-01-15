@@ -6,6 +6,7 @@
 
   export let buttonDestination = "";
   export let extraButton = "";
+  export let filterKey = "UUID"
 
   const dispatch = createEventDispatcher();
   function forwardId(object) {
@@ -33,7 +34,6 @@
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
   $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
-  let filterKey = tableHeadings ? tableHeadings[0] : "UUID"; //used to determine which column the user is searching in
   let page = 1; //used to determine which page the user is on and which data should be displayed
   let items_per_page = 20; //used to determine how many items should be displayed per page
 
@@ -383,7 +383,6 @@
   }
   .dropdown {
     position: relative;
-    width: 8rem;
     border-radius: 10px;
     height: 100%;
   }
@@ -398,6 +397,7 @@
     padding: 0 12px;
     width: 100%;
     height: 100%;
+    gap: 0.5rem;
   }
   .dropdown-btn:focus {
     border: none;

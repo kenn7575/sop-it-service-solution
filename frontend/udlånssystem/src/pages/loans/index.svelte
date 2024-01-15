@@ -46,12 +46,13 @@
   />
   <label for="checkbox">Vis kun afleverede lån</label>
 
+  <!-- extraButton="Send mail til overskredne udlån" -->
   <Table
-    extraButton="Send mail til overskredne udlån"
     {inputData}
     buttonDestination={`${page_name}/new`}
     on:message={handleRowClick}
     on:action={handleSendMails}
+    filterKey="Bruger"
   />
 </div>
 
