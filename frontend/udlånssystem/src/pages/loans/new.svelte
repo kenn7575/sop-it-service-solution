@@ -284,8 +284,8 @@
         page = 2;
       }}
       class:current={2 === page}
-      class:invalid={page > 2 && !validateProducts()}
-      class:valid={page > 2 && validateProducts()}
+      class:invalid={page > 2 && (!validateProducts() || !validateCables())}
+      class:valid={page > 2 && validateProducts() || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -301,8 +301,8 @@
         page = 3;
       }}
       class:current={3 === page}
-      class:invalid={page > 3 && !validateProducts()}
-      class:valid={page > 3 && validateProducts()}
+      class:invalid={page > 3 && (!validateProducts() || !validateCables())}
+      class:valid={page > 3 && validateProducts() || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -328,8 +328,8 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        console.log(validateInfo(), validateProducts(), validateUser());
-        if (validateInfo() && validateProducts() && validateUser()) {
+        console.log(validateInfo() && (validateProducts() || validateCables()) && validateUser());
+        if (validateInfo() && (validateProducts() || validateCables()) && validateUser()) {
           page = 5;
         } else {
           alert("Du kan ikke gå videre før alle felter er udfyldt");
@@ -459,6 +459,7 @@
             <ul>
               <li>Bruger: {user.Brugernavn}</li>
               <li>Produkter: {products.length}</li>
+              <li>Kabler: {sum(cables.map((c) => c.Lånt))}</li>
               <li>
                 Retur dato: {returnDate.getFullYear()}
                 {translateMonth(returnDate.getMonth())}
@@ -477,6 +478,7 @@
               </li>
             </ul>
           </div>
+          {#if products.length > 0}
           <div class="table-container">
             <TableSimplified
               inputData={products}
@@ -485,6 +487,7 @@
               exclude={["Stor. Loc. ID"]}
             />
           </div>
+          {/if}
           {#if cables.length > 0}
             <div class="table-container">
               <TableSimplified
