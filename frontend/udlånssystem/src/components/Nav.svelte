@@ -97,6 +97,16 @@
                 icon="fa-solid fa-pen-to-square"
             />
         </a>
+        <div class="darkmode">
+            <div class="text2">
+                <i class="fa-solid fa-moon" />
+                <p>Dark mode</p>
+            </div>
+            <Toggle />
+        </div>
+        <div class="user">
+            <UserWidget />
+        </div>
     </div>
 </div>
 
