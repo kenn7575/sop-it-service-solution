@@ -1,18 +1,4 @@
 var jwt = require("jsonwebtoken");
-// const { authenticate } = require('ldap-authentication')
-
-// cosnoptions = {
-//     ldapOpts: {
-//       url: 'ldap://ldap.forumsys.com',
-//       // tlsOptions: { rejectUnauthorized: false }
-//     },
-//     userDn: 'uid=einstein,dc=example,dc=com',
-//     userPassword: 'password',
-//     userSearchBase: 'dc=example,dc=com',
-//     usernameAttribute: 'uid',
-//     username: 'einstein',
-//     // starttls: false
-//   }
 
 function authenticateUser(req, res, next) {
     const token = req.cookies.token;

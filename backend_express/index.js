@@ -18,6 +18,7 @@ app.use(async (req, res, next) => {
 });
 
 app.use("/api", require("./routes/getData"));
+app.use("/api/auth", require("./routes/auth"));
 app.use("/api/users", require("./routes/users"));
 
 const port = process.env.PORT || 3000;
