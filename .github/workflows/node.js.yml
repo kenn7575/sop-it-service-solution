@@ -19,6 +19,12 @@ jobs:
         node-version: [20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
+    env:
+      VITE_APP_ADMIN_USERNAME: ${{ secrets.VITE_APP_ADMIN_USERNAME }}
+      VITE_APP_ADMIN_PASSWORD: ${{ secrets.VITE_APP_ADMIN_PASSWORD }}
+      VITE_APP_AUTH: ${{ secrets.VITE_APP_AUTH }}
+      VITE_APP_BACKEND_URL: ${{ secrets.VITE_APP_BACKEND_URL }}
+
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
