@@ -1,32 +1,50 @@
 const express = require("express");
 const router = express.Router();
-const ldap = require("ldapjs");
+const { authenticate } = require("ldap-authentication");
 
-const client = ldap.createClient({
+let options = {
+  ldapOpts: {
     url: `ldap://${process.env.LDAP_HOST}:${process.env.LDAP_PORT}`,
-});
+    // tlsOptions: { rejectUnauthorized: false }
+  },
+  adminDn: process.env.LDAP_USERNAME,
+  adminPassword: process.env.LDAP_PASSWORD,
+  userSearchBase: `${process.env.LDAP_USERS}`,
+  usernameAttribute: "samaccountname",
+  // starttls: false
+};
 
 router.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+  const { username, password: userPassword } = req.body;
 
-    console.log("CN=Nima Badiei,OU=OU_Programmoer,OU=OU_Elever,OU=OU_IT-SKP,OU=OU_Main,DC=ITSKP-ODENSE,DC=dk")
-    console.log(`cn=${username},OU=OU_Programmoer,${process.env.LDAP_USERS}`)
+  if (!username || !userPassword)
+    return res.json({ error: "Missing credentials" });
 
-    client.bind(
-        `cn=${username},OU=OU_Programmoer,${process.env.LDAP_USERS}`,
-        password,
-        (err) => {
-            if (err) {
-                if (err.name === "InvalidCredentialsError") {
-                    console.log("Invalid credentials");
-                    res.status(401).json({ error: "Invalid credentials" });
-                }
-            } else {
-                console.log("Login successful");
-                res.json({ message: "Login successful" });
-            }
-        }
-    );
+  if (["test123t", "kenn4747"].includes(username)) {
+    // find the user from the AD and return it
+    let admin = await authenticate(options);
+
+    return res.json({ error: "Test user" });
+  }
+
+  try {
+    let user = await authenticate({ ...options, username, userPassword });
+    res.json(user);
+  } catch (err) {
+    if (err?.admin?.lde_message) {
+      console.log("Invalid admin credentials");
+      res.json({ error: "Invalid admin credentials" });
+    } else if (err?.lde_message) {
+      console.log("Invalid credentials");
+      res.json({ error: "Invalid credentials" });
+    } else if (err?.name == "LdapAuthenticationError") {
+      console.log("User not found");
+      res.json({ error: "User not found" });
+    } else {
+      console.log(err);
+      res.json({ error: "Something went wrong" });
+    }
+  }
 });
 
 module.exports = router;
