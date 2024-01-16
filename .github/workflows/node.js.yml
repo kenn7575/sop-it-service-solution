@@ -33,10 +33,10 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST_NAME }}
         username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
         port:  ${{ secrets.SERVER_SSH_PORT }}
         source: "frontend/udlånssystem/dist" # Update this with the path to your build directory
-        target: "path_on_your_server" # Update this with the target path on your server
+        target: "/var/www/lager" # Update this with the target path on your server
 
     - name: Restart NGINX
       uses: appleboy/ssh-action@master
