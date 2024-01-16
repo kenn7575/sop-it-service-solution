@@ -6,7 +6,8 @@
 
   export let buttonDestination = "";
   export let extraButton = "";
-  export let filterKey = "UUID"
+  export let filterKey = "UUID";
+  export let sortBy = "UUID";
 
   const dispatch = createEventDispatcher();
   function forwardId(object) {
@@ -56,16 +57,20 @@
         sortColumn = columnKey;
       }
     }
+
     const sortedData = data.sort((a, b) => {
       if (a[columnKey] === undefined || b[columnKey] === undefined) return 0;
       let valueA = a[columnKey];
       let valueB = b[columnKey];
+
       valueA =
         typeof valueA === "string" ? valueA.toString().toLowerCase() : valueA;
       valueB =
         typeof valueB === "string" ? valueB.toString().toLowerCase() : valueB;
+
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
     });
+
     if (!sortAscending) {
       tableDataFiltered = sortedData.reverse();
     } else {
@@ -74,8 +79,14 @@
   }
 
   onMount(() => {
-    sortTable(tableDataFiltered, tableHeadings[0]);
+    sortTable(tableDataFiltered, sortBy);
   });
+
+  const tableDataFiltered2 = () => {
+    var data = inputData;
+
+    return data;
+  };
 
   //filter Data
   function filterData() {
@@ -90,18 +101,17 @@
   }
   //change page
   function PageChangeUp() {
-    if (page < tableDataFiltered.length / items_per_page) {
-      page += 1;
-    }
+    if (page < tableDataFiltered.length / items_per_page) page += 1;
   }
+
   function PageChangeDown() {
-    if (page > 1) {
-      page -= 1;
-    }
+    if (page > 1) page -= 1;
   }
+
   function PageChangeTo(pageNumber) {
     page = pageNumber;
   }
+
   function handleButtonClick() {
     if (buttonDestination) {
       navigate(buttonDestination);
@@ -259,7 +269,8 @@
   }
   .pagination button:not(.currentPage):hover {
     background: var(--bg3);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+    box-shadow:
+      rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
       rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
       rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
     cursor: pointer;
@@ -405,7 +416,8 @@
   }
   .dropdown-btn:hover {
     background: var(--bg3);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+    box-shadow:
+      rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
       rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
       rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
     cursor: pointer;
@@ -461,7 +473,8 @@
     width: 100%;
     max-width: 480px;
     color: var(--text1);
-    box-shadow: 0 2px 6px 0 rgba(136, 148, 171, 0.2),
+    box-shadow:
+      0 2px 6px 0 rgba(136, 148, 171, 0.2),
       0 24px 20px -24px rgba(71, 82, 107, 0.1);
     overflow: hidden;
     outline: 1px solid var(--text1);

@@ -8,12 +8,10 @@
       localStorage.setItem("theme", "light");
     }
   }
-  let darkmode = true;
-  if (localStorage.getItem("theme") === "dark") {
-    darkmode = true;
-  } else {
-    darkmode = false;
-  }
+
+  let darkmode = false;
+  if (localStorage.getItem("theme") == "dark") darkmode = true;
+
   $: toggleTheme(darkmode);
 </script>
 

@@ -29,7 +29,7 @@
   import Help from "./pages/help/index.svelte";
   import Notifications from "./pages/notifications/index.svelte";
   import Chat from "./pages/chat/index.svelte";
-  import Breadcrumps from "./components/breadcrumps.svelte";
+  import Breadcrumps from "./components/breadcrumbs.svelte";
   import Loans from "./pages/loans/index.svelte";
   import Loading from "./pages/Loading.svelte";
 

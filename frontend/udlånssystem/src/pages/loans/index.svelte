@@ -53,6 +53,7 @@
     on:message={handleRowClick}
     on:action={handleSendMails}
     filterKey="Bruger"
+    sortBy="Oprettet"
   />
 </div>
 
