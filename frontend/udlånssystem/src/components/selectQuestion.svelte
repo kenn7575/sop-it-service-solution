@@ -20,6 +20,7 @@
     id="a10"
     required
     form="user-form"
+    class="!py-0"
     on:change={(e) => { binding = JSON.parse(e.target.value) }}
   >
     {#each options as option}

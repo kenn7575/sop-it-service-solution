@@ -31,6 +31,7 @@
       buttonDestination={"produkttyper/new"}
       {inputData}
       on:message={handleRowClick}
+      filterKey="Navn"
     />
   </div>
 {:else}

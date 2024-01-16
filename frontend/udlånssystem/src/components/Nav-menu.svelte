@@ -21,6 +21,7 @@
     path.update(() => {
       return dest;
     });
+
     navigate(dest, { replace: true });
   }
   //toggle menu
@@ -76,7 +77,6 @@
         on:click={() => {
           handleNavClick(button.destination);
         }}
-        
       >
         <div class="flex small">
           {#if button.icon}
@@ -97,7 +97,6 @@
     border-radius: 10px;
     transition: background-color 100ms ease-in-out;
     cursor: pointer;
-
   }
   button.outer {
     padding: 0;
@@ -125,7 +124,8 @@
   /* Target buttons hover if not selected */
   button:hover:not(.selected) {
     background-color: var(--bg2);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+    box-shadow:
+      rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
       rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
       rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
   }

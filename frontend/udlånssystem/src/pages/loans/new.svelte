@@ -219,11 +219,11 @@
       console.log("!loanType");
       return false;
     }
-    if (!password) {
-      console.log("!password");
-      console.log(password);
-      return false;
-    }
+    // if (!password) {
+    //   console.log("!password");
+    //   console.log(password);
+    //   return false;
+    // }
     return true;
   }
 
@@ -284,8 +284,8 @@
         page = 2;
       }}
       class:current={2 === page}
-      class:invalid={page > 2 && !validateProducts()}
-      class:valid={page > 2 && validateProducts()}
+      class:invalid={page > 2 && (!validateProducts() || !validateCables())}
+      class:valid={page > 2 && validateProducts() || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -301,8 +301,8 @@
         page = 3;
       }}
       class:current={3 === page}
-      class:invalid={page > 3 && !validateProducts()}
-      class:valid={page > 3 && validateProducts()}
+      class:invalid={page > 3 && (!validateProducts() || !validateCables())}
+      class:valid={page > 3 && validateProducts() || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -328,8 +328,8 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        console.log(validateInfo(), validateProducts(), validateUser());
-        if (validateInfo() && validateProducts() && validateUser()) {
+        console.log(validateInfo() && (validateProducts() || validateCables()) && validateUser());
+        if (validateInfo() && (validateProducts() || validateCables()) && validateUser()) {
           page = 5;
         } else {
           alert("Du kan ikke gå videre før alle felter er udfyldt");
@@ -350,13 +350,14 @@
           inputData={importUsers}
           on:message={handleUserSelection}
           buttonDestination="/brugere/new"
+          filterKey="Brugernavn"
         />
       </div>
     {:else if page === 2}
       <!-- ! Products -->
       <div class="tables">
         <div class="splitscreen">
-          <Table on:message={handleAddProduct} inputData={importProducts} />
+          <Table on:message={handleAddProduct} inputData={importProducts} filterKey="Navn" />
         </div>
         <div class="table-group">
           {#if $controlStore}
@@ -384,6 +385,7 @@
             on:message={handleAddCable}
             inputData={importCables}
             exclude={["Lånt"]}
+            filterKey="Navn"
           />
         </div>
         <div class="table-group">
@@ -449,16 +451,6 @@
             {/each}
           </select>
         </div>
-        <div class="grid-item g3">
-          <form>
-            <TextQuestion
-              label="Kode"
-              type="password"
-              bind:binding={password}
-              editMode={true}
-            />
-          </form>
-        </div>
       </div>
     {:else if page === 5}
       <div class="wrapper">
@@ -467,6 +459,7 @@
             <ul>
               <li>Bruger: {user.Brugernavn}</li>
               <li>Produkter: {products.length}</li>
+              <li>Kabler: {sum(cables.map((c) => c.Lånt))}</li>
               <li>
                 Retur dato: {returnDate.getFullYear()}
                 {translateMonth(returnDate.getMonth())}
@@ -485,6 +478,7 @@
               </li>
             </ul>
           </div>
+          {#if products.length > 0}
           <div class="table-container">
             <TableSimplified
               inputData={products}
@@ -493,6 +487,7 @@
               exclude={["Stor. Loc. ID"]}
             />
           </div>
+          {/if}
           {#if cables.length > 0}
             <div class="table-container">
               <TableSimplified
@@ -505,6 +500,14 @@
           {/if}
         </div>
         <div class="button-container">
+          <form>
+            <TextQuestion
+              label="Skriv din kode"
+              type="password"
+              bind:binding={password}
+              editMode={true}
+            />
+          </form>
           <button
             class="create-btn"
             on:click={createLoan}
@@ -537,6 +540,7 @@
   }
   .button-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 2rem;

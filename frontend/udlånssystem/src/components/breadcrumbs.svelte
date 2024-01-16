@@ -1,13 +1,15 @@
 <script>
   import { path } from "../stores/pathStore";
-  import { formatPathToBreadcrumps } from "../services/pathFormatter.js";
+  import { formatPathToBreadcrumbs } from "../services/pathFormatter.js";
   import { navigate } from "svelte-routing";
 
   function handleClick(inputpath) {
     if (currentPath === inputpath) return;
+
     path.update(() => {
       return inputpath;
     });
+
     navigate(inputpath, { replace: true });
   }
 
@@ -15,7 +17,7 @@
 </script>
 
 <div class="content">
-  {#each formatPathToBreadcrumps(currentPath) as path}
+  {#each formatPathToBreadcrumbs(currentPath) as path}
     <button
       on:click={() => {
         handleClick(path.fullPath);

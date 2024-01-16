@@ -10,9 +10,9 @@
 <div class="content">
   <div class="info">
     {#if user}
-      <img src={user.img_name ? pic : profilePic} alt="profilePic" />
+      <!-- <img src={user.img_name ? pic : profilePic} alt="profilePic" /> -->
     {:else}
-      <img src={profilePic} alt="" />
+      <!-- <img src={profilePic} alt="" /> -->
     {/if}
     {#if user}
       <div class="text">
