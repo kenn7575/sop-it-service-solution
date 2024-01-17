@@ -239,23 +239,23 @@
     };
 
     const validatePassword = await axios
-      .post("validate_password.php", {
+      .post("auth/login", {
+        username: $currentUser.username,
         password,
-        user_password: $currentUser.password,
       })
-      .then((res) => res.data);
-    if (!validatePassword.success) {
+      
+    if (validatePassword.status != 200) {
       alert("Forkert kode");
       return;
     }
 
-    const { data } = await axios.post("create_loan.php", { loan, products, cables });
-    if (data && data?.success && data?.data) {
+    const { data, status } = await axios.post("loans", { loan, products, cables });
+    if (status === 200) {
       alert("Gemt");
 
-      goToPath(`/${page_name.toLowerCase()}/${data.data}`);
+      goToPath(`/${page_name.toLowerCase()}/${data.loanId}`);
     } else {
-      alert("Error 500 - " + data?.message);
+      alert("Error 500 - " + data?.error);
     }
   }
 </script>

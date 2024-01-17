@@ -24,6 +24,25 @@ let options = {
 router.post("/login", async (req, res) => {
   const { username, password: userPassword } = req.body;
 
+  if (process.env.NODE_ENV == "development") {
+    const user = {
+      UUID: 792,
+      username: "dev",
+      name: "Dev",
+      mail: "dev@dev.com",
+    };
+
+    const token = jwt.sign(user, process.env.JWT_SECRET);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+
+    return res.json(user);
+  }
+
   if (!username || !userPassword)
     return res.json({ error: "Missing credentials" });
 
@@ -37,7 +56,7 @@ router.post("/login", async (req, res) => {
     };
 
     const token = jwt.sign(user, process.env.JWT_SECRET, {
-      expiresIn: "10h",
+      expiresIn: "10m",
     });
 
     console.log(token);
@@ -83,6 +102,10 @@ router.post("/validate", async (req, res) => {
     return res.status(400).json({ error: "Invalid token" });
   }
 });
+
+router.post("/validate_password", async (req, res) => {
+  console.log(req.body);
+})
 
 router.get("/cookies", (req, res) => {
   res.json(req.cookies);
