@@ -1,5 +1,7 @@
 {
     "require": {
-        "phpmailer/phpmailer": "^6.8"
+        "phpmailer/phpmailer": "^6.8",
+        "firebase/php-jwt": "^6.10",
+        "paragonie/sodium_compat": "^1.20"
     }
 }
