@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { authenticate } = require("ldap-authentication");
+const jwt = require("jsonwebtoken");
+
+const userSearchBase =
+  process.env.NODE_ENV == "development"
+    ? process.env.LDAP_USERS
+    : process.env.LDAP_ADMINS;
 
 let options = {
   ldapOpts: {
@@ -9,8 +15,9 @@ let options = {
   },
   adminDn: process.env.LDAP_USERNAME,
   adminPassword: process.env.LDAP_PASSWORD,
-  userSearchBase: `${process.env.LDAP_USERS}`,
+  userSearchBase,
   usernameAttribute: "samaccountname",
+  attributes: ["sn", "givenName", "Name", "sAMAccountName", "mail"],
   // starttls: false
 };
 
@@ -20,15 +27,27 @@ router.post("/login", async (req, res) => {
   if (!username || !userPassword)
     return res.json({ error: "Missing credentials" });
 
-  if (["test123t", "kenn4747"].includes(username)) {
-    // find the user from the AD and return it
-    let admin = await authenticate(options);
-
-    return res.json({ error: "Test user" });
-  }
-
   try {
-    let user = await authenticate({ ...options, username, userPassword });
+    let ADUser = await authenticate({ ...options, username, userPassword });
+
+    const user = {
+      username: ADUser.sAMAccountName,
+      name: ADUser.name,
+      mail: ADUser.mail,
+    };
+
+    const token = jwt.sign(user, process.env.JWT_SECRET, {
+      expiresIn: "10h",
+    });
+
+    console.log(token);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+
     res.json(user);
   } catch (err) {
     if (err?.admin?.lde_message) {
@@ -45,6 +64,28 @@ router.post("/login", async (req, res) => {
       res.json({ error: "Something went wrong" });
     }
   }
+});
+
+router.post("/validate", async (req, res) => {
+  const { token } = req.cookies;
+
+  if (!token) return res.status(401).json({ error: "Validation failed" });
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    res.json(verified);
+    // res.end();
+  } catch (err) {
+    res.clearCookie("token");
+    if (err.name === "TokenExpiredError")
+      return res.status(401).json({ error: "Token expired" });
+
+    return res.status(400).json({ error: "Invalid token" });
+  }
+});
+
+router.get("/cookies", (req, res) => {
+  res.json(req.cookies);
 });
 
 module.exports = router;

@@ -22,7 +22,7 @@ app.use(async (req, res, next) => {
 app.use("/api", require("./routes/getData"));
 app.use("/api/users", require("./routes/users"));
 
-const port = process.env.PORT || 3000;
+const port = process.env.BACKEND_PORT || 3000;
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
