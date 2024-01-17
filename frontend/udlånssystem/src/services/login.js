@@ -15,7 +15,6 @@ export const validateSession = async () => {
     return null;
   });
 
-  console.log(data)
   data.user = data;
   return data;
 };
@@ -66,7 +65,7 @@ export async function loginViaCredentials(username, password) {
   return output;
 }
 export function logout() {
-  Cookies.remove("token");
+  axios.post("auth/logout")
   currentUser.update((user) => {
     return null; //update current user
   });
