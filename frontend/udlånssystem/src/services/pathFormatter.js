@@ -13,7 +13,8 @@ export const stripPath = (path, level) => {
 
   return formatPath;
 };
-export const formatPathToBreadcrumps = (path) => {
+
+export const formatPathToBreadcrumbs = (path) => {
   //convert path to array
   let paths = path.split("/");
   //remove empty strings

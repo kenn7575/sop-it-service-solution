@@ -27,6 +27,7 @@
       buttonDestination={`${$path}/new`}
       {inputData}
       on:message={handleRowClick}
+      filterKey="Kategori navn"
     />
   </div>
 {:else}

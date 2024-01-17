@@ -8,13 +8,16 @@
 
   function handleSubmit() {
     navigate(`/brugere/${searchPromt}`, { replace: true });
+
     path.update(() => {
       return `/brugere/${searchPromt}`;
     });
   }
+
   function handleInput() {
     if (searchPromt === "" || searchPromt === undefined) {
       navigate(`/brugere`);
+
       path.update(() => {
         return `/brugere`;
       });
@@ -55,7 +58,8 @@
     width: 100%;
     max-width: 480px;
     color: var(--text1);
-    box-shadow: 0 2px 6px 0 rgba(136, 148, 171, 0.2),
+    box-shadow:
+      0 2px 6px 0 rgba(136, 148, 171, 0.2),
       0 24px 20px -24px rgba(71, 82, 107, 0.1);
     overflow: hidden;
     border: 1px solid var(--text1);
