@@ -1,11 +1,15 @@
 <script lang="ts">
-  export let id;
   import { onMount } from "svelte";
-  import getData from "../../data/getData";
-  import { itemsFromLoan } from "../../types/itemsFromLoan";
-  import goToPath from "../../services/goToPath";
+
   import TableSimplified from "../../components/table-simplified.svelte";
+
+  import getData from "../../data/getData";
+  import goToPath from "../../services/goToPath";
+
+  import { itemsFromLoan } from "../../types/itemsFromLoan";
   import { cableFromLoan } from "../../types/cableFromLoan";
+
+  export let id;
 
   let importItemsInLoanLent: itemsFromLoan[] = [];
   let importItemsInLoanAvailable: itemsFromLoan[] = [];
@@ -21,11 +25,7 @@
   let page_name = "Udlaan/returner";
 
   onMount(async () => {
-    try {
-      importDataFromDB();
-    } catch (error) {
-      console.log(error);
-    }
+    importDataFromDB();
   });
 
   import { barcodeStore, controlStore } from "../../stores/barcodeStore";
@@ -35,28 +35,21 @@
 
     //check if barcode is being added or removed
     if (!$controlStore) {
-      console.log("adding");
-      const product = importItemsInLoanLent.find((o) => o.UUID == code);
-      //add
-      if (ItemsInLoanToReturn.find((o) => o.UUID == code)) {
-        alert("Produktet er allerede tilføjet");
-        return;
-      }
-      if (!product) {
-        alert("Produktet findes ikke");
-        return;
-      }
+      const product = importItemsInLoanLent.find(({ UUID }) => UUID == code);
+
+      if (ItemsInLoanToReturn.find(({ UUID }) => UUID == code))
+        return alert("Produktet er allerede tilføjet");
+
+      if (!product) return alert("Produktet findes ikke");
+
       handleAddProduct({ detail: product });
     } else {
-      console.log("removing");
-      //remove
-      const product = ItemsInLoanToReturn.find((o) => o.UUID == code);
-      if (!product) {
-        return;
-      }
-      if (importItemsInLoanLent.find((o) => o.UUID == code)) {
-        return;
-      }
+      const product = ItemsInLoanToReturn.find(({ UUID }) => UUID == code);
+
+      if (!product) return;
+
+      if (importItemsInLoanLent.find(({ UUID }) => UUID == code)) return;
+
       handleRemoveProduct({ detail: product });
     }
   }
@@ -79,8 +72,8 @@
         cables.push(new cableFromLoan({ ...dataCables[index] }));
       }
     });
-    importItemsInLoanLent = items.filter((o) => !o.Returneret);
-    importItemsInLoanAvailable = items.filter((o) => o.Returneret);
+    importItemsInLoanLent = items.filter(({ Returneret }) => !Returneret);
+    importItemsInLoanAvailable = items.filter(({ Returneret }) => Returneret);
 
     importCablesInLoanLent = cables.filter((o) => o["Mængde lånt"] > 0);
     importCablesInLoanAvailable = cables.filter((o) => !(o["Mængde lånt"] > 0));
@@ -88,9 +81,6 @@
   function handleAddProduct(event) {
     //move product from inputDataProducts to products
     let product = event.detail;
-    console.log("product", product);
-    console.log("importItemsInLoanLent", importItemsInLoanLent);
-    console.log("ItemsInLoanToReturn", ItemsInLoanToReturn);
     if (importItemsInLoanLent.length == 0) return;
 
     ItemsInLoanToReturn.push(
@@ -118,8 +108,10 @@
     cable["Mængde lånt"]--;
     cable["Mængde returneret"]++;
 
-    const thisCable = CablesInLoanToReturn.find((c) => c.UUID == cable.UUID);
-    var indexCable = CablesInLoanToReturn.find((c) => c.UUID > cable.UUID);
+    const thisCable = CablesInLoanToReturn.find(
+      ({ UUID }) => UUID == cable.UUID
+    );
+    var indexCable = CablesInLoanToReturn.find(({ UUID }) => UUID > cable.UUID);
 
     if (thisCable) {
       if (cable["Mængde lånt"] == 0)
@@ -156,8 +148,12 @@
     cable["Mængde lånt"]++;
     cable["Mængde returneret"]--;
 
-    const thisCable = importCablesInLoanLent.find((c) => c.UUID == cable.UUID);
-    var indexCable = importCablesInLoanLent.find((c) => c.UUID > cable.UUID);
+    const thisCable = importCablesInLoanLent.find(
+      ({ UUID }) => UUID == cable.UUID
+    );
+    var indexCable = importCablesInLoanLent.find(
+      ({ UUID }) => UUID > cable.UUID
+    );
 
     if (thisCable) {
       if (cable["Mængde returneret"] == 0)
@@ -181,48 +177,28 @@
     importCablesInLoanLent = importCablesInLoanLent;
   }
 
-  function handleReturn() {
-    const ids = ItemsInLoanToReturn.map((i) => i.UUID);
+  async function handleReturn() {
+    if (ItemsInLoanToReturn.length > 0) {
+      const { status } = await axios.patch("loans/return/item", {
+        ItemsInLoanToReturn,
+      });
 
-    if (ids.length > 0) {
-      axios
-        .delete("/return_item.php", {
-          params: { ids },
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data?.success) {
-            alert("Produkterne er returneret");
-            goToPath(`/udlaan`);
-          } else {
-            alert("Der skete en fejl");
-          }
-        });
+      if (status != 200) return alert("Der skete en fejl");
+
+      alert("Produkterne er returneret");
     }
 
     if (CablesInLoanToReturn.length > 0) {
-      const cables = CablesInLoanToReturn.map((c) => {
-        return {
-          UUID: c.UUID,
-          amount: c["Mængde returneret"],
-        };
+      const { status } = await axios.patch("loans/return/cable", {
+        CablesInLoanToReturn,
       });
-      axios
-        .delete("/return_cable.php", {
-          params: {
-            cables,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data?.success) {
-            alert("Kablerne er returneret");
-            goToPath(`/udlaan`);
-          } else {
-            alert("Der skete en fejl");
-          }
-        });
+
+      if (status != 200) return alert("Der skete en fejl");
+
+      alert("Kablerne er returneret");
     }
+
+    goToPath(`/udlaan`);
   }
   function handleAddAll() {
     ItemsInLoanToReturn = importItemsInLoanLent;
@@ -284,14 +260,14 @@
             exclude={["date_returned", "loan_id"]}
           />
         {:else}
-          <p class="text-center">Tryk på at vælge prokuter</p>
+          <p class="text-center">Tryk for at vælge prokuter</p>
         {/if}
       </div>
     </div>
   {/if}
 
   <div class="flex justify-center mt-16 flex-col items-center gap-2">
-    {#if ItemsInLoanToReturn.length != 0 || importItemsInLoanLent.length != 0}
+    {#if ItemsInLoanToReturn.length != 0 || importItemsInLoanLent.length != 0 || CablesInLoanToReturn.length != 0 || importCablesInLoanLent.length != 0}
       <button
         on:click={handleAddAll}
         id="add-all"
