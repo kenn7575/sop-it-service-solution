@@ -34,13 +34,6 @@
   <div class="content">
     <h1>Velkommen til helpdesk'en</h1>
     <p>Hvordan kan vi hjælpe dig i dag?</p>
-
-    <button on:click={() => {
-      fetch('http://localhost:5001/api?table=users&UUID=792', {
-        credentials: 'include',
-      }).then(res => res.json()).then(data => console.log(data))
-    }}
-    >Nima's test knap</button>
     <div class="svg">
       {@html welcome}
     </div>

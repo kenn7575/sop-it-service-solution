@@ -6,22 +6,28 @@ export default async function updateItem(
   table: string
 ): Promise<object> {
   try {
-    console.log("Updating " + table + " with data: ", { ...exportData });
     const { data } = await axios
-      .post("upsert_data.php", { data: { ...exportData }, table: table })
+      .patch(
+        "",
+        { data: { ...exportData } },
+        {
+          params: {
+            table,
+            UUID: exportData.UUID,
+          },
+        }
+      )
       .then((res: any) => {
-        console.log("Response: ", res);
         res.id = res.data;
         return res;
       })
       .catch((err) => {
         alert("Fejl! " + err);
-        console.log("Error: ", err);
         return { success: false, data: err, id: null };
       });
-    console.log("Data return: ", data);
 
-    data.id = data?.data;
+    data.success = true;
+
     return data;
   } catch (error) {
     alert("Application crashed: " + error);
