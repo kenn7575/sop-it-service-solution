@@ -36,7 +36,6 @@ router.get("/", async (req, res) => {
   var result = rows;
 
   if (rows.length === 1 && UUID) result = rows[0];
-  if (rows.length < 1) result = [{ error: "No results found" }];
 
   return res.json(result);
 });

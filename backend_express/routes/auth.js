@@ -11,14 +11,12 @@ const userSearchBase =
 let options = {
   ldapOpts: {
     url: `ldap://${process.env.LDAP_HOST}:${process.env.LDAP_PORT}`,
-    // tlsOptions: { rejectUnauthorized: false }
   },
   adminDn: process.env.LDAP_USERNAME,
   adminPassword: process.env.LDAP_PASSWORD,
   userSearchBase,
   usernameAttribute: "samaccountname",
   attributes: ["sn", "givenName", "Name", "sAMAccountName", "mail"],
-  // starttls: false
 };
 
 router.post("/login", async (req, res) => {

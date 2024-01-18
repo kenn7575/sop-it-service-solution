@@ -19,6 +19,7 @@ app.use(async (req, res, next) => {
     authenticateUser(req, res, next);
 });
 
+app.use("/", require("./routes/db_mode_test"));
 app.use("/api", require("./routes/tables"));
 app.use("/api/users", require("./routes/users"));
 app.use("/api/loans", require("./routes/loans"));
