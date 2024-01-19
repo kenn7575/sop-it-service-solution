@@ -49,7 +49,6 @@ router.post("/", async (req, res) => {
 });
 
 router.patch("/return/item", async (req, res) => {
-  console.log("returning item")
   const { ItemsInLoanToReturn: items } = req.body;
   if (!items) return res.sendStatus(400);
 

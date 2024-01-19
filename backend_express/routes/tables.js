@@ -1,99 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db");
+const { pool, db } = require("../db");
 
-router.use((req, res, next) => {
-  if (req.path !== "/") return next();
+router.get("/:table", async (req, res) => {
+  const table = req.params.table;
+  const filter = req.query;
 
-  if (!req.query?.table)
-    return res.status(400).json({ error: "Invalid table name" });
-  next();
+  const result = await db.find(table, filter);
+
+  // console.log(result)
+
+  res.json(result);
 });
 
-router.get("/", async (req, res) => {
-  const table = req.query.table;
-  const UUID = (req.query.UUID && `WHERE UUID = '${req.query.UUID}'`) || "";
+router.get("/:table/:UUID", async (req, res) => {
+  const { table, UUID } = req.params;
 
-  const conn = await pool.getConnection();
+  const result = await db.findOne(table, { UUID });
 
-  await conn.beginTransaction();
-
-  var rows;
-
-  try {
-    [rows] = await conn.query(`SELECT * FROM ${table} ${UUID}`);
-  } catch (err) {
-    if (err.code == "ER_NO_SUCH_TABLE") {
-      console.log("Invalid table name:", table);
-      return res.status(400).json({ error: "Invalid table name" });
-    }
-  }
-
-  await conn.commit();
-
-  conn.release();
-
-  var result = rows;
-
-  if (rows.length === 1 && UUID) result = rows[0];
-
-  return res.json(result);
+  res.json(result);
 });
 
-router.post("/", async (req, res) => {
-  const table = req.query.table;
+router.post("/:table", async (req, res) => {
+  const table = req.params.table;
   const values = req.body.data;
 
-  var rows;
+  const newRow = await db.create(table, values);
 
-  const conn = await pool.getConnection();
-
-  await conn.beginTransaction();
-
-  try {
-    [rows] = await pool.query(`INSERT INTO ${table} SET ?`, values);
-  } catch (err) {
-    if (err.code == "ER_NO_SUCH_TABLE") {
-      console.log("Invalid table name:", table);
-      return res.status(400).json({ error: "Invalid table name" });
-    }
-    console.log(err);
-  }
-
-  await conn.commit();
-
-  conn.release();
-
-  return res.json({ id: rows.insertId });
+  res.json(newRow);
 });
 
-router.patch("/", async (req, res) => {
-  const table = req.query.table;
-  const UUID = req.query.UUID;
+router.patch("/:table/:UUID", async (req, res) => {
+  const { table, UUID } = req.params;
   const values = req.body.data;
 
-  var rows;
+  const result = await db.update(table, UUID, values);
 
-  const conn = await pool.getConnection();
-
-  await conn.beginTransaction();
-
-  try {
-    [rows] = await pool.query(`UPDATE ${table} SET ? WHERE UUID = '${UUID}'`, [
-      values,
-    ]);
-  } catch (err) {
-    if (err.code == "ER_NO_SUCH_TABLE") {
-      console.log("Invalid table name:", table);
-      return res.status(400).json({ error: "Invalid table name" });
-    }
-  }
-
-  await conn.commit();
-
-  conn.release();
-
-  return res.json({ id: UUID });
+  res.json(result);
 });
 
 router.delete("/", async (req, res) => {

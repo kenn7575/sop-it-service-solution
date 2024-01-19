@@ -32,7 +32,7 @@ class Database {
     return result.length > 0;
   }
 
-  async find(table, filter = null) {
+  async find(table, filter = {}) {
     if (!(await this.validateTable(table))) {
       return { error: `Invalid table name '${table}' ` };
     }
@@ -71,7 +71,11 @@ class Database {
     return rows[0];
   }
 
-  async create(table, data) {
+  async create(table, data = {}) {
+    if (!(await this.validateTable(table))) {
+      return { error: `Invalid table name '${table}' ` };
+    }
+
     if (Object.keys(data).length === 0) return { error: "No data provided" };
 
     const conn = await this.pool.getConnection();
@@ -91,6 +95,29 @@ class Database {
     conn.release();
 
     return insertedRow;
+  }
+
+  async update(table, UUID, data = {}) {
+    if (!(await this.validateTable(table))) {
+      return { error: `Invalid table name '${table}' ` };
+    }
+
+    if (Object.keys(data).length === 0) return { error: "No data provided" };
+
+    const conn = await this.pool.getConnection();
+
+    const [{ affectedRows }] = await conn.query(
+      `UPDATE ${table} SET ? WHERE UUID = ? LIMIT 1`,
+      [data, UUID]
+    );
+
+    if (affectedRows == 0) return { error: "Not found" };
+
+    const updatedRow = await this.findOne(table, { UUID });
+
+    conn.release();
+
+    return updatedRow;
   }
 
   async delete(table, UUID) {
@@ -117,9 +144,8 @@ class Database {
   }
 }
 
-module.exports = pool;
-
 module.exports = {
+  pool,
   Database,
   db: new Database(),
 };
