@@ -7,16 +7,7 @@ export default async function updateItem(
 ): Promise<object> {
   try {
     const { data } = await axios
-      .patch(
-        "",
-        { data: { ...exportData } },
-        {
-          params: {
-            table,
-            UUID: exportData.UUID,
-          },
-        }
-      )
+      .patch(table + "/" + exportData.UUID, { data: { ...exportData } })
       .then((res: any) => {
         res.id = res.data;
         return res;

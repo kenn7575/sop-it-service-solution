@@ -4,15 +4,7 @@ import doesObjectsMatch from "../services/doesObjectsMatch";
 export default async function createItem(table: string, exportData: any) {
   try {
     const { data } = await axios
-      .post(
-        "",
-        { data: { ...exportData } },
-        {
-          params: {
-            table,
-          },
-        }
-      )
+      .post(table, { data: { ...exportData } })
       .catch((err) => {
         alert("Fejl! " + err);
         console.log("Error: ", err);

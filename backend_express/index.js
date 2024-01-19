@@ -14,12 +14,11 @@ app.use(cookieParser());
 app.use("/api/auth", require("./routes/auth"));
 
 app.use(async (req, res, next) => {
-    const { authenticateUser } = require("./functions/auth")
+  const { authenticateUser } = require("./functions/auth");
 
-    authenticateUser(req, res, next);
+  authenticateUser(req, res, next);
 });
 
-app.use("/", require("./routes/db_mode_test"));
 app.use("/api", require("./routes/tables"));
 app.use("/api/users", require("./routes/users"));
 app.use("/api/loans", require("./routes/loans"));
@@ -27,5 +26,5 @@ app.use("/api/loans", require("./routes/loans"));
 const port = process.env.BACKEND_PORT || 3000;
 
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });

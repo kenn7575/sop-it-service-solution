@@ -2,8 +2,8 @@ import axios from "axios";
 
 export default async function getData(table: string, UUID?: number) {
   const { data } = await axios
-    .get("", {
-      params: { table: table, UUID: UUID },
+    .get(table, {
+      params: { UUID: UUID },
     })
     .catch((err) => {
       alert("Ukendt fejl " + err);
