@@ -1,51 +1,55 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db");
+const { db, pool } = require("../db");
 const { returnLoan, returnCable } = require("../functions/loanLogic");
 
 router.post("/", async (req, res) => {
-  const conn = await pool.getConnection();
+  await db.transaction();
 
-  await conn.beginTransaction();
+  const newLoan = await db.create("loans", req.body.loan);
 
-  const [newLoan] = await conn.query(
-    "INSERT INTO `loans` (`user_id`, `loan_length`, `recipient_type_id`, `location_of_use_id`, `helpdesk_personel_id`) VALUES (?)",
-    [Object.values(req.body.loan)]
-  );
+  const { products, cables } = req.body;
 
-  const loanId = newLoan.insertId;
-
-  if (req.body?.products) {
-    await conn.query(
-      "UPDATE `items` SET `product_status_id` = '4' WHERE `UUID` IN (?)",
-      [req.body.products.map((product) => product.UUID)]
+  if (products) {
+    await db.update(
+      "items",
+      { UUID: products.map((product) => product.UUID) },
+      { product_status_id: 4 }
     );
 
-    await conn.query(
-      "INSERT INTO `items_in_loan` (`loan_id`, `item_id`) VALUES ?",
-      [req.body.products.map((product) => [loanId, product.UUID])]
-    );
+    for (const product of products) {
+      await db.create("items_in_loan", {
+        loan_id: newLoan.UUID,
+        item_id: product.UUID,
+      });
+    }
   }
 
-  if (req.body?.cables) {
-    await conn.query(
-      "INSERT INTO `cables_in_loan` (`loan_id`, `cable_id`, `amount_lent`) VALUES ?",
-      [req.body.cables.map((cable) => [loanId, cable.UUID, cable["Lånt"]])]
-    );
+  if (cables) {
+    for (const cable of cables) {
+      await db.create(
+        "cables_in_loan",
+        {
+          loan_id: newLoan.UUID,
+          cable_id: cable.UUID,
+          amount_lent: cable["Lånt"],
+        },
+        true
+      );
+    }
 
-    for (const cable of req.body.cables) {
-      await conn.query(
-        "UPDATE `cables` SET `amount_lent` = `amount_lent` + ? WHERE `UUID` IN (?)",
-        [cable["Lånt"], cable.UUID]
+    for (const cable of cables) {
+      await db.update(
+        "cables",
+        { UUID: cable.UUID },
+        { amount_lent: cable["Lånt"] }
       );
     }
   }
 
-  await conn.commit();
+  await db.commit();
 
-  conn.release();
-
-  return res.json({ loanId });
+  return res.json({ ...newLoan, loanId: newLoan.UUID });
 });
 
 router.patch("/return/item", async (req, res) => {

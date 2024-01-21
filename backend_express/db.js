@@ -4,22 +4,24 @@ const pool = mysql.createPool(process.env.DB_URI);
 
 class Database {
   pool;
+  conn;
 
   constructor() {
     this.pool = pool;
   }
 
   async transaction() {
-    const conn = await this.pool.getConnection();
+    this.conn = await this.pool.getConnection();
 
-    await conn.beginTransaction();
+    await this.conn.beginTransaction();
 
-    return conn;
+    return this.conn;
   }
 
-  async commit(conn) {
-    await conn.commit();
-    conn.release();
+  async commit() {
+    await this.conn.commit();
+
+    this.conn.release();
   }
 
   async validateTable(table) {
@@ -37,13 +39,11 @@ class Database {
       return { error: `Invalid table name '${table}' ` };
     }
 
-    const conn = await this.pool.getConnection();
-
-    var rows;
+    const conn = this.conn || (await this.pool.getConnection());
 
     if (Object.keys(filter).length === 0) filter = null;
 
-    [rows] = await conn.query(
+    const [rows] = await conn.query(
       `SELECT * FROM ${table} ${filter ? "WHERE ?" : ""}`,
       filter || []
     );
@@ -58,11 +58,12 @@ class Database {
       return { error: `Invalid table name '${table}' ` };
     }
 
-    const conn = await this.pool.getConnection();
+    const conn = this.conn || (await this.pool.getConnection());
 
-    var rows;
-
-    [rows] = await conn.query(`SELECT * FROM ${table} WHERE ? LIMIT 1`, filter);
+    const [rows] = await conn.query(
+      `SELECT * FROM ${table} WHERE ? LIMIT 1`,
+      filter
+    );
 
     conn.release();
 
@@ -71,59 +72,63 @@ class Database {
     return rows[0];
   }
 
-  async create(table, data = {}) {
+  async create(table, data = {}, noReturn = false) {
     if (!(await this.validateTable(table))) {
       return { error: `Invalid table name '${table}' ` };
     }
 
     if (Object.keys(data).length === 0) return { error: "No data provided" };
 
-    const conn = await this.pool.getConnection();
+    const conn = this.conn || (await this.pool.getConnection());
 
-    var newRow;
-
-    try {
-      [newRow] = await conn.query(`INSERT INTO ${table} SET ?`, data);
-    } catch (err) {
-      return { error: err.sqlMessage };
-    }
-
-    const newRowId = newRow.insertId;
-
-    const insertedRow = await this.findOne(table, { UUID: newRowId });
+    const [newRow] = await conn.query(`INSERT INTO ${table} SET ?`, data);
 
     conn.release();
+
+    if (noReturn) return;
+
+    const insertedRow = await this.findOne(table, {
+      UUID: newRow.insertId,
+    });
 
     return insertedRow;
   }
 
-  async update(table, UUID, data = {}) {
+  async update(table, filter = {}, data = {}) {
     if (!(await this.validateTable(table))) {
       return { error: `Invalid table name '${table}' ` };
     }
 
     if (Object.keys(data).length === 0) return { error: "No data provided" };
+    if (Object.keys(filter).length === 0)
+      return { error: "No filter provided" };
 
-    const conn = await this.pool.getConnection();
+    const conn = this.conn || (await this.pool.getConnection());
 
     const [{ affectedRows }] = await conn.query(
-      `UPDATE ${table} SET ? WHERE UUID = ? LIMIT 1`,
-      [data, UUID]
+      `UPDATE ${table} SET ? WHERE ${Object.keys(filter)[0]} IN (?)`,
+      [data, Object.values(filter)[0]]
     );
 
     if (affectedRows == 0) return { error: "Not found" };
 
-    const updatedRow = await this.findOne(table, { UUID });
-
     conn.release();
 
-    return updatedRow;
+    if (affectedRows == 1) {
+      const updatedRow = await this.findOne(table, filter);
+      return updatedRow;
+    } else {
+      return { affectedRows };
+    }
   }
 
-  async delete(table, UUID) {
+  async delete(table, filter = {}) {
     if (!(await this.validateTable(table))) {
       return { error: `Invalid table name '${table}' ` };
     }
+
+    if (Object.keys(filter).length === 0)
+      return { error: "No filter provided" };
 
     const conn = await this.pool.getConnection();
 
@@ -132,7 +137,7 @@ class Database {
     if (deletedRow.error) return deletedRow;
 
     const [{ affectedRows }] = await conn.query(
-      `DELETE FROM ${table} WHERE UUID = ?`,
+      `DELETE FROM ${table} WHERE ?`,
       [UUID]
     );
 

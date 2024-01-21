@@ -8,8 +8,6 @@ router.get("/:table", async (req, res) => {
 
   const result = await db.find(table, filter);
 
-  // console.log(result)
-
   res.json(result);
 });
 

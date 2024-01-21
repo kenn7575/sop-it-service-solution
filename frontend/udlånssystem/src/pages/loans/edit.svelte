@@ -29,12 +29,12 @@
   });
 
   async function importDataFromDB() {
-    const data = await getData(table, id);
+    const [data] = await getData(table, id);
     exportData = new loanModel({ ...data });
     importLoan = new loanModel({ ...data });
 
     let itemsInLoan = await getData("items_in_loan");
-    loan_view = await getData("loans_view_extended", id);
+    [loan_view] = await getData("loans_view_extended", id);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!importLoan?.UUID) {
