@@ -52,25 +52,11 @@ router.patch("/return/item", async (req, res) => {
   const { ItemsInLoanToReturn: items } = req.body;
   if (!items) return res.sendStatus(400);
 
-  // const conn = await pool.getConnection();
-
-  // await conn.beginTransaction();
-
   await db.transaction();
-
-  // await conn.query(
-  //   "UPDATE `items` SET `product_status_id` = 1 WHERE `UUID` IN (?)",
-  //   [items.map((item) => item.UUID)]
-  // );
 
   for (const item of items) {
     await db.update("items", { UUID: item.UUID }, { product_status_id: 1 });
   }
-
-  // await conn.query(
-  //   "UPDATE `items_in_loan` SET `date_returned` = NOW() WHERE `item_id` IN (?) AND `date_returned` IS NULL",
-  //   [items.map((item) => item.UUID)]
-  // );
 
   for (const item of items) {
     await db.update(
@@ -82,10 +68,6 @@ router.patch("/return/item", async (req, res) => {
 
   await returnLoan(db, items[0].loan_id);
 
-  // await conn.commit();
-
-  // conn.release();
-
   await db.commit();
 
   res.json({ success: true });
@@ -95,30 +77,21 @@ router.patch("/return/cable", async (req, res) => {
   const { CablesInLoanToReturn: cables } = req.body;
   if (!cables) return res.sendStatus(400);
 
-  const conn = await pool.getConnection();
-
-  await conn.beginTransaction();
+  await db.transaction();
 
   for (const cable of cables) {
-    // await conn.query(
-    //   "UPDATE `cables_in_loan` SET `amount_returned` = ? WHERE `cable_id` = (?)",
-    //   [cable["Mængde returneret"], cable.UUID]
-    // );
-
     await db.update(
       "cables_in_loan",
       { cable_id: cable.UUID },
       { amount_returned: cable["Mængde returneret"] }
     );
 
-    returnCable(db, cable);
+    await returnCable(db, cable);
   }
 
   await returnLoan(db, cables[0].loan_id);
 
-  await conn.commit();
-
-  conn.release();
+  await db.commit();
 
   res.json({ success: true });
 });
