@@ -72,7 +72,7 @@ class Database {
     return rows[0];
   }
 
-  async create(table, data = {}, noReturn = false) {
+  async create(table, data = {}) {
     if (!(await this.validateTable(table))) {
       return { error: `Invalid table name '${table}' ` };
     }
@@ -85,7 +85,7 @@ class Database {
 
     conn.release();
 
-    if (noReturn) return;
+    if (newRow.insertId == 0) return;
 
     const insertedRow = await this.findOne(table, {
       UUID: newRow.insertId,
