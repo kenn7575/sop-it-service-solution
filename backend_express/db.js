@@ -1,4 +1,5 @@
 const mysql = require("mysql2/promise");
+const { generateFilter } = require("./functions/dbLogic");
 
 const pool = mysql.createPool(process.env.DB_URI);
 
@@ -41,14 +42,17 @@ class Database {
 
     const conn = this.conn || (await this.pool.getConnection());
 
-    if (Object.keys(filter).length === 0) filter = null;
-
     const [rows] = await conn.query(
-      `SELECT * FROM ${table} ${filter ? "WHERE ?" : ""}`,
-      filter || []
+      `SELECT * FROM ${table} ${generateFilter(filter)}`
     );
 
     conn.release();
+
+    if (
+      Object.keys(filter)[0] === "UUID" &&
+      typeof parseInt(Object.values(filter)[0]) === "number"
+    )
+      return rows[0];
 
     return rows;
   }
@@ -61,8 +65,7 @@ class Database {
     const conn = this.conn || (await this.pool.getConnection());
 
     const [rows] = await conn.query(
-      `SELECT * FROM ${table} WHERE ? LIMIT 1`,
-      filter
+      `SELECT * FROM ${table} ${generateFilter(filter)} LIMIT 1`
     );
 
     conn.release();
