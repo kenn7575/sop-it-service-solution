@@ -109,9 +109,6 @@
     products.push(importProducts.splice(importProducts.indexOf(product), 1)[0]);
     products = products;
     importProducts = importProducts;
-
-    console.log(products);
-    console.log(importProducts);
   }
   function handleRemoveProduct(event) {
     //move product from products to importProducts
@@ -129,7 +126,6 @@
     return true;
   }
   function sum(list: number[]): number {
-    console.log("🚀 ~ file: new.svelte:135 ~ sum ~ list:", list);
     let sum = 0;
     for (let i = 0; i < list.length; i++) {
       sum += list[i];
@@ -204,23 +200,12 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import Index from "../login/index.svelte";
   function validateInfo() {
-    if (returnDate === undefined) {
-      console.log("returnDate === undefined");
-      return false;
-    }
-    if (!locationOfUseId) {
-      console.log("!locationOfUseId");
-      return false;
-    }
-    if (!loanType) {
-      console.log("!loanType");
-      return false;
-    }
-    // if (!password) {
-    //   console.log("!password");
-    //   console.log(password);
-    //   return false;
-    // }
+    if (returnDate === undefined) return false;
+
+    if (!locationOfUseId) return false;
+
+    if (!loanType) return false;
+
     return true;
   }
 
@@ -325,11 +310,6 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        console.log(
-          validateInfo() &&
-            (validateProducts() || validateCables()) &&
-            validateUser()
-        );
         if (
           validateInfo() &&
           (validateProducts() || validateCables()) &&
