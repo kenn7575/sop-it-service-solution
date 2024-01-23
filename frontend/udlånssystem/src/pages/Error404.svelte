@@ -1,13 +1,7 @@
-<script>
-  import { error404 } from "../../public/svg/error404.js";
-</script>
-
 <div class="content">
   <h1>Error 404</h1>
   <p>Page not found</p>
-  <div class="svg">
-    {@html error404}
-  </div>
+  <img class="svg" src="svg/error404.svg" alt="Error 404" />
 </div>
 
 <style>

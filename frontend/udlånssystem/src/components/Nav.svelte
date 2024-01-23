@@ -1,5 +1,4 @@
 <script>
-  import logo from "../../public/logo.png";
   import SearchInput from "./SearchInput.svelte";
   import NavBtn from "./Nav-btn.svelte";
   import NavMenu from "./Nav-menu.svelte";
@@ -10,7 +9,7 @@
 <div class="content">
   <div class="section">
     <div class="watermark">
-      <img src={logo} alt="logo" class="object-contain" />
+      <img src=/logo.png alt="logo" class="object-contain" />
       <div class="text">
         <h3>v1.1.0-beta</h3>
         <h1>Udlånssystem</h1>
@@ -144,10 +143,10 @@
     width: 100%;
     margin-top: 1rem;
   }
-  .search {
+  /* .search {
     width: 100%;
     margin: 1rem 0;
-  }
+  } */
   .watermark {
     display: flex;
     width: 100%;
