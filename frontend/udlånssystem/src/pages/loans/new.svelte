@@ -11,20 +11,16 @@
         alert("Produktet er allerede tilføjet");
         return;
       }
-      if (!product) {
-        alert("Produktet findes ikke");
-        return;
-      }
+      if (!product) return alert("Produktet findes ikke");
+
       handleAddProduct({ detail: product });
     } else {
       //remove
       const product = products.find((o) => o.UUID == code);
-      if (!product) {
-        return;
-      }
-      if (importProducts.find((o) => o.UUID == code)) {
-        return;
-      }
+      if (!product) return;
+
+      if (importProducts.find((o) => o.UUID == code)) return;
+
       handleRemoveProduct({ detail: product });
     }
   }
@@ -101,9 +97,8 @@
   //Products
   //--------------------------------------------------------------------------------
   function validateProducts() {
-    if (products.length == 0) {
-      return false;
-    }
+    if (products.length == 0) return false;
+
     return true;
   }
   function handleAddProduct(event) {
@@ -114,6 +109,9 @@
     products.push(importProducts.splice(importProducts.indexOf(product), 1)[0]);
     products = products;
     importProducts = importProducts;
+
+    console.log(products);
+    console.log(importProducts);
   }
   function handleRemoveProduct(event) {
     //move product from products to importProducts
@@ -126,9 +124,8 @@
   //cabels
   //--------------------------------------------------------------------------------
   function validateCables() {
-    if (cables.length <= 0) {
-      return false;
-    }
+    if (cables.length <= 0) return false;
+
     return true;
   }
   function sum(list: number[]): number {
@@ -238,18 +235,18 @@
       helpdesk_personel_id: $currentUser.UUID,
     };
 
-    const validatePassword = await axios
-      .post("auth/login", {
-        username: $currentUser.username,
-        password,
-      })
-      
-    if (validatePassword.status != 200) {
-      alert("Forkert kode");
-      return;
-    }
+    const validatePassword = await axios.post("auth/login", {
+      username: $currentUser.username,
+      password,
+    });
 
-    const { data, status } = await axios.post("loans", { loan, products, cables });
+    if (validatePassword.status != 200) return alert("Forkert kode");
+
+    const { data, status } = await axios.post("loans", {
+      loan,
+      products,
+      cables,
+    });
     if (status === 200) {
       alert("Gemt");
 
@@ -285,7 +282,7 @@
       }}
       class:current={2 === page}
       class:invalid={page > 2 && (!validateProducts() || !validateCables())}
-      class:valid={page > 2 && validateProducts() || validateCables()}
+      class:valid={(page > 2 && validateProducts()) || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -302,7 +299,7 @@
       }}
       class:current={3 === page}
       class:invalid={page > 3 && (!validateProducts() || !validateCables())}
-      class:valid={page > 3 && validateProducts() || validateCables()}
+      class:valid={(page > 3 && validateProducts()) || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -328,8 +325,16 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        console.log(validateInfo() && (validateProducts() || validateCables()) && validateUser());
-        if (validateInfo() && (validateProducts() || validateCables()) && validateUser()) {
+        console.log(
+          validateInfo() &&
+            (validateProducts() || validateCables()) &&
+            validateUser()
+        );
+        if (
+          validateInfo() &&
+          (validateProducts() || validateCables()) &&
+          validateUser()
+        ) {
           page = 5;
         } else {
           alert("Du kan ikke gå videre før alle felter er udfyldt");
@@ -357,7 +362,11 @@
       <!-- ! Products -->
       <div class="tables">
         <div class="splitscreen">
-          <Table on:message={handleAddProduct} inputData={importProducts} filterKey="Navn" />
+          <Table
+            on:message={handleAddProduct}
+            inputData={importProducts}
+            filterKey="Navn"
+          />
         </div>
         <div class="table-group">
           {#if $controlStore}
@@ -447,7 +456,9 @@
           <hr />
           <select bind:value={locationOfUseId}>
             {#each importZones as zone}
-              <option class="dropdown-menu" value={zone.UUID}>{zone.name}</option>
+              <option class="dropdown-menu" value={zone.UUID}
+                >{zone.name}</option
+              >
             {/each}
           </select>
         </div>
@@ -479,14 +490,14 @@
             </ul>
           </div>
           {#if products.length > 0}
-          <div class="table-container">
-            <TableSimplified
-              inputData={products}
-              title="Produkter"
-              disabled={true}
-              exclude={["Stor. Loc. ID"]}
-            />
-          </div>
+            <div class="table-container">
+              <TableSimplified
+                inputData={products}
+                title="Produkter"
+                disabled={true}
+                exclude={["Stor. Loc. ID"]}
+              />
+            </div>
           {/if}
           {#if cables.length > 0}
             <div class="table-container">
