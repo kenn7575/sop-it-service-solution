@@ -32,7 +32,14 @@ router.patch("/:table/:UUID", async (req, res) => {
   const { table, UUID } = req.params;
   const values = req.body.data;
 
-  const result = await db.update(table, UUID, values);
+  if (!values || Object.keys(values).length === 0)
+    return res.status(400).json({ error: "No data provided" });
+  
+  delete values["UUID"];
+  delete values["date_created"];
+  delete values["date_updated"];
+
+  const result = await db.update(table, { UUID: UUID }, values);
 
   res.json(result);
 });
