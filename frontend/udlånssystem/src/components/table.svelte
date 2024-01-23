@@ -41,7 +41,7 @@
   let dropdownOpen = false; //used to determine if the dropdown is open
 
   //log all state variables
-  $: filterKey && filterData();
+  $: filterKey && filterData(), inputData
 
   function toggleDropdown() {
     dropdownOpen = !dropdownOpen;
