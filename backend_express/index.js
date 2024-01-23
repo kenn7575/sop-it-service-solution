@@ -21,6 +21,7 @@ app.use(async (req, res, next) => {
 
 app.use("/api/users", require("./routes/users"));
 app.use("/api/loans", require("./routes/loans"));
+app.use("/api/mail", require("./routes/mail"));
 app.use("/api", require("./routes/tables"));
 
 const port = process.env.BACKEND_PORT || 3000;
