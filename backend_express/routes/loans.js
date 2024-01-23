@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { db, pool } = require("../db");
+const { db } = require("../db");
 const { returnLoan, returnCable } = require("../functions/loanLogic");
 
 router.post("/", async (req, res) => {

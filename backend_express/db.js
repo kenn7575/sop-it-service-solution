@@ -1,14 +1,12 @@
 const mysql = require("mysql2/promise");
 const { generateFilter } = require("./functions/dbLogic");
 
-const pool = mysql.createPool(process.env.DB_URI);
-
 class Database {
   pool;
   conn;
 
   constructor() {
-    this.pool = pool;
+    this.pool = mysql.createPool(process.env.DB_URI);
   }
 
   async transaction() {
@@ -135,13 +133,13 @@ class Database {
 
     const conn = await this.pool.getConnection();
 
-    var deletedRow = await this.findOne(table, { UUID });
+    var deletedRow = await this.findOne(table, filter);
 
     if (deletedRow.error) return deletedRow;
 
     const [{ affectedRows }] = await conn.query(
       `DELETE FROM ${table} WHERE ?`,
-      [UUID]
+      filter
     );
 
     if (affectedRows === 0) return { error: "Not found" };
@@ -153,7 +151,6 @@ class Database {
 }
 
 module.exports = {
-  pool,
   Database,
   db: new Database(),
 };

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { pool, db } = require("../db");
+const { db } = require("../db");
 
 router.get("/:table", async (req, res) => {
   const table = req.params.table;
@@ -44,30 +44,12 @@ router.patch("/:table/:UUID", async (req, res) => {
   res.json(result);
 });
 
-router.delete("/", async (req, res) => {
-  const table = req.query.table;
-  const UUID = req.query.UUID;
+router.delete("/:table/:UUID", async (req, res) => {
+  const { table, UUID } = req.params;
 
-  var rows;
+  const result = await db.delete(table, { UUID: UUID });
 
-  const conn = await pool.getConnection();
-
-  await conn.beginTransaction();
-
-  try {
-    [rows] = await pool.query(`DELETE FROM ${table} WHERE UUID = '${UUID}'`);
-  } catch (err) {
-    if (err.code == "ER_NO_SUCH_TABLE") {
-      console.log("Invalid table name:", table);
-      return res.status(400).json({ error: "Invalid table name" });
-    }
-  }
-
-  await conn.commit();
-
-  conn.release();
-
-  return res.json(rows);
+  res.json(result);
 });
 
 module.exports = router;
