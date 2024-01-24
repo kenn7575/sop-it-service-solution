@@ -1,24 +1,32 @@
-const nodemailer = require("nodemailer");
+const Mailjet = require('node-mailjet');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: process.env.MAIL_PORT,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.MAIL_USERNAME,
-    pass: process.env.MAIL_PASSWORD,
-  },
-  debug: true,
-});
+const mailjet = Mailjet.apiConnect(
+  process.env.MAIL_USERNAME,
+  process.env.MAIL_PASSWORD,
+)
 
 async function sendMail(to, subject, text) {
-  console.log("Sending mail to", to);
-  await transporter.sendMail({
-    from: process.env.MAIL_FROM_NAME,
-    to,
-    subject,
-    text,
+  const request = mailjet.post('send', { version: 'v3.1' }).request({
+    Messages: [
+      {
+        From: {
+          Email: process.env.MAIL_FROM_ADDRESS,
+          Name: process.env.MAIL_FROM_NAME,
+        },
+        To: [
+          {
+            Email: to,
+          },
+        ],
+        Subject: subject,
+        TextPart: text,
+      },
+    ],
   });
+
+  const result = await request;
+
+  return result.body;
 }
 
 module.exports = { sendMail };
