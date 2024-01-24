@@ -4,8 +4,7 @@
     "i": "npm i && cd frontend/udlånssystem && npm install",
     "dev": "cd frontend/udlånssystem && npm run dev",
     "host": "cd frontend/udlånssystem && npm run host",
-    "serv": "cd backend/routes && concurrently \"php -S localhost:5000\" \"php -S 172.16.3.52:5000\"",
-    "exp": "cd backend_express && npm run dev",
+    "serv": "cd backend && npm run dev",
     "test": "cd backend/routes && npm run test",
     "mysqldump": "cd C:/Program Files/MariaDB 10.11/bin && mysqldump -u root -p sop > 'C:/Users/Nima Badiei/Desktop/test/test.sql'"
   },
