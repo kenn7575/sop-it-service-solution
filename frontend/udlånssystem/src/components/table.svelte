@@ -41,7 +41,7 @@
   let dropdownOpen = false; //used to determine if the dropdown is open
 
   //log all state variables
-  $: filterKey && filterData(), inputData
+  $: filterKey && filterData(), inputData;
 
   function toggleDropdown() {
     dropdownOpen = !dropdownOpen;
@@ -182,9 +182,21 @@
         <tr>
           {#each tableHeadings as heading}
             {#if !exclude.includes(heading)}
-              <th on:click={() => sortTable(tableDataFiltered, heading)}
-                >{heading}</th
+              <th
+                on:click={() => sortTable(tableDataFiltered, heading)}
+                class="w-40"
               >
+                <div class="flex gap-3 items-center">
+                  <p>{heading}</p>
+                  {#if sortColumn.toString() == heading}
+                    <i
+                      class={`fa-solid fa-arrow-${
+                        sortAscending ? "down" : "up"
+                      }`}
+                    />
+                  {/if}
+                </div>
+              </th>
             {/if}
           {/each}
         </tr>
