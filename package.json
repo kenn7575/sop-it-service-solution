@@ -6,7 +6,7 @@
     "host": "cd frontend/udlånssystem && npm run host",
     "serv": "cd backend && npm run dev",
     "test": "cd backend/routes && npm run test",
-    "mysqldump": "cd C:/Program Files/MariaDB 10.11/bin && mysqldump -u root -p sop > 'C:/Users/Nima Badiei/Desktop/test/test.sql'"
+    "mysqldump": "cd C:/Program Files/MariaDB 10.11/bin && mysqldump -u root -p sop > 'C:/Users/Nima Badiei/Desktop/test/test.sql'",
     "build": "cd frontend/udlånssystem && npm run build"
   },
   "devDependencies": {
