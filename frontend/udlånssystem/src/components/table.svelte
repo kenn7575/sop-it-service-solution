@@ -31,7 +31,7 @@
   $: tableHeadings = Object.keys(headers);
   $: tableData = Object.values(inputData);
 
-  let sortAscending = true; //used to determine if the table should be sorted ascending or descending
+  export let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
   $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
@@ -41,7 +41,7 @@
   let dropdownOpen = false; //used to determine if the dropdown is open
 
   //log all state variables
-  $: filterKey && filterData();
+  $: filterKey && filterData(), inputData;
 
   function toggleDropdown() {
     dropdownOpen = !dropdownOpen;
@@ -71,22 +71,16 @@
       return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
     });
 
-    if (!sortAscending) {
-      tableDataFiltered = sortedData.reverse();
-    } else {
-      tableDataFiltered = sortedData;
-    }
+    if (!sortAscending) tableDataFiltered = sortedData.reverse();
+    else tableDataFiltered = sortedData;
   }
 
   onMount(() => {
+    console.log(sortBy, sortAscending)
     sortTable(tableDataFiltered, sortBy);
   });
 
-  const tableDataFiltered2 = () => {
-    var data = inputData;
-
-    return data;
-  };
+  $: sortTable(tableDataFiltered, sortBy);
 
   //filter Data
   function filterData() {
@@ -182,9 +176,21 @@
         <tr>
           {#each tableHeadings as heading}
             {#if !exclude.includes(heading)}
-              <th on:click={() => sortTable(tableDataFiltered, heading)}
-                >{heading}</th
+              <th
+                on:click={() => sortTable(tableDataFiltered, heading)}
+                class="w-40"
               >
+                <div class="flex gap-3 items-center">
+                  <p>{heading}</p>
+                  {#if sortColumn.toString() == heading}
+                    <i
+                      class={`fa-solid fa-arrow-${
+                        sortAscending ? "down" : "up"
+                      }`}
+                    />
+                  {/if}
+                </div>
+              </th>
             {/if}
           {/each}
         </tr>

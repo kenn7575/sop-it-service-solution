@@ -72,6 +72,14 @@
     handleUpdate();
   }
 
+  function loanDateFormatter() {
+    let startDate = new Date(exportData?.date_created);
+    let endDate = new Date(exportData?.date_created);
+    endDate.setDate(endDate.getDate() + exportData?.loan_length);
+
+    return `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+  }
+
   $: loaner_textbox = loan_view?.loaner_name + " | " + loan_view?.loaner_id;
   $: personel_textbox =
     loan_view?.personel_name + " | " + loan_view?.personel_id;
@@ -101,10 +109,7 @@
         />
         <NumberQuestion
           bind:binding={exportData.loan_length}
-          label={`Lånetid | [${new Date(
-            new Date(exportData.date_created).getTime() +
-              exportData.loan_length * 24 * 60 * 60 * 1000
-          ).toLocaleString()}]`}
+          label={`Lånetid | [${loanDateFormatter()}]`}
           {editMode}
         />
         <TextQuestion

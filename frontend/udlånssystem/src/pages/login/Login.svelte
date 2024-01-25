@@ -10,12 +10,10 @@
   async function login(e) {
     e.preventDefault();
     loginViaCredentials(username, password).then((res) => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         currentUser.update(() => {
           return res.user;
         });
-        //set session
-        localStorage.setItem("session", res.message);
       }
       if (res.status === 401) errorMessages = "Forkert unilogin eller adgangskode";
       if (res.status === 403) errorMessages = "Adgang nægtet";

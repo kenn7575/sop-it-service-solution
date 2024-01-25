@@ -4,21 +4,15 @@ import doesObjectsMatch from "../services/doesObjectsMatch";
 export default async function createItem(table: string, exportData: any) {
   try {
     const { data } = await axios
-      .post("upsert_data.php", { data: { ...exportData }, table: table })
-      .then((res: any) => {
-        if (res?.success) {
-          return res;
-        } else {
-          return res;
-        }
-      })
+      .post(table, { data: { ...exportData } })
       .catch((err) => {
         alert("Fejl! " + err);
         console.log("Error: ", err);
         return { success: false, data: err, id: null };
       });
 
-    data.id = data?.data;
+    data.success = true;
+
     return data;
   } catch (err) {
     alert("Application crashed: " + err);

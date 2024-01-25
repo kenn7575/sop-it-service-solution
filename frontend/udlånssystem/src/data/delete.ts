@@ -3,10 +3,13 @@ import goToPath from "../services/goToPath";
 
 export default async function deleteItem(importData: object): Promise<object> {
   return axios
-    .post("delete_data.php", importData)
+    .delete("", {
+      params: {
+        ...importData,
+      },
+    })
     .then((res) => {
-      console.log(res.data);
-      if (res.data == true) {
+      if (res.status == 200) {
         return { success: true, error: null };
       } else {
         return { success: false, error: res.data };

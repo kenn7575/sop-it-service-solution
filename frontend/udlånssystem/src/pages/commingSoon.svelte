@@ -1,13 +1,7 @@
-<script>
-  import { commingSoon } from "../../public/svg/commingSoon.js";
-</script>
-
 <div class="content">
   <h1>Coming soon!</h1>
   <p>This feature is going to be Implemented in the future.</p>
-  <div class="svg">
-    {@html commingSoon}
-  </div>
+  <img class="svg" src="svg/commingSoon.svg" alt="Coming soon" />
 </div>
 
 <style>

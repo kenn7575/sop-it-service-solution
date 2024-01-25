@@ -1,7 +1,5 @@
 <script>
   import { cheatCode } from "../services/cheatCode.js";
-  import { welcome } from "../../public/svg/welcome.js";
-  import nyanCat from "../../public/nyanCat.gif";
 
   let cheatActive = false;
   window.addEventListener(
@@ -29,14 +27,12 @@
 </script>
 
 {#if cheatActive}
-  <img src={nyanCat} alt="nyan cat" />
+  <img src="/nyanCat.gif" alt="nyan cat" />
 {:else}
   <div class="content">
     <h1>Velkommen til helpdesk'en</h1>
     <p>Hvordan kan vi hjælpe dig i dag?</p>
-    <div class="svg">
-      {@html welcome}
-    </div>
+    <img class="svg" src="svg/welcome.svg" alt="Welcome" />
   </div>
 {/if}
 
