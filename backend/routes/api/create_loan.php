@@ -1,6 +1,6 @@
 <?php
-include "components/admin_db_conn.php";
-include "components/functions.php";
+include "../components/admin_db_conn.php";
+include "../components/functions.php";
 
 $loan = (object) $_POST["loan"];
 $items = $_POST["products"] ?? [];

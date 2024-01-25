@@ -1,6 +1,6 @@
 <?php
-include "components/admin_db_conn.php";
-include "components/functions.php";
+include "../components/admin_db_conn.php";
+include "../components/functions.php";
 
 $cables = $_GET["cables"] ?? res(400, "No cables specified");
 

@@ -1,6 +1,6 @@
 <?php
-include "components/admin_db_conn.php";
-include "components/functions.php";
+include "../components/admin_db_conn.php";
+include "../components/functions.php";
 
 $ids = $_GET["ids"] ?? res(400, "No ids specified");
 

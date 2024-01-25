@@ -1,5 +1,5 @@
 <?php
-include "components/admin_db_conn.php";
+include "../components/admin_db_conn.php";
 
 try {
 $UUID = $_POST['UUID'];

@@ -1,21 +1,10 @@
 <?php
-include "components/headers.php";
+include "../components/headers.php";
+include "../components/admin_db_conn.php";
 
 $table = $_GET['table'] ?? "items";
-$user = $_GET['user'] ?? "guest";
-$password = $_GET['password'] ?? "";
 $UUID = $_GET['UUID'] ?? "";
 if ($UUID != "") $UUID = "WHERE UUID = '$UUID'";
-
-try {
-$conn = new mysqli("127.0.0.1", $user, $password, "sop", '3306');
-} catch (Exception $e) {
-  die(json_encode([['error'=>$e->getMessage()]], JSON_PRETTY_PRINT));
-}
-
-if ($conn->connect_error) {
-  die(json_encode([['error'=>$conn->connect_error]], JSON_PRETTY_PRINT));
-}
 
 $column_names_sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = '$table'

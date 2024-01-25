@@ -1,5 +1,5 @@
 <?php
-include "components/admin_db_conn.php";
+include "../components/admin_db_conn.php";
 
 $UUID = $_GET["UUID"];
 

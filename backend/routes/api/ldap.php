@@ -1,5 +1,5 @@
 <?php
-include 'components/headers.php';
+include '../components/headers.php';
 
 $ldap = ldap_connect($env['LDAP_HOST']);
 

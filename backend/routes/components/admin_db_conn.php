@@ -2,10 +2,10 @@
 
 include "headers.php";
 
-if ($header != $env['AUTH']) die("Unauthorized");
+$dbUri = parse_url($env["DB_URI"]);
 
 try {
-$conn = new mysqli("127.0.0.1", $env['ADMIN_USERNAME'], $env['ADMIN_PASSWORD'], "sop", '3306');
+    $conn = new mysqli($dbUri["host"], $dbUri["user"], $dbUri["pass"], substr($dbUri["path"], 1), $dbUri["port"]);
 } catch (Exception $e) { res(500, "Connection failed: " . $e->getMessage()); }
 
 if ($conn->connect_error) res(500, "Connection failed: " . $conn->connect_error);

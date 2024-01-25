@@ -1,13 +1,13 @@
 <?php
-include 'components/admin_db_conn.php';
-include 'components/functions.php';
+include '../components/admin_db_conn.php';
+include '../components/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') res(405, 'Method not allowed');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php'; // Path to autoload.php
+require '../../vendor/autoload.php'; // Path to autoload.php
 
 // Create a new PHPMailer instance
 $mail = new PHPMailer(true); // 'true' enables exceptions
