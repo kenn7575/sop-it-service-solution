@@ -1,26 +1,30 @@
 import { writable } from "svelte/store";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export const currentUser = writable(null); //check for session token in local storage
 
-export const getSession = () => {
-  return localStorage.getItem("session");
-};
+export const getSession = () => new Promise(resolve => {
+  const token = Cookies.get("token");
+  resolve(token);
+})
 //validate session token
-export const validateSession = async (token) => {
-  let { data } = await axios
-    .post(
-      "validate.php",
-      { token: token }
-    )
+export const validateSession = async () => {
+  let { data } = await axios.post("auth/validate").catch((err) => {
+    console.log(err);
+    return null;
+  });
 
-  data.user = data.data;
+  data.user = data;
   return data;
 };
 
 //login user
 export const loginViaSession = async () => {
-  let token = getSession();
+  let { data } = await axios.get("auth/cookies")
+
+  const { token } = data;
+
   if (!token) {
     currentUser.update((user) => {
       return null; //update current user
@@ -28,16 +32,14 @@ export const loginViaSession = async () => {
     return false;
   }
 
-  let res = await validateSession(token);
+  let res = await validateSession();
 
-  if (res.success) {
+  if (res) {
     currentUser.update((user) => {
       return res.user; //update current user
     });
     return true;
   } else {
-    //remove session token
-    localStorage.removeItem("session");
     currentUser.update((user) => {
       return null; //update current user
     });
@@ -48,13 +50,13 @@ export const loginViaSession = async () => {
 export async function loginViaCredentials(username, password) {
   let output = { status: 500, message: "Server error", user: undefined };
   await axios
-    .post("/login.php", { username: username, password: password })
+    .post("auth/login", { username, password })
     .then((res) => {
       console.log(res);
-      output.message = res.data.message;
-      output.status = res.data.code;
-      if (res.data.success) {
-        output.user = res.data.data;
+      output.message = res.data;
+      if (res.data?.username) {
+        output.user = res.data;
+        output.status = 200;
       }
     })
     .catch((err) => {
@@ -63,7 +65,7 @@ export async function loginViaCredentials(username, password) {
   return output;
 }
 export function logout() {
-  localStorage.removeItem("session");
+  axios.post("auth/logout")
   currentUser.update((user) => {
     return null; //update current user
   });

@@ -54,6 +54,7 @@
     on:action={handleSendMails}
     filterKey="Bruger"
     sortBy="Oprettet"
+    sortAscending={true}
   />
 </div>
 

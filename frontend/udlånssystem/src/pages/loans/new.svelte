@@ -11,20 +11,16 @@
         alert("Produktet er allerede tilføjet");
         return;
       }
-      if (!product) {
-        alert("Produktet findes ikke");
-        return;
-      }
+      if (!product) return alert("Produktet findes ikke");
+
       handleAddProduct({ detail: product });
     } else {
       //remove
       const product = products.find((o) => o.UUID == code);
-      if (!product) {
-        return;
-      }
-      if (importProducts.find((o) => o.UUID == code)) {
-        return;
-      }
+      if (!product) return;
+
+      if (importProducts.find((o) => o.UUID == code)) return;
+
       handleRemoveProduct({ detail: product });
     }
   }
@@ -101,9 +97,8 @@
   //Products
   //--------------------------------------------------------------------------------
   function validateProducts() {
-    if (products.length == 0) {
-      return false;
-    }
+    if (products.length == 0) return false;
+
     return true;
   }
   function handleAddProduct(event) {
@@ -126,13 +121,11 @@
   //cabels
   //--------------------------------------------------------------------------------
   function validateCables() {
-    if (cables.length <= 0) {
-      return false;
-    }
+    if (cables.length <= 0) return false;
+
     return true;
   }
   function sum(list: number[]): number {
-    console.log("🚀 ~ file: new.svelte:135 ~ sum ~ list:", list);
     let sum = 0;
     for (let i = 0; i < list.length; i++) {
       sum += list[i];
@@ -207,23 +200,12 @@
   import TextQuestion from "../../components/textQuestion.svelte";
   import Index from "../login/index.svelte";
   function validateInfo() {
-    if (returnDate === undefined) {
-      console.log("returnDate === undefined");
-      return false;
-    }
-    if (!locationOfUseId) {
-      console.log("!locationOfUseId");
-      return false;
-    }
-    if (!loanType) {
-      console.log("!loanType");
-      return false;
-    }
-    // if (!password) {
-    //   console.log("!password");
-    //   console.log(password);
-    //   return false;
-    // }
+    if (returnDate === undefined) return false;
+
+    if (!locationOfUseId) return false;
+
+    if (!loanType) return false;
+
     return true;
   }
 
@@ -238,24 +220,24 @@
       helpdesk_personel_id: $currentUser.UUID,
     };
 
-    const validatePassword = await axios
-      .post("validate_password.php", {
-        password,
-        user_password: $currentUser.password,
-      })
-      .then((res) => res.data);
-    if (!validatePassword.success) {
-      alert("Forkert kode");
-      return;
-    }
+    const validatePassword = await axios.post("auth/login", {
+      username: $currentUser.username,
+      password,
+    });
 
-    const { data } = await axios.post("create_loan.php", { loan, products, cables });
-    if (data && data?.success && data?.data) {
+    if (validatePassword.status != 200) return alert("Forkert kode");
+
+    const { data, status } = await axios.post("loans", {
+      loan,
+      products,
+      cables,
+    });
+    if (status === 200) {
       alert("Gemt");
 
-      goToPath(`/${page_name.toLowerCase()}/${data.data}`);
+      goToPath(`/${page_name.toLowerCase()}/${data.loanId}`);
     } else {
-      alert("Error 500 - " + data?.message);
+      alert("Error 500 - " + data?.error);
     }
   }
 </script>
@@ -285,7 +267,7 @@
       }}
       class:current={2 === page}
       class:invalid={page > 2 && (!validateProducts() || !validateCables())}
-      class:valid={page > 2 && validateProducts() || validateCables()}
+      class:valid={(page > 2 && validateProducts()) || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -302,7 +284,7 @@
       }}
       class:current={3 === page}
       class:invalid={page > 3 && (!validateProducts() || !validateCables())}
-      class:valid={page > 3 && validateProducts() || validateCables()}
+      class:valid={(page > 3 && validateProducts()) || validateCables()}
       class="page-nav-btn"
     >
       <i class="fa-solid fa-cart-shopping" />
@@ -328,8 +310,11 @@
     <i class="fa-solid fa-angles-right" />
     <button
       on:click={() => {
-        console.log(validateInfo() && (validateProducts() || validateCables()) && validateUser());
-        if (validateInfo() && (validateProducts() || validateCables()) && validateUser()) {
+        if (
+          validateInfo() &&
+          (validateProducts() || validateCables()) &&
+          validateUser()
+        ) {
           page = 5;
         } else {
           alert("Du kan ikke gå videre før alle felter er udfyldt");
@@ -357,7 +342,11 @@
       <!-- ! Products -->
       <div class="tables">
         <div class="splitscreen">
-          <Table on:message={handleAddProduct} inputData={importProducts} filterKey="Navn" />
+          <Table
+            on:message={handleAddProduct}
+            inputData={importProducts}
+            filterKey="Navn"
+          />
         </div>
         <div class="table-group">
           {#if $controlStore}
@@ -447,7 +436,9 @@
           <hr />
           <select bind:value={locationOfUseId}>
             {#each importZones as zone}
-              <option class="dropdown-menu" value={zone.UUID}>{zone.name}</option>
+              <option class="dropdown-menu" value={zone.UUID}
+                >{zone.name}</option
+              >
             {/each}
           </select>
         </div>
@@ -479,14 +470,14 @@
             </ul>
           </div>
           {#if products.length > 0}
-          <div class="table-container">
-            <TableSimplified
-              inputData={products}
-              title="Produkter"
-              disabled={true}
-              exclude={["Stor. Loc. ID"]}
-            />
-          </div>
+            <div class="table-container">
+              <TableSimplified
+                inputData={products}
+                title="Produkter"
+                disabled={true}
+                exclude={["Stor. Loc. ID"]}
+              />
+            </div>
           {/if}
           {#if cables.length > 0}
             <div class="table-container">

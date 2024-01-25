@@ -41,7 +41,7 @@
     });
 
     //get brand data
-    const data = await getData(table, id);
+    const data = await getData(table, id)
 
     if (!data?.UUID) {
       alert("Kunne ikke finde data");
