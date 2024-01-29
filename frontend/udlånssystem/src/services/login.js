@@ -12,7 +12,7 @@ export const getSession = () => new Promise(resolve => {
 export const validateSession = async () => {
   let { data } = await axios.post("auth/validate").catch((err) => {
     console.log(err);
-    return null;
+    return err.response
   });
 
   data.user = data;

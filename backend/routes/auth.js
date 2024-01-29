@@ -57,8 +57,6 @@ router.post("/login", async (req, res) => {
       expiresIn: "10m",
     });
 
-    console.log(token);
-
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
@@ -67,6 +65,7 @@ router.post("/login", async (req, res) => {
 
     res.json(user);
   } catch (err) {
+    console.log(err)
     if (err?.admin?.lde_message) {
       console.log("Invalid admin credentials");
       res.json({ error: "Invalid admin credentials" });
