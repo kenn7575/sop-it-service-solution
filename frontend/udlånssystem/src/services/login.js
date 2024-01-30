@@ -11,7 +11,7 @@ export const getSession = () => new Promise(resolve => {
 //validate session token
 export const validateSession = async () => {
   let { data } = await axios.post("auth/validate").catch((err) => {
-    console.log(err);
+    err.response.data.user = null;
     return err.response
   });
 
@@ -34,7 +34,7 @@ export const loginViaSession = async () => {
 
   let res = await validateSession();
 
-  if (res) {
+  if (res && !res.error) {
     currentUser.update((user) => {
       return res.user; //update current user
     });
@@ -52,7 +52,6 @@ export async function loginViaCredentials(username, password) {
   await axios
     .post("auth/login", { username, password })
     .then((res) => {
-      console.log(res);
       output.message = res.data;
       if (res.data?.username) {
         output.user = res.data;

@@ -5,7 +5,7 @@
   let errorMessages = "";
 
   import { currentUser, loginViaCredentials } from "../../services/login";
-  $: console.log("user", $currentUser);
+  // $: console.log("user", $currentUser);
 
   async function login(e) {
     e.preventDefault();
@@ -17,7 +17,7 @@
       }
       if (res.status === 401) errorMessages = "Forkert unilogin eller adgangskode";
       if (res.status === 403) errorMessages = "Adgang nægtet";
-      if (res.status === 500) errorMessages = "Serveren problemer";
+      if (res.status === 500) errorMessages = "Server problemer";
     });
   }
   function resetError() {

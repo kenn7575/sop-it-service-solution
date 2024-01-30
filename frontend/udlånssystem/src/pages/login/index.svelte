@@ -20,7 +20,7 @@
       >
         Login
       </button>
-      <button
+      <!-- <button
         on:click={() => {
           newUser = true;
         }}
@@ -29,7 +29,7 @@
         class="mode right"
       >
         Opret bruger
-      </button>
+      </button> -->
     </div>
 
     {#if newUser}
