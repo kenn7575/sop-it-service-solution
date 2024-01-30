@@ -76,11 +76,10 @@
   }
 
   onMount(() => {
-    console.log(sortBy, sortAscending)
     sortTable(tableDataFiltered, sortBy);
   });
 
-  $: sortTable(tableDataFiltered, sortBy);
+  // $: sortTable(tableDataFiltered, sortBy);
 
   //filter Data
   function filterData() {
