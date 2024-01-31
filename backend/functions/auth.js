@@ -18,6 +18,14 @@ function authenticateUser(req, res, next) {
 }
 
 async function ldapAuthenticate(username, userPassword) {
+  if (process.env.NODE_ENV === "development") {
+    return {
+      name: "John Doe",
+      username: "jdoe",
+      mail: "johndoe@mail.com",
+    };
+  }
+
   const userSearchBase =
     process.env.NODE_ENV == "development"
       ? process.env.LDAP_USERS
