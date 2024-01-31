@@ -35,7 +35,7 @@
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
-      alert("Kunne ikke finde data" + data);
+      if (data) alert("Kunne ikke hente data: " + data);
       goToPath(`/${page_name.toLowerCase()}`);
       return;
     }

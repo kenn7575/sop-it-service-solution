@@ -1,4 +1,5 @@
 <script>
+  import getData from "../data/getData";
   import { cheatCode } from "../services/cheatCode.js";
 
   let cheatActive = false;
@@ -15,15 +16,19 @@
   cheatCode();
   import goToPath from "../services/goToPath";
   import { barcodeStore, barcodeBuilderTimeOut } from "../stores/barcodeStore";
-  function handleBarcodeScan(value) {
+  async function handleBarcodeScan(value) {
     if (!value) return;
-    if (Date.now() - $barcodeBuilderTimeOut > 1000) {
+    if (Date.now() - $barcodeBuilderTimeOut > 10) {
       return;
     }
-    goToPath(`/produkter/${value}`);
+
+    const [scannedProduct] = await getData("items_view?Barcode=" + value);
+
+    if (!scannedProduct) return alert("Produktet kunne ikke findes");
+
+    goToPath(`/produkter/${scannedProduct.UUID}`);
   }
   $: handleBarcodeScan($barcodeStore);
-  $: console.log($barcodeStore);
 </script>
 
 {#if cheatActive}
