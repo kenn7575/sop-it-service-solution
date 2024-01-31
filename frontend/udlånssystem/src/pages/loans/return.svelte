@@ -19,7 +19,7 @@
   let importCablesInLoanAvailable: cableFromLoan[] = [];
   let CablesInLoanToReturn: cableFromLoan[] = [];
 
-  $: console.log("importItemsInLoanLent", importItemsInLoanLent);
+  // $: console.log("importItemsInLoanLent", importItemsInLoanLent);
 
   let table = "items_from_loans";
   let page_name = "Udlaan/returner";
@@ -35,25 +35,29 @@
 
     //check if barcode is being added or removed
     if (!$controlStore) {
-      const product = importItemsInLoanLent.find(({ UUID }) => UUID == code);
+      if (importItemsInLoanLent.length == 0) return;
+      const product = importItemsInLoanLent.find(({ Barcode }) => Barcode == code);
 
-      if (ItemsInLoanToReturn.find(({ UUID }) => UUID == code))
+      if (ItemsInLoanToReturn.find(({ Barcode }) => Barcode == code))
         return alert("Produktet er allerede tilføjet");
 
       if (!product) return alert("Produktet findes ikke");
 
       handleAddProduct({ detail: product });
+      barcodeStore.set("");
     } else {
-      const product = ItemsInLoanToReturn.find(({ UUID }) => UUID == code);
+      const product = ItemsInLoanToReturn.find(({ Barcode }) => Barcode == code);
 
       if (!product) return;
 
-      if (importItemsInLoanLent.find(({ UUID }) => UUID == code)) return;
+      if (importItemsInLoanLent.find(({ Barcode }) => Barcode == code)) return;
 
       handleRemoveProduct({ detail: product });
+      barcodeStore.set("");
+
     }
   }
-  $: handleBarcode($barcodeStore);
+  $: handleBarcode($barcodeStore), importItemsInLoanLent
 
   async function importDataFromDB() {
     const dataItems = await getData(table);
@@ -218,7 +222,7 @@
             on:message={handleAddProduct}
             inputData={importItemsInLoanLent}
             title=""
-            exclude={["date_returned", "loan_id"]}
+            exclude={["date_returned", "loan_id", "Barcode"]}
           />
         </div>
       {/if}
@@ -228,7 +232,7 @@
             on:message={handleRemoveProduct}
             inputData={ItemsInLoanToReturn}
             title=""
-            exclude={["date_returned", "loan_id"]}
+            exclude={["date_returned", "loan_id", "Barcode"]}
           />
         {:else}
           <p class="text-center">Tryk på at vælge prokuter</p>
@@ -247,7 +251,7 @@
             on:message={handleAddCable}
             inputData={importCablesInLoanLent}
             title=""
-            exclude={["date_returned", "loan_id"]}
+            exclude={["date_returned", "loan_id", "Barcode"]}
           />
         </div>
       {/if}
@@ -257,7 +261,7 @@
             on:message={handleRemoveCable}
             inputData={CablesInLoanToReturn}
             title=""
-            exclude={["date_returned", "loan_id"]}
+            exclude={["date_returned", "loan_id", "Barcode"]}
           />
         {:else}
           <p class="text-center">Tryk for at vælge prokuter</p>

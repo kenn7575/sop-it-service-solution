@@ -34,7 +34,7 @@
 
   async function importDataFromDB() {
     let data = await getData(table, id);
-    itemLoan = await getData("items_from_loans", id);
+    itemLoan = await getData(`items_from_loans?UUID=${id}&Returneret=null`);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {

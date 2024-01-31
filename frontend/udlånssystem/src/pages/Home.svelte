@@ -26,6 +26,23 @@
 
     if (!scannedProduct) return alert("Produktet kunne ikke findes");
 
+    if (scannedProduct.product_status_id === 1) {
+      goToPath(`/udlaan/new?item=${scannedProduct.UUID}`);
+      return;
+    }
+
+    if (scannedProduct.Status == "Lent") {
+      const item_from_loan = await getData(
+        `items_from_loans?UUID=${scannedProduct.UUID}&Returneret=null`
+      );
+
+      barcodeStore.set(value);
+
+      return goToPath(
+        `/udlaan/${item_from_loan.loan_id}/returner`
+      );
+    }
+
     goToPath(`/produkter/${scannedProduct.UUID}`);
   }
   $: handleBarcodeScan($barcodeStore);

@@ -4,7 +4,7 @@ function generateFilter(filter) {
   filter = Object.entries(filter)
     .map(([key, value]) => {
       if (Array.isArray(value)) return `${key} IN (${value.join(", ")})`;
-      if (value === null) return `${key} IS NULL`;
+      if (value == null || value == 'null') return `${key} IS NULL`;
       return `${key} = '${value}'`;
     })
     .join(" AND ");
