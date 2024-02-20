@@ -1,12 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../db");
+const { findReferenced, findReferencing } = require("../functions/dbLogic");
 
 router.get("/:table", async (req, res) => {
   const table = req.params.table;
   const filter = req.query;
 
-  const result = await db.find(table, filter);
+  const [referenced] = await db.query(findReferenced(table));
+
+  var result = await db.find(table, filter);
+
+  if (referenced && result && result.length > 0) {
+    for (var column of result) {
+      const rows = await db.query(
+        `SELECT * FROM ${referenced.TABLE_NAME} WHERE ${referenced.COLUMN_NAME} = ?`,
+        column[referenced.REFERENCED_COLUMN_NAME]
+      );
+
+      column[referenced.TABLE_NAME] = rows;
+    }
+  }
 
   res.json(result);
 });
@@ -34,7 +48,7 @@ router.patch("/:table/:UUID", async (req, res) => {
 
   if (!values || Object.keys(values).length === 0)
     return res.status(400).json({ error: "No data provided" });
-  
+
   delete values["UUID"];
   delete values["date_created"];
   delete values["date_updated"];
