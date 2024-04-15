@@ -2,6 +2,8 @@
   export let editMode = false;
   export let loanMode = false;
   export let loanReturnDate = null;
+  export let loanId = null;
+  export let item = null;
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
   //create reset event
@@ -48,6 +50,11 @@
       <button id="" on:click={handleDelete}>Se detaljer </button>
     {/if}
   {/if}
+  {#if loanId}
+    <a href={`/udlaan/${loanId}`}>Gå til lån</a>
+  {:else if item?.product_status_id == 1}
+    <a href={`/udlaan/new?item=${item.UUID}`}>Opret lån</a>
+  {/if}
 </div>
 
 <style>
@@ -58,5 +65,17 @@
   #delete {
     color: white;
     background: #f85a40dd;
+  }
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 2rem;
+    height: 2rem;
+    color: var(--text1);
+    background: transparent;
+    border: 1px solid var(--text1);
+    border-radius: 10px;
   }
 </style>

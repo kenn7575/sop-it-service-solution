@@ -93,7 +93,7 @@
   }
   function handleKeyDown(e) {
     if (!e.key) return;
-    if (e.key.toLowerCase() === "meta") {
+    if (e.keyCode == 20) {
       $controlStore = true;
       return;
     }

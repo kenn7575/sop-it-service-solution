@@ -148,6 +148,16 @@ class Database {
 
     return deletedRow;
   }
+
+  async query(query, values = []) {
+    const conn = this.conn || (await this.pool.getConnection());
+
+    const [rows] = await conn.query(query, values);
+
+    conn.release();
+
+    return rows;
+  }
 }
 
 module.exports = {

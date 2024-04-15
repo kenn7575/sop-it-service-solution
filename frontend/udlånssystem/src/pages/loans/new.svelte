@@ -6,8 +6,10 @@
     //check if barcode is being added or removed
     if (!$controlStore) {
       //add
-      const product = importProducts.find((o) => o.UUID == code);
-      if (products.find((o) => o.UUID == code)) {
+      const product = importProducts.find(
+        (o: productModel & { Barcode: string }) => o.Barcode == code
+      );
+      if (products.find((o) => o.Barcode == code)) {
         alert("Produktet er allerede tilføjet");
         return;
       }

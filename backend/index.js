@@ -11,20 +11,25 @@ app.use(express.urlencoded({ extended: true }));
 app.set("json spaces", 4);
 app.use(cookieParser());
 
-app.use("/api/auth", require("./routes/auth"));
+const router = express.Router();
 
-app.use(async (req, res, next) => {
+router.use("/auth", require("./routes/auth"));
+
+router.use(async (req, res, next) => {
   const { authenticateUser } = require("./functions/auth");
 
   authenticateUser(req, res, next);
 });
 
-app.use("/api/users", require("./routes/users"));
-app.use("/api/loans", require("./routes/loans"));
-app.use("/api/mail", require("./routes/mail"));
-app.use("/api", require("./routes/tables"));
+router.use("/users", require("./routes/users"));
+router.use("/loans", require("./routes/loans"));
+router.use("/mail", require("./routes/mail"));
+router.use("/items", require("./routes/items"));
+router.use("", require("./routes/tables"));
 
-const port = process.env.BACKEND_PORT || 3000;
+app.use("/api", router);
+
+const port = process.env.BACKEND_PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

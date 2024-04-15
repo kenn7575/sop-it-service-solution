@@ -30,12 +30,15 @@
   let product_status: productStatusModel[] = [];
   let products: productModel[] = [];
 
+  let itemLoan: { UUID: number, loan_id: number } = null;
+
   async function importDataFromDB() {
     let data = await getData(table, id);
+    itemLoan = await getData(`items_from_loans?UUID=${id}&Returneret=null`);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
-      alert("Kunne ikke finde data" + data);
+      if (data) alert("Kunne ikke hente data: " + data);
       goToPath(`/${page_name.toLowerCase()}`);
       return;
     }
@@ -97,7 +100,7 @@
     handleUpdate();
   }
   import { path } from "../../stores/pathStore.js";
-  $: console.log($path);
+  // $: console.log($path);
 </script>
 
 {#if importData}
@@ -110,6 +113,8 @@
       on:delete={handleDelete}
       on:update={handleUpdate}
       bind:editMode
+      loanId={itemLoan?.loan_id}
+      item={exportData}
     />
     <div
       on:submit={(e) => {

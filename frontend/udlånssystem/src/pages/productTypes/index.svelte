@@ -11,6 +11,11 @@
 
   onMount(async () => {
     inputData = await getData("products_view")
+
+    inputData.map(item => {
+      item.Oprettet = new Date(item.Oprettet).toUTCString()
+      item.Opdateret = new Date(item.Opdateret).toUTCString()
+    })
   });
 
   import { path } from "../../stores/pathStore";
