@@ -9,10 +9,13 @@
   } from "../../stores/barcodeStore";
   function handleBarcodeScan(value) {
     if (!value) return;
-    if (Date.now() - $barcodeBuilderTimeOut > 1000) {
-      return;
-    }
-    goToPath(`/${page_name.toLowerCase()}/${value}`);
+    if (Date.now() - $barcodeBuilderTimeOut > 100) return;
+
+    const product = inputData.find((product) => product.Barcode === value);
+
+    if (!product) return;
+
+    goToPath(`/${page_name.toLowerCase()}/${product.UUID}`);
   }
   $: handleBarcodeScan($barcodeStore);
   $: console.log($barcodeStore);
