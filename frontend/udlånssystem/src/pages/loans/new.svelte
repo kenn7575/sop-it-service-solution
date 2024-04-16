@@ -1,18 +1,29 @@
 <script lang="ts">
   //Barcode
   import { barcodeStore, controlStore } from "../../stores/barcodeStore";
-  function handleBarcode(code) {
+  async function handleBarcode(code) {
     if (!$barcodeStore) return; //if barcode is empty
     //check if barcode is being added or removed
     if (!$controlStore) {
       //add
-      const product = importProducts.find(
+
+      if (importProducts.length == 0) importProducts = await getData("available_products_view");
+
+      var product = importProducts.find(
         (o: productModel & { Barcode: string }) => o.Barcode == code
       );
+
       if (products.find((o) => o.Barcode == code)) {
         alert("Produktet er allerede tilføjet");
         return;
       }
+
+      if (!product) {
+        [product] = await getData("items_from_loans?Barcode=" + code);
+
+        if (product) return alert("Produktet er allerede lånt ud");
+      }
+
       if (!product) return alert("Produktet findes ikke");
 
       handleAddProduct({ detail: product });
@@ -495,7 +506,7 @@
         <div class="button-container">
           <form>
             <TextQuestion
-              label="Skriv din kode"
+              label="Skriv adgangskoden til dit login"
               type="password"
               bind:binding={password}
               editMode={true}
