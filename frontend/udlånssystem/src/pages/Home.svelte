@@ -26,7 +26,7 @@
 
     if (!scannedProduct) return alert("Produktet kunne ikke findes");
 
-    if (scannedProduct.product_status_id === 1) {
+    if (scannedProduct.Status == "Available") {
       goToPath(`/udlaan/new?item=${scannedProduct.UUID}`);
       return;
     }
@@ -38,9 +38,7 @@
 
       barcodeStore.set(value);
 
-      return goToPath(
-        `/udlaan/${item_from_loan.loan_id}/returner`
-      );
+      return goToPath(`/udlaan/${item_from_loan.loan_id}/returner`);
     }
 
     goToPath(`/produkter/${scannedProduct.UUID}`);

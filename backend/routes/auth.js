@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
     let user = await ldapAuthenticate(username, userPassword);
 
     const token = jwt.sign(user, process.env.JWT_SECRET, {
-      expiresIn: "10m",
+      expiresIn: "1h",
     });
 
     res.cookie("token", token, {
