@@ -66,4 +66,12 @@ router.delete("/:table/:UUID", async (req, res) => {
   res.json(result);
 });
 
+router.delete("/", async (req, res) => {
+  const { table, UUID } = req.query;
+
+  const result = await db.delete(table, { UUID: UUID });
+
+  res.json(result);
+});
+
 module.exports = router;

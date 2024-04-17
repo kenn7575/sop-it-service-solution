@@ -9,7 +9,7 @@
 <div class="content">
   <div class="section">
     <div class="watermark">
-      <img src=/logo.png alt="logo" class="object-contain" />
+      <img src="/logo.png" alt="logo" class="object-contain" />
       <div class="text">
         <h3>v1.1.0-beta</h3>
         <h1>Udlånssystem</h1>
@@ -44,6 +44,11 @@
       text="Produkttyper"
       icon="fa-solid fa-barcode"
     />
+    <NavBtn
+      destination="/kabler"
+      text="Kabler"
+      icon="fa-solid fa-plug"
+    />
     <!-- TODO: build chat so that the 2 departments can communicate with eachother -->
     <!-- <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" /> -->
 
@@ -58,6 +63,11 @@
           text: "Kategorigrupper",
           icon: "fa-solid fa-tag",
           destination: "/kategorigrupper",
+        },
+        {
+          text: "Kabelgrupper",
+          icon: "fa-solid fa-tag",
+          destination: "/kabelgrupper",
         },
         {
           text: "Brands",

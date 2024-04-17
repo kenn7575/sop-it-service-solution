@@ -3,24 +3,9 @@
   import axios from "axios";
   import { onMount } from "svelte";
   import getData from "../../data/getData";
-  import {
-    barcodeStore,
-    barcodeBuilderTimeOut,
-  } from "../../stores/barcodeStore";
-  function handleBarcodeScan(value) {
-    if (!value) return;
-    if (Date.now() - $barcodeBuilderTimeOut > 100) return;
 
-    const product = inputData.find((product) => product.Barcode === value);
-
-    if (!product) return;
-
-    goToPath(`/${page_name.toLowerCase()}/${product.UUID}`);
-  }
-  $: handleBarcodeScan($barcodeStore);
-
-  let table = "items_view";
-  let page_name = "Produkter";
+  let table = "cable_categories_view";
+  let page_name = "Kabelgrupper";
 
   let inputData = [{}];
 
@@ -39,7 +24,7 @@
 {#if inputData}
   <div class="table-container">
     <Table
-      buttonDestination={"produkter/new"}
+      buttonDestination={"kabelgrupper/new"}
       {inputData}
       on:message={handleRowClick}
       filterKey="Navn"

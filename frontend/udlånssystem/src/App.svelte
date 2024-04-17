@@ -26,6 +26,8 @@
   import Categories from "./pages/categories/index.svelte";
   import CategoriesGroups from "./pages/categoryGroups/index.svelte";
   import ProductTypes from "./pages/productTypes/index.svelte";
+  import Cables from "./pages/cables/index.svelte";
+  import CablesGroups from "./pages/cableCategories/index.svelte";
   import Help from "./pages/help/index.svelte";
   import Notifications from "./pages/notifications/index.svelte";
   import Chat from "./pages/chat/index.svelte";
@@ -41,6 +43,8 @@
   import categoryGroupsEdit from "./pages/categoryGroups/edit.svelte";
   import productTypesEdit from "./pages/productTypes/edit.svelte";
   import loansEdit from "./pages/loans/edit.svelte";
+  import cablesEdit from "./pages/cables/edit.svelte";
+  import cableGroupsEdit from "./pages/cableCategories/edit.svelte";
 
   //new pages import
   import usersNew from "./pages/users/new.svelte";
@@ -50,6 +54,8 @@
   import categoryGroupsNew from "./pages/categoryGroups/new.svelte";
   import productTypesNew from "./pages/productTypes/new.svelte";
   import loansNew from "./pages/loans/new.svelte";
+  import cablesNew from "./pages/cables/new.svelte";
+  import cableGroupsNew from "./pages/cableCategories/new.svelte";
 
   //return loan
   import loanReturn from "./pages/loans/return.svelte";
@@ -150,6 +156,8 @@
           <Route path="chat" component={Chat} />
           <Route path="udlaan" component={Loans} />
           <Route path="help" component={Help} />
+          <Route path="kabler" component={Cables} />
+          <Route path="kabelgrupper" component={CablesGroups} />
 
           <!-- dynsmic routes edit -->
           <!-- <Route path="brugere/:id" component={usersEdit} /> -->
@@ -159,6 +167,8 @@
           <Route path="produkter/:id" component={productsEdit} />
           <Route path="produkttyper/:id" component={productTypesEdit} />
           <Route path="udlaan/:id" component={loansEdit} />
+          <Route path="kabler/:id" component={cablesEdit} />
+          <Route path="kabelgrupper/:id" component={cableGroupsEdit} />
 
           <!-- new routes -->
           <!-- <Route path="brugere/new" component={usersNew} /> -->
@@ -168,6 +178,8 @@
           <Route path="kategorigrupper/new" component={categoryGroupsNew} />
           <Route path="produkttyper/new" component={productTypesNew} />
           <Route path="udlaan/new" component={loansNew} />
+          <Route path="kabler/new" component={cablesNew} />
+          <Route path="kabelgrupper/new" component={cableGroupsNew} />
 
           <Route path="udlaan/:id/returner" component={loanReturn} />
         </div>
