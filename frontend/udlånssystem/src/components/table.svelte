@@ -204,7 +204,16 @@
           >
             {#each Object.entries(row) as [key, value]}
               {#if !exclude.includes(key)}
-                <td>{value}</td>
+                <td
+                  >{typeof value == "string" && Date.parse(value)
+                    ? new Date(value).toLocaleDateString("da-DK", {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                        weekday: "short",
+                      })
+                    : value}</td
+                >
               {/if}
             {/each}
           </tr>
