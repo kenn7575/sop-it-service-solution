@@ -7,7 +7,8 @@
     if (!$controlStore) {
       //add
 
-      if (importProducts.length == 0) importProducts = await getData("available_products_view");
+      if (importProducts.length == 0)
+        importProducts = await getData("available_products_view");
 
       var product = importProducts.find(
         (o: productModel & { Barcode: string }) => o.Barcode == code
@@ -504,7 +505,12 @@
           {/if}
         </div>
         <div class="button-container">
-          <form>
+          <form
+            on:submit={(e) => {
+              e.preventDefault();
+              createLoan();
+            }}
+          >
             <TextQuestion
               label="Skriv adgangskoden til dit login"
               type="password"
