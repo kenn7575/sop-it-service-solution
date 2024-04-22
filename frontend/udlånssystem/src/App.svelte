@@ -98,6 +98,8 @@
     // // $controlStore = false;
   }
   function handleKeyDown(e) {
+    const now = new Date().getTime();
+
     if (!e.key) return;
     if (e.keyCode == 20) {
       $controlStore = true;
@@ -106,11 +108,12 @@
     if (e.key.toLowerCase() === "shift") {
       return;
     }
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (
+      (e.key === "Enter" || e.keyCode === 13) &&
+      now - $barcodeBuilderTimeOut < 20
+    ) {
       $barcodeStore = $barcodeBuilder;
     } else {
-      const now = new Date().getTime();
-
       if (now - $barcodeBuilderTimeOut > 20) {
         $barcodeStore = "";
         $barcodeBuilder = e.key;
