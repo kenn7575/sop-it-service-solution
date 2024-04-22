@@ -18,7 +18,7 @@
   import { barcodeStore, barcodeBuilderTimeOut } from "../stores/barcodeStore";
   async function handleBarcodeScan(value) {
     if (!value) return;
-    if (Date.now() - $barcodeBuilderTimeOut > 10) {
+    if (Date.now() - $barcodeBuilderTimeOut > 100) {
       return;
     }
 

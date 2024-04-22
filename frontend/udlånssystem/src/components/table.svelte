@@ -205,7 +205,9 @@
             {#each Object.entries(row) as [key, value]}
               {#if !exclude.includes(key)}
                 <td
-                  >{typeof value == "string" && Date.parse(value)
+                  >{typeof value == "string" &&
+                  Date.parse(value) &&
+                  ["Oprettet", "Opdateret"].includes(key)
                     ? new Date(value).toLocaleDateString("da-DK", {
                         year: "numeric",
                         month: "short",
