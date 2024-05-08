@@ -1,5 +1,4 @@
 {
-  "dependencies": {},
   "scripts": {
     "i": "npm i && cd frontend/udlånssystem && npm install",
     "dev": "cd frontend/udlånssystem && npm run dev",

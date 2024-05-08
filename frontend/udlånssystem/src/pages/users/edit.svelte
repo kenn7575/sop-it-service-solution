@@ -1,7 +1,6 @@
 <script lang="ts">
   import DropZone from "../../components/drop-zone.svelte";
   import { onMount } from "svelte";
-  import { DeleteUser } from "./delete";
   import { UserModel } from "../../types/userModel";
   import { currentUser } from "../../services/login";
   import getData from "../../data/getData";
@@ -96,27 +95,6 @@
     editMode = togggleEditMode(user, importData, editMode);
   }
 
-  async function handleDelete() {
-    if (
-      !confirm("Er du sikker på at du vil slette denne bruger fra databasen?")
-    )
-      return;
-    if (
-      !confirm(
-        "Du sleter også alle lån og ændre udlånte tings status til tilgængelig. \n er du sikker på at du vil fortætte?"
-      )
-    )
-      return;
-    const res = await DeleteUser(importData.UUID);
-
-    if (res) {
-      alert("Slettet");
-      goToPath(`/${page_name.toLowerCase()}`);
-    } else {
-      alert("Error 500 - Ukendt fejl");
-    }
-  }
-
   function handleSubmit(event: Event) {
     event.preventDefault();
     handleUpdate();
@@ -164,14 +142,6 @@
           >
         {/if}
       </div>
-      {#if editMode}
-        <button id="delete" on:click={handleDelete}>Slet bruger</button>
-        <DropZone
-          on:message={(e) => {
-            picture = e.detail;
-          }}
-        />
-      {/if}
     </div>
     <div class="form">
       <form on:submit={handleSubmit} id="user-form">

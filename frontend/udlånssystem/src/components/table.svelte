@@ -207,7 +207,7 @@
                 <td
                   >{typeof value == "string" &&
                   Date.parse(value) &&
-                  ["Oprettet", "Opdateret"].includes(key)
+                  ["Oprettet", "Opdateret", "Returneringsdato"].includes(key)
                     ? new Date(value).toLocaleDateString("da-DK", {
                         year: "numeric",
                         month: "short",

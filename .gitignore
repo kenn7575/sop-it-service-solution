@@ -3,3 +3,4 @@ package-lock.json
 .env
 temp.js
 .DS_Store
+.vscode
