@@ -1,15 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const { db } = require("../db");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
 
 router.get("/:UUID", async (req, res) => {
   const { UUID } = req.params;
 
-  var [items] = await db.query("SELECT * FROM items WHERE UUID = ? LIMIT 1", [UUID]);
+  var item = await prisma.items.findUnique({
+    where: { UUID: Number(UUID) },
+    include: {
+      items_in_loan: true
+    },
+  });
 
-  items.loans = await db.query("SELECT * FROM items_in_loan WHERE item_id = ?", [UUID]);
-
-  res.json(items);
+  res.json(item);
 });
 
 module.exports = router;

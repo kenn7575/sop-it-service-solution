@@ -33,7 +33,7 @@
     exportData = new loanModel({ ...data });
     importLoan = new loanModel({ ...data });
 
-    let itemsInLoan = await getData("items_in_loan");
+    // let itemsInLoan = await getData("items_in_loan");
     loan_view = await getData("loans_view_extended", id);
 
     // HOT FIX - if the data is not found, redirect to the index page

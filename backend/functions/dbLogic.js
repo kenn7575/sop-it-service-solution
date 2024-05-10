@@ -1,3 +1,6 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 function generateFilter(filter) {
   if (Object.keys(filter).length === 0) return "";
 
@@ -12,6 +15,26 @@ function generateFilter(filter) {
   filter = `WHERE ${filter}`;
 
   return filter;
+}
+
+function getFieldTypes(table) {
+  let fieldTypes = {};
+
+  Object.entries(prisma[table].fields).map(
+    ([key, value]) => (fieldTypes[key] = value.typeName)
+  );
+
+  return fieldTypes;
+}
+
+function convertToPrismaTypes(data, table) {
+  let fieldTypes = getFieldTypes(table);
+
+  Object.entries(data).map(([key, value]) => {
+    if (fieldTypes[key] == "Int") data[key] = Number(value);
+  });
+
+  return data;
 }
 
 function findReferenced(table) {
@@ -44,6 +67,8 @@ function findReferencing(table) {
 
 module.exports = {
   generateFilter,
+  getFieldTypes,
+  convertToPrismaTypes,
   findReferenced,
   findReferencing,
 };

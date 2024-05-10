@@ -30,11 +30,11 @@
   let product_status: productStatusModel[] = [];
   let products: productModel[] = [];
 
-  let itemLoan: { UUID: number, loan_id: number } = null;
+  let itemLoan: { UUID: number; loan_id: number } = null;
 
   async function importDataFromDB() {
     let data = await getData(table, id);
-    itemLoan = await getData(`items_from_loans?UUID=${id}&Returneret=null`);
+    [itemLoan] = await getData(`items_from_loans?UUID=${id}&Returneret=null`);
 
     // HOT FIX - if the data is not found, redirect to the index page
     if (!data?.UUID) {
@@ -55,9 +55,7 @@
     }
 
     product_status = await getData("product_status");
-    product_status.map((product) => {
-      return (product.name = product.status_name);
-    });
+    product_status.map((product) => (product.name = product.status_name));
 
     products = await getData("products");
   });

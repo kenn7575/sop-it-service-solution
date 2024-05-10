@@ -1,26 +1,30 @@
 const express = require("express");
 const router = express.Router();
-const { db } = require("../db");
-const { findReferenced, findReferencing } = require("../functions/dbLogic");
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
+
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 router.get("/:table", async (req, res) => {
   const table = req.params.table;
-  const filter = req.query;
+  let filter = req.query;
 
-  const [referenced] = await db.query(findReferenced(table));
+  if (filter.UUID) filter.UUID = Number(filter.UUID);
 
-  var result = await db.find(table, filter);
+  const prismaTable = prisma[table];
 
-  if (referenced && result && result.length > 0) {
-    for (var column of result) {
-      const rows = await db.query(
-        `SELECT * FROM ${referenced.TABLE_NAME} WHERE ${referenced.COLUMN_NAME} = ?`,
-        column[referenced.REFERENCED_COLUMN_NAME]
-      );
+  if (!prismaTable) return res.status(404).json({ error: "Table not found" });
 
-      column[referenced.TABLE_NAME] = rows;
-    }
-  }
+  Object.entries(filter).map(([key, value]) => {
+    if (value === "null") filter[key] = null;
+  });
+
+  const result = await prisma[table].findMany({
+    where: filter,
+  });
 
   res.json(result);
 });
@@ -28,18 +32,33 @@ router.get("/:table", async (req, res) => {
 router.get("/:table/:UUID", async (req, res) => {
   const { table, UUID } = req.params;
 
-  const result = await db.findOne(table, { UUID });
+  if (!table || !Number(UUID))
+    return res.status(400).json({ error: "Invalid request" });
+
+  const result = await prisma[table].findUnique({
+    where: { UUID: Number(UUID) },
+  });
 
   res.json(result);
 });
 
 router.post("/:table", async (req, res) => {
   const table = req.params.table;
-  const values = req.body.data;
+  var values = req.body.data;
 
-  const newRow = await db.create(table, values);
+  const prismaTable = prisma[table].fields;
 
-  res.json(newRow);
+  Object.entries(prismaTable).map(([key, value]) => {
+    if (values[key]) {
+      if (value.typeName === "Int") values[key] = Number(values[key]);
+    }
+  });
+
+  const newRow = await prisma[table].create({
+    data: values,
+  });
+
+  res.json({ ...newRow, id: newRow.UUID });
 });
 
 router.patch("/:table/:UUID", async (req, res) => {
@@ -53,7 +72,10 @@ router.patch("/:table/:UUID", async (req, res) => {
   delete values["date_created"];
   delete values["date_updated"];
 
-  const result = await db.update(table, { UUID: UUID }, values);
+  const result = await prisma[table].update({
+    where: { UUID: Number(UUID) },
+    data: values,
+  });
 
   res.json(result);
 });
@@ -61,7 +83,9 @@ router.patch("/:table/:UUID", async (req, res) => {
 router.delete("/:table/:UUID", async (req, res) => {
   const { table, UUID } = req.params;
 
-  const result = await db.delete(table, { UUID: UUID });
+  const result = await prisma[table].delete({
+    where: { UUID: Number(UUID) },
+  });
 
   res.json(result);
 });
@@ -69,7 +93,9 @@ router.delete("/:table/:UUID", async (req, res) => {
 router.delete("/", async (req, res) => {
   const { table, UUID } = req.query;
 
-  const result = await db.delete(table, { UUID: UUID });
+  const result = await prisma[table].delete({
+    where: { UUID: Number(UUID) },
+  });
 
   res.json(result);
 });
