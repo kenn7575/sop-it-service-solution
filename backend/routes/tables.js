@@ -85,21 +85,24 @@ router.patch("/:table/:UUID", async (req, res) => {
 router.delete("/:table/:UUID", async (req, res) => {
   const { table, UUID } = req.params;
 
-  const result = await prisma[table].delete({
-    where: { UUID: Number(UUID) },
-  });
+  try {
+    const result = await prisma[table].delete({
+      where: { UUID: Number(UUID) },
+    });
 
-  res.json(result);
+    res.json(result);
+  } catch (error) {
+    if (error?.code === "P2003")
+      return res.status(400).json({ error: "Foreign key constraint" });
+
+    res.status(400).json({ error: error.message });
+  }
 });
 
 router.delete("/", async (req, res) => {
   const { table, UUID } = req.query;
 
-  const result = await prisma[table].delete({
-    where: { UUID: Number(UUID) },
-  });
-
-  res.json(result);
+  return res.redirect(`api/${table}/${UUID}`);
 });
 
 module.exports = router;

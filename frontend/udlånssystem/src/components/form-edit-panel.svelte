@@ -4,6 +4,7 @@
   export let loanReturnDate = null;
   export let loanId = null;
   export let item = null;
+  export let disableDelete = false;
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
   //create reset event
@@ -39,7 +40,9 @@
     {/if}
   </div>
   {#if editMode && !loanMode}
-    <button id="delete" on:click={handleDelete}>Slet</button>
+    <button id="delete" on:click={handleDelete} disabled={disableDelete}
+      >Slet</button
+    >
   {/if}
   {#if loanMode}
     {#if !loanReturnDate}

@@ -1,25 +1,25 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { brandModel } from "types/brandModel";
   import { deleteItem, updateItem, getData } from "@data/index.js";
   import TextQuestion from "@components/textQuestion.svelte";
   import FormEditPanel from "@components/form-edit-panel.svelte";
   import goToPath from "@services/goToPath.js";
   import doesObjectsMatch from "@services/doesObjectsMatch.js";
-  import { z } from "zod";
+  import type { z } from "zod";
 
   //this is the id of the brand to be edited
   export let UUID: number;
   export let table: string;
   export let page_name: string;
   export let fields: { binding: string; label: string }[];
+  export let zodSchema: z.ZodObject<any>;
 
   //if the page is in edit mode or read only
   let editMode = false;
 
   //imported Data
-  let importData: brandModel;
-  let exportData: brandModel;
+  let importData;
+  let exportData;
 
   onMount(async () => {
     try {
@@ -37,8 +37,8 @@
       goToPath(`/${page_name.toLowerCase()}`);
       return;
     }
-    exportData = new brandModel({ ...data });
-    importData = new brandModel({ ...data });
+    exportData = { ...data };
+    importData = { ...data };
   }
 
   async function handleUpdate(): Promise<any> {
@@ -47,11 +47,15 @@
       editMode = false;
       return;
     }
-    if (!exportData.validate()) {
-      alert("Udfyld alle felter");
-      return;
-    }
-    const response: any = await updateItem(exportData, table);
+
+    const { success, data, error } = zodSchema.safeParse(exportData);
+
+    if (!success)
+      return alert(
+        "Fejl i data: " + error.errors.map((e) => e.message).join(", ")
+      );
+
+    const response: any = await updateItem(data, table);
     if (response && response.success) {
       importDataFromDB();
       editMode = false;
@@ -66,15 +70,11 @@
       return;
     }
 
-    if (false) {
-      alert("Kan ikke slette");
-      return;
-    }
+    const response: any = await deleteItem({ UUID, table });
 
-    const response: any = await deleteItem({
-      UUID: importData.UUID,
-      table,
-    });
+    if (response?.error)
+      return alert("Error: " + response?.error?.response?.data?.error);
+
     if (response?.success) {
       alert("Slettet");
       goToPath(`/${page_name.toLowerCase()}`);
@@ -93,6 +93,7 @@
       on:cancel={() => {
         goToPath(`/${page_name.toLowerCase()}`);
       }}
+      disableDelete={importData._count.products > 0}
       on:delete={handleDelete}
       on:update={handleUpdate}
       bind:editMode
