@@ -6,8 +6,6 @@ name: CI/CD
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -27,16 +25,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Install and build frontend
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm run i
     - run: npm run build
-
     
 
-    - name: Restart NGINXn
+    - name: Delete old frontend files
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_HOST_NAME }}
