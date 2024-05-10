@@ -15,8 +15,9 @@ model authorization_levels {
 }
 
 model brands {
-  UUID Int    @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name String @db.VarChar(255)
+  UUID     Int        @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name     String     @db.VarChar(255)
+  products products[]
 }
 
 model buildings {
@@ -50,9 +51,10 @@ model cables_in_loan {
 }
 
 model categories {
-  UUID              Int     @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name              String? @db.VarChar(255)
+  UUID              Int        @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String?    @db.VarChar(255)
   category_group_id Int
+  products          products[]
 
   @@index([category_group_id], map: "category_group_id")
 }
@@ -136,15 +138,17 @@ model product_status {
 }
 
 model products {
-  UUID              Int      @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
-  name              String   @db.VarChar(255)
-  brand_id          Int
-  category_id       Int
-  date_created      DateTime @default(now()) @db.DateTime(0)
-  date_updated      DateTime @default(now()) @db.DateTime(0)
-  product_id_prefix String?  @db.VarChar(50)
-  image_name        String?  @db.VarChar(50)
-  max_loan_time     Int?     @default(360)
+  UUID              Int        @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
+  name              String     @db.VarChar(255)
+  brand_id          Int        @db.UnsignedInt
+  category_id       Int        @db.UnsignedInt
+  date_created      DateTime   @default(now()) @db.DateTime(0)
+  date_updated      DateTime   @default(now()) @db.DateTime(0)
+  product_id_prefix String?    @db.VarChar(50)
+  image_name        String?    @db.VarChar(50)
+  max_loan_time     Int?       @default(360)
+  categories        categories @relation(fields: [category_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "product_category_fk")
+  brands            brands     @relation(fields: [brand_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "products_brands_fk")
 
   @@index([brand_id], map: "brand_id")
   @@index([category_id], map: "products_ibfk_2")

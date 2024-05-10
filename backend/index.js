@@ -21,9 +21,11 @@ router.use(async (req, res, next) => {
   authenticateUser(req, res, next);
 });
 
+router.use("/brands", require("./routes/brands"));
 router.use("/loans", require("./routes/loans"));
 router.use("/mail", require("./routes/mail"));
 router.use("/items", require("./routes/items"));
+
 router.use("", require("./routes/tables"));
 
 app.use("/api", router);

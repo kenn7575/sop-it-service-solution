@@ -1,4 +1,3 @@
-import doesObjectsMatch from "../services/doesObjectsMatch";
 import axios from "axios";
 
 export default async function updateItem(

@@ -53,7 +53,7 @@
   {#if loanId}
     <a href={`/udlaan/${loanId}`}>Gå til lån</a>
   {:else if item?.product_status_id == 1}
-    <a href={`/udlaan/new?item=${item.UUID}`}>Opret lån</a>
+    <a href={`/udlaan/new?item=${item?.UUID}`}>Opret lån</a>
   {/if}
 </div>
 

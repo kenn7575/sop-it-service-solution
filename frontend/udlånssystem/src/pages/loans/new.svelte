@@ -346,7 +346,7 @@
       <!-- ! User -->
       <div class="table-container">
         <Table
-          inputData={importUsers}
+          values={importUsers}
           on:message={handleUserSelection}
           buttonDestination="/brugere/new"
           filterKey="Brugernavn"
@@ -358,7 +358,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddProduct}
-            inputData={importProducts}
+            values={importProducts}
             filterKey="Navn"
           />
         </div>
@@ -386,7 +386,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddCable}
-            inputData={importCables}
+            values={importCables}
             exclude={["Lånt"]}
             filterKey="Navn"
           />

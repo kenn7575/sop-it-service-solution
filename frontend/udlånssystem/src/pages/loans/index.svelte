@@ -6,22 +6,22 @@
   import { onMount } from "svelte";
   import getData from "../../data/getData";
 
-  let inputData = [[]];
-  let constData = [[]];
+  let inputData = {};
+  let constData = {};
 
   let page_name = "udlaan";
 
   async function filterLoans(returned) {
     if (returned) {
-      inputData = constData.filter((loan) => loan.Returneret);
+      inputData.data = constData.data.filter((loan) => loan.Returneret);
     } else {
-      inputData = constData.filter((loan) => !loan.Returneret);
+      inputData.data = constData.data.filter((loan) => !loan.Returneret);
     }
   }
 
   onMount(async () => {
     constData = await getData("loans_view");
-    inputData = [...constData];
+    inputData = {...constData};
     filterLoans(false);
   });
 
@@ -48,7 +48,8 @@
 
   <!-- extraButton="Send mail til overskredne udlån" -->
   <Table
-    {inputData}
+    headers={inputData.headers}
+    values={inputData.data}
     buttonDestination={`${page_name}/new`}
     on:message={handleRowClick}
     on:action={handleSendMails}

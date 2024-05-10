@@ -26,7 +26,9 @@ router.get("/:table", async (req, res) => {
     where: filter,
   });
 
-  res.json(result);
+  const headers = Object.keys(prisma[table].fields);
+
+  res.json({ headers, data: result });
 });
 
 router.get("/:table/:UUID", async (req, res) => {

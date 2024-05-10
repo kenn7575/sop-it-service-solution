@@ -1,5 +1,4 @@
 import axios from "axios";
-import doesObjectsMatch from "../services/doesObjectsMatch";
 
 export default async function createItem(table: string, exportData: any) {
   try {
