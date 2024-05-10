@@ -6,7 +6,12 @@ class Database {
   conn;
 
   constructor() {
-    this.pool = mysql.createPool(process.env.DB_URI);
+    try {
+      this.pool = mysql.createPool(process.env.DB_URI);
+      console.log("Database connected");
+    } catch (error) {
+      console.error("Database connection failed", error);
+    }
   }
 
   async transaction() {

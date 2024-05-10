@@ -1,6 +1,4 @@
 <script>
-  import profilePic from "../../../../mappePaaServeren/profile.png";
-  import pic from "../../../../mappePaaServeren/gulerodder.png";
   import { currentUser } from "../services/login";
   import { logout } from "../services/login";
 

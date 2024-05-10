@@ -1,5 +1,9 @@
 node_modules
 package-lock.json
 .env
+_.env
 temp.js
 .DS_Store
+
+Dockerfile
+docker-compose.yaml
