@@ -2,7 +2,6 @@
   export let editMode = false;
   export let label;
   export let binding;
-  $: console.log(binding);
 </script>
 
 <div class="question">
