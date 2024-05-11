@@ -1,21 +1,13 @@
 <script lang="ts">
   import EditLayout from "@layouts/edit.svelte";
   import { z } from "zod";
-  import type { Field } from "types/field";
+  import { autoGenFields } from "@services/autoGenFields";
 
   export let id: number;
 
-  $: fields = [
-    {
-      type: "text",
-      binding: "name",
-      label: "Navn",
-    },
-  ] as Field[];
-
   let zodSchema = z.object({
     UUID: z.number(),
-    name: z.string().trim().min(1, "Navn er påkrævet"),
+    name: z.string({ description: "Navn" }).trim().min(1, "Navn er påkrævet"),
   });
 </script>
 
@@ -23,6 +15,6 @@
   table="cable_categories"
   page_name="Kabelgrupper"
   UUID={id}
-  {fields}
+  fields={autoGenFields(zodSchema)}
   {zodSchema}
 />
