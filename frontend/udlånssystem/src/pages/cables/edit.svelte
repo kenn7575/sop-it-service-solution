@@ -1,150 +1,47 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { itemModel } from "../../types/itemModel.js";
-  import TextQuestion from "../../components/textQuestion.svelte";
-  import SelectQuestion from "../../components/selectQuestion.svelte";
-  import deleteItem from "../../data/delete.js";
-  import update from "../../data/update.js";
-  import FormEditPanel from "../../components/form-edit-panel.svelte";
-  import goToPath from "../../services/goToPath.js";
-  import doesObjectsMatch from "../../services/doesObjectsMatch.js";
-  import getData from "../../data/getData.js";
+  import EditLayout from "@layouts/edit.svelte";
+  import { z } from "zod";
+  import type { Field } from "types/field";
 
-  import { barcodeStore } from "../../stores/barcodeStore.js";
-  $barcodeStore = ""; //reset the barcode store. This is to prevent automatic redirect on load
+  export let id: number;
 
-  //this is the id of the item to be edited
-  export let id;
+  $: fields = [
+    {
+      type: "text",
+      binding: "name",
+      label: "Navn",
+    },
+    {
+      type: "number",
+      binding: "amount_total",
+      label: "Antal i alt",
+    },
+    {
+      type: "number",
+      binding: "amount_lent",
+      label: "Antal lånt",
+    },
+    {
+      type: "select",
+      binding: "category_id",
+      label: "Kategori",
+      options: "cable_categories",
+    },
+  ] as Field[];
 
-  //if the page is in edit mode or read only
-  let editMode = false;
-
-  //imported Data
-  let importData: any;
-  let exportData: any;
-
-  let table = "cables";
-  let page_name = "Kabler";
-
-  let cableLoan = { loan_id: "" };
-  let cableCategories = [];
-
-  async function importDataFromDB() {
-    let data = await getData(table, id);
-
-    // HOT FIX - if the data is not found, redirect to the index page
-    if (!data?.UUID) {
-      if (data) alert("Kunne ikke hente data: " + data);
-      goToPath(`/${page_name.toLowerCase()}`);
-      return;
-    }
-    exportData = { ...data };
-    importData = { ...data };
-  }
-
-  async function handleUpdate(): Promise<any> {
-    if (doesObjectsMatch(importData, exportData)) {
-      alert("Ingen ændringer");
-      return;
-    }
-
-    const response: any = await update(exportData, table);
-    if (response && response.success) {
-      importDataFromDB();
-      editMode = false;
-      alert("Changes saved");
-    } else {
-      alert("Error 500 - Ukendt fejl");
-    }
-  }
-
-  async function handleDelete() {
-    const response: any = await deleteItem({
-      UUID: importData.UUID,
-      table,
-    });
-    console.log(response);
-    if (response?.success) {
-      alert("Slettet");
-      goToPath(`/${page_name.toLowerCase()}`);
-    } else {
-      alert("Error 500 - Ukendt fejl");
-    }
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    handleUpdate();
-  }
-  import { path } from "../../stores/pathStore.js";
-  // $: console.log($path);
-
-  onMount(async () => {
-    cableCategories = await getData("cable_categories");
-    if (id) {
-      importDataFromDB();
-    }
+  let zodSchema = z.object({
+    UUID: z.number(),
+    name: z.string().trim().min(1, "Navn er påkrævet"),
+    amount_total: z
+      .number()
+      .int()
+      .min(0, "Antal i alt skal være et positivt heltal"),
+    amount_lent: z
+      .number()
+      .int()
+      .min(0, "Antal lånt skal være et positivt heltal"),
+    category_id: z.number().int(),
   });
 </script>
 
-{#if importData}
-  <div class="content">
-    <FormEditPanel
-      on:cancel={() => {
-        goToPath(`/${page_name.toLowerCase()}`);
-      }}
-      on:reset={importDataFromDB}
-      on:delete={handleDelete}
-      on:update={handleUpdate}
-      bind:editMode
-      loanId={cableLoan?.loan_id}
-      item={exportData}
-    />
-    <div
-      on:submit={(e) => {
-        e.preventDefault;
-        handleUpdate();
-      }}
-      class="form"
-    >
-      <form id="user-form">
-        <TextQuestion
-          label="Navn"
-          type="text"
-          bind:binding={exportData.name}
-          {editMode}
-          required
-        />
-        <TextQuestion
-          label="Antal i alt"
-          type="number"
-          bind:binding={exportData.amount_total}
-          {editMode}
-        />
-        <TextQuestion
-          label="Antal lånt"
-          type="number"
-          bind:binding={exportData.amount_lent}
-          {editMode}
-        />
-        <SelectQuestion
-          bind:binding={exportData.category_id}
-          label="Produkt"
-          options={cableCategories}
-          {editMode}
-          match={{ UUID: exportData.category_id }}
-        />
-      </form>
-    </div>
-  </div>
-{/if}
-
-<style>
-  .content {
-    height: 100%;
-    box-sizing: border-box;
-    padding: 2rem;
-    display: flex;
-    gap: 1rem;
-  }
-</style>
+<EditLayout table="cables" page_name="Kabler" UUID={id} {fields} {zodSchema} />

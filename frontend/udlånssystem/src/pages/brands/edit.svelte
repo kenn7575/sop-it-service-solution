@@ -1,23 +1,21 @@
 <script lang="ts">
   import EditLayout from "@layouts/edit.svelte";
-  import TextQuestion from "@components/textQuestion.svelte";
-  import { brandModel } from "types/brandModel";
   import { z } from "zod";
+  import type { Field } from "types/field";
 
-  export let id;
+  export let id: number;
 
-  let fields = [
+  $: fields = [
     {
+      type: "text",
       binding: "name",
       label: "Navn",
     },
-  ];
+  ] as Field[];
 
   let zodSchema = z.object({
     UUID: z.number(),
-    name: z.string().trim().min(1, {
-      message: "Navn er påkrævet",
-    }),
+    name: z.string().trim().min(1, "Navn er påkrævet"),
   });
 </script>
 

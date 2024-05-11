@@ -2,16 +2,23 @@
   import { onMount } from "svelte";
   import { deleteItem, updateItem, getData } from "@data/index.js";
   import TextQuestion from "@components/textQuestion.svelte";
+  import NumberQuestion from "@components/numberQuestion.svelte";
+  import SelectQuestion from "@components/selectQuestion.svelte";
   import FormEditPanel from "@components/form-edit-panel.svelte";
   import goToPath from "@services/goToPath.js";
   import doesObjectsMatch from "@services/doesObjectsMatch.js";
   import type { z } from "zod";
+  import type { Field } from "types/field";
 
   //this is the id of the brand to be edited
   export let UUID: number;
   export let table: string;
   export let page_name: string;
-  export let fields: { binding: string; label: string }[];
+
+  export let fields: Field[];
+
+  $: fetchSelectOptions(), fields;
+
   export let zodSchema: z.ZodObject<any>;
 
   //if the page is in edit mode or read only
@@ -28,6 +35,20 @@
       console.log(error);
     }
   });
+
+  //loop to fetch select options in fields, where options is type of string
+  async function fetchSelectOptions() {
+    for (let field of fields) {
+      if (field.type == "select") {
+        if (!(typeof field.options == "string")) continue;
+
+        const { data } = await getData(field.options);
+        field.options = data;
+      }
+    }
+
+    fields = [...fields];
+  }
 
   async function importDataFromDB() {
     const data = await getData(table, UUID);
@@ -50,10 +71,11 @@
 
     const { success, data, error } = zodSchema.safeParse(exportData);
 
-    if (!success)
-      return alert(
-        "Fejl i data: " + error.errors.map((e) => e.message).join(", ")
-      );
+    if (error) {
+      alert("Fejl i data: " + error.errors.map((e) => e.message).join(", "));
+
+      return;
+    }
 
     const response: any = await updateItem(data, table);
     if (response && response.success) {
@@ -66,7 +88,9 @@
   }
 
   async function handleDelete() {
-    if (!confirm("Er du sikker på du vil slette " + importData?.name + "?")) {
+    const name = importData?.name || "#" + UUID;
+
+    if (!confirm("Er du sikker på du vil slette " + name + "?")) {
       return;
     }
 
@@ -84,6 +108,7 @@
   }
 </script>
 
+<!-- disableDelete={importData._count.products > 0} -->
 {#if importData}
   <div class="content">
     <FormEditPanel
@@ -93,7 +118,6 @@
       on:cancel={() => {
         goToPath(`/${page_name.toLowerCase()}`);
       }}
-      disableDelete={importData._count.products > 0}
       on:delete={handleDelete}
       on:update={handleUpdate}
       bind:editMode
@@ -107,13 +131,31 @@
     >
       <form id="new-form">
         {#each fields as field}
-          <TextQuestion
-            bind:binding={exportData[field.binding]}
-            label={field.label}
-            {editMode}
-          />
+          {#if field.type == "text"}
+            <TextQuestion
+              bind:binding={exportData[field.binding]}
+              label={field.label}
+              {editMode}
+              required={field.required}
+            />
+          {:else if field.type == "number"}
+            <NumberQuestion
+              bind:binding={exportData[field.binding]}
+              label={field.label}
+              {editMode}
+            />
+          {:else if field.type == "select" && typeof field.options == "object"}
+            <SelectQuestion
+              bind:binding={exportData[field.binding]}
+              label={field.label}
+              options={field?.options}
+              match={{ UUID: exportData[field.binding] }}
+              {editMode}
+            />
+          {/if}
         {/each}
       </form>
+      <slot name="form" />
     </div>
   </div>
 {/if}
