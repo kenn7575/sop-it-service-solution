@@ -3,7 +3,10 @@ SELECT
   `p`.`name` AS `Navn`,
   `b`.`name` AS `Brand`,
   `ps`.`status_name` AS `Status`,
-  `i`.`storage_location_id` AS `storage_location_id`
+  concat(
+    `p`.`product_id_prefix`,
+    lpad(`i`.`barcode_number`, 4, '0')
+  ) AS `Barcode`
 FROM
   (
     (

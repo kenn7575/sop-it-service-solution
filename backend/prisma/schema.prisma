@@ -30,9 +30,9 @@ model cables {
   date_created   DateTime         @default(now()) @db.DateTime(0)
   date_updated   DateTime         @default(now()) @db.DateTime(0)
   name           String           @db.VarChar(100)
-  amount_total   Int              @db.UnsignedInt
-  amount_lent    Int              @db.UnsignedInt
-  category_id    Int              @db.UnsignedInt
+  amount_total   Int              @default(0) @db.UnsignedInt
+  amount_lent    Int              @default(0) @db.UnsignedInt
+  category_id    Int              @default(1) @db.UnsignedInt
   cables_in_loan cables_in_loan[]
 }
 
@@ -70,11 +70,11 @@ model educations {
 }
 
 model items {
-  UUID                Int             @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  UUID                Int             @id @unique(map: "UUID") @default(autoincrement()) @db.UnsignedInt
   date_created        DateTime        @default(now()) @db.DateTime(0)
   date_updated        DateTime?       @default(now()) @db.DateTime(0)
   storage_location_id Int?            @db.UnsignedInt
-  product_status_id   Int             @db.UnsignedInt
+  product_status_id   Int             @default(1) @db.UnsignedInt
   product_id          Int             @db.UnsignedInt
   description         String?         @db.LongText
   barcode_number      Int?
@@ -216,22 +216,27 @@ model zones {
   @@index([building_id], map: "building_id")
 }
 
+model cable_categories {
+  UUID Int    @id @default(autoincrement()) @db.UnsignedInt
+  name String
+}
+
 view available_cables {
   UUID          Int      @id @default(0) @db.UnsignedInt
   Oprettet      DateTime @default(now()) @db.DateTime(0)
   Opdateret     DateTime @default(now()) @db.DateTime(0)
   Navn          String   @db.VarChar(100)
-  Total         Int      @db.UnsignedInt
+  Total         Int      @default(0) @db.UnsignedInt
   Tilgaengelige BigInt   @default(0) @db.UnsignedBigInt
-  Kategori      String?  @db.VarChar(255)
+  Kategori_Navn String?  @map("Kategori Navn")
 }
 
 view available_products_view {
-  UUID                Int     @id @default(0) @db.UnsignedInt
-  Navn                String? @db.VarChar(255)
-  Brand               String? @db.VarChar(255)
-  Status              String? @db.VarChar(255)
-  storage_location_id Int?    @db.UnsignedInt
+  UUID    Int     @id @default(0) @db.UnsignedInt
+  Navn    String? @db.VarChar(255)
+  Brand   String? @db.VarChar(255)
+  Status  String? @db.VarChar(255)
+  Barcode String? @db.VarChar(54)
 }
 
 view brands_view {
@@ -270,6 +275,7 @@ view items_from_loans {
   Oprettet       DateTime  @default(now()) @db.DateTime(0)
   Produkt_status String    @map("Produkt status") @db.VarChar(255)
   Produkt_navn   String    @map("Produkt navn") @db.VarChar(255)
+  Barcode        String?   @db.VarChar(54)
   loan_id        Int       @db.UnsignedInt
   Returneret     DateTime? @db.DateTime(0)
 }
@@ -330,13 +336,14 @@ view personnel_users {
 }
 
 view products_view {
-  UUID       Int      @id @default(0) @db.UnsignedInt
-  Navn       String   @db.VarChar(255)
-  Kategori   String?  @db.VarChar(255)
-  Brand      String?  @db.VarChar(255)
-  Oprettet   DateTime @default(now()) @db.DateTime(0)
-  Opdateret  DateTime @default(now()) @db.DateTime(0)
-  image_name String?  @db.VarChar(50)
+  UUID            Int      @id @default(0) @db.UnsignedInt
+  Navn            String   @db.VarChar(255)
+  Kategori_Gruppe String?  @map("Kategori Gruppe") @db.VarChar(255)
+  Kategori        String?  @db.VarChar(255)
+  Brand           String?  @db.VarChar(255)
+  Oprettet        DateTime @default(now()) @db.DateTime(0)
+  Opdateret       DateTime @default(now()) @db.DateTime(0)
+  image_name      String?  @db.VarChar(50)
 }
 
 view roles_view {
@@ -366,7 +373,6 @@ view users_view_extended {
 }
 
 view cable_categories_view {
-  UUID                Int     @id @default(0) @db.UnsignedInt
-  Kategori_navn       String? @map("Kategori navn") @db.VarChar(255)
-  Kategorigruppe_navn String? @map("Kategorigruppe navn") @db.VarChar(255)
+  UUID Int    @id @default(0) @db.UnsignedInt
+  Navn String
 }

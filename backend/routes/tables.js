@@ -8,15 +8,26 @@ BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
+router.get(["/:table", "/:table/:UUID"], async (req, res, next) => {
+  const { table } = req.params;
+  if (!table) return next();
+
+  const prismaTable = prisma[table];
+
+  if (!prismaTable) {
+    console.log("Table not found:", table)
+
+    return res.status(404).json({ error: "Table not found" });
+  }
+
+  next();
+});
+
 router.get("/:table", async (req, res) => {
   const table = req.params.table;
   let filter = req.query;
 
   if (filter.UUID) filter.UUID = Number(filter.UUID);
-
-  const prismaTable = prisma[table];
-
-  if (!prismaTable) return res.status(404).json({ error: "Table not found" });
 
   Object.entries(filter).map(([key, value]) => {
     if (value === "null") filter[key] = null;
