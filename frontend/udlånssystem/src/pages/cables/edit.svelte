@@ -10,11 +10,11 @@
     name: z.string({ description: "Navn" }).trim().min(1, "Navn er påkrævet"),
     amount_total: z
       .number({ description: "Antal i alt" })
-      .int()
+      .int("Antal i alt skal være et positivt heltal")
       .min(0, "Antal i alt skal være et positivt heltal"),
     amount_lent: z
       .number({ description: "Antal Lånt" })
-      .int()
+      .int("Antal lånt skal være et heltal")
       .min(0, "Antal lånt skal være et positivt heltal"),
     category_id: z.number().int(),
   });
