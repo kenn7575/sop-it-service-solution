@@ -53,7 +53,7 @@
       alert("Ingen ændringer");
       return;
     }
-    const response: any = await update(exportData, table);
+    const response: any = await update(table, id, exportData);
     if (response && response.success) {
       importDataFromDB();
       editMode = false;

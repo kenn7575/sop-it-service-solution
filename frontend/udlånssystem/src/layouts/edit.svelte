@@ -15,11 +15,8 @@
   export let table: string;
   export let page_name: string;
 
-  export let fields: Field[];
-
-  $: fetchSelectOptions(), fields;
-
   export let zodSchema: z.ZodObject<any>;
+  export let fields: Field[];
 
   //if the page is in edit mode or read only
   let editMode = false;
@@ -50,6 +47,8 @@
     fields = [...fields];
   }
 
+  $: fetchSelectOptions(), fields;
+
   async function importDataFromDB() {
     const data = await getData(table, UUID);
 
@@ -69,7 +68,7 @@
       return;
     }
 
-    const { success, data, error } = zodSchema.safeParse(exportData);
+    const { data, error } = zodSchema.safeParse(exportData);
 
     if (error) {
       alert("Fejl i data: " + error.errors.map((e) => e.message).join(", "));
@@ -77,7 +76,7 @@
       return;
     }
 
-    const response: any = await updateItem(data, table);
+    const response: any = await updateItem(table, UUID, data);
     if (response && response.success) {
       importDataFromDB();
       editMode = false;
@@ -129,20 +128,15 @@
       }}
       class="form"
     >
-      <form id="new-form">
+      <form id="edit-form">
         {#each fields as field}
-          {#if field.type == "text"}
+          {#if field.type == "text" || field.type == "number"}
             <TextQuestion
               bind:binding={exportData[field.binding]}
               label={field.label}
               {editMode}
               required={field.required}
-            />
-          {:else if field.type == "number"}
-            <NumberQuestion
-              bind:binding={exportData[field.binding]}
-              label={field.label}
-              {editMode}
+              type={field.type}
             />
           {:else if field.type == "select" && typeof field.options == "object"}
             <SelectQuestion
