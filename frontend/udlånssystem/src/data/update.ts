@@ -1,12 +1,13 @@
 import axios from "axios";
 
 export default async function updateItem(
-  exportData: any, //typescript class instance with validateUpdate() method
-  table: string
+  table: string,
+  UUID: number,
+  exportData: any //typescript class instance with validateUpdate() method
 ): Promise<object> {
   try {
     const { data } = await axios
-      .patch(table + "/" + exportData.UUID, { data: { ...exportData } })
+      .patch(table + "/" + UUID, { data: { ...exportData } })
       .then((res: any) => {
         res.id = res.data;
         return res;
