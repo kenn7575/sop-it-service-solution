@@ -102,11 +102,11 @@
   {#if exportData && loan_view}
     <div class="content">
       <form action="" id="loan-form">
-        <TextQuestion
+        <!-- <TextQuestion
           bind:binding={exportData.UUID}
           label="ID"
           editMode={false}
-        />
+        /> -->
         <NumberQuestion
           bind:binding={exportData.loan_length}
           label={`Lånetid | [${loanDateFormatter()}]`}
