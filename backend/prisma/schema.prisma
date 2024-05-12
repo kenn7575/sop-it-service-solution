@@ -133,8 +133,8 @@ model pickup_locations {
 }
 
 model product_status {
-  UUID        Int    @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  status_name String @db.VarChar(255)
+  UUID Int    @id @unique(map: "UUID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  name String @db.VarChar(255)
 }
 
 model products {

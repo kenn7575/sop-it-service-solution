@@ -2,7 +2,7 @@ SELECT
   `i`.`UUID` AS `UUID`,
   `p`.`name` AS `Navn`,
   `b`.`name` AS `Brand`,
-  `ps`.`status_name` AS `Status`,
+  `ps`.`name` AS `Status`,
   concat(
     `p`.`product_id_prefix`,
     lpad(`i`.`barcode_number`, 4, '0')

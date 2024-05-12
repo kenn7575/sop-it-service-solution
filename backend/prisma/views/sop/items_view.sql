@@ -5,7 +5,7 @@ SELECT
     `p`.`product_id_prefix`,
     lpad(`i`.`barcode_number`, 4, '0')
   ) AS `Barcode`,
-  `ps`.`status_name` AS `Status`,
+  `ps`.`name` AS `Status`,
   `sl`.`zone_id` AS `Zone id`,
   `i`.`date_created` AS `Oprettet`,
   `i`.`date_updated` AS `Opdateret`

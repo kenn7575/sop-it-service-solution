@@ -1,7 +1,7 @@
 SELECT
   `i`.`UUID` AS `UUID`,
   `il`.`date_created` AS `Oprettet`,
-  `ps`.`status_name` AS `Produkt status`,
+  `ps`.`name` AS `Produkt status`,
   `p`.`name` AS `Produkt navn`,
   concat(
     `p`.`product_id_prefix`,
