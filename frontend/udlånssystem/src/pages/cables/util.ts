@@ -1,29 +1,29 @@
-import { z } from "zod";
-import { autoGenFields } from "@services/autoGenFields";
+import type { Field } from "types/field";
+import { autoGenZodSchema } from "@services/autoGen";
 
-export const zodSchema = z.object({
-  name: z
-    .string({ description: "Navn", message: "Navn er påkrævet" })
-    .trim()
-    .min(1, "Navn er påkrævet"),
-  amount_total: z.coerce
-    .number({ description: "Antal i alt" })
-    .int("Antal i alt skal være et positivt heltal")
-    .min(0, "Antal i alt skal være et positivt heltal")
-    .nullish(),
-  amount_lent: z.coerce
-    .number({ description: "Antal Lånt" })
-    .int("Antal lånt skal være et heltal")
-    .min(0, "Antal lånt skal være et positivt heltal")
-    .nullish(),
-  category_id: z.number().int(),
-});
+export const fields: Field[] = [
+  {
+    label: "Navn",
+    binding: "name",
+  },
+  {
+    label: "Antal i alt",
+    binding: "amount_total",
+    type: "number",
+    required: false,
+  },
+  {
+    label: "Antal Lånt",
+    binding: "amount_lent",
+    type: "number",
+    required: false,
+  },
+  {
+    label: "Kategori",
+    binding: "category_id",
+    type: "select",
+    options: "cable_categories",
+  },
+];
 
-export let fields = autoGenFields(zodSchema, ["category_id"]);
-
-fields.push({
-  type: "select",
-  binding: "category_id",
-  label: "Kategori",
-  options: "cable_categories",
-});
+export const zodSchema = autoGenZodSchema(fields);

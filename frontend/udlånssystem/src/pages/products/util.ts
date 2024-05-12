@@ -1,22 +1,19 @@
-import { z } from "zod";
 import type { Field } from "types/field";
+import { autoGenZodSchema } from "@services/autoGen";
 
-export let fields = [
+export const fields = [
   {
-    type: "select",
-    binding: "product_id",
     label: "Produkttype",
+    binding: "product_id",
+    type: "select",
     options: "products",
   },
   {
-    type: "select",
-    binding: "product_status_id",
     label: "Status",
+    binding: "product_status_id",
+    type: "select",
     options: "product_status",
   },
 ] as Field[];
 
-export let zodSchema = z.object({
-  product_id: z.number().int(),
-  product_status_id: z.number().int(),
-});
+export const zodSchema = autoGenZodSchema(fields);

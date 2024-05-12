@@ -71,7 +71,7 @@
     const { data, error } = zodSchema.safeParse(exportData);
 
     if (error) {
-      alert("Fejl i data: " + error.errors.map((e) => e.message).join(", "));
+      alert(error.errors.map((e) => e.message).join("\n"));
 
       return;
     }

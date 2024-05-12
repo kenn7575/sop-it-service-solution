@@ -1,19 +1,17 @@
-import { z } from "zod";
-import { autoGenFields } from "@services/autoGenFields";
+import type { Field } from "types/field";
+import { autoGenZodSchema } from "@services/autoGen";
 
-export const zodSchema = z.object({
-  name: z
-    .string({ description: "Navn", message: "Navn er påkrævet" })
-    .trim()
-    .min(1, "Navn er påkrævet"),
-  category_group_id: z.number().int(),
-});
+export const fields: Field[] = [
+  {
+    label: "Navn",
+    binding: "name",
+  },
+  {
+    label: "Kategorigruppe",
+    binding: "category_group_id",
+    type: "select",
+    options: "category_groups",
+  },
+];
 
-export let fields = autoGenFields(zodSchema, ["category_group_id"]);
-
-fields.push({
-  type: "select",
-  binding: "category_group_id",
-  label: "Kategorigruppe",
-  options: "category_groups",
-});
+export const zodSchema = autoGenZodSchema(fields);

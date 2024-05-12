@@ -1,6 +1,6 @@
 <script lang="ts">
   import EditLayout from "@layouts/edit.svelte";
-  import { zodSchema, fields } from "./util";
+  import { fields, zodSchema } from "./util";
 
   export let id: number;
 </script>

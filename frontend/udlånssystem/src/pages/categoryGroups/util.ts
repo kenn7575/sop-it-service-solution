@@ -1,8 +1,6 @@
-import { z } from "zod";
+import type { Field } from "types/field";
+import { autoGenZodSchema } from "@services/autoGen";
 
-export const zodSchema = z.object({
-  name: z
-    .string({ description: "Navn", message: "Navn er påkrævet" })
-    .trim()
-    .min(1, "Navn er påkrævet"),
-});
+export const fields: Field[] = [{ label: "Navn", binding: "name" }];
+
+export const zodSchema = autoGenZodSchema(fields);

@@ -1,7 +1,7 @@
 export interface Field {
-  type: "text" | "number" | "select";
-  binding: string | number;
   label: string;
+  binding: string | number;
+  type?: "text" | "number" | "select";
   required?: boolean;
   options?: { UUID: number; name: string }[] | string;
 }
