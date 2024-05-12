@@ -1,22 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-function generateFilter(filter) {
-  if (Object.keys(filter).length === 0) return "";
-
-  filter = Object.entries(filter)
-    .map(([key, value]) => {
-      if (Array.isArray(value)) return `${key} IN (${value.join(", ")})`;
-      if (value == null || value == "null") return `${key} IS NULL`;
-      return `${key} = '${value}'`;
-    })
-    .join(" AND ");
-
-  filter = `WHERE ${filter}`;
-
-  return filter;
-}
-
 function getFieldTypes(table) {
   let fieldTypes = {};
 
@@ -66,7 +50,6 @@ function findReferencing(table) {
 }
 
 module.exports = {
-  generateFilter,
   getFieldTypes,
   convertToPrismaTypes,
   findReferenced,
