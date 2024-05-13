@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { PrismaClient } = require("@prisma/client");
+const prisma = require("../prisma.config.js");
 
 const { returnLoan, returnCable } = require("../functions/loanLogic.js");
 const { convertToPrismaTypes } = require("../functions/general");
-
-const prisma = new PrismaClient();
 
 router.post("/", async (req, res) => {
   let { loan, products = [], cables = [] } = req.body;
