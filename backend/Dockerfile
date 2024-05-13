@@ -1,0 +1,44 @@
+FROM node:20-alpine3.18
+
+RUN npm install -g nodemon
+
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm install
+
+COPY . .
+
+ENV NODE_ENV="development"
+
+ENV DATABASE_URL="mysql://root:root@database:3306/sop"
+
+ENV BACKEND_PORT="3000"
+
+ENV JWT_SECRET="6fbd42c1aa1827748907dd7911bafa325e7a43d66c3a70649e6c110ed3f0b6242109dfe7eb158c94937a3ad56bf89b2939030bdab58d618013219294e9387884"
+
+ENV LDAP_HOST=172.16.1.186
+ENV LDAP_PORT=389
+ENV LDAP_USERNAME="CN=Ldap Con,OU=OU_ServerAccounts,OU=OU_Zone9,OU=OU_IT-SKP,OU=OU_Main,DC=ITSKP-ODENSE,DC=dk"
+ENV LDAP_PASSWORD="SKPlager1!"
+ENV LDAP_BASE_DN="DC=ITSKP-ODENSE,DC=dk"
+ENV LDAP_USERS="OU=OU_Elever,OU=OU_IT-SKP,OU=OU_Main,DC=ITSKP-ODENSE,DC=dk"
+ENV ENV LDAP_ADMINS="OU=OU_Zone9,OU=OU_IT-SKP,OU=OU_Main,DC=ITSKP-ODENSE,DC=dk"
+
+ENV MAIL_MAILER="mailjet"
+ENV MAIL_HOST="in-v3.mailjet.com"
+ENV MAIL_PORT=587
+ENV MAIL_USERNAME="8baac458ffc2b109bcb7c37524986be0"
+ENV MAIL_PASSWORD="e2842903df91ad9deb940b12cc3e58e1"
+ENV MAIL_ENCRYPTION="tls"
+ENV MAIL_FROM_ADDRESS="lageradministrationen@itskp-odense.dk"
+ENV MAIL_FROM_NAME="Udlånsystemets automatiske mail"
+
+EXPOSE 3000
+
+LABEL Name=udlånsystem-backend
+
+RUN npx prisma generate
+
+CMD ["npm", "run", "start"]

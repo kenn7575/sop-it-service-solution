@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend/udlånssystem # Adjust this path to your Svelte project's root directory
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./backend 
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL="mysql://root:root@database:3306/sop"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - database
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root   # Sets the root user's password
+      MYSQL_DATABASE: sop          # Creates a database
+      MYSQL_USER: root                  # Creates a user
+      MYSQL_PASSWORD: root 
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - /var/lib/mysql/mysql.sock:/mysql.sock -it database bash
+    expose:
+      - "3306"
+    ports:
+      - "9999:3306"
+  
+
+volumes:
+  mariadb_data:
