@@ -18,7 +18,6 @@
   //pages import
   import Nav from "./components/Nav.svelte";
   import Home from "./pages/Home.svelte";
-  import Users from "./pages/users/index.svelte";
   import Error404 from "./pages/Error404.svelte";
   import Products from "./pages/products/index.svelte";
   import Dashboard from "./pages/dashboard/index.svelte";
@@ -36,7 +35,6 @@
   import Loading from "./pages/Loading.svelte";
 
   //dynamic pages import - edit
-  import usersEdit from "./pages/users/edit.svelte";
   import productsEdit from "./pages/products/edit.svelte";
   import brandsEdit from "./pages/brands/edit.svelte";
   import categoriesEdit from "./pages/categories/edit.svelte";
@@ -47,7 +45,6 @@
   import cableGroupsEdit from "./pages/cableCategories/edit.svelte";
 
   //new pages import
-  import usersNew from "./pages/users/new.svelte";
   import productsNew from "./pages/products/new.svelte";
   import brandsNew from "./pages/brands/new.svelte";
   import categoriesNew from "./pages/categories/new.svelte";

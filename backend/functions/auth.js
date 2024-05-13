@@ -1,12 +1,14 @@
 var jwt = require("jsonwebtoken");
 var ldap = require("ldapjs");
 
+const { JWT_SECRET } = process.env;
+
 function authenticateUser(req, res, next) {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "Access denied" });
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    const verified = jwt.verify(token, JWT_SECRET);
     req.user = verified;
     next();
   } catch (err) {
@@ -17,8 +19,18 @@ function authenticateUser(req, res, next) {
   }
 }
 
+const {
+  NODE_ENV,
+  LDAP_USERS,
+  LDAP_ADMINS,
+  LDAP_HOST,
+  LDAP_PORT,
+  LDAP_USERNAME,
+  LDAP_PASSWORD,
+} = process.env;
+
 async function ldapAuthenticate(username, userPassword) {
-  if (process.env.NODE_ENV === "development") {
+  if (NODE_ENV === "development") {
     return {
       name: "John Doe",
       username: "jdoe",
@@ -26,14 +38,11 @@ async function ldapAuthenticate(username, userPassword) {
     };
   }
 
-  const userSearchBase =
-    process.env.NODE_ENV == "development"
-      ? process.env.LDAP_USERS
-      : process.env.LDAP_ADMINS;
+  const userSearchBase = NODE_ENV == "development" ? LDAP_USERS : LDAP_ADMINS;
 
-  const ldapUrl = `ldap://${process.env.LDAP_HOST}:${process.env.LDAP_PORT}`;
-  const adminDn = process.env.LDAP_USERNAME;
-  const adminPassword = process.env.LDAP_PASSWORD;
+  const ldapUrl = `ldap://${LDAP_HOST}:${LDAP_PORT}`;
+  const adminDn = LDAP_USERNAME;
+  const adminPassword = LDAP_PASSWORD;
   const usernameAttribute = "sAMAccountName";
 
   const client = ldap.createClient({

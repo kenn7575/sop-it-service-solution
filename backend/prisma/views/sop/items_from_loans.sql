@@ -1,8 +1,12 @@
 SELECT
   `i`.`UUID` AS `UUID`,
   `il`.`date_created` AS `Oprettet`,
-  `ps`.`status_name` AS `Produkt status`,
+  `ps`.`name` AS `Produkt status`,
   `p`.`name` AS `Produkt navn`,
+  concat(
+    `p`.`product_id_prefix`,
+    lpad(`i`.`barcode_number`, 4, '0')
+  ) AS `Barcode`,
   `il`.`loan_id` AS `loan_id`,
   `il`.`date_returned` AS `Returneret`
 FROM

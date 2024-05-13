@@ -36,7 +36,9 @@
     //check if barcode is being added or removed
     if (!$controlStore) {
       if (importItemsInLoanLent.length == 0) return;
-      const product = importItemsInLoanLent.find(({ Barcode }) => Barcode == code);
+      const product = importItemsInLoanLent.find(
+        ({ Barcode }) => Barcode == code
+      );
 
       if (ItemsInLoanToReturn.find(({ Barcode }) => Barcode == code))
         return alert("Produktet er allerede tilføjet");
@@ -46,7 +48,9 @@
       handleAddProduct({ detail: product });
       barcodeStore.set("");
     } else {
-      const product = ItemsInLoanToReturn.find(({ Barcode }) => Barcode == code);
+      const product = ItemsInLoanToReturn.find(
+        ({ Barcode }) => Barcode == code
+      );
 
       if (!product) return;
 
@@ -54,14 +58,29 @@
 
       handleRemoveProduct({ detail: product });
       barcodeStore.set("");
-
     }
   }
-  $: handleBarcode($barcodeStore), importItemsInLoanLent
+  $: handleBarcode($barcodeStore), importItemsInLoanLent;
 
   async function importDataFromDB() {
-    const dataItems = await getData(table);
-    const dataCables = await getData("cables_from_loans");
+    var dataItems = (await getData(table)).data;
+    var dataCables = (await getData("cables_from_loans")).data;
+
+    for (let dataItem of dataItems) {
+      Object.entries(dataItem).map(([key, value]) => {
+        key = key.replace("_", " ");
+        dataItem[key] = value;
+      });
+    }
+
+    for (let dataCable of dataCables) {
+      Object.entries(dataCable).map(([key, value]) => {
+        key = key.replace("_", " ");
+        dataCable[key] = value;
+      });
+    }
+
+    console.log("dataItems", dataItems);
 
     const items: itemsFromLoan[] = [];
     const cables: cableFromLoan[] = [];

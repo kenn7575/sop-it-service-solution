@@ -8,7 +8,7 @@
       //add
 
       if (importProducts.length == 0)
-        importProducts = await getData("available_products_view");
+        importProducts = (await getData("available_products_view")).data;
 
       var product = importProducts.find(
         (o: productModel & { Barcode: string }) => o.Barcode == code
@@ -20,7 +20,7 @@
       }
 
       if (!product) {
-        [product] = await getData("items_from_loans?Barcode=" + code);
+        [product] = (await getData("items_from_loans?Barcode=" + code)).data;
 
         if (product) return alert("Produktet er allerede lånt ud");
       }
@@ -80,11 +80,11 @@
   let importCables: cableModel[] = []; //get data onMount
   let importCablesAvailable: cableModel[] = []; //get data onMount
   onMount(async () => {
-    importPersonnels = await getData("personnel_users");
-    importUsers = await getData("users_view");
-    importProducts = await getData("available_products_view");
-    importZones = await getData("zones");
-    importCables = (await getData("available_cables")).filter(
+    importPersonnels = (await getData("personnel_users")).data;
+    importUsers = (await getData("users_view")).data;
+    importProducts = (await getData("available_products_view")).data;
+    importZones = (await getData("zones")).data;
+    importCables = (await getData("available_cables")).data.filter(
       (ac) => ac.Tilgaengelige >= 1
     ) as cableModel[];
     importCablesAvailable = [...importCables] as cableModel[];
@@ -346,7 +346,7 @@
       <!-- ! User -->
       <div class="table-container">
         <Table
-          inputData={importUsers}
+          values={importUsers}
           on:message={handleUserSelection}
           buttonDestination="/brugere/new"
           filterKey="Brugernavn"
@@ -358,7 +358,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddProduct}
-            inputData={importProducts}
+            values={importProducts}
             filterKey="Navn"
           />
         </div>
@@ -386,7 +386,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddCable}
-            inputData={importCables}
+            values={importCables}
             exclude={["Lånt"]}
             filterKey="Navn"
           />

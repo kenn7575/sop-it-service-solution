@@ -32,6 +32,7 @@
     "pusher-js": "^8.0.2",
     "svelte-media-queries": "^1.5.4",
     "svelte-routing": "^1.6.0",
-    "vitest": "^0.31.4"
+    "vitest": "^0.31.4",
+    "zod": "^3.23.8"
   }
 }

@@ -8,15 +8,26 @@ BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
+router.get(["/:table", "/:table/:UUID"], async (req, res, next) => {
+  const { table } = req.params;
+  if (!table) return next();
+
+  const prismaTable = prisma[table];
+
+  if (!prismaTable) {
+    console.log("Table not found:", table)
+
+    return res.status(404).json({ error: "Table not found" });
+  }
+
+  next();
+});
+
 router.get("/:table", async (req, res) => {
   const table = req.params.table;
   let filter = req.query;
 
   if (filter.UUID) filter.UUID = Number(filter.UUID);
-
-  const prismaTable = prisma[table];
-
-  if (!prismaTable) return res.status(404).json({ error: "Table not found" });
 
   Object.entries(filter).map(([key, value]) => {
     if (value === "null") filter[key] = null;
@@ -26,7 +37,9 @@ router.get("/:table", async (req, res) => {
     where: filter,
   });
 
-  res.json(result);
+  const headers = Object.keys(prisma[table].fields);
+
+  res.json({ headers, data: result });
 });
 
 router.get("/:table/:UUID", async (req, res) => {
@@ -83,21 +96,24 @@ router.patch("/:table/:UUID", async (req, res) => {
 router.delete("/:table/:UUID", async (req, res) => {
   const { table, UUID } = req.params;
 
-  const result = await prisma[table].delete({
-    where: { UUID: Number(UUID) },
-  });
+  try {
+    const result = await prisma[table].delete({
+      where: { UUID: Number(UUID) },
+    });
 
-  res.json(result);
+    res.json(result);
+  } catch (error) {
+    if (error?.code === "P2003")
+      return res.status(400).json({ error: "Foreign key constraint" });
+
+    res.status(400).json({ error: error.message });
+  }
 });
 
 router.delete("/", async (req, res) => {
   const { table, UUID } = req.query;
 
-  const result = await prisma[table].delete({
-    where: { UUID: Number(UUID) },
-  });
-
-  res.json(result);
+  return res.redirect(`api/${table}/${UUID}`);
 });
 
 module.exports = router;

@@ -5,7 +5,11 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+var origin = "http://localhost:5173";
+
+if (process.env.FRONTEND_URL) origin = process.env.FRONTEND_URL.split(",");
+
+app.use(cors({ origin, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("json spaces", 4);
@@ -21,9 +25,11 @@ router.use(async (req, res, next) => {
   authenticateUser(req, res, next);
 });
 
+router.use("/brands", require("./routes/brands"));
 router.use("/loans", require("./routes/loans"));
 router.use("/mail", require("./routes/mail"));
 router.use("/items", require("./routes/items"));
+
 router.use("", require("./routes/tables"));
 
 app.use("/api", router);

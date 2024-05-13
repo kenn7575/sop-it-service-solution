@@ -1,6 +1,5 @@
 SELECT
-  `categories_view`.`UUID` AS `UUID`,
-  `categories_view`.`Kategori navn` AS `Kategori navn`,
-  `categories_view`.`Kategorigruppe navn` AS `Kategorigruppe navn`
+  `sop`.`cable_categories`.`UUID` AS `UUID`,
+  `sop`.`cable_categories`.`name` AS `Navn`
 FROM
-  `sop`.`categories_view`
+  `sop`.`cable_categories`
