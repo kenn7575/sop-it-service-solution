@@ -5,7 +5,11 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+var origin = "http://localhost:5173";
+
+if (process.env.FRONTEND_URL) origin = process.env.FRONTEND_URL.split(",");
+
+app.use(cors({ origin, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("json spaces", 4);

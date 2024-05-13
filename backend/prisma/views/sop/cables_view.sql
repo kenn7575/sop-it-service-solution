@@ -1,5 +1,5 @@
 SELECT
-  `p`.`UUID` AS `ProductUUID`,
+  `p`.`UUID` AS `UUID`,
   `p`.`name` AS `Name`
 FROM
   (
