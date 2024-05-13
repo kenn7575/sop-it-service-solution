@@ -148,8 +148,8 @@
             />
           {/if}
         {/each}
+        <slot name="form" />
       </form>
-      <slot name="form" />
     </div>
   </div>
 {/if}
