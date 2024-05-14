@@ -156,6 +156,7 @@
         >{extraButton}</button
       >
     {/if}
+    <slot name="controls" />
     {#if buttonDestination}
       <button class="add-user" on:click={handleButtonClick}>
         <i class="fa-solid fa-plus" />
