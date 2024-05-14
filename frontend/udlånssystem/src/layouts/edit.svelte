@@ -61,6 +61,16 @@
     importData = { ...data };
   }
 
+  function isDeleteDisabled(): boolean {
+    if (!importData?._count) return false;
+
+    const { _count } = importData as { _count: { [key: string]: number } };
+
+    for (let value of Object.values(_count)) {
+      if (value > 0) return true;
+    }
+  }
+
   async function handleUpdate(): Promise<any> {
     if (doesObjectsMatch(importData, exportData)) {
       // alert("Ingen ændringer");
@@ -120,6 +130,7 @@
       on:delete={handleDelete}
       on:update={handleUpdate}
       bind:editMode
+      disableDelete={isDeleteDisabled()}
     />
     <div
       on:submit={(e) => {
