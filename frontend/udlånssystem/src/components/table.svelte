@@ -18,30 +18,26 @@
   }
 
   //import data
-  export let inputData = [];
+  export let headers = [];
+  export let values = [];
   export let exclude = [];
-
-  let headers = [{}];
-  $: if (inputData.length > 0) headers = inputData[0];
 
   //resort data every time inputData changes
   // $: inputData && sortTable(inputData, sortColumn);
 
-  //split data into tableData and tableHeadings
-  $: tableHeadings = Object.keys(headers);
-  $: tableData = Object.values(inputData);
+  $: tableData = values;
 
   export let sortAscending = true; //used to determine if the table should be sorted ascending or descending
   let sortColumn = -1; //used to determine which column the table should be sorted by
   let searchPromt = ""; //used to determine what the user is searching for
-  $: tableDataFiltered = inputData; //used to determine what data should be displayed in the table after filtering
+  $: tableDataFiltered = values; //used to determine what data should be displayed in the table after filtering
   let page = 1; //used to determine which page the user is on and which data should be displayed
   let items_per_page = 20; //used to determine how many items should be displayed per page
 
   let dropdownOpen = false; //used to determine if the dropdown is open
 
   //log all state variables
-  $: filterKey && filterData(), inputData;
+  $: filterKey && filterData(), values;
 
   function toggleDropdown() {
     dropdownOpen = !dropdownOpen;
@@ -139,7 +135,7 @@
           <i class="fa-solid fa-angle-down" />
         </button>
         <div class="options" class:hidden={!dropdownOpen}>
-          {#each tableHeadings as option, index}
+          {#each headers as option}
             {#if !exclude.includes(option)}
               <button
                 class="option-btn"
@@ -160,6 +156,7 @@
         >{extraButton}</button
       >
     {/if}
+    <slot name="controls" />
     {#if buttonDestination}
       <button class="add-user" on:click={handleButtonClick}>
         <i class="fa-solid fa-plus" />
@@ -173,7 +170,7 @@
     <table>
       <thead>
         <tr>
-          {#each tableHeadings as heading}
+          {#each headers as heading}
             {#if !exclude.includes(heading)}
               <th
                 on:click={() => sortTable(tableDataFiltered, heading)}

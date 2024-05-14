@@ -1,0 +1,82 @@
+version: '3.8'
+networks:
+  server-net:
+    driver: bridge
+  db-net:
+    driver: bridge
+services: # Frontend, backend and database
+  frontend:
+    build:
+      context: ./frontend/udlånssystem # Adjust this path to your Svelte project's root directory
+      dockerfile: Dockerfile
+      args:
+        - VITE_APP_BACKEND_URL=${VITE_APP_BACKEND_URL}
+
+
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - server-net
+  backend:
+    build:
+      context: ./backend 
+      dockerfile: Dockerfile
+      args:
+        - FRONTEND_URL=${FRONTEND_URL}
+        - BACKEND_PORT=${BACKEND_PORT}
+        - JWT_SECRET=${JWT_SECRET}
+        - LDAP_HOST=${LDAP_HOST}
+        - LDAP_PORT=${LDAP_PORT}
+        - LDAP_USERNAME=${LDAP_USERNAME}
+        - LDAP_PASSWORD=${LDAP_PASSWORD}
+        - LDAP_BASE_DN=${LDAP_BASE_DN}
+        - LDAP_USERS=${LDAP_USERS}
+        - LDAP_ADMINS=${LDAP_ADMINS}
+        - MAIL_MAILER=${MAIL_MAILER}
+        - MAIL_HOST=${MAIL_HOST}
+        - MAIL_PORT=${MAIL_PORT}
+        - MAIL_USERNAME=${MAIL_USERNAME}
+        - MAIL_PASSWORD=${MAIL_PASSWORD}
+        - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
+        - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+        - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - database
+    networks:
+      - server-net
+      - db-net
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}   
+      MYSQL_DATABASE: ${MYSQL_DATABASE}  
+      MYSQL_USER:  ${MYSQL_USER}                  
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} 
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - /var/lib/mysql/mysql.sock:/mysql.sock -it database bash
+    expose:
+      - "3306"
+    ports:
+      - "9999:3306"
+    networks:
+      - db-net
+  
+volumes:
+  mariadb_data:

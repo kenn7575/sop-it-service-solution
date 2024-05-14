@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { ldapAuthenticate } = require("../functions/auth");
 const jwt = require("jsonwebtoken");
+
+const { ldapAuthenticate } = require("../functions/auth");
 
 router.post("/login", async (req, res) => {
   const { username, password: userPassword } = req.body;
