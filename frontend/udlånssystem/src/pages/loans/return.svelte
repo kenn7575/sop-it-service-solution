@@ -6,8 +6,8 @@
   import getData from "../../data/getData";
   import goToPath from "../../services/goToPath";
 
-  import { itemsFromLoan } from "../../types/itemsFromLoan";
-  import { cableFromLoan } from "../../types/cableFromLoan";
+  import type { itemsFromLoan } from "types/views/itemsFromLoan";
+  import type { cableFromLoan } from "types/views/cableFromLoan";
 
   export let id;
 
@@ -87,12 +87,12 @@
 
     dataItems.map((element, index) => {
       if (element.loan_id == id) {
-        items.push(new itemsFromLoan({ ...dataItems[index] }));
+        items.push({ ...dataItems[index] });
       }
     });
     dataCables.map((element, index) => {
       if (element.loan_id == id) {
-        cables.push(new cableFromLoan({ ...dataCables[index] }));
+        cables.push({ ...dataCables[index] });
       }
     });
     importItemsInLoanLent = items.filter(({ Returneret }) => !Returneret);

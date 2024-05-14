@@ -49,12 +49,12 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import goToPath from "../../services/goToPath";
-  import type { cableModel } from "../../types/cableModel";
+  import type { cableView } from "types/views/cableView";
   const page_name = "udlaan";
 
-  import type { zoneModel } from "../../types/zoneModel";
-  import type { productModel } from "../../types/productModel";
-  import type { UserModel } from "../../types/userModel";
+  import type { zoneModel } from "../../types/tables/zoneModel";
+  import type { productModel } from "../../types/tables/product";
+  import type { UserModel } from "../../types/tables/userModel";
 
   //data to be exported
   let user: any = {};
@@ -77,8 +77,8 @@
   let importUsers: UserModel[] = []; //get data onMount
   let importProducts: productModel[] = []; //get data onMount
   let importZones: zoneModel[] = []; //get data onMount
-  let importCables: cableModel[] = []; //get data onMount
-  let importCablesAvailable: cableModel[] = []; //get data onMount
+  let importCables: cableView[] = []; //get data onMount
+  let importCablesAvailable: cableView[] = []; //get data onMount
   onMount(async () => {
     importPersonnels = (await getData("personnel_users")).data;
     importUsers = (await getData("users_view")).data;
@@ -86,8 +86,8 @@
     importZones = (await getData("zones")).data;
     importCables = (await getData("available_cables")).data.filter(
       (ac) => ac.Tilgaengelige >= 1
-    ) as cableModel[];
-    importCablesAvailable = [...importCables] as cableModel[];
+    ) as cableView[];
+    importCablesAvailable = [...importCables] as cableView[];
     importCablesAvailable.map((c) => {
       return (c.Lånt = 0);
     });
@@ -149,7 +149,7 @@
 
   function handleAddCable(event) {
     //move product from importProducts to products
-    let cable: cableModel = event.detail;
+    let cable: cableView = event.detail;
     if (importCables.length == 0) return;
 
     cable.Tilgaengelige--;

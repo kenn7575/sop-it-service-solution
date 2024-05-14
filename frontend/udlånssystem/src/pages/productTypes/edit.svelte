@@ -1,6 +1,6 @@
 <script lang="ts">
   import EditLayout from "@layouts/edit.svelte";
-  import { itemModel } from "types/itemModel";
+  import type { itemModel } from "types/tables/item";
   import createItem from "@data/create";
   import goToPath from "@services/goToPath";
   import { zodSchema, fields } from "./util";
@@ -8,7 +8,7 @@
   export let id: number;
 
   async function handleCreateNewProduct(product_id: number) {
-    const item = new itemModel({ product_id });
+    const item = { product_id } as itemModel;
 
     const response: any = await createItem("items", item);
     if (response && response.success) {
