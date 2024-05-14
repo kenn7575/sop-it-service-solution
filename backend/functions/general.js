@@ -21,8 +21,9 @@ function convertToPrismaTypes(data, table) {
   return data;
 }
 
-function findReferenced(table) {
-  return `
+async function findReferenced(table) {
+  const referenced = await prisma.$queryRawUnsafe(
+    `
   SELECT 
     TABLE_NAME, 
     COLUMN_NAME, 
@@ -32,7 +33,12 @@ function findReferenced(table) {
     information_schema.KEY_COLUMN_USAGE 
   WHERE 
 	  REFERENCED_TABLE_SCHEMA = 'sop' AND 
-    REFERENCED_TABLE_NAME = '${table}';`;
+    REFERENCED_TABLE_NAME = '${table}';`
+  );
+
+  const referencedArray = referenced.map(({ TABLE_NAME }) => TABLE_NAME);
+
+  return referencedArray;
 }
 
 function findReferencing(table) {

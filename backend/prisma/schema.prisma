@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["views"]
-  binaryTargets = ["native","darwin-arm64","linux-arm64-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
+  binaryTargets   = ["native", "darwin-arm64", "linux-arm64-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -39,6 +39,12 @@ model cables {
   cables_in_loan   cables_in_loan[]
 
   @@index([category_id], map: "fk_cable_category_idx")
+}
+
+model cable_categories {
+  UUID   Int      @id @default(autoincrement()) @db.UnsignedInt
+  name   String   @db.VarChar(255)
+  cables cables[]
 }
 
 model cables_in_loan {
@@ -242,12 +248,6 @@ model zones {
   loans       loans[]
 
   @@index([building_id], map: "building_id")
-}
-
-model cable_categories {
-  UUID   Int      @id @default(autoincrement()) @db.UnsignedInt
-  name   String   @db.VarChar(255)
-  cables cables[]
 }
 
 view available_cables {
