@@ -6,13 +6,13 @@
   import type { loanModel } from "types/tables/loan";
   import type { itemModel } from "types/tables/item";
   
-  import FormEditPanel from "components/form-edit-panel.svelte";
-  import TextQuestion from "components/textQuestion.svelte";
-  import NumberQuestion from "components/numberQuestion.svelte";
+  import FormEditPanel from "@components/form-edit-panel.svelte";
+  import TextQuestion from "@components/textQuestion.svelte";
+  import NumberQuestion from "@components/numberQuestion.svelte";
   
-    import { getData, updateItem } from "data/index";
-    import goToPath from "services/goToPath";
-    import doseObjectsMatch from "services/doesObjectsMatch";
+    import { getData, updateItem } from "@data/index";
+    import goToPath from "@services/goToPath";
+    import doseObjectsMatch from "@services/doesObjectsMatch";
 
   let importLoan: loanModel;
   let exportData: loanModel;
