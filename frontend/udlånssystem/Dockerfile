@@ -14,7 +14,8 @@ RUN npm install
 COPY . .
 
 # Set the environment variable for the Vite build
-ENV VITE_APP_BACKEND_URL="http://localhost:3000/api"
+ARG VITE_APP_BACKEND_URL
+ENV VITE_APP_BACKEND_URL $VITE_APP_BACKEND_URL
 
 # Build the app
 RUN npm run build
