@@ -7,6 +7,7 @@
   import FormEditPanel from "@components/form-edit-panel.svelte";
   import goToPath from "@services/goToPath.js";
   import doesObjectsMatch from "@services/doesObjectsMatch.js";
+  import { toast } from "svelte-sonner";
   import type { z } from "zod";
   import type { Field } from "types/field";
 
@@ -53,7 +54,7 @@
     const data = await getData(table, UUID);
 
     if (!data?.UUID) {
-      alert("Kunne ikke finde data");
+      toast.error("Kunne ikke finde data");
       goToPath(`/${page_name.toLowerCase()}`);
       return;
     }
@@ -71,9 +72,8 @@
     }
   }
 
-  async function handleUpdate(): Promise<any> {
+  async function handleUpdate(): Promise<void> {
     if (doesObjectsMatch(importData, exportData)) {
-      // alert("Ingen ændringer");
       editMode = false;
       return;
     }
@@ -81,39 +81,50 @@
     const { data, error } = zodSchema.safeParse(exportData);
 
     if (error) {
-      alert(error.errors.map((e) => e.message).join("\n"));
-
+      error.errors.reverse().map((e) =>
+        toast.warning(e.message, {
+          id: e.code + "-" + e.path.join("-"),
+        })
+      );
       return;
     }
 
-    const response: any = await updateItem(table, UUID, data);
-    if (response && response.success) {
-      importDataFromDB();
-      editMode = false;
-      alert("Changes saved");
-    } else {
-      alert("Ukendt fejl");
-    }
+    toast.promise(updateItem(table, UUID, data), {
+      loading: "Gemmer...",
+      success: () => {
+        importDataFromDB();
+        editMode = false;
+        return "Gemt";
+      },
+      error: (err: any) => {
+        console.log(err);
+        return "Der opstod en fejl";
+      },
+    });
   }
 
   async function handleDelete() {
     const name = importData?.name || "#" + UUID;
 
-    if (!confirm("Er du sikker på du vil slette " + name + "?")) {
-      return;
-    }
-
-    const response: any = await deleteItem({ UUID, table });
-
-    if (response?.error)
-      return alert("Error: " + response?.error?.response?.data?.error);
-
-    if (response?.success) {
-      alert("Slettet");
-      goToPath(`/${page_name.toLowerCase()}`);
-    } else {
-      alert("Error 500 - Ukendt fejl");
-    }
+    toast(`Sikker på du vil slette "${name}"?`, {
+      id: "promptDelete",
+      action: {
+        label: "Slet",
+        onClick: () => {
+          toast.promise(deleteItem({ UUID, table }), {
+            loading: "Sletter...",
+            success: () => {
+              goToPath(`/${page_name.toLowerCase()}`);
+              return "Slettet";
+            },
+            error: (err: any) => {
+              return "Fejl: " + err?.response?.data?.error;
+            },
+          });
+        },
+      },
+      cancel: { label: "Annuller" },
+    });
   }
 </script>
 

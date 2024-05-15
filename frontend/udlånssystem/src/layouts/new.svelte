@@ -6,6 +6,7 @@
   import TextQuestion from "@components/textQuestion.svelte";
   import NumberQuestion from "@components/numberQuestion.svelte";
   import SelectQuestion from "@components/selectQuestion.svelte";
+  import { toast } from "svelte-sonner";
   import type { z } from "zod";
   import type { Field } from "types/field";
 
@@ -37,23 +38,25 @@
     const { data, error } = zodSchema.safeParse(exportData);
 
     if (error) {
-      alert(error.errors.map((e) => e.message).join("\n"));
-
+      error.errors.reverse().map((e) =>
+        toast.warning(e.message, {
+          id: e.code + "-" + e.path.join("-"),
+        })
+      );
       return;
     }
 
-    const response: any = await createItem(table, data);
-    if (response && response.success) {
-      alert("Gemt");
-      goToPath(`/${page_name.toLowerCase()}/${response.id}`);
-    } else {
-      alert("Error 500 - Ukendt fejl");
-    }
-  }
-
-  function handleSubmit(event: Event) {
-    event.preventDefault();
-    handleCreate();
+    toast.promise(createItem(table, data), {
+      loading: "Gemmer...",
+      success: ({ id }) => {
+        goToPath(`/${page_name.toLowerCase()}/${id}`);
+        return "Gemt";
+      },
+      error: (err: any) => {
+        console.log(err)
+        return "Der opstod en fejl";
+      },
+    });
   }
 </script>
 
@@ -66,7 +69,7 @@
   />
 
   <div class="form">
-    <form on:submit={handleSubmit} id="new-form">
+    <form id="new-form">
       {#each fields as field}
         {#if field.type == "text" || field.type == "number"}
           <TextQuestion

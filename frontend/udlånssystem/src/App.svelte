@@ -11,6 +11,7 @@
     barcodeBuilderTimeOut,
     controlStore,
   } from "./stores/barcodeStore";
+  import { Toaster } from "svelte-sonner";
 
   //login page
   import NotLoggedIn from "./pages/login/index.svelte";
@@ -120,9 +121,13 @@
       $barcodeBuilderTimeOut = now;
     }
   }
+
+  $: theme = localStorage.getItem("theme") as "light" | "dark";
 </script>
 
 <svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
+
+<Toaster {theme} closeButton />
 
 <!-- While in development disable login -->
 <!-- {#if true} -->
