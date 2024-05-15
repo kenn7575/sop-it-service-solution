@@ -1,15 +1,18 @@
 <script lang="ts">
   export let id;
-  import { loanModel } from "../../types/loanModel";
-  import type { itemModel } from "../../types/itemModel";
-  import getData from "../../data/getData";
-  import goToPath from "../../services/goToPath";
-  import update from "../../data/update";
-  import FormEditPanel from "../../components/form-edit-panel.svelte";
-  import TextQuestion from "../../components/textQuestion.svelte";
+
   import { onMount } from "svelte";
-  import doseObjectsMatch from "../../services/doesObjectsMatch";
-  import NumberQuestion from "../../components/numberQuestion.svelte";
+
+  import type { loanModel } from "types/tables/loan";
+  import type { itemModel } from "types/tables/item";
+  
+  import FormEditPanel from "@components/form-edit-panel.svelte";
+  import TextQuestion from "@components/textQuestion.svelte";
+  import NumberQuestion from "@components/numberQuestion.svelte";
+  
+    import { getData, updateItem } from "@data/index";
+    import goToPath from "@services/goToPath";
+    import doseObjectsMatch from "@services/doesObjectsMatch";
 
   let importLoan: loanModel;
   let exportData: loanModel;
@@ -30,10 +33,10 @@
 
   async function importDataFromDB() {
     const data = await getData(table, id);
-    exportData = new loanModel({ ...data });
-    importLoan = new loanModel({ ...data });
+    exportData = { ...data };
+    importLoan = { ...data };
 
-    let itemsInLoan = await getData("items_in_loan");
+    // let itemsInLoan = await getData("items_in_loan");
     loan_view = await getData("loans_view_extended", id);
 
     // HOT FIX - if the data is not found, redirect to the index page
@@ -45,15 +48,11 @@
   }
 
   async function handleUpdate(): Promise<any> {
-    if (!exportData.validate()) {
-      alert("Udfyld alle felter");
-      return;
-    }
     if (doseObjectsMatch(importLoan, exportData)) {
       alert("Ingen ændringer");
       return;
     }
-    const response: any = await update(exportData, table);
+    const response: any = await updateItem(table, id, exportData);
     if (response && response.success) {
       importDataFromDB();
       editMode = false;
@@ -102,11 +101,6 @@
   {#if exportData && loan_view}
     <div class="content">
       <form action="" id="loan-form">
-        <TextQuestion
-          bind:binding={exportData.UUID}
-          label="ID"
-          editMode={false}
-        />
         <NumberQuestion
           bind:binding={exportData.loan_length}
           label={`Lånetid | [${loanDateFormatter()}]`}

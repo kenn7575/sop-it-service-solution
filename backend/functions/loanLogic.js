@@ -1,16 +1,20 @@
-async function returnLoan(db, loanId) {
-  const itemsNotReturned = await db.find("items_in_loan", {
-    loan_id: loanId,
-    date_returned: null,
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+async function returnLoan(loanId) {
+  const itemsNotReturned = await prisma.items_in_loan.findMany({
+    where: { loan_id: loanId, date_returned: null },
   });
 
-  const cablesNotReturned = await db.find("cables_in_loan", {
-    loan_id: loanId,
-    date_returned: null,
+  const cablesNotReturned = await prisma.cables_in_loan.findMany({
+    where: { loan_id: loanId, date_returned: null },
   });
 
   if (itemsNotReturned.length === 0 && cablesNotReturned.length === 0) {
-    await db.update("loans", { UUID: loanId }, { date_of_return: new Date() });
+    await prisma.loans.update({
+      where: { UUID: loanId },
+      data: { date_of_return: new Date() },
+    });
 
     return true;
   }
@@ -18,23 +22,30 @@ async function returnLoan(db, loanId) {
   return false;
 }
 
-async function returnCable(db, cable) {
-  const { amount_lent, amount_returned } = await db.findOne("cables_in_loan", {
-    cable_id: cable.UUID,
+async function returnCable(cable) {
+  const { amount_lent, amount_returned } =
+    await prisma.cables_in_loan.findFirst({
+      where: { cable_id: cable.UUID, loan_id: cable.loan_id },
+    });
+
+  await prisma.cables.update({
+    where: { UUID: cable.UUID },
+    data: {
+      amount_lent: {
+        decrement: cable["Mængde returneret"],
+      },
+    },
   });
 
-  await db.update(
-    "cables",
-    { UUID: cable.UUID },
-    { amount_lent: amount_lent - cable["Mængde returneret"] }
-  );
-
   if (amount_returned >= amount_lent) {
-    await db.update(
-      "cables_in_loan",
-      { cable_id: cable.UUID, date_returned: null },
-      { date_returned: new Date() }
-    );
+    const { UUID: cableInLoanUUID } = await prisma.cables_in_loan.findFirst({
+      where: { cable_id: cable.UUID, loan_id: cable.loan_id },
+    });
+
+    await prisma.cables_in_loan.update({
+      where: { UUID: cableInLoanUUID },
+      data: { date_returned: new Date() },
+    });
 
     return true;
   }

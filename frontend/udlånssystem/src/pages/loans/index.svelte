@@ -6,22 +6,22 @@
   import { onMount } from "svelte";
   import getData from "../../data/getData";
 
-  let inputData = [[]];
-  let constData = [[]];
+  let inputData = {};
+  let constData = {};
 
   let page_name = "udlaan";
 
   async function filterLoans(returned) {
     if (returned) {
-      inputData = constData.filter((loan) => loan.Returneret);
+      inputData.data = constData.data.filter((loan) => loan.Returneret);
     } else {
-      inputData = constData.filter((loan) => !loan.Returneret);
+      inputData.data = constData.data.filter((loan) => !loan.Returneret);
     }
   }
 
   onMount(async () => {
     constData = await getData("loans_view");
-    inputData = [...constData];
+    inputData = { ...constData };
     filterLoans(false);
   });
 
@@ -39,28 +39,48 @@
 </script>
 
 <div class="table-container">
-  <input
-    id="checkbox"
-    type="checkbox"
-    on:change={(e) => filterLoans(e.target.checked)}
-  />
-  <label for="checkbox">Vis kun afleverede lån</label>
-
   <!-- extraButton="Send mail til overskredne udlån" -->
   <Table
-    {inputData}
+    headers={inputData.headers}
+    values={inputData.data}
     buttonDestination={`${page_name}/new`}
     on:message={handleRowClick}
     on:action={handleSendMails}
     filterKey="Bruger"
     sortBy="Oprettet"
     sortAscending={true}
-  />
+  >
+    <label slot="controls" id="toggleReturned">
+      <input
+        id="checkbox"
+        type="checkbox"
+        on:change={(e) => filterLoans(e.target.checked)}
+      />
+      <p>Vis kun afleverede lån</p>
+    </label>
+  </Table>
 </div>
 
 <style>
   .table-container {
     width: 100%;
     height: 100%;
+  }
+
+  #toggleReturned {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.75rem 0.5rem;
+
+    border: solid 1px var(--text1);
+    border-radius: 10px;
+    background: var(--bg2);
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
   }
 </style>
