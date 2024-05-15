@@ -8,7 +8,15 @@ router.get("/:UUID", async (req, res) => {
   var item = await prisma.items.findUnique({
     where: { UUID: Number(UUID) },
     include: {
-      items_in_loan: true
+      items_in_loan: {
+        include: {
+          loans: {
+            include: {
+              users_loans_user_idTousers: true,
+            },
+          },
+        },
+      },
     },
   });
 

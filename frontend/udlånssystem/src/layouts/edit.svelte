@@ -142,7 +142,9 @@
       on:update={handleUpdate}
       bind:editMode
       disableDelete={isDeleteDisabled()}
-    />
+    >
+      <slot name="edit-panel" />
+    </FormEditPanel>
     <div
       on:submit={(e) => {
         e.preventDefault;

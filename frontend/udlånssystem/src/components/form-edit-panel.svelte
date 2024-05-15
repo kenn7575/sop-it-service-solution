@@ -3,7 +3,7 @@
   export let loanMode = false;
   export let loanReturnDate = null;
   export let loanId = null;
-  export let item = null;
+  export let item = {}
   export let disableDelete = false;
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
@@ -58,6 +58,7 @@
   {:else if item?.product_status_id == 1}
     <a href={`/udlaan/new?item=${item?.UUID}`}>Opret lån</a>
   {/if}
+  <slot />
 </div>
 
 <style>
