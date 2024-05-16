@@ -11,12 +11,24 @@ services: # Frontend, backend and database
       dockerfile: Dockerfile
       args:
         - VITE_APP_BACKEND_URL=${VITE_APP_BACKEND_URL}
-
-
     expose:
       - "80"
     ports:
       - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - server-net
+  frontend-selfservice:
+    build:
+      context: ./frontend/selfservice # Adjust this path to your Svelte project's root directory
+      dockerfile: Dockerfile
+      args:
+        - VITE_APP_BACKEND_URL=${VITE_APP_BACKEND_URL}
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
     depends_on:
       - backend
     networks:
