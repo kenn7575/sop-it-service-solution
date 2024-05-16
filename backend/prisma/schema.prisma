@@ -116,7 +116,7 @@ model items_in_loan {
 }
 
 model loans {
-  UUID                                    Int               @id @db.UnsignedInt
+  UUID                                    Int               @id @default(autoincrement()) @db.UnsignedInt
   date_created                            DateTime          @default(now()) @db.DateTime(0)
   date_updated                            DateTime          @default(now()) @db.DateTime(0)
   date_of_return                          DateTime?         @db.DateTime(0)
@@ -222,7 +222,7 @@ model storage_locations {
 model users {
   UUID                                    Int        @id @db.UnsignedInt
   username                                String     @db.VarChar(255)
-  password                                String     @db.VarChar(255)
+  password                                String?    @db.VarChar(255)
   name                                    String     @db.VarChar(255)
   mail                                    String     @db.VarChar(255)
   is_ad_user                              Boolean
@@ -274,7 +274,7 @@ view brands_view {
 }
 
 view cables_from_loans {
-  loan_id            Int       @db.UnsignedInt
+  loan_id            Int       @default(0) @db.UnsignedInt
   UUID               Int       @id @default(0) @db.UnsignedInt
   Oprettet           DateTime  @default(now()) @db.DateTime(0)
   Kabel_navn         String    @map("Kabel navn") @db.VarChar(100)
@@ -319,7 +319,7 @@ view items_view {
 }
 
 view loans_view {
-  UUID             Int       @id @db.UnsignedInt
+  UUID             Int       @id @default(0) @db.UnsignedInt
   Oprettet         DateTime  @default(now()) @db.DateTime(0)
   Opdateret        DateTime  @default(now()) @db.DateTime(0)
   Returneret       DateTime? @db.DateTime(0)
@@ -331,7 +331,7 @@ view loans_view {
 }
 
 view loans_view_extended {
-  UUID                Int     @id @db.UnsignedInt
+  UUID                Int     @id @default(0) @db.UnsignedInt
   location_of_use_id  Int?    @db.UnsignedInt
   selfservice_case_id Int?    @db.UnsignedInt
   loan_length         Int?
@@ -351,7 +351,7 @@ view loans_view_extended {
 view personnel_users {
   UUID         Int      @id @db.UnsignedInt
   username     String   @db.VarChar(255)
-  password     String   @db.VarChar(255)
+  password     String?  @db.VarChar(255)
   name         String   @db.VarChar(255)
   mail         String   @db.VarChar(255)
   is_ad_user   Boolean
