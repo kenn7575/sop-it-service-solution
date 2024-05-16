@@ -44,6 +44,7 @@ async function ldapAuthenticate(
       name: "John Doe",
       username: "jdoe",
       mail: "johndoe@mail.com",
+      moderator: true,
     };
   }
 

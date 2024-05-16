@@ -1,37 +1,55 @@
-<script lang="js">
-  // @ts-nocheck
-
-  import Table from "../../components/table.svelte";
+<script lang="ts">
+  import Table from "@components/table.svelte";
   import axios from "axios";
   import { onMount } from "svelte";
-  import getData from "../../data/getData";
+  import getData from "@data/getData";
 
-  let inputData = {};
-  let constData = {};
+  let headers: string[] = [];
+  let values: any[] = [];
+  let constData: any[] = [];
 
   let page_name = "udlaan";
 
-  async function filterLoans(returned) {
-    if (returned) {
-      inputData.data = constData.data.filter((loan) => loan.Returneret);
-    } else {
-      inputData.data = constData.data.filter((loan) => !loan.Returneret);
+  let filters = {
+    active: false,
+    returned: false,
+  };
+
+  async function filterLoans(filter: "active" | "returned") {
+    filters[filter] = !filters[filter];
+
+    values = [];
+
+    if (filters.active) {
+      values.push(...constData.filter((loan) => loan.Returneret));
+    }
+
+    if (filters.returned) {
+      values.push(...constData.filter((loan) => !loan.Returneret));
+    }
+
+    if (!filters.active && !filters.returned) {
+      values = [...constData];
     }
   }
 
   onMount(async () => {
-    constData = await getData("loans_view");
-    inputData = { ...constData };
-    filterLoans(false);
+    const data = await getData("loans_view");
+
+    headers = data.headers;
+    values = data.data;
+
+    constData = [...values];
+    filterLoans("active");
   });
 
-  import goToPath from "../../services/goToPath";
+  import goToPath from "@services/goToPath";
   function handleRowClick(event) {
     let id = event.detail.UUID;
     goToPath(`${page_name.toLowerCase()}/${id}`);
   }
   async function handleSendMails() {
-    console.log("Sending mails");
+    return; // temp
     const { data } = await axios.post("mail.php");
     if (data?.success) alert(data.message);
   }
@@ -40,8 +58,8 @@
 <div class="table-container">
   <!-- extraButton="Send mail til overskredne udlån" -->
   <Table
-    headers={inputData.headers}
-    values={inputData.data}
+    {headers}
+    {values}
     buttonDestination={`${page_name}/new`}
     on:message={handleRowClick}
     on:action={handleSendMails}
@@ -49,14 +67,26 @@
     sortBy="Oprettet"
     sortAscending={true}
   >
-    <label slot="controls" id="toggleReturned">
-      <input
-        id="checkbox"
-        type="checkbox"
-        on:change={(e) => filterLoans(e.target.checked)}
-      />
-      <p>Vis kun afleverede lån</p>
-    </label>
+    <div slot="controls" class="flex gap-5">
+      <label class="toggleReturned">
+        <input
+          id="checkbox"
+          type="checkbox"
+          checked={filters.active}
+          on:change={(e) => filterLoans("active")}
+        />
+        <p>Vis aktive lån</p>
+      </label>
+      <label class="toggleReturned">
+        <input
+          id="checkbox"
+          type="checkbox"
+          checked={filters.returned}
+          on:change={(e) => filterLoans("returned")}
+        />
+        <p>Vis afleverede lån</p>
+      </label>
+    </div>
   </Table>
 </div>
 
@@ -66,7 +96,7 @@
     height: 100%;
   }
 
-  #toggleReturned {
+  .toggleReturned {
     display: flex;
     justify-content: center;
     align-items: center;
