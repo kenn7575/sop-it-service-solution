@@ -42,12 +42,13 @@ router.get("/:table", async (req, res) => {
 
 router.get("/:table/:UUID", async (req, res) => {
   const { table, UUID } = req.params;
+  let filter = req.query;
 
   if (!table || !Number(UUID))
     return res.status(400).json({ error: "Invalid request" });
 
   const result = await prisma[table].findUnique({
-    where: { UUID: Number(UUID) },
+    where: { UUID: Number(UUID), ...filter },
   });
 
   res.json(result);

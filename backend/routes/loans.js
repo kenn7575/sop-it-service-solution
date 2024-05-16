@@ -5,6 +5,22 @@ const prisma = require("../prisma.config.js");
 const { returnLoan, returnCable } = require("../functions/loanLogic.js");
 const { convertToPrismaTypes } = require("../functions/general");
 
+router.get(["/", "/:UUID"], async (req, res, next) => {
+  const { moderator } = req.user;
+
+  let user = await prisma.users.findFirst({
+    where: { username: req.user.username },
+  });
+
+  if (!user && !moderator) return res.sendStatus(401);
+
+  let user_id = moderator ? undefined : user?.UUID;
+
+  req.query.user_id = user_id;
+
+  return next();
+});
+
 router.post("/", async (req, res) => {
   let { loan, products = [], cables = [] } = req.body;
 

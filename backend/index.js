@@ -26,6 +26,7 @@ router.use(async (req, res, next) => {
 });
 
 router.use("/loans", require("./routes/loans"));
+router.use("/loans_view", require("./routes/loans_view"));
 router.use("/mail", require("./routes/mail"));
 router.use("/items", require("./routes/items"));
 

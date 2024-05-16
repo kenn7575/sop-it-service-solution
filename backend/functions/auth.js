@@ -29,7 +29,16 @@ const {
   LDAP_PASSWORD,
 } = process.env;
 
-async function ldapAuthenticate(username, userPassword) {
+const ldapUrl = `ldap://${LDAP_HOST}:${LDAP_PORT}`;
+const adminDn = LDAP_USERNAME;
+const adminPassword = LDAP_PASSWORD;
+const usernameAttribute = "sAMAccountName";
+
+async function ldapAuthenticate(
+  username,
+  userPassword,
+  userSearchBase = LDAP_ADMINS
+) {
   if (NODE_ENV === "development") {
     return {
       name: "John Doe",
@@ -37,13 +46,6 @@ async function ldapAuthenticate(username, userPassword) {
       mail: "johndoe@mail.com",
     };
   }
-
-  const userSearchBase = NODE_ENV == "development" ? LDAP_USERS : LDAP_ADMINS;
-
-  const ldapUrl = `ldap://${LDAP_HOST}:${LDAP_PORT}`;
-  const adminDn = LDAP_USERNAME;
-  const adminPassword = LDAP_PASSWORD;
-  const usernameAttribute = "sAMAccountName";
 
   const client = ldap.createClient({
     url: ldapUrl,
@@ -56,6 +58,8 @@ async function ldapAuthenticate(username, userPassword) {
         reject("Admin bind failed: " + err);
         return;
       }
+
+      username = username.replace("@edu.sde.dk", "");
 
       const searchOptions = {
         filter: `(${usernameAttribute}=${username})`,
@@ -99,6 +103,7 @@ async function ldapAuthenticate(username, userPassword) {
             name,
             username: sAMAccountName,
             mail,
+            moderator: userSearchBase == LDAP_ADMINS,
           };
         });
 
@@ -110,6 +115,10 @@ async function ldapAuthenticate(username, userPassword) {
           }
 
           if (!user?.distinguishedName) {
+            if (userSearchBase == LDAP_ADMINS)
+              ldapAuthenticate(username, userPassword, LDAP_USERS).catch(
+                reject
+              );
             client.unbind();
             reject("User DN not found: " + username);
             return;
