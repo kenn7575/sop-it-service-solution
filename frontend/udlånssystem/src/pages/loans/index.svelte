@@ -33,7 +33,6 @@
   async function handleSendMails() {
     console.log("Sending mails");
     const { data } = await axios.post("mail.php");
-    console.log(data);
     if (data?.success) alert(data.message);
   }
 </script>

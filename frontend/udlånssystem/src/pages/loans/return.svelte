@@ -80,8 +80,6 @@
       });
     }
 
-    console.log("dataItems", dataItems);
-
     const items: itemsFromLoan[] = [];
     const cables: cableFromLoan[] = [];
 
