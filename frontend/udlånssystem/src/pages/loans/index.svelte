@@ -21,11 +21,11 @@
     values = [];
 
     if (filters.active) {
-      values.push(...constData.filter((loan) => loan.Returneret));
+      values.push(...constData.filter((loan) => !loan.Returneret));
     }
 
     if (filters.returned) {
-      values.push(...constData.filter((loan) => !loan.Returneret));
+      values.push(...constData.filter((loan) => loan.Returneret));
     }
 
     if (!filters.active && !filters.returned) {
