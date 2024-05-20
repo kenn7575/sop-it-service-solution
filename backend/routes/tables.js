@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { convertToPrismaTypes } = require("../functions/general.js");
 const prisma = require("../prisma.config.js");
 
 BigInt.prototype.toJSON = function () {
@@ -30,6 +31,8 @@ router.get("/:table", async (req, res) => {
   Object.entries(filter).map(([key, value]) => {
     if (value === "null") filter[key] = null;
   });
+
+  filter = convertToPrismaTypes(filter, table);
 
   const result = await prisma[table].findMany({
     where: filter,

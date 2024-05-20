@@ -63,36 +63,9 @@
   $: handleBarcode($barcodeStore), importItemsInLoanLent;
 
   async function importDataFromDB() {
-    var dataItems = (await getData(table)).data;
-    var dataCables = (await getData("cables_from_loans")).data;
+    const items = (await getData(table + "?loan_id=" + id)).data;
+    const cables = (await getData("cables_from_loans?loan_id=" + id)).data;
 
-    for (let dataItem of dataItems) {
-      Object.entries(dataItem).map(([key, value]) => {
-        key = key.replace("_", " ");
-        dataItem[key] = value;
-      });
-    }
-
-    for (let dataCable of dataCables) {
-      Object.entries(dataCable).map(([key, value]) => {
-        key = key.replace("_", " ");
-        dataCable[key] = value;
-      });
-    }
-
-    const items: itemsFromLoan[] = [];
-    const cables: cableFromLoan[] = [];
-
-    dataItems.map((element, index) => {
-      if (element.loan_id == id) {
-        items.push({ ...dataItems[index] });
-      }
-    });
-    dataCables.map((element, index) => {
-      if (element.loan_id == id) {
-        cables.push({ ...dataCables[index] });
-      }
-    });
     importItemsInLoanLent = items.filter(({ Returneret }) => !Returneret);
     importItemsInLoanAvailable = items.filter(({ Returneret }) => Returneret);
 

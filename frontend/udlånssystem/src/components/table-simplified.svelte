@@ -61,7 +61,9 @@
         <tr>
           {#each tableHeadings as heading}
             {#if !exclude.includes(heading)}
-              <th on:click={() => sortTable(heading)}>{heading}</th>
+              <th on:click={() => sortTable(heading)}
+                >{heading.replace("_", " ")}</th
+              >
             {/if}
           {/each}
         </tr>
