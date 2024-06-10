@@ -1,6 +1,6 @@
 <script lang="ts">
   import EditLayout from "@layouts/edit.svelte";
-  import { zodSchema, fields } from "./util";
+  import { zodSchema, fields, LoanHistory } from "./util";
   import { onMount } from "svelte";
   import getData from "@data/getData";
 
@@ -12,61 +12,53 @@
     items = await getData("items", id);
   });
 
-  function activeLoan(item: any): "active" | "" {
-    if (item?.date_returned == null) return "active";
-    return "";
-  }
-
-  function fDate(date: string): string {
-    return new Date(date).toLocaleDateString("da-DK");
-  }
-
-  function loanDate({ date_created, date_returned }): string {
-    let text = fDate(date_created);
-
-    if (date_returned) {
-      text += " - " + fDate(date_returned);
-    }
-
-    return text;
-  }
-
-  function loanUser({ loans: loan }): string {
-    if (loan) {
-      let { name, username } = loan.users_loans_user_idTousers;
-
-      let nameList = name.split(" ");
-
-      let firstName = nameList[0];
-      let lastName = nameList[nameList.length - 1];
-
-      return `${firstName} ${lastName} (${username})`;
-    }
-
-    return "";
-  }
+  let show = false;
 </script>
 
 <EditLayout table="items" page_name="Produkter" UUID={id} {fields} {zodSchema}>
-  <div slot="edit-panel" class="flex flex-col items-center gap-3">
-    <h1>Lånehistorik</h1>
-    <ul class="flex flex-col gap-5 text-center">
-      {#if items?.items_in_loan?.length > 0}
+  <div
+    slot="edit-panel"
+    class="flex flex-col items-center gap-3 overflow-hidden"
+  >
+    <h1>Lånehistorik:</h1>
+    {#if items?.items_in_loan?.length > 0}
+      <ul class="loanHistoryList">
         {#each items?.items_in_loan.reverse() as item}
-          <a class={`${activeLoan(item)}`} href={`/udlaan/${item.loan_id}`}
-            ><p>{loanDate(item)}</p>
-            <p>{loanUser(item)}</p>
+          <a
+            class={`${new LoanHistory(item).isActive()} loanHistoryItem`}
+            href={`/udlaan/${item.loan_id}`}
+          >
+            <p>{new LoanHistory(item).date()}</p>
+            <p>{new LoanHistory(item).time()}</p>
+            <p>{new LoanHistory(item).user()}</p>
           </a>
         {/each}
-      {:else}
-        <p>Ingen lån</p>
-      {/if}
-    </ul>
+      </ul>
+    {:else}
+      <p>Ingen lånehistorik</p>
+    {/if}
   </div>
 </EditLayout>
 
 <style>
+  .loanHistoryList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .loanHistoryItem {
+    width: 100%;
+    min-height: 2rem;
+    padding: 0.6rem;
+    color: var(--text1);
+    background: transparent;
+    border: 3px solid var(--text1);
+    border-radius: 10px;
+  }
+
   .active {
-    background-color: var(--p);
+    border-color: var(--p);
   }
 </style>
