@@ -36,14 +36,9 @@
 
   //scroll to element when menu is opened
   function scrollIntoView(classname) {
-    console.log("scrolling to", classname);
     setTimeout(() => {
       const el = document.getElementById(classname);
-      if (!el) {
-        console.log("element not found");
-        return;
-      }
-      console.log("scrolling to ", classname);
+      if (!el) return;
 
       el.scrollIntoView({
         behavior: "smooth",

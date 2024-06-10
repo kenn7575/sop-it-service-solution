@@ -1,5 +1,4 @@
 var jwt = require("jsonwebtoken");
-var ldap = require("ldapjs");
 
 const { JWT_SECRET } = process.env;
 
@@ -19,112 +18,86 @@ function authenticateUser(req, res, next) {
   }
 }
 
+const { NODE_ENV, LDAP_USERS, LDAP_ADMINS } = process.env;
 const {
-  NODE_ENV,
-  LDAP_USERS,
-  LDAP_ADMINS,
-  LDAP_HOST,
-  LDAP_PORT,
-  LDAP_USERNAME,
-  LDAP_PASSWORD,
-} = process.env;
+  attributes,
+  createLdapClient,
+  formatEntryResult,
+  getUsers,
+} = require("./ldapHelper");
 
-async function ldapAuthenticate(username, userPassword) {
-  if (NODE_ENV === "development") {
+async function ldapAuthenticate(username, password, searchBase = LDAP_ADMINS) {
+  let resolve, reject;
+
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  if (NODE_ENV === "developmentt") {
     return {
       name: "John Doe",
       username: "jdoe",
       mail: "johndoe@mail.com",
+      moderator: true,
     };
   }
 
-  const userSearchBase = NODE_ENV == "development" ? LDAP_USERS : LDAP_ADMINS;
+  const client = await createLdapClient();
 
-  const ldapUrl = `ldap://${LDAP_HOST}:${LDAP_PORT}`;
-  const adminDn = LDAP_USERNAME;
-  const adminPassword = LDAP_PASSWORD;
-  const usernameAttribute = "sAMAccountName";
+  const searchOptions = {
+    filter: `(sAMAccountName=${username.replace("@edu.sde.dk", "")})`,
+    scope: "sub",
+    attributes,
+  };
 
-  const client = ldap.createClient({
-    url: ldapUrl,
-  });
+  client.search(searchBase, searchOptions, (err, res) => {
+    if (err) {
+      client.unbind();
+      reject("Search failed: " + err);
+      return promise;
+    }
 
-  return new Promise((resolve, reject) => {
-    client.bind(adminDn, adminPassword, (err) => {
-      if (err) {
+    let user;
+
+    res.on("searchEntry", (entry) => {
+      user = formatEntryResult(entry);
+
+      user.moderator = searchBase === LDAP_ADMINS;
+    });
+
+    res.on("end", (result) => {
+      if (result.status !== 0) {
         client.unbind();
-        reject("Admin bind failed: " + err);
-        return;
+        reject("Non-zero status from LDAP search: " + result.status);
+        return promise;
       }
 
-      const searchOptions = {
-        filter: `(${usernameAttribute}=${username})`,
-        scope: "sub",
-        attributes: [
-          "cn",
-          "sn",
-          "givenName",
-          "distinguishedName",
-          "name",
-          "sAMAccountName",
-          "mail",
-        ],
-      };
+      if (!user?.distinguishedName) {
+        if (searchBase == LDAP_ADMINS)
+          ldapAuthenticate(username, password, LDAP_USERS).catch(reject);
+        client.unbind();
+        reject("User DN not found: " + username);
+        return promise;
+      }
 
-      client.search(userSearchBase, searchOptions, (err, res) => {
-        if (err) {
-          client.unbind();
-          reject("Search failed: " + err);
-          return;
-        }
+      client.bind(user.distinguishedName, password, (err) => {
+        client.unbind();
+        if (err) reject("User bind failed: " + username);
 
-        let user;
-
-        res.on("searchEntry", (entry) => {
-          const [
-            cn,
-            sn,
-            givenName,
-            distinguishedName,
-            name,
-            sAMAccountName,
-            mail,
-          ] = entry.pojo.attributes.map(({ type, values }) => values[0]);
-
-          user = {
-            cn,
-            sn,
-            givenName,
-            distinguishedName,
-            name,
-            username: sAMAccountName,
-            mail,
-          };
-        });
-
-        res.on("end", (result) => {
-          if (result.status !== 0) {
-            client.unbind();
-            reject("Non-zero status from LDAP search: " + result.status);
-            return;
-          }
-
-          if (!user?.distinguishedName) {
-            client.unbind();
-            reject("User DN not found: " + username);
-            return;
-          }
-
-          client.bind(user.distinguishedName, userPassword, (err) => {
-            client.unbind();
-            if (err) reject("User bind failed: " + username);
-
-            resolve(user);
-          });
-        });
+        resolve(user);
       });
     });
   });
+
+  return promise;
 }
 
-module.exports = { authenticateUser, ldapAuthenticate };
+module.exports = {
+  authenticateUser,
+  ldapAuthenticate,
+  createLdapClient,
+  attributes,
+  formatEntryResult,
+  getUsers,
+};

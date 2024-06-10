@@ -14,6 +14,12 @@ function includeInModel() {
       let select = {};
 
       for (let ref of referenced) {
+        if (model == "users" && ref == "loans") {
+          select.loans_loans_helpdesk_personel_idTousers = true;
+          select.loans_loans_user_idTousers = true;
+ 
+          continue;
+        }
         select[ref] = true;
       }
 
