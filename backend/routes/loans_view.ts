@@ -1,10 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const { PrismaClient } = require("@prisma/client");
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
+const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get(["/", "/:UUID"], async (req, res, next) => {
+router.get(["/", "/:UUID"], async (req: any, res, next) => {
   const { moderator } = req.user;
 
   let user = await prisma.users.findFirst({
@@ -29,4 +29,4 @@ router.get(["/", "/:UUID"], async (req, res, next) => {
   res.json({ headers, data: loansView });
 });
 
-module.exports = router;
+export default router;

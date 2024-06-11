@@ -1,6 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const { attributes, getUsers } = require("../functions/auth");
+import { Router } from "express";
+import { attributes, getUsers } from "@functions";
+import { SearchOptions } from "ldapjs";
+
+const router = Router();
 
 const { LDAP_USERS, LDAP_ADMINS } = process.env;
 
@@ -20,7 +22,10 @@ router.get("/ldap", async (req, res) => {
       filter: "(objectClass=person)",
       scope: "sub",
       attributes,
-    };
+    } as SearchOptions;
+
+    if (!LDAP_USERS || !LDAP_ADMINS)
+      return res.status(500).json({ error: "LDAP credentials missing" });
 
     const users = await getUsers(LDAP_USERS, searchOptions);
     const admins = await getUsers(LDAP_ADMINS, searchOptions);
@@ -32,4 +37,4 @@ router.get("/ldap", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

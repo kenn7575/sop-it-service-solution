@@ -1,17 +1,23 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient, Prisma } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
-function getFieldTypes(table) {
-  let fieldTypes = {};
+export function getFieldTypes(table: Prisma.ModelName) {
+  let fieldTypes = {} as Record<string, string>;
 
-  Object.entries(prisma[table].fields).map(
+  const fields = prisma[table].fields;
+
+  Object.entries(fields).map(
     ([key, value]) => (fieldTypes[key] = value.typeName)
   );
 
   return fieldTypes;
 }
 
-function convertToPrismaTypes(data, table) {
+export function convertToPrismaTypes(
+  data: any,
+  table: Prisma.ModelName
+): typeof data {
   let fieldTypes = getFieldTypes(table);
 
   Object.entries(data).map(([key, value]) => {
@@ -21,8 +27,8 @@ function convertToPrismaTypes(data, table) {
   return data;
 }
 
-async function findReferenced(table) {
-  const referenced = await prisma.$queryRawUnsafe(
+export async function findReferenced(table: Prisma.ModelName) {
+  const referenced = (await prisma.$queryRawUnsafe(
     `
   SELECT 
     TABLE_NAME, 
@@ -34,14 +40,14 @@ async function findReferenced(table) {
   WHERE 
 	  REFERENCED_TABLE_SCHEMA = 'sop' AND 
     REFERENCED_TABLE_NAME = '${table}';`
-  );
+  )) as Array<{ TABLE_NAME: string }>;
 
   const referencedArray = referenced.map(({ TABLE_NAME }) => TABLE_NAME);
 
   return referencedArray;
 }
 
-function findReferencing(table) {
+export function findReferencing(table: Prisma.ModelName) {
   return `
   SELECT 
     TABLE_NAME, 
@@ -55,9 +61,9 @@ function findReferencing(table) {
     REFERENCED_TABLE_NAME IS NOT NULL;`;
 }
 
-module.exports = {
-  getFieldTypes,
-  convertToPrismaTypes,
-  findReferenced,
-  findReferencing,
-};
+// export default {
+//   getFieldTypes,
+//   convertToPrismaTypes,
+//   findReferenced,
+//   findReferencing,
+// };

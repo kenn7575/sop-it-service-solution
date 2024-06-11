@@ -1,11 +1,12 @@
-const express = require("express");
+import express from "express";
+import prisma from "@/prisma.config";
+import { returnLoan, returnCable, convertToPrismaTypes } from "@functions";
+
+import type { cables, items, loans } from "@prisma/client";
+
 const router = express.Router();
-const prisma = require("../prisma.config.js");
 
-const { returnLoan, returnCable } = require("../functions/loanLogic.js");
-const { convertToPrismaTypes } = require("../functions/general");
-
-router.get(["/", "/:UUID"], async (req, res, next) => {
+router.get(["/", "/:UUID"], async (req: any, res, next) => {
   const { moderator } = req.user;
 
   let user = await prisma.users.findFirst({
@@ -14,7 +15,7 @@ router.get(["/", "/:UUID"], async (req, res, next) => {
 
   if (!user && !moderator) return res.sendStatus(401);
 
-  let user_id = moderator ? undefined : user?.UUID;
+  let user_id = user.UUID;
 
   req.query.user_id = user_id;
 
@@ -22,7 +23,13 @@ router.get(["/", "/:UUID"], async (req, res, next) => {
 });
 
 router.post("/", async (req, res) => {
-  let { loan, products = [], cables = [] } = req.body;
+  interface reqBody {
+    loan: loans;
+    products: items[];
+    cables: cables[] | any[];
+  }
+
+  let { loan, products = [], cables = [] }: reqBody = req.body;
 
   loan = convertToPrismaTypes(loan, "loans");
   products = products.map((product) => convertToPrismaTypes(product, "items"));
@@ -86,9 +93,9 @@ router.patch("/return/item", async (req, res) => {
   var itemsInLoan = [];
 
   for (const item of items) {
-    const { UUID: itemInLoanUUID } = await prisma.items_in_loan.findFirst({
+    const { UUID: itemInLoanUUID } = (await prisma.items_in_loan.findFirst({
       where: { item_id: item.UUID },
-    });
+    }))!;
 
     const itemInLoan = prisma.items_in_loan.update({
       where: { UUID: itemInLoanUUID },
@@ -110,9 +117,9 @@ router.patch("/return/cable", async (req, res) => {
   if (!cables) return res.sendStatus(400);
 
   for (const cable of cables) {
-    const { UUID: cableInLoanUUID } = await prisma.cables_in_loan.findFirst({
+    const { UUID: cableInLoanUUID } = (await prisma.cables_in_loan.findFirst({
       where: { cable_id: cable.UUID, loan_id: cable.loan_id },
-    });
+    }))!;
 
     await prisma.cables_in_loan.update({
       where: { UUID: cableInLoanUUID },
@@ -127,4 +134,4 @@ router.patch("/return/cable", async (req, res) => {
   res.json({ success: true });
 });
 
-module.exports = router;
+export default router;

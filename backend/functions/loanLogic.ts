@@ -1,7 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient, loans, cables } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
-async function returnLoan(loanId) {
+export async function returnLoan(loanId: loans["UUID"]) {
   const itemsNotReturned = await prisma.items_in_loan.findMany({
     where: { loan_id: loanId, date_returned: null },
   });
@@ -22,11 +23,14 @@ async function returnLoan(loanId) {
   return false;
 }
 
-async function returnCable(cable) {
-  const { amount_lent, amount_returned } =
-    await prisma.cables_in_loan.findFirst({
-      where: { cable_id: cable.UUID, loan_id: cable.loan_id },
-    });
+export async function returnCable(cable: cables | any) {
+  let findCable = await prisma.cables_in_loan.findFirst({
+    where: { cable_id: cable.UUID, loan_id: cable.loan_id },
+  });
+
+  if (!findCable) return false;
+
+  const { amount_lent, amount_returned } = findCable;
 
   await prisma.cables.update({
     where: { UUID: cable.UUID },
@@ -38,9 +42,13 @@ async function returnCable(cable) {
   });
 
   if (amount_returned >= amount_lent) {
-    const { UUID: cableInLoanUUID } = await prisma.cables_in_loan.findFirst({
+    findCable = await prisma.cables_in_loan.findFirst({
       where: { cable_id: cable.UUID, loan_id: cable.loan_id },
     });
+
+    if (!findCable) return false;
+
+    const { UUID: cableInLoanUUID } = findCable;
 
     await prisma.cables_in_loan.update({
       where: { UUID: cableInLoanUUID },
@@ -52,8 +60,3 @@ async function returnCable(cable) {
 
   return false;
 }
-
-module.exports = {
-  returnLoan,
-  returnCable,
-};

@@ -1,8 +1,12 @@
-var ldap = require("ldapjs");
+import { users } from "@prisma/client";
+import { Client, SearchEntry, SearchOptions, createClient } from "ldapjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const { LDAP_HOST, LDAP_PORT, LDAP_USERNAME, LDAP_PASSWORD } = process.env;
 
-const attributes = [
+export const attributes = [
   "distinguishedName",
   "cn",
   "sAMAccountName",
@@ -12,7 +16,7 @@ const attributes = [
   "lastLogon",
 ];
 
-function convertADDatetime(ldapTime) {
+export function convertADDatetime(ldapTime: string) {
   let year = parseInt(ldapTime.slice(0, 4), 10);
   let month = parseInt(ldapTime.slice(4, 6), 10) - 1;
   let day = parseInt(ldapTime.slice(6, 8), 10);
@@ -25,12 +29,11 @@ function convertADDatetime(ldapTime) {
   return date;
 }
 
-function formatEntryResult(entry) {
-  let ldapUser = {};
+export function formatEntryResult(entry: SearchEntry) {
+  let ldapUser = {} as any;
 
   entry.pojo.attributes.map(({ type, values }) => {
     ldapUser[type] = values[0];
-    // console.log(type, values[0]);
   });
 
   const user = {
@@ -42,35 +45,53 @@ function formatEntryResult(entry) {
     mail: ldapUser.mail,
     date_created: convertADDatetime(ldapUser.whenCreated),
     date_updated: convertADDatetime(ldapUser.whenChanged),
+    moderator: false,
   };
 
   return user;
 }
 
-function createLdapClient() {
-  const client = ldap.createClient({ url: `ldap://${LDAP_HOST}:${LDAP_PORT}` });
+export function createLdapClient(): Promise<Client> {
+  let resolve: any, reject: any;
 
-  return new Promise((resolve, reject) => {
-    client.bind(LDAP_USERNAME, LDAP_PASSWORD, (err) => {
-      if (err) reject(err);
-      else resolve(client);
-    });
+  const promise = new Promise<Client>((res, rej) => {
+    resolve = res;
+    reject = rej;
   });
+
+  const client = createClient({ url: `ldap://${LDAP_HOST}:${LDAP_PORT}` });
+
+  if (!LDAP_USERNAME || !LDAP_PASSWORD)
+    return reject("LDAP credentials missing");
+
+  client.bind(LDAP_USERNAME, LDAP_PASSWORD, (err) => {
+    if (err) reject(err);
+    else resolve(client);
+  });
+
+  return promise;
 }
 
-async function getUsers(search, options) {
+export async function getUsers(search: string, options: SearchOptions) {
+  // let resolve: any, reject: any;
+
+  // const promise = new Promise<users[] | any[]>((res, rej) => {
+  //   resolve = res;
+  //   reject = rej;
+  // });
+
   const client = await createLdapClient();
 
-  return new Promise((resolve, reject) => {
+  return new Promise<users[] | any[]>((resolve, reject) => {
     client.search(search, options, (err, searchRes) => {
       if (err) reject("Search error");
 
-      const users = [];
+      const users = [] as any[];
 
       searchRes.on("searchEntry", (entry) => {
         const user = formatEntryResult(entry);
 
-        user.moderator = search == process.env.LDAP_ADMINS
+        user.moderator = search == process.env.LDAP_ADMINS;
 
         if (user) users.push(user);
       });
@@ -93,11 +114,3 @@ async function getUsers(search, options) {
     });
   });
 }
-
-module.exports = {
-  attributes,
-  formatEntryResult,
-  createLdapClient,
-  getUsers,
-  convertADDatetime,
-};

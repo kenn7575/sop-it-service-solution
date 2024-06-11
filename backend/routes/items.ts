@@ -1,6 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const prisma = require("../prisma.config.js");
+import { Router } from "express";
+import prisma from "@/prisma.config";
+
+const router = Router();
 
 router.get("/:UUID", async (req, res) => {
   const { UUID } = req.params;
@@ -11,9 +12,7 @@ router.get("/:UUID", async (req, res) => {
       items_in_loan: {
         include: {
           loans: {
-            include: {
-              users_loans_user_idTousers: true,
-            },
+            include: { users_loans_user_idTousers: true },
           },
         },
       },
@@ -23,4 +22,4 @@ router.get("/:UUID", async (req, res) => {
   res.json(item);
 });
 
-module.exports = router;
+export default router;

@@ -1,16 +1,30 @@
-var jwt = require("jsonwebtoken");
+import { Request, Response, NextFunction } from "express";
+import { verify } from "jsonwebtoken";
+import { SearchOptions } from "ldapjs";
+import { attributes, createLdapClient, formatEntryResult } from "./ldapHelper";
+import dotenv from "dotenv";
 
-const { JWT_SECRET } = process.env;
+import type { users } from "@prisma/client";
 
-function authenticateUser(req, res, next) {
+dotenv.config();
+
+const { JWT_SECRET, NODE_ENV, LDAP_USERS, LDAP_ADMINS } = process.env;
+
+export function authenticateUser(
+  req: Request & { user: any },
+  res: Response,
+  next: NextFunction
+) {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "Access denied" });
 
+  if (!JWT_SECRET) throw new Error("JWT_SECRET not set");
+
   try {
-    const verified = jwt.verify(token, JWT_SECRET);
+    const verified = verify(token, JWT_SECRET);
     req.user = verified;
     next();
-  } catch (err) {
+  } catch (err: any) {
     if (err.name === "TokenExpiredError")
       return res.status(401).json({ error: "Token expired" });
 
@@ -18,29 +32,32 @@ function authenticateUser(req, res, next) {
   }
 }
 
-const { NODE_ENV, LDAP_USERS, LDAP_ADMINS } = process.env;
-const {
-  attributes,
-  createLdapClient,
-  formatEntryResult,
-  getUsers,
-} = require("./ldapHelper");
+// ** Replace with global interface
+export async function ldapAuthenticate(
+  username: any,
+  password: any,
+  searchBase = LDAP_ADMINS
+): Promise<(users & { moderator: boolean }) | null> {
+  let resolve: any, reject: any;
 
-async function ldapAuthenticate(username, password, searchBase = LDAP_ADMINS) {
-  let resolve, reject;
+  const promise = new Promise<(users & { moderator: boolean }) | null>(
+    (res, rej) => {
+      resolve = res;
+      reject = rej;
+    }
+  );
 
-  const promise = new Promise((res, rej) => {
-    resolve = res;
-    reject = rej;
-  });
+  console.log(username, password, searchBase);
+
+  if (!searchBase) return reject(promise);
 
   if (NODE_ENV === "developmentt") {
-    return {
+    return resolve({
       name: "John Doe",
       username: "jdoe",
       mail: "johndoe@mail.com",
       moderator: true,
-    };
+    }) as users & { moderator: boolean };
   }
 
   const client = await createLdapClient();
@@ -49,7 +66,7 @@ async function ldapAuthenticate(username, password, searchBase = LDAP_ADMINS) {
     filter: `(sAMAccountName=${username.replace("@edu.sde.dk", "")})`,
     scope: "sub",
     attributes,
-  };
+  } as SearchOptions;
 
   client.search(searchBase, searchOptions, (err, res) => {
     if (err) {
@@ -58,7 +75,7 @@ async function ldapAuthenticate(username, password, searchBase = LDAP_ADMINS) {
       return promise;
     }
 
-    let user;
+    let user = {} as any;
 
     res.on("searchEntry", (entry) => {
       user = formatEntryResult(entry);
@@ -67,9 +84,9 @@ async function ldapAuthenticate(username, password, searchBase = LDAP_ADMINS) {
     });
 
     res.on("end", (result) => {
-      if (result.status !== 0) {
+      if (result?.status !== 0) {
         client.unbind();
-        reject("Non-zero status from LDAP search: " + result.status);
+        reject("Non-zero status from LDAP search: " + result?.status);
         return promise;
       }
 
@@ -92,12 +109,3 @@ async function ldapAuthenticate(username, password, searchBase = LDAP_ADMINS) {
 
   return promise;
 }
-
-module.exports = {
-  authenticateUser,
-  ldapAuthenticate,
-  createLdapClient,
-  attributes,
-  formatEntryResult,
-  getUsers,
-};

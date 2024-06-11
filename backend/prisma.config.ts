@@ -1,23 +1,23 @@
-const { PrismaClient } = require("@prisma/client");
-const { findReferenced } = require("./functions/general");
+import { PrismaClient } from "@prisma/client";
+import { findReferenced } from "./functions/general";
 
 const prisma = new PrismaClient().$extends({
   query: {
     $allModels: includeInModel(),
   },
-});
+}) as PrismaClient | any;
 
 function includeInModel() {
   return {
-    async $allOperations({ args, model, operation, query }) {
+    async $allOperations({ args, model, operation, query }: any) {
       const referenced = await findReferenced(model);
-      let select = {};
+      let select = {} as any;
 
       for (let ref of referenced) {
         if (model == "users" && ref == "loans") {
           select.loans_loans_helpdesk_personel_idTousers = true;
           select.loans_loans_user_idTousers = true;
- 
+
           continue;
         }
         select[ref] = true;
@@ -34,4 +34,4 @@ function includeInModel() {
   };
 }
 
-module.exports = prisma;
+export default prisma;

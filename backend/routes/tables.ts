@@ -1,14 +1,24 @@
-const express = require("express");
-const router = express.Router();
-const { convertToPrismaTypes } = require("../functions/general.js");
-const prisma = require("../prisma.config.js");
+import { Router } from "express";
+import { convertToPrismaTypes } from "@functions";
+import prisma from "@/prisma.config";
+
+import type { Prisma } from "@prisma/client";
+
+const router = Router();
+
+declare global {
+  interface BigInt {
+    toJSON(): string;
+  }
+}
 
 BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
 router.get(["/:table", "/:table/:UUID"], async (req, res, next) => {
-  const { table } = req.params;
+  const table = req.params.table as Prisma.ModelName;
+
   if (!table) return next();
 
   const prismaTable = prisma[table];
@@ -23,8 +33,8 @@ router.get(["/:table", "/:table/:UUID"], async (req, res, next) => {
 });
 
 router.get("/:table", async (req, res) => {
-  const table = req.params.table;
-  let filter = req.query;
+  const table = req.params.table as Prisma.ModelName;
+  let filter = req.query as any;
 
   if (filter.UUID) filter.UUID = Number(filter.UUID);
 
@@ -44,7 +54,11 @@ router.get("/:table", async (req, res) => {
 });
 
 router.get("/:table/:UUID", async (req, res) => {
-  const { table, UUID } = req.params;
+  const { table, UUID } = req.params as {
+    table: Prisma.ModelName;
+    UUID: string;
+  };
+
   let filter = req.query;
 
   if (!table || !Number(UUID))
@@ -58,16 +72,20 @@ router.get("/:table/:UUID", async (req, res) => {
 });
 
 router.post("/:table", async (req, res) => {
-  const table = req.params.table;
+  const table = req.params.table as Prisma.ModelName;
   var values = req.body.data;
 
   const prismaTable = prisma[table].fields;
 
-  Object.entries(prismaTable).map(([key, value]) => {
-    if (values[key]) {
-      if (value.typeName === "Int") values[key] = Number(values[key]);
-    }
-  });
+  for (const { key, value } of Object.entries(prismaTable) as any) {
+    if (value.typeName === "Int") values[key] = Number(values[key]);
+  }
+
+  // Object.entries(prismaTable).map(([key, value]) => {
+  //   if (values[key]) {
+  //     if (value.typeName === "Int") values[key] = Number(values[key]);
+  //   }
+  // });
 
   const newRow = await prisma[table].create({
     data: values,
@@ -77,7 +95,11 @@ router.post("/:table", async (req, res) => {
 });
 
 router.patch("/:table/:UUID", async (req, res) => {
-  const { table, UUID } = req.params;
+  const { table, UUID } = req.params as {
+    table: Prisma.ModelName;
+    UUID: string;
+  };
+
   const values = req.body.data;
 
   if (!values || Object.keys(values).length === 0)
@@ -96,7 +118,10 @@ router.patch("/:table/:UUID", async (req, res) => {
 });
 
 router.delete("/:table/:UUID", async (req, res) => {
-  const { table, UUID } = req.params;
+  const { table, UUID } = req.params as {
+    table: Prisma.ModelName;
+    UUID: string;
+  };
 
   try {
     const result = await prisma[table].delete({
@@ -104,7 +129,7 @@ router.delete("/:table/:UUID", async (req, res) => {
     });
 
     res.json(result);
-  } catch (error) {
+  } catch (error: any) {
     if (error?.code === "P2003")
       return res.status(400).json({ error: "Foreign key constraint" });
 
@@ -118,4 +143,4 @@ router.delete("/", async (req, res) => {
   return res.redirect(`api/${table}/${UUID}`);
 });
 
-module.exports = router;
+export default router;
