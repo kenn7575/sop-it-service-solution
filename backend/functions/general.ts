@@ -40,7 +40,7 @@ export async function findReferenced(table: Prisma.ModelName) {
   WHERE 
 	  REFERENCED_TABLE_SCHEMA = 'sop' AND 
     REFERENCED_TABLE_NAME = '${table}';`
-  )) as Array<{ TABLE_NAME: string }>;
+  )) as Array<{ TABLE_NAME: Prisma.ModelName }>;
 
   const referencedArray = referenced.map(({ TABLE_NAME }) => TABLE_NAME);
 
@@ -60,10 +60,3 @@ export function findReferencing(table: Prisma.ModelName) {
     TABLE_NAME = '${table}' AND
     REFERENCED_TABLE_NAME IS NOT NULL;`;
 }
-
-// export default {
-//   getFieldTypes,
-//   convertToPrismaTypes,
-//   findReferenced,
-//   findReferencing,
-// };

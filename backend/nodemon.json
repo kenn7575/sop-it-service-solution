@@ -2,5 +2,5 @@
   "watch": ["./"],
   "ext": ".ts,.js",
   "ignore": [],
-  "exec": "npx ts-node -r tsconfig-paths/register index.ts"
+  "exec": "ts-node -T -r tsconfig-paths/register index.ts"
 }

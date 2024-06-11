@@ -22,8 +22,12 @@ export function authenticateUser(
 
   try {
     //TODO: Change this to be correct, instead of implicitly adding moderator
-    const verified = verify(token, JWT_SECRET) as users & { moderator: boolean };
+    const verified = verify(token, JWT_SECRET) as users & {
+      moderator: boolean;
+    };
+
     req.user = verified;
+
     next();
   } catch (err: any) {
     if (err.name === "TokenExpiredError")
@@ -35,8 +39,8 @@ export function authenticateUser(
 
 // ** Replace with global interface
 export async function ldapAuthenticate(
-  username: any,
-  password: any,
+  username: users["username"],
+  password: users["password"],
   searchBase = LDAP_ADMINS
 ): Promise<(users & { moderator: boolean }) | null> {
   let resolve: any, reject: any;
@@ -48,18 +52,18 @@ export async function ldapAuthenticate(
     }
   );
 
-  console.log(username, password, searchBase);
-
-  if (!searchBase) return reject(promise);
-
-  if (NODE_ENV === "developmentt") {
-    return resolve({
+  if (NODE_ENV === "development") {
+    resolve({
       name: "John Doe",
       username: "jdoe",
       mail: "johndoe@mail.com",
       moderator: true,
     }) as users & { moderator: boolean };
+
+    return promise;
   }
+
+  if (!searchBase) return reject(promise);
 
   const client = await createLdapClient();
 
@@ -99,7 +103,7 @@ export async function ldapAuthenticate(
         return promise;
       }
 
-      client.bind(user.distinguishedName, password, (err) => {
+      client.bind(user.distinguishedName, password!, (err) => {
         client.unbind();
         if (err) reject("User bind failed: " + username);
 
