@@ -5,7 +5,7 @@ const prisma = new PrismaClient().$extends({
   query: {
     $allModels: includeInModel(),
   },
-}) as PrismaClient | any;
+}) as PrismaClient;
 
 function includeInModel() {
   return {

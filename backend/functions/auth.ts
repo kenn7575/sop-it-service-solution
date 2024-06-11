@@ -11,7 +11,7 @@ dotenv.config();
 const { JWT_SECRET, NODE_ENV, LDAP_USERS, LDAP_ADMINS } = process.env;
 
 export function authenticateUser(
-  req: Request & { user: any },
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
@@ -21,7 +21,8 @@ export function authenticateUser(
   if (!JWT_SECRET) throw new Error("JWT_SECRET not set");
 
   try {
-    const verified = verify(token, JWT_SECRET);
+    //TODO: Change this to be correct, instead of implicitly adding moderator
+    const verified = verify(token, JWT_SECRET) as users & { moderator: boolean };
     req.user = verified;
     next();
   } catch (err: any) {

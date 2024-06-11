@@ -20,12 +20,21 @@ app.use(cookieParser());
 
 const router = express.Router();
 
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: users & { moderator: boolean } | null;
+    }
+  }
+}
+
 import Auth from "./routes/auth";
 
 router.use("/auth", Auth);
 
 router.use(async (req, res, next) => {
-  authenticateUser(req as Request & { user: any }, res, next);
+  authenticateUser(req, res, next);
 });
 
 import Loans from "./routes/loans";
@@ -41,6 +50,7 @@ router.use("/items", Items);
 router.use("/users", Users);
 
 import tables from "./routes/tables";
+import { users } from "@prisma/client";
 
 router.use("", tables);
 

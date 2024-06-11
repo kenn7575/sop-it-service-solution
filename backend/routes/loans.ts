@@ -6,18 +6,18 @@ import type { cables, items, loans } from "@prisma/client";
 
 const router = express.Router();
 
-router.get(["/", "/:UUID"], async (req: any, res, next) => {
-  const { moderator } = req.user;
+router.get(["/", "/:UUID"], async (req, res, next) => {
+  const moderator = req.user?.moderator;
 
   let user = await prisma.users.findFirst({
-    where: { username: req.user.username },
+    where: { username: req.user?.username },
   });
 
   if (!user && !moderator) return res.sendStatus(401);
 
-  let user_id = user.UUID;
+  let user_id = user!.UUID;
 
-  req.query.user_id = user_id;
+  req.query.user_id = user_id.toString();
 
   return next();
 });
