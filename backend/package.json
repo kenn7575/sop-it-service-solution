@@ -19,7 +19,8 @@
     "ldapjs": "^3.0.7",
     "node-mailjet": "^6.0.5",
     "pdfkit": "^0.15.0",
-    "prisma": "^5.13.0"
+    "prisma": "^5.13.0",
+    "puppeteer": "^22.10.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
