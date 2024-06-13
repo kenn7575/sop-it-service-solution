@@ -8,14 +8,16 @@ const router = express.Router();
 
 router.get(["/", "/:UUID"], async (req, res, next) => {
   const moderator = req.user?.moderator;
+  
+  if (moderator) return next();
 
   let user = await prisma.users.findFirst({
     where: { username: req.user?.username },
   });
 
-  if (!user && !moderator) return res.sendStatus(401);
+  if (!user || !moderator) return res.sendStatus(401);
 
-  let user_id = user!.UUID;
+  let user_id = user.UUID;
 
   req.query.user_id = user_id.toString();
 

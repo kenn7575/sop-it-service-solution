@@ -1,0 +1,94 @@
+<link href="index.css" rel="stylesheet" />
+
+<head>
+  <title>Udlånskvittering</title>
+</head>
+
+<style>
+  @import url("https://fonts.googleapis.com/css?family=Inter");
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    background-color: black;
+  }
+
+  body {
+    font-family: "Inter";
+    height: calc(100vh - 6rem);
+    aspect-ratio: 595 / 842;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+
+    padding: 3rem;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+
+  label {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 1.5rem;
+    font-weight: normal;
+  }
+</style>
+
+<body>
+  <div
+    style="
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 4rem;
+    "
+  >
+    <img
+      style="width: 40%"
+      src="https://bb-ind.sde.dk/sde-logotype.png"
+      alt="SDE logo"
+    />
+  </div>
+
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    "
+  >
+    <div style="display: flex; flex-direction: column; gap: 2rem">
+      <span>
+        <label>Låner:</label>
+        <p>{{ username1 }}</p>
+      </span>
+
+      <span>
+        <label>Udlåner:</label>
+        <p>{{ username2 }}</p>
+      </span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 2rem">
+      <span>
+        <label>Udlån Dato:</label>
+        <p>{{ date1 }}</p>
+      </span>
+
+      <span>
+        <label>Retur Dato:</label>
+        <p>{{ date2 }}</p>
+      </span>
+    </div>
+  </div>
+</body>

@@ -60,13 +60,21 @@ router.get("/:table/:UUID", async (req, res) => {
     UUID: string;
   };
 
+  const include = {} as any;
+
+  let includeStringList = req.query.include?.toString().split(",");
+
+  includeStringList?.map((table) => (include[table] = true));
+
   let filter = req.query;
+  delete filter.include;
 
   if (!table || !Number(UUID))
     return res.status(400).json({ error: "Invalid request" });
 
   const result = await prisma[table].findUnique({
     where: { UUID: Number(UUID), ...filter },
+    include,
   });
 
   res.json(result);
