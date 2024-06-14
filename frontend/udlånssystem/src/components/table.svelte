@@ -79,11 +79,31 @@
 
   //filter Data
   function filterData() {
+    let searchValue = searchPromt.toLowerCase();
+
+    if (filterKey == "Barcode") {
+      const barcodeSplit = searchPromt.toLowerCase().split(".");
+      const barcodeId = barcodeSplit.pop();
+
+      let addValue = "";
+
+      if (!isNaN(Number(barcodeId)) && barcodeId) {
+        addValue = ("000" + barcodeId).slice(-4);
+        ("000" + barcodeId).slice(-4);
+      } else {
+        addValue = barcodeId;
+      }
+
+      barcodeSplit.push(addValue);
+
+      searchValue = barcodeSplit.join(".");
+    }
+
     const filteredData = tableData.filter((row) => {
       let value = row[filterKey];
       value = value ? value.toString().toLowerCase() : "";
       // console.log("expects", value, "to includes", searchPromt.toLowerCase());
-      return value.includes(searchPromt.toLowerCase());
+      return value.includes(searchValue);
     });
 
     tableDataFiltered = filteredData;
@@ -204,7 +224,12 @@
                 <td
                   >{typeof value == "string" &&
                   Date.parse(value) &&
-                  ["Oprettet", "Opdateret", "Returneret", "Returneringsdato"].includes(key)
+                  [
+                    "Oprettet",
+                    "Opdateret",
+                    "Returneret",
+                    "Returneringsdato",
+                  ].includes(key)
                     ? new Date(value).toLocaleDateString("da-DK", {
                         year: "numeric",
                         month: "short",
