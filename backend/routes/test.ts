@@ -28,16 +28,38 @@ router.get("/2", async (req, res) => {
 
   // doc.pipe(fs.createWriteStream("test.pdf"))
 
-  doc.fontSize(25).text("SDE Skoleoplæring", { align: "center" });
-  doc.moveDown();
+  doc.image("./images/sde-logotype.png", 150, 50, {
+    align: "center",
+    fit: [300, 300],
+  });
+
+  doc.moveDown(7);
+
+  // doc.fontSize(25).text("SDE Skoleoplæring", { align: "center" });
+  // doc.moveDown();
 
   doc
-    .text("Bruger: ", { continued: true, align: "left" })
-    .text(loanExample.users_loans_user_idTousers.username, { continued: true })
-    .text("Dato: ", { align: "right" });
+    .fontSize(15)
+    .text("Låner: ")
+    .fontSize(23)
+    .text(loanExample.users_loans_user_idTousers.username, { continued: true });
 
-  doc.moveUp();
-  doc.text("Dato: ", { align: "right" });
+  doc
+    .fontSize(15)
+    .text("Dato: ", { align: "right" })
+    .fontSize(23)
+    .text(loanExample.date_created.split("T")[0], {
+      align: "right",
+    });
+
+  doc.text("Lånte produkter:");
+
+  for (let item of loanExample.items_in_loan) {
+    doc.text(item.UUID.toString());
+  }
+
+  // doc.moveUp();
+  // doc.text("Dato: ", { align: "right" });
 
   doc.end();
 
@@ -47,51 +69,166 @@ router.get("/2", async (req, res) => {
 export default router;
 
 const loanExample = {
-  UUID: 1413,
-  date_created: "2022-07-28T11:11:41.000Z",
-  date_updated: "2022-07-28T15:03:27.000Z",
-  date_of_return: "2022-07-28T13:03:27.000Z",
+  UUID: 4351,
+  date_created: "2023-10-18T11:30:48.000Z",
+  date_updated: "2023-10-18T11:30:48.000Z",
+  date_of_return: null,
   location_of_use_id: null,
-  user_id: 779,
+  user_id: 907,
   helpdesk_personel_id: null,
   selfservice_case_id: null,
   recipient_type_id: null,
-  loan_length: 0,
+  loan_length: null,
   items_in_loan: [
     {
-      UUID: 25,
-      loan_id: 1413,
-      item_id: 3961,
-      date_created: "2024-05-17T09:08:55.000Z",
-      date_returned: "2022-07-28T13:03:27.000Z",
+      UUID: 6734,
+      loan_id: 4351,
+      item_id: 1952,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6735,
+      loan_id: 4351,
+      item_id: 3264,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6736,
+      loan_id: 4351,
+      item_id: 1951,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6737,
+      loan_id: 4351,
+      item_id: 2606,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6738,
+      loan_id: 4351,
+      item_id: 1901,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6739,
+      loan_id: 4351,
+      item_id: 1965,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6740,
+      loan_id: 4351,
+      item_id: 1900,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6741,
+      loan_id: 4351,
+      item_id: 3979,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6742,
+      loan_id: 4351,
+      item_id: 3989,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6743,
+      loan_id: 4351,
+      item_id: 1853,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6744,
+      loan_id: 4351,
+      item_id: 1825,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6745,
+      loan_id: 4351,
+      item_id: 1888,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6746,
+      loan_id: 4351,
+      item_id: 1878,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
+    },
+    {
+      UUID: 6747,
+      loan_id: 4351,
+      item_id: 1869,
+      date_created: "2024-06-14T08:52:56.000Z",
+      date_returned: null,
     },
   ],
   cables_in_loan: [
     {
-      UUID: 1,
-      loan_id: 1413,
+      UUID: 450,
+      loan_id: 4351,
+      cable_id: 4,
+      amount_lent: 1,
+      amount_returned: 0,
+      date_returned: null,
+    },
+    {
+      UUID: 451,
+      loan_id: 4351,
+      cable_id: 5,
+      amount_lent: 2,
+      amount_returned: 0,
+      date_returned: null,
+    },
+    {
+      UUID: 452,
+      loan_id: 4351,
       cable_id: 9,
+      amount_lent: 1,
+      amount_returned: 0,
+      date_returned: null,
+    },
+    {
+      UUID: 453,
+      loan_id: 4351,
+      cable_id: 24,
       amount_lent: 1,
       amount_returned: 0,
       date_returned: null,
     },
   ],
   users_loans_user_idTousers: {
-    UUID: 779,
-    username: "marc157d",
-    password: "$2y$10$OHCmal4.YBxQVyZxxHLZxeM6q.fV5zQhCthH12c9ViHVQzToB5fFm",
-    name: "Marco Rolle",
-    mail: "marc157d@edu.sde.dk",
+    UUID: 907,
+    username: "ANNL",
+    password: "$2y$10$lHfKM8OFTL4uvle0SFdS4.MRXZaK47ec26uzYeg/1FzBqPea4dSZ.",
+    name: "Anette N. Larsen",
+    mail: "ANNL@edu.sde.dk",
     is_ad_user: true,
-    date_created: "2022-07-28T10:50:45.000Z",
-    date_updated: "2022-07-28T10:50:45.000Z",
+    date_created: "2022-11-09T15:37:21.000Z",
+    date_updated: "2022-11-09T15:37:21.000Z",
     education_id: 1,
-    role_id: 2,
+    role_id: 3,
     img_name: null,
   },
   users_loans_helpdesk_personel_idTousers: null,
   _count: {
-    items_in_loan: 1,
-    cables_in_loan: 1,
+    items_in_loan: 14,
+    cables_in_loan: 4,
   },
 };
