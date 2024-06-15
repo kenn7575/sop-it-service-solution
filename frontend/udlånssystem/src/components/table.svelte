@@ -79,6 +79,8 @@
 
   //filter Data
   function filterData() {
+    page = 1;
+
     let searchValue = searchPromt.toLowerCase();
 
     if (filterKey == "Barcode") {
@@ -102,7 +104,6 @@
     const filteredData = tableData.filter((row) => {
       let value = row[filterKey];
       value = value ? value.toString().toLowerCase() : "";
-      // console.log("expects", value, "to includes", searchPromt.toLowerCase());
       return value.includes(searchValue);
     });
 
