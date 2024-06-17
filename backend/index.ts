@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { authenticateUser } from "@/functions";
+import { authenticateUser } from "@functions";
 import dotenv from "dotenv";
 
 import * as Routes from "@/routes";
