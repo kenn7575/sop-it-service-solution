@@ -465,7 +465,7 @@
     position: absolute;
     left: 0;
     top: 3rem;
-    width: 100%;
+    /* width: 100%; */
     border-radius: 10px;
     background: var(--bg2);
 
