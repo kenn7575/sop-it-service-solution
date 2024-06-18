@@ -73,20 +73,25 @@
     { name: "Til person", id: 2 },
     { name: "Til lokale", id: 1 },
   ]; //get data onMount
-  let importPersonnels: UserModel[] = []; //get data onMount
   let importUsers: UserModel[] = []; //get data onMount
+  let userHeaders: string[] = []; //get data onMount
   let importProducts: productModel[] = []; //get data onMount
+  let productHeaders: string[] = []; //get data onMount
   let importZones: zoneModel[] = []; //get data onMount
   let importCables: cableView[] = []; //get data onMount
+  let cableHeaders: string[] = []; //get data onMount
   let importCablesAvailable: cableView[] = []; //get data onMount
   onMount(async () => {
-    importPersonnels = (await getData("personnel_users")).data;
-    importUsers = (await getData("users_view")).data;
-    importProducts = (await getData("available_products_view")).data;
+    const users = await getData("users_view");
+    importUsers = users.data;
+    userHeaders = users.headers;
+    const products = await getData("available_products_view");
+    importProducts = products.data;
+    productHeaders = products.headers;
     importZones = (await getData("zones")).data;
-    importCables = (await getData("available_cables")).data.filter(
-      (ac) => ac.Tilgaengelige >= 1
-    ) as cableView[];
+    const cables = await getData("available_cables");
+    importCables = cables.data;
+    cableHeaders = cables.headers;
     importCablesAvailable = [...importCables] as cableView[];
     importCablesAvailable.map((c) => {
       return (c.Lånt = 0);
@@ -346,6 +351,7 @@
       <!-- ! User -->
       <div class="table-container">
         <Table
+          headers={userHeaders}
           values={importUsers}
           on:message={handleUserSelection}
           buttonDestination="/brugere/new"
@@ -358,6 +364,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddProduct}
+            headers={productHeaders}
             values={importProducts}
             filterKey="Navn"
           />
@@ -386,6 +393,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddCable}
+            headers={cableHeaders}
             values={importCables}
             exclude={["Lånt"]}
             filterKey="Navn"

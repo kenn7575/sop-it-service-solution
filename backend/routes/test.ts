@@ -1,15 +1,21 @@
 import { Router } from "express";
 import PDFDocument from "pdfkit";
 import { generateHtml, generatePdf } from "@functions";
+import prisma from "@/prisma.config";
+import puppeteer from "puppeteer";
 
 const router = Router();
 
 router.get("/1", async (req, res) => {
+  const loan = await getLoan();
+
+  if (!loan) return res.status(404).json({ error: "Loan not found" });
+
   const main = generateHtml("main", {
-    username1: loanExample.users_loans_user_idTousers.username,
-    username2: loanExample.users_loans_helpdesk_personel_idTousers || "",
-    date1: loanExample.date_created,
-    date2: loanExample.date_of_return,
+    username1: loan.users_loans_user_idTousers.username,
+    username2: loan.users_loans_helpdesk_personel_idTousers || "",
+    date1: loan.date_created.toLocaleDateString("da-dk") || "",
+    date2: loan.date_of_return?.toLocaleDateString("da-dk") || "",
   });
 
   const itemLoans = generateHtml("itemLoans", {});
@@ -21,6 +27,10 @@ router.get("/1", async (req, res) => {
 });
 
 router.get("/2", async (req, res) => {
+  const loan = await getLoan();
+
+  if (!loan) return res.status(404).json({ error: "Loan not found" });
+
   const doc = new PDFDocument({
     // font: "Inter",
     info: { Title: "Udlånskvittering" },
@@ -33,30 +43,73 @@ router.get("/2", async (req, res) => {
     fit: [300, 300],
   });
 
-  doc.moveDown(7);
+  doc.moveDown(8);
 
   // doc.fontSize(25).text("SDE Skoleoplæring", { align: "center" });
   // doc.moveDown();
 
-  doc
-    .fontSize(15)
-    .text("Låner: ")
-    .fontSize(23)
-    .text(loanExample.users_loans_user_idTousers.username, { continued: true });
+  const h2 = 17
+  const h1 = 21
+
+  const topTextY = doc.y;
 
   doc
-    .fontSize(15)
-    .text("Dato: ", { align: "right" })
-    .fontSize(23)
-    .text(loanExample.date_created.split("T")[0], {
+    .fontSize(h2)
+    .text("Låner: ", 30, topTextY, { align: "left", })
+    .fontSize(h1)
+    .text(loan.users_loans_user_idTousers.username, {
+      continued: true,
+    });
+
+  doc
+    .fontSize(h2)
+    .text("Låne Dato: ", 30, topTextY, { align: "right" })
+    .fontSize(h1)
+    .text(loan.date_created.toLocaleDateString("da-dk"), {
       align: "right",
     });
 
-  doc.text("Lånte produkter:");
+  doc
+    .fontSize(h2)
+    .text("Udlåner: ", 30, topTextY + 60, { align: "left" })
+    .fontSize(h1)
+    .text(loan.helpdesk_personel_id?.toString() || "", {
+      continued: true,
+    });
 
-  for (let item of loanExample.items_in_loan) {
-    doc.text(item.UUID.toString());
+  let date_to_return = new Date(loan.date_created);
+
+  date_to_return.setDate(date_to_return.getDate() + (loan.loan_length || 0));
+
+  doc
+    .fontSize(h2)
+    .text("Retur Dato: ", 30, topTextY + 60, { align: "right" })
+    .fontSize(h1)
+    .text(date_to_return.toLocaleDateString("da-dk"), {
+      align: "right",
+    });
+
+  doc.moveDown(2);
+
+  const currentY = doc.y;
+
+  doc.fontSize(20).text("Lånte produkter:");
+
+  for (let item of loan.items_in_loan) {
+    doc.fontSize(16).text(item.items.products.name);
   }
+
+  doc.moveDown().text("Total: " + loan.items_in_loan.length, 30, doc.y);
+
+  doc.fontSize(20).text("Lånte kabler:", 0, currentY, { align: "right" });
+
+  for (let cable of loan.cables_in_loan) {
+    doc.fontSize(16).text(cable.cables.name, 0, doc.y, { align: "right" });
+  }
+
+  doc.moveDown().text("Total: " + loan.cables_in_loan.length, 30, doc.y, {
+    align: "right",
+  });
 
   // doc.moveUp();
   // doc.text("Dato: ", { align: "right" });
@@ -66,169 +119,39 @@ router.get("/2", async (req, res) => {
   doc.pipe(res);
 });
 
+router.get("/3", async (req, res) => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+
+  await page.goto("http://localhost:5173/udlaan/1408/pdf", {
+    waitUntil: "networkidle2",
+  });
+
+  const pdf = await page.pdf({ format: "A4" });
+
+  await browser.close();
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.send(pdf);
+})
+
 export default router;
 
-const loanExample = {
-  UUID: 4351,
-  date_created: "2023-10-18T11:30:48.000Z",
-  date_updated: "2023-10-18T11:30:48.000Z",
-  date_of_return: null,
-  location_of_use_id: null,
-  user_id: 907,
-  helpdesk_personel_id: null,
-  selfservice_case_id: null,
-  recipient_type_id: null,
-  loan_length: null,
-  items_in_loan: [
-    {
-      UUID: 6734,
-      loan_id: 4351,
-      item_id: 1952,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
+async function getLoan() {
+  const loan = await prisma.loans.findUnique({
+    where: { UUID: 4351 },
+    include: {
+      items_in_loan: {
+        select: { items: { select: { products: { select: { name: true } } } } },
+      },
+      cables_in_loan: {
+        select: { cables: { select: { name: true, amount_lent: true } } },
+      },
+      users_loans_user_idTousers: true,
+      users_loans_helpdesk_personel_idTousers: true,
     },
-    {
-      UUID: 6735,
-      loan_id: 4351,
-      item_id: 3264,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6736,
-      loan_id: 4351,
-      item_id: 1951,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6737,
-      loan_id: 4351,
-      item_id: 2606,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6738,
-      loan_id: 4351,
-      item_id: 1901,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6739,
-      loan_id: 4351,
-      item_id: 1965,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6740,
-      loan_id: 4351,
-      item_id: 1900,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6741,
-      loan_id: 4351,
-      item_id: 3979,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6742,
-      loan_id: 4351,
-      item_id: 3989,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6743,
-      loan_id: 4351,
-      item_id: 1853,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6744,
-      loan_id: 4351,
-      item_id: 1825,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6745,
-      loan_id: 4351,
-      item_id: 1888,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6746,
-      loan_id: 4351,
-      item_id: 1878,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-    {
-      UUID: 6747,
-      loan_id: 4351,
-      item_id: 1869,
-      date_created: "2024-06-14T08:52:56.000Z",
-      date_returned: null,
-    },
-  ],
-  cables_in_loan: [
-    {
-      UUID: 450,
-      loan_id: 4351,
-      cable_id: 4,
-      amount_lent: 1,
-      amount_returned: 0,
-      date_returned: null,
-    },
-    {
-      UUID: 451,
-      loan_id: 4351,
-      cable_id: 5,
-      amount_lent: 2,
-      amount_returned: 0,
-      date_returned: null,
-    },
-    {
-      UUID: 452,
-      loan_id: 4351,
-      cable_id: 9,
-      amount_lent: 1,
-      amount_returned: 0,
-      date_returned: null,
-    },
-    {
-      UUID: 453,
-      loan_id: 4351,
-      cable_id: 24,
-      amount_lent: 1,
-      amount_returned: 0,
-      date_returned: null,
-    },
-  ],
-  users_loans_user_idTousers: {
-    UUID: 907,
-    username: "ANNL",
-    password: "$2y$10$lHfKM8OFTL4uvle0SFdS4.MRXZaK47ec26uzYeg/1FzBqPea4dSZ.",
-    name: "Anette N. Larsen",
-    mail: "ANNL@edu.sde.dk",
-    is_ad_user: true,
-    date_created: "2022-11-09T15:37:21.000Z",
-    date_updated: "2022-11-09T15:37:21.000Z",
-    education_id: 1,
-    role_id: 3,
-    img_name: null,
-  },
-  users_loans_helpdesk_personel_idTousers: null,
-  _count: {
-    items_in_loan: 14,
-    cables_in_loan: 4,
-  },
-};
+  });
+
+  return loan;
+}

@@ -57,6 +57,7 @@
 
   //return loan
   import loanReturn from "./pages/loans/return.svelte";
+  import loanPDF from "./pages/loans/pdf.svelte";
 
   import "./axiosConfig.js";
 
@@ -187,6 +188,7 @@
           <Route path="kabelgrupper/new" component={cableGroupsNew} />
 
           <Route path="udlaan/:id/returner" component={loanReturn} />
+          <Route path="udlaan/:id/pdf" component={loanPDF} />
         </div>
       </main>
     </Router>
