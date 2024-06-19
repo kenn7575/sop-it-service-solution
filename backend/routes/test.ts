@@ -123,18 +123,41 @@ router.get("/3", async (req, res) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
+  page.setCookie({
+    domain: "localhost",
+    name: "token",
+    value:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJ1c2VybmFtZSI6Impkb2UiLCJtYWlsIjoiam9obmRvZUBtYWlsLmNvbSIsIm1vZGVyYXRvciI6dHJ1ZSwiaWF0IjoxNzE4Nzc3MTM5fQ.bRobcOQdj3I5Hv_S-aV0mb_l7ackYF9RqhbOIVPpi58",
+  });
 
   await page.goto("http://localhost:5173/udlaan/1408/pdf", {
     waitUntil: "networkidle2",
   });
 
-  const pdf = await page.pdf({ format: "A4" });
+  await page.evaluate(() => {
+    // @ts-ignore
+    const pdfPart = document.querySelector("#pdf");
+
+    if (pdfPart) {
+      // @ts-ignore
+      document.body.innerHTML = "";
+      // @ts-ignore
+      document.body.appendChild(pdfPart);
+    } else {
+      throw new Error("PDF part not found");
+    }
+  });
+
+  const pdf = await page.pdf({
+    format: "A4",
+    printBackground: true,
+  });
 
   await browser.close();
 
   res.setHeader("Content-Type", "application/pdf");
   res.send(pdf);
-})
+});
 
 export default router;
 
