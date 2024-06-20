@@ -220,11 +220,12 @@ view available_cables {
 }
 
 view available_products_view {
-  UUID    Int     @id @default(0) @db.UnsignedInt
-  Navn    String? @db.VarChar(255)
-  Brand   String? @db.VarChar(255)
-  Status  String? @db.VarChar(255)
-  Barcode String? @db.VarChar(54)
+  UUID            Int     @id @default(0) @db.UnsignedInt
+  Navn            String? @db.VarChar(255)
+  Brand           String? @db.VarChar(255)
+  Kategori_Gruppe String? @db.VarChar(255)
+  Status          String? @db.VarChar(255)
+  Barcode         String? @db.VarChar(54)
 }
 
 view brands_view {
@@ -278,13 +279,15 @@ view items_view {
 }
 
 view loans_view {
-  UUID             Int       @id @default(0) @db.UnsignedInt
-  Oprettet         DateTime  @default(now()) @db.DateTime(0)
-  Opdateret        DateTime  @default(now()) @db.DateTime(0)
-  Returneret       DateTime? @db.DateTime(0)
-  Recipent         String?   @db.VarChar(255)
-  Laanetid         String?   @db.VarChar(16)
-  Returneringsdato DateTime? @db.DateTime(0)
+  UUID                Int       @id @default(0) @db.UnsignedInt
+  Laaner_Brugernavn   String?   @db.VarChar(255)
+  Personel_Brugernavn String?   @db.VarChar(255)
+  Oprettet            DateTime  @default(now()) @db.DateTime(0)
+  Opdateret           DateTime  @default(now()) @db.DateTime(0)
+  Returneret          DateTime? @db.DateTime(0)
+  Recipent            String?   @db.VarChar(255)
+  Laanetid            String?   @db.VarChar(16)
+  Returneringsdato    DateTime? @db.DateTime(0)
 }
 
 view loans_view_extended {

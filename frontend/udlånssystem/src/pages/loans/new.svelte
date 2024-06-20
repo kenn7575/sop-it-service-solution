@@ -53,7 +53,66 @@
 
   //data to be exported
   let user: any = {};
-  let products = [];
+  let products = [
+    {
+      UUID: 3897,
+      Navn: "Dell lattitude",
+      Brand: "Dell",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "Baerbar.Lattitude.0004",
+    },
+    {
+      UUID: 3900,
+      Navn: "Dell lattitude",
+      Brand: "Dell",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "Baerbar.Lattitude.0007",
+    },
+    {
+      UUID: 3910,
+      Navn: "Dell lattitude",
+      Brand: "Dell",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "Baerbar.Lattitude.0017",
+    },
+    {
+      UUID: 3911,
+      Navn: "Dell lattitude",
+      Brand: "Dell",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "Baerbar.Lattitude.0018",
+    },
+    {
+      UUID: 3912,
+      Navn: "Dell lattitude",
+      Brand: "Dell",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "Baerbar.Lattitude.0019",
+    },
+    {
+      UUID: 4961,
+      Navn: "HP Elitebook 650 g10",
+      Brand: "HP",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "laptop.HPG10.0001",
+    },
+    {
+      UUID: 4725,
+      Navn: "Dell Precision M3800",
+      Brand: "Dell",
+      Kategori_Gruppe: "Laptop",
+      Status: "Available",
+      Barcode: "LAPTOP.PRE-M3800.0002",
+    },
+  ];
+
+  // let products = [];
   let cables = [];
   let returnDate = new Date();
   let loanType = 2;
@@ -63,6 +122,8 @@
   $: loanLength = Math.round(
     (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
   );
+  let bag; //!! adjust later
+  let lock; //!! adjust later
   //import data
   let loanTypes = [
     { name: "Til person", id: 2 },
@@ -120,14 +181,18 @@
     let product = event.detail;
     if (importProducts.length == 0) return;
 
-    products.push(importProducts.splice(importProducts.indexOf(product), 1)[0]);
+    products.push(
+      importProducts.splice(importProducts.indexOf(product), 1)[0] as any
+    );
     products = products;
     importProducts = importProducts;
   }
   function handleRemoveProduct(event) {
     //move product from products to importProducts
     let product = event.detail;
-    importProducts.push(products.splice(products.indexOf(product), 1)[0]);
+    importProducts.push(
+      products.splice(products.indexOf(product), 1)[0] as any
+    );
     products = products;
     importProducts = importProducts;
   }
@@ -459,6 +524,44 @@
             {/each}
           </select>
         </div>
+        {#if products.some((p) => p.Kategori_Gruppe == "Laptop")}
+          <table class="grid-item g4 w-2/3">
+            <tr class="">
+              <th class="w-3/4 text-left"><h4>Ekstra info</h4></th>
+              <th><h4>Taske</h4></th>
+              <th><h4>Lås</h4></th>
+            </tr>
+
+            <hr />
+            {#each products.filter((p) => p.Kategori_Gruppe == "Laptop") as laptop}
+              <tr>
+                <td><p>{laptop.Navn} [#{laptop.UUID}]</p></td>
+
+                <td><input id="taske" bind:value={bag} type="checkbox" /></td>
+                <td><input id="laas" bind:value={lock} type="checkbox" /></td>
+              </tr>
+            {/each}
+          </table>
+        {/if}
+        <!-- {#if products.some((p) => p.Kategori_Gruppe == "Laptop")}
+          <div class="grid-item g4 w-1/2">
+            <div class="flex justify-between">
+              <h4>Ekstra info</h4>
+              <h4>Taske</h4>
+              <h4>Lås</h4>
+            </div>
+
+            <hr />
+            {#each products.filter((p) => p.Kategori_Gruppe == "Laptop") as laptop}
+              <div class="flex justify-between">
+                <p>#{laptop.UUID} | {laptop.Navn}</p>
+                <input id="taske" bind:value={bag} type="checkbox" />
+
+                <input id="laas" bind:value={lock} type="checkbox" />
+              </div>
+            {/each}
+          </div>
+        {/if} -->
       </div>
     {:else if page === 5}
       <div class="wrapper">
