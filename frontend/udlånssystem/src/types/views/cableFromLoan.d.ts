@@ -1,4 +1,4 @@
-export interface cableFromLoan {
+interface cableFromLoan {
   UUID: number;
   Oprettet: string;
   "Kabel navn": number;

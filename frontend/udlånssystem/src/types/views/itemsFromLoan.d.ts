@@ -1,4 +1,4 @@
-export interface itemsFromLoan {
+interface itemsFromLoan {
   UUID: number;
   Oprettet: string;
   "Produkt navn": string;

@@ -1,4 +1,3 @@
-import type { Field } from "types/field";
 import { autoGenZodSchema } from "@services/autoGen";
 
 export const fields: Field[] = [

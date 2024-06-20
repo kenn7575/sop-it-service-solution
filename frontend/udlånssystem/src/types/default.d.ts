@@ -1,4 +1,4 @@
-export interface brandModel {
+interface defaultModel {
   UUID: number;
   name: string;
 }

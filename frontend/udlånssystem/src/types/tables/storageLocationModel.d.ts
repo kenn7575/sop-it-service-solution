@@ -1,4 +1,4 @@
-export interface storageLocationModel {
+interface storageLocationModel {
   UUID: number;
   date_updated: string;
   kabinet: string;

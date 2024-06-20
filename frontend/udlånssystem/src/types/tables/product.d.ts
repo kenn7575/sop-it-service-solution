@@ -1,8 +1,8 @@
-export interface productModel {
+interface productModel {
   UUID: number;
   name: string;
-  brand_id: number;
-  category_id: number;
+  brand_id: brandModel["UUID"];
+  category_id: categoryModel["UUID"];
   date_created: string | Date;
   date_updated: string | Date;
   product_id_prefix: string;
