@@ -95,6 +95,8 @@ model items_in_loan {
   item_id       Int       @db.UnsignedInt
   date_created  DateTime  @default(now()) @db.DateTime(0)
   date_returned DateTime? @db.DateTime(0)
+  withBag       Boolean   @default(false)
+  withLock      Boolean   @default(false)
   items         items     @relation(fields: [item_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "item_id_fk")
   loans         loans     @relation(fields: [loan_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "loan_id_fk")
 
@@ -264,6 +266,8 @@ view items_from_loans {
   Oprettet       DateTime  @default(now()) @db.DateTime(0)
   Produkt_status String    @map("Produkt status") @db.VarChar(255)
   Produkt_navn   String    @map("Produkt navn") @db.VarChar(255)
+  Med_taske      Boolean   @default(false)
+  Med_Laas       Boolean   @default(false)
   Barcode        String?   @db.VarChar(54)
   loan_id        Int       @db.UnsignedInt
   Returneret     DateTime? @db.DateTime(0)

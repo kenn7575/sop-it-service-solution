@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get(["/", "/:UUID"], async (req, res, next) => {
   const moderator = req.user?.moderator;
-  
+
   if (moderator) return next();
 
   let user = await prisma.users.findFirst({
@@ -27,7 +27,7 @@ router.get(["/", "/:UUID"], async (req, res, next) => {
 router.post("/", async (req, res) => {
   interface reqBody {
     loan: loans;
-    products: items[];
+    products: (items & { withBag: boolean; withLock: boolean })[];
     cables: cables[] | any[];
   }
 
@@ -41,8 +41,10 @@ router.post("/", async (req, res) => {
     data: {
       ...loan,
       items_in_loan: {
-        create: products.map(({ UUID }) => ({
+        create: products.map(({ UUID, withBag, withLock }) => ({
           item_id: UUID,
+          withBag: Boolean(withBag),
+          withLock: Boolean(withLock),
         })),
       },
       cables_in_loan: {

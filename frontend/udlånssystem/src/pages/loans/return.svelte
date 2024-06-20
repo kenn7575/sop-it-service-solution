@@ -6,9 +6,6 @@
   import getData from "../../data/getData";
   import goToPath from "../../services/goToPath";
 
-  import type { itemsFromLoan } from "types/views/itemsFromLoan";
-  import type { cableFromLoan } from "types/views/cableFromLoan";
-
   export let id;
 
   let importItemsInLoanLent: itemsFromLoan[] = [];
