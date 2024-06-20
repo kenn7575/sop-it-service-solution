@@ -1,6 +1,6 @@
 <script>
   import getData from "../data/getData";
-  import { cheatCode } from "../services/cheatCode.js";
+  import { cheatCode } from "../services/cheatCode";
 
   let cheatActive = false;
   window.addEventListener(

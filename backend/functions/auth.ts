@@ -40,7 +40,7 @@ export function authenticateUser(
 // ** Replace with global interface
 export async function ldapAuthenticate(
   username: users["username"],
-  password: users["password"],
+  password: string,
   searchBase = LDAP_ADMINS
 ): Promise<(users & { moderator: boolean }) | null> {
   let resolve: any, reject: any;
@@ -54,7 +54,8 @@ export async function ldapAuthenticate(
 
   if (NODE_ENV === "development") {
     resolve({
-      name: "John Doe",
+      firstName: "John",
+      lastName: "Doe",
       username: "jdoe",
       mail: "johndoe@mail.com",
       moderator: true,

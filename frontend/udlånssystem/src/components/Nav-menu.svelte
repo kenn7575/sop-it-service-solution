@@ -2,7 +2,7 @@
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
   import { fly } from "svelte/transition";
-  import { stripPath } from "../services/pathFormatter.js";
+  import { stripPath } from "../services/pathFormatter";
   export let text = "Home";
   export let icon = "fa-solid fa-house";
   export let buttons = [

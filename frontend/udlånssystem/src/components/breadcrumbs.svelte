@@ -1,6 +1,6 @@
 <script>
   import { path } from "../stores/pathStore";
-  import { formatPathToBreadcrumbs } from "../services/pathFormatter.js";
+  import { formatPathToBreadcrumbs } from "../services/pathFormatter";
   import { navigate } from "svelte-routing";
 
   function handleClick(inputpath) {
