@@ -11,3 +11,5 @@ FROM
     `sop`.`cables`
     LEFT JOIN `sop`.`cable_categories` `cc` ON(`sop`.`cables`.`category_id` = `cc`.`UUID`)
   )
+WHERE
+  `sop`.`cables`.`amount_total` - `sop`.`cables`.`amount_lent` > 0

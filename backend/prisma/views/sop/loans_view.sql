@@ -3,9 +3,7 @@ SELECT
   `l`.`date_created` AS `Oprettet`,
   `l`.`date_updated` AS `Opdateret`,
   `l`.`date_of_return` AS `Returneret`,
-  `loaner`.`name` AS `Bruger`,
-  `personel`.`name` AS `Personale`,
-  `rt`.`NAME` AS `Recipent`,
+  `rt`.`name` AS `Recipent`,
   concat(`l`.`loan_length`, ' dage') AS `Laanetid`,
   `l`.`date_created` + INTERVAL `l`.`loan_length` DAY AS `Returneringsdato`
 FROM

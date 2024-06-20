@@ -9,13 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model authorization_levels {
-  UUID  Int     @id @default(autoincrement()) @db.UnsignedInt
-  name  String  @db.VarChar(255)
-  level Int
-  roles roles[]
-}
-
 model brands {
   UUID     Int        @id @default(autoincrement()) @db.UnsignedInt
   name     String     @db.VarChar(255)
@@ -77,12 +70,6 @@ model category_groups {
   categories categories[]
 }
 
-model educations {
-  UUID  Int     @id @default(autoincrement()) @db.UnsignedInt
-  name  String  @db.VarChar(255)
-  users users[]
-}
-
 model items {
   UUID                Int                @id @default(autoincrement()) @db.UnsignedInt
   date_created        DateTime           @default(now()) @db.DateTime(0)
@@ -141,14 +128,6 @@ model loans {
   @@index([user_id], map: "user_id")
 }
 
-model login_sessions {
-  UUID            Int      @id @default(autoincrement()) @db.UnsignedInt
-  username        String   @db.VarChar(255)
-  user_UUID       Int
-  expiration_date DateTime @db.DateTime(0)
-  token           String   @db.VarChar(255)
-}
-
 model pickup_locations {
   UUID Int    @id @default(autoincrement()) @db.UnsignedInt
   name String @db.VarChar(255)
@@ -184,16 +163,6 @@ model recipient_type {
   loans loans[]
 }
 
-model roles {
-  UUID                   Int                  @id @default(autoincrement()) @db.UnsignedInt
-  name                   String               @db.VarChar(255)
-  authorization_level_id Int                  @db.UnsignedInt
-  authorization_levels   authorization_levels @relation(fields: [authorization_level_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "authorization_level_id_fk")
-  users                  users[]
-
-  @@index([authorization_level_id], map: "authorization_level_id")
-}
-
 model selfservice_case {
   UUID                       Int       @id @default(autoincrement()) @db.UnsignedInt
   delivery_location_id       Int?      @db.UnsignedInt
@@ -220,24 +189,14 @@ model storage_locations {
 }
 
 model users {
-  UUID                                    Int        @id @default(autoincrement()) @db.UnsignedInt
-  username                                String     @db.VarChar(255)
-  password                                String?    @db.VarChar(255)
-  name                                    String     @db.VarChar(255)
-  mail                                    String     @db.VarChar(255)
-  is_ad_user                              Boolean
-  date_created                            DateTime   @default(now()) @db.DateTime(0)
-  date_updated                            DateTime   @default(now()) @db.DateTime(0)
-  education_id                            Int        @default(1) @db.UnsignedInt
-  role_id                                 Int        @default(1) @db.UnsignedInt
-  img_name                                String?    @db.Text
-  loans_loans_helpdesk_personel_idTousers loans[]    @relation("loans_helpdesk_personel_idTousers")
-  loans_loans_user_idTousers              loans[]    @relation("loans_user_idTousers")
-  educations                              educations @relation(fields: [education_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "education_id")
-  roles                                   roles      @relation(fields: [role_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "role_id")
-
-  @@index([education_id], map: "education_id")
-  @@index([role_id], map: "role_id_fk_idx")
+  UUID                                    Int      @id @default(autoincrement()) @db.UnsignedInt
+  username                                String   @db.VarChar(255)
+  mail                                    String   @db.VarChar(255)
+  date_created                            DateTime @default(now()) @db.DateTime(0)
+  date_updated                            DateTime @default(now()) @db.DateTime(0)
+  img_name                                String?  @db.Text
+  loans_loans_helpdesk_personel_idTousers loans[]  @relation("loans_helpdesk_personel_idTousers")
+  loans_loans_user_idTousers              loans[]  @relation("loans_user_idTousers")
 }
 
 model zones {
@@ -323,8 +282,6 @@ view loans_view {
   Oprettet         DateTime  @default(now()) @db.DateTime(0)
   Opdateret        DateTime  @default(now()) @db.DateTime(0)
   Returneret       DateTime? @db.DateTime(0)
-  Bruger           String?   @db.VarChar(255)
-  Personale        String?   @db.VarChar(255)
   Recipent         String?   @db.VarChar(255)
   Laanetid         String?   @db.VarChar(16)
   Returneringsdato DateTime? @db.DateTime(0)
@@ -339,27 +296,11 @@ view loans_view_extended {
   kabinet             String? @db.VarChar(255)
   shelf               String? @db.VarChar(255)
   loaner_id           Int?    @default(0) @db.UnsignedInt
-  loaner_name         String? @db.VarChar(255)
   loaner_username     String? @db.VarChar(255)
   personel_id         Int?    @default(0) @db.UnsignedInt
-  personel_name       String? @db.VarChar(255)
   personel_username   String? @db.VarChar(255)
   recipient_type_id   Int?    @default(0) @db.UnsignedInt
   recipient_name      String? @db.VarChar(255)
-}
-
-view personnel_users {
-  UUID         Int      @id @default(0) @db.UnsignedInt
-  username     String   @db.VarChar(255)
-  password     String?  @db.VarChar(255)
-  name         String   @db.VarChar(255)
-  mail         String   @db.VarChar(255)
-  is_ad_user   Boolean
-  date_created DateTime @default(now()) @db.DateTime(0)
-  date_updated DateTime @default(now()) @db.DateTime(0)
-  education_id Int      @default(1) @db.UnsignedInt
-  role_id      Int      @default(1) @db.UnsignedInt
-  img_name     String?  @db.Text
 }
 
 view products_view {
@@ -373,33 +314,15 @@ view products_view {
   image_name      String?  @db.VarChar(50)
 }
 
-view roles_view {
-  UUID    Int     @id @default(0) @db.UnsignedInt
-  name    String  @db.VarChar(255)
-  level   Int?
-  al_name String? @db.VarChar(255)
+view cable_categories_view {
+  UUID Int    @id @default(0) @db.UnsignedInt
+  Navn String @db.VarChar(255)
 }
 
 view users_view {
   UUID       Int      @id @default(0) @db.UnsignedInt
   Brugernavn String   @db.VarChar(255)
-  Navn       String   @db.VarChar(255)
   Oprettet   DateTime @default(now()) @db.DateTime(0)
   Opdateret  DateTime @default(now()) @db.DateTime(0)
   Mail       String   @db.VarChar(255)
-  Rolle      String?  @db.VarChar(255)
-}
-
-view users_view_extended {
-  UUID       Int     @id @default(0) @db.UnsignedInt
-  Brugernavn String  @db.VarChar(255)
-  Navn       String  @db.VarChar(255)
-  Mail       String  @db.VarChar(255)
-  Uddannelse String? @db.VarChar(255)
-  Rolle      String? @db.VarChar(255)
-}
-
-view cable_categories_view {
-  UUID Int    @id @default(0) @db.UnsignedInt
-  Navn String @db.VarChar(255)
 }

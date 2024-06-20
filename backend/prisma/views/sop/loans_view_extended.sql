@@ -7,13 +7,11 @@ SELECT
   `sl`.`kabinet` AS `kabinet`,
   `sl`.`shelf` AS `shelf`,
   `u`.`UUID` AS `loaner_id`,
-  `u`.`name` AS `loaner_name`,
   `u`.`username` AS `loaner_username`,
   `hd`.`UUID` AS `personel_id`,
-  `hd`.`name` AS `personel_name`,
   `hd`.`username` AS `personel_username`,
   `rt`.`UUID` AS `recipient_type_id`,
-  `rt`.`NAME` AS `recipient_name`
+  `rt`.`name` AS `recipient_name`
 FROM
   (
     (
