@@ -1,0 +1,1 @@
+interface productStatusModel extends defaultModel {}

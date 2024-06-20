@@ -1,4 +1,4 @@
-export interface Field {
+interface Field {
   label: string;
   binding: string | number;
   type?: "text" | "number" | "select";
