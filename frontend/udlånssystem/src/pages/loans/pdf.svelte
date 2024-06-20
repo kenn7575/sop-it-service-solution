@@ -1,53 +1,19 @@
 <script lang="ts">
-  const loan = {
-    UUID: 4351,
-    date_created: "2023-10-18T11:30:48.000Z",
-    date_updated: "2023-10-18T11:30:48.000Z",
-    date_of_return: null,
-    location_of_use_id: null,
-    user_id: 907,
-    helpdesk_personel_id: null,
-    selfservice_case_id: null,
-    recipient_type_id: null,
-    loan_length: null,
-    items_in_loan: [
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "KEYBOARD" } } },
-      { items: { products: { name: "HP Mus" } } },
-      { items: { products: { name: "HP Mus" } } },
-      { items: { products: { name: "HP Mus" } } },
-      { items: { products: { name: "LOGITECH-MUS" } } },
-      { items: { products: { name: "Dell Mus" } } },
-      { items: { products: { name: "HP Mus" } } },
-      { items: { products: { name: "HP Mus" } } },
-    ],
-    cables_in_loan: [
-      { cables: { name: "DVI", amount_lent: 9 } },
-      { cables: { name: "0-1m", amount_lent: 108 } },
-      { cables: { name: "Strømkabler_med_jord", amount_lent: 54 } },
-      { cables: { name: "Cisco_USB_Console_kable", amount_lent: 61 } },
-    ],
-    users_loans_user_idTousers: {
-      UUID: 907,
-      username: "ANNL",
-      password: "$2y$10$lHfKM8OFTL4uvle0SFdS4.MRXZaK47ec26uzYeg/1FzBqPea4dSZ.",
-      name: "Anette N. Larsen",
-      mail: "ANNL@edu.sde.dk",
-      is_ad_user: true,
-      date_created: "2022-11-09T15:37:21.000Z",
-      date_updated: "2022-11-09T15:37:21.000Z",
-      education_id: 1,
-      role_id: 3,
-      img_name: null,
-    },
-    users_loans_helpdesk_personel_idTousers: null,
-    _count: { items_in_loan: 14, cables_in_loan: 4 },
-  };
+  import getData from "@data/getData";
+  import { onMount } from "svelte";
+
+  export let id: number;
+
+  let loan: loanModel = {} as loanModel;
+  let itemsInLoan: itemsFromLoan[] = [];
+  let cablesInLoan: cableFromLoan[] = [];
+
+  onMount(async () => {
+    loan = await getData("loans", id);
+    itemsInLoan = (await getData("items_from_loans?loan_id=" + loan.UUID)).data;
+    cablesInLoan = (await getData("cables_from_loans?loan_id=" + loan.UUID))
+      .data;
+  });
 </script>
 
 <div id="pdf" class="px-10">
@@ -64,13 +30,13 @@
 
   <section class="grid grid-cols-2 gap-y-3">
     <div>
-      <span> Udlåner: </span>
-      <h3>{loan.users_loans_user_idTousers.username}</h3>
+      <span> Låner: </span>
+      <h3>{loan.user_id}</h3>
     </div>
 
     <div>
-      <span> Låner: </span>
-      <h3>{loan.users_loans_helpdesk_personel_idTousers?.username || ""}</h3>
+      <span> Udlåner: </span>
+      <h3>{loan.helpdesk_personel_id || ""}</h3>
     </div>
 
     <div>
@@ -90,9 +56,9 @@
     <div class="w-1/2">
       <h2 class="mb-2">Produkter:</h2>
       <div>
-        {#each loan.items_in_loan as item}
+        {#each itemsInLoan as item}
           <div>
-            <p>{item.items.products.name}</p>
+            <p>{item.Produkt_navn}</p>
           </div>
         {/each}
       </div>
@@ -101,9 +67,9 @@
     <div class="w-1/2">
       <h2 class="mb-2">Kabler:</h2>
       <div>
-        {#each loan.cables_in_loan as cable}
+        {#each cablesInLoan as cable}
           <div>
-            <p>{cable.cables.name} x {cable.cables.amount_lent}</p>
+            <p>{cable.Kabel_navn} x {cable.Maengde_laant}</p>
           </div>
         {/each}
       </div>
