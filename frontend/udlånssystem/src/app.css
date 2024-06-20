@@ -11,8 +11,8 @@
   transition: background 500ms;
 }
 button:focus {
-  outline: solid var(--p) 3px;
-  border: solid var(--p) 3px;
+  outline: solid var(--p) 2px;
+  border: solid var(--p) 2px;
 }
 html {
   background-color: var(--bg1);
