@@ -42,19 +42,14 @@
 
   //General
   import { currentUser } from "../../services/login";
-  import { translateMonth } from "../../services/translateMonth";
+  import translateMonth from "../../services/translateMonth.json";
   import Table from "../../components/table.svelte";
   import TableSimplified from "../../components/table-simplified.svelte";
   import getData from "../../data/getData";
   import { onMount } from "svelte";
   import axios from "axios";
   import goToPath from "../../services/goToPath";
-  import type { cableView } from "types/views/cableView";
   const page_name = "udlaan";
-
-  import type { zoneModel } from "../../types/tables/zoneModel";
-  import type { productModel } from "../../types/tables/product";
-  import type { UserModel } from "../../types/tables/userModel";
 
   //data to be exported
   let user: any = {};
@@ -73,7 +68,7 @@
     { name: "Til person", id: 2 },
     { name: "Til lokale", id: 1 },
   ]; //get data onMount
-  let importUsers: UserModel[] = []; //get data onMount
+  let importUsers: userModel[] = []; //get data onMount
   let userHeaders: string[] = []; //get data onMount
   let importProducts: productModel[] = []; //get data onMount
   let productHeaders: string[] = []; //get data onMount
@@ -475,7 +470,7 @@
               <li>Kabler: {sum(cables.map((c) => c.Lånt))}</li>
               <li>
                 Retur dato: {returnDate.getFullYear()}
-                {translateMonth(returnDate.getMonth())}
+                {translateMonth[returnDate.getMonth()]}
                 {returnDate.getDate()}
               </li>
               <li>

@@ -59,7 +59,7 @@
   import loanReturn from "./pages/loans/return.svelte";
   import loanPDF from "./pages/loans/pdf.svelte";
 
-  import "./axiosConfig.js";
+  import "./axios.config";
 
   import { path } from "./stores/pathStore";
   $: $path, loginViaSession();

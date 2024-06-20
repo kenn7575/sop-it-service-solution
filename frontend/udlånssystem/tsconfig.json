@@ -16,7 +16,9 @@
       "@pages/*": ["./pages/*"],
       "@services/*": ["./services/*"],
       "@stores/*": ["./stores/*"]
-    }
+    },
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0"
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

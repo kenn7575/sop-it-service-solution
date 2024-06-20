@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { Field } from "types/field";
 
 export function autoGenZodSchema(fields: Field[]): z.ZodObject<any> {
   let zodSchema = {} as any;
