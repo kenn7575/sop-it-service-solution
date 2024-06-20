@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "run-prod": "npm run build && npm run start"
   },
   "dependencies": {
     "@prisma/client": "^5.13.0",
@@ -19,8 +20,7 @@
     "ldapjs": "^3.0.7",
     "node-mailjet": "^6.0.5",
     "pdfkit": "^0.15.0",
-    "prisma": "^5.13.0",
-    "puppeteer": "^22.10.1"
+    "prisma": "^5.13.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",

@@ -22,8 +22,6 @@ app.use(cookieParser());
 
 const router = Router();
 
-router.use("/test", Routes.Test);
-
 router.use("/auth", Routes.Auth);
 
 router.use(async (req, res, next) => {
