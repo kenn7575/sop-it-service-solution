@@ -13,6 +13,11 @@ export const fields = [
     type: "select",
     options: "product_status",
   },
+  {
+    label: "Stregkode Nummer",
+    binding: "barcode_number",
+    type: "text",
+  },
 ] as Field[];
 
 export const zodSchema = autoGenZodSchema(fields);
@@ -73,7 +78,7 @@ export class LoanHistory {
 
   user() {
     if (this.loan) {
-      let { name, username } = this.loan.users_loans_user_idTousers;
+      let { name = "", username } = this.loan.users_loans_user_idTousers;
 
       let nameList = name.split(" ");
 

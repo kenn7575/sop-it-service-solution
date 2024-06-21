@@ -55,7 +55,13 @@
 
       <div>
         <span> Afleveringsdato: </span>
-        <h3>{loan.date_of_return || "Ingen"}</h3>
+        <h3>
+          {#if loan.date_of_return}
+            {new Date(loan.date_of_return).toLocaleDateString("da-dk")}
+          {:else}
+            <i class="fa-solid fa-infinity" />
+          {/if}
+        </h3>
       </div>
     </section>
 
