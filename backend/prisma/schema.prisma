@@ -333,3 +333,8 @@ view users_view {
   Opdateret  DateTime @default(now()) @db.DateTime(0)
   Mail       String   @db.VarChar(255)
 }
+
+view product_status_view {
+  UUID Int    @id @default(0) @db.UnsignedInt
+  Navn String @db.VarChar(255)
+}

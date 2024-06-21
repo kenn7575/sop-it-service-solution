@@ -44,11 +44,7 @@
       text="Produkttyper"
       icon="fa-solid fa-barcode"
     />
-    <NavBtn
-      destination="/kabler"
-      text="Kabler"
-      icon="fa-solid fa-plug"
-    />
+    <NavBtn destination="/kabler" text="Kabler" icon="fa-solid fa-plug" />
     <!-- TODO: build chat so that the 2 departments can communicate with eachother -->
     <!-- <NavBtn destination="/chat" text="Chat" icon="fa-solid fa-comments" /> -->
 
@@ -73,6 +69,11 @@
           text: "Brands",
           destination: "/brands",
           icon: "fa-regular fa-copyright",
+        },
+        {
+          text: "Produkt Statusser",
+          icon: "fa-solid fa-clipboard-question",
+          destination: "/produktstatusser",
         },
         {
           text: "Dashboard",
