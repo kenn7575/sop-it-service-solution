@@ -193,10 +193,8 @@ model storage_locations {
 model users {
   UUID                                    Int      @id @default(autoincrement()) @db.UnsignedInt
   username                                String   @db.VarChar(255)
-  mail                                    String   @db.VarChar(255)
   date_created                            DateTime @default(now()) @db.DateTime(0)
   date_updated                            DateTime @default(now()) @db.DateTime(0)
-  img_name                                String?  @db.Text
   loans_loans_helpdesk_personel_idTousers loans[]  @relation("loans_helpdesk_personel_idTousers")
   loans_loans_user_idTousers              loans[]  @relation("loans_user_idTousers")
 }
@@ -331,7 +329,6 @@ view users_view {
   Brugernavn String   @db.VarChar(255)
   Oprettet   DateTime @default(now()) @db.DateTime(0)
   Opdateret  DateTime @default(now()) @db.DateTime(0)
-  Mail       String   @db.VarChar(255)
 }
 
 view product_status_view {
