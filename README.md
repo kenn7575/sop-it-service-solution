@@ -15,8 +15,8 @@
 
 ## Issues
 The [issues](https://github.com/kenn7575/sop-it-service-solution/issues) page is for anyone to repport
-- 👾 Bugs (obvious errors that compromises the systems functionality)
-- 😲 Concerns (other types of errors that compromises the systems efficiency or usability)
+- 👾 Bugs (obvious errors that compromises the systems functionality).
+- 😲 Concerns (other types of errors that compromises the systems efficiency or usability).
 
 # For Developers 
 👨‍💻 This project is developed in [Visual Studio Code](https://code.visualstudio.com/) using [PHP](https://www.php.net/), [MariaDB](https://mariadb.org/) and [Svelte](https://svelte.dev/)
