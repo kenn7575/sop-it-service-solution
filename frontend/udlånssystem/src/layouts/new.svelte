@@ -8,7 +8,6 @@
   import SelectQuestion from "@components/selectQuestion.svelte";
   import { toast } from "svelte-sonner";
   import type { z } from "zod";
-  import type { Field } from "types/field";
 
   export let table: string;
   export let page_name: string;

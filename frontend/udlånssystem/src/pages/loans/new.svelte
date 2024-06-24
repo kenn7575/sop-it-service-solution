@@ -42,23 +42,18 @@
 
   //General
   import { currentUser } from "../../services/login";
-  import { translateMonth } from "../../services/translateMonth";
+  import translateMonth from "../../services/translateMonth.json";
   import Table from "../../components/table.svelte";
   import TableSimplified from "../../components/table-simplified.svelte";
   import getData from "../../data/getData";
   import { onMount } from "svelte";
   import axios from "axios";
   import goToPath from "../../services/goToPath";
-  import type { cableView } from "types/views/cableView";
   const page_name = "udlaan";
-
-  import type { zoneModel } from "../../types/tables/zoneModel";
-  import type { productModel } from "../../types/tables/product";
-  import type { UserModel } from "../../types/tables/userModel";
 
   //data to be exported
   let user: any = {};
-  let products = [];
+  let products = [] as (itemsView & { withBag: boolean; withLock: boolean })[];
   let cables = [];
   let returnDate = new Date();
   let loanType = 2;
@@ -73,20 +68,25 @@
     { name: "Til person", id: 2 },
     { name: "Til lokale", id: 1 },
   ]; //get data onMount
-  let importPersonnels: UserModel[] = []; //get data onMount
-  let importUsers: UserModel[] = []; //get data onMount
+  let importUsers: userModel[] = []; //get data onMount
+  let userHeaders: string[] = []; //get data onMount
   let importProducts: productModel[] = []; //get data onMount
+  let productHeaders: string[] = []; //get data onMount
   let importZones: zoneModel[] = []; //get data onMount
   let importCables: cableView[] = []; //get data onMount
+  let cableHeaders: string[] = []; //get data onMount
   let importCablesAvailable: cableView[] = []; //get data onMount
   onMount(async () => {
-    importPersonnels = (await getData("personnel_users")).data;
-    importUsers = (await getData("users_view")).data;
-    importProducts = (await getData("available_products_view")).data;
+    const users = await getData("users_view");
+    importUsers = users.data;
+    userHeaders = users.headers;
+    const products = await getData("available_products_view");
+    importProducts = products.data;
+    productHeaders = products.headers;
     importZones = (await getData("zones")).data;
-    importCables = (await getData("available_cables")).data.filter(
-      (ac) => ac.Tilgaengelige >= 1
-    ) as cableView[];
+    const cables = await getData("available_cables");
+    importCables = cables.data;
+    cableHeaders = cables.headers;
     importCablesAvailable = [...importCables] as cableView[];
     importCablesAvailable.map((c) => {
       return (c.Lånt = 0);
@@ -120,14 +120,18 @@
     let product = event.detail;
     if (importProducts.length == 0) return;
 
-    products.push(importProducts.splice(importProducts.indexOf(product), 1)[0]);
+    products.push(
+      importProducts.splice(importProducts.indexOf(product), 1)[0] as any
+    );
     products = products;
     importProducts = importProducts;
   }
   function handleRemoveProduct(event) {
     //move product from products to importProducts
     let product = event.detail;
-    importProducts.push(products.splice(products.indexOf(product), 1)[0]);
+    importProducts.push(
+      products.splice(products.indexOf(product), 1)[0] as any
+    );
     products = products;
     importProducts = importProducts;
   }
@@ -346,6 +350,7 @@
       <!-- ! User -->
       <div class="table-container">
         <Table
+          headers={userHeaders}
           values={importUsers}
           on:message={handleUserSelection}
           buttonDestination="/brugere/new"
@@ -358,6 +363,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddProduct}
+            headers={productHeaders}
             values={importProducts}
             filterKey="Navn"
           />
@@ -386,6 +392,7 @@
         <div class="splitscreen">
           <Table
             on:message={handleAddCable}
+            headers={cableHeaders}
             values={importCables}
             exclude={["Lånt"]}
             filterKey="Navn"
@@ -456,6 +463,37 @@
             {/each}
           </select>
         </div>
+        {#if products.some((p) => p.Kategori_Gruppe == "Laptop")}
+          <table class="grid-item g4 w-2/3">
+            <tr class="">
+              <th class="w-3/4 text-left"><h4>Ekstra info</h4></th>
+              <th><h4>Taske</h4></th>
+              <th><h4>Lås</h4></th>
+            </tr>
+
+            <hr />
+            {#each products.filter((p) => p.Kategori_Gruppe == "Laptop") as laptop}
+              <tr>
+                <td><p>{laptop.Navn} [#{laptop.UUID}]</p></td>
+
+                <td>
+                  <input
+                    id="taske"
+                    bind:checked={laptop.withBag}
+                    type="checkbox"
+                  />
+                </td>
+                <td>
+                  <input
+                    id="laas"
+                    bind:checked={laptop.withLock}
+                    type="checkbox"
+                  />
+                </td>
+              </tr>
+            {/each}
+          </table>
+        {/if}
       </div>
     {:else if page === 5}
       <div class="wrapper">
@@ -467,7 +505,7 @@
               <li>Kabler: {sum(cables.map((c) => c.Lånt))}</li>
               <li>
                 Retur dato: {returnDate.getFullYear()}
-                {translateMonth(returnDate.getMonth())}
+                {translateMonth[returnDate.getMonth()]}
                 {returnDate.getDate()}
               </li>
               <li>
@@ -489,7 +527,7 @@
                 inputData={products}
                 title="Produkter"
                 disabled={true}
-                exclude={["Stor. Loc. ID"]}
+                exclude={["Stor. Loc. ID", "withBag", "withLock"]}
               />
             </div>
           {/if}

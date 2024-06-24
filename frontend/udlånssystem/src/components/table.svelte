@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
@@ -44,7 +44,7 @@
   }
 
   //sortTable
-  function sortTable(data, columnKey, disableActiveSort) {
+  function sortTable(data: any, columnKey: any, disableActiveSort = false) {
     if (disableActiveSort !== true) {
       if (columnKey === sortColumn) {
         sortAscending = !sortAscending;
@@ -79,26 +79,69 @@
 
   //filter Data
   function filterData() {
+    page = 1;
+
+    let searchValue = searchPromt.toLowerCase();
+
+    if (filterKey == "Barcode") {
+      const barcodeSplit = searchPromt.toLowerCase().split(".");
+      const barcodeId = barcodeSplit.pop();
+
+      let addValue = "";
+
+      if (!isNaN(Number(barcodeId)) && barcodeId) {
+        addValue = ("000" + barcodeId).slice(-4);
+        ("000" + barcodeId).slice(-4);
+      } else {
+        addValue = barcodeId;
+      }
+
+      barcodeSplit.push(addValue);
+
+      searchValue = barcodeSplit.join(".");
+    }
+
     const filteredData = tableData.filter((row) => {
       let value = row[filterKey];
       value = value ? value.toString().toLowerCase() : "";
-      // console.log("expects", value, "to includes", searchPromt.toLowerCase());
-      return value.includes(searchPromt.toLowerCase());
+      return value.includes(searchValue);
     });
 
     tableDataFiltered = filteredData;
   }
+
+  $: dataToShow = tableDataFiltered.slice(
+    (page - 1) * items_per_page,
+    page * items_per_page
+  );
+
+  let topRow: HTMLElement;
+
+  onMount(() => {
+    topRow = document.getElementById("top-row");
+  });
+
   //change page
   function PageChangeUp() {
-    if (page < tableDataFiltered.length / items_per_page) page += 1;
+    if (page < tableDataFiltered.length / items_per_page) {
+      page += 1;
+
+      topRow.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   function PageChangeDown() {
-    if (page > 1) page -= 1;
+    if (page > 1) {
+      page -= 1;
+
+      topRow.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
-  function PageChangeTo(pageNumber) {
+  function PageChangeTo(pageNumber: number) {
     page = pageNumber;
+
+    topRow.scrollIntoView({ behavior: "smooth" });
   }
 
   function handleButtonClick() {
@@ -168,7 +211,7 @@
   <!-- ! table -->
   <div class="table-container">
     <table>
-      <thead>
+      <thead id="top-row">
         <tr>
           {#each headers as heading}
             {#if !exclude.includes(heading)}
@@ -192,7 +235,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each tableDataFiltered.slice((page - 1) * items_per_page, page * items_per_page - 1) as row, rowIndex}
+        {#each dataToShow as row, rowIndex}
           <tr
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
@@ -204,7 +247,12 @@
                 <td
                   >{typeof value == "string" &&
                   Date.parse(value) &&
-                  ["Oprettet", "Opdateret", "Returneret", "Returneringsdato"].includes(key)
+                  [
+                    "Oprettet",
+                    "Opdateret",
+                    "Returneret",
+                    "Returneringsdato",
+                  ].includes(key)
                     ? new Date(value).toLocaleDateString("da-DK", {
                         year: "numeric",
                         month: "short",
@@ -224,9 +272,12 @@
   <!-- ! pagination -->
   <div class="koedsovs">
     <div class="pagination">
-      <button id="one" on:click={PageChangeDown} name="previous"
-        ><i class="fa-solid fa-angle-left" /></button
-      >
+      {#if page > 1}
+        <button id="one" on:click={PageChangeDown} name="previous">
+          <i class="fa-solid fa-angle-left" />
+        </button>
+      {/if}
+
       {#if page >= 2}
         <button
           id="two"
@@ -252,14 +303,19 @@
         >
       {/if}
 
-      <button id="seven" on:click={PageChangeUp} name="next"
-        ><i class="fa-solid fa-angle-right" /></button
-      >
+      {#if page < Math.ceil(tableDataFiltered.length / items_per_page)}
+        <button id="seven" on:click={PageChangeUp} name="next">
+          <i class="fa-solid fa-angle-right" />
+        </button>
+      {/if}
     </div>
   </div>
   <p>
     viser {page * items_per_page - (items_per_page - 1)} til {page *
-      items_per_page} ud af {tableDataFiltered.length}
+      items_per_page -
+      items_per_page +
+      dataToShow.length}
+    ud af {tableDataFiltered.length}
   </p>
 </div>
 
@@ -327,6 +383,14 @@
     width: fit-content;
   }
 
+  .pagination > button {
+    transition: all 0.1s ease-in-out;
+  }
+
+  .pagination > button:active {
+    transform: scale(0.9);
+  }
+
   .koedsovs {
     width: 100%;
     display: flex;
@@ -335,9 +399,9 @@
   /* main */
 
   .content {
+    display: flex;
+    flex-direction: column;
     padding: 1rem 1rem;
-    display: grid;
-    grid-template-rows: 40px auto 2.5rem;
     gap: 0.5rem;
     width: 100%;
     overflow-y: hidden;
@@ -352,6 +416,7 @@
   }
   .table-container {
     width: 100%;
+    height: 100%;
     overflow-y: auto;
   }
   thead tr {
@@ -380,6 +445,7 @@
   /* controls */
   .controls {
     width: 100%;
+    height: 2.5rem;
 
     display: flex;
     justify-content: space-between;
@@ -439,7 +505,7 @@
     position: absolute;
     left: 0;
     top: 3rem;
-    width: 100%;
+    /* width: 100%; */
     border-radius: 10px;
     background: var(--bg2);
 

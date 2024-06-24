@@ -1,4 +1,3 @@
-import type { Field } from "types/field";
 import { autoGenZodSchema } from "@services/autoGen";
 
 export const fields = [
@@ -13,6 +12,11 @@ export const fields = [
     binding: "product_status_id",
     type: "select",
     options: "product_status",
+  },
+  {
+    label: "Stregkode Nummer",
+    binding: "barcode_number",
+    type: "text",
   },
 ] as Field[];
 
@@ -74,7 +78,7 @@ export class LoanHistory {
 
   user() {
     if (this.loan) {
-      let { name, username } = this.loan.users_loans_user_idTousers;
+      let { name = "", username } = this.loan.users_loans_user_idTousers;
 
       let nameList = name.split(" ");
 

@@ -28,6 +28,8 @@
   import ProductTypes from "./pages/productTypes/index.svelte";
   import Cables from "./pages/cables/index.svelte";
   import CablesGroups from "./pages/cableCategories/index.svelte";
+  import ProductStatus from "./pages/productStatus/index.svelte";
+
   import Help from "./pages/help/index.svelte";
   import Notifications from "./pages/notifications/index.svelte";
   import Chat from "./pages/chat/index.svelte";
@@ -44,6 +46,7 @@
   import loansEdit from "./pages/loans/edit.svelte";
   import cablesEdit from "./pages/cables/edit.svelte";
   import cableGroupsEdit from "./pages/cableCategories/edit.svelte";
+  import productStatusEdit from "./pages/productStatus/edit.svelte";
 
   //new pages import
   import productsNew from "./pages/products/new.svelte";
@@ -54,11 +57,13 @@
   import loansNew from "./pages/loans/new.svelte";
   import cablesNew from "./pages/cables/new.svelte";
   import cableGroupsNew from "./pages/cableCategories/new.svelte";
+  import productStatusNew from "./pages/productStatus/new.svelte";
 
   //return loan
   import loanReturn from "./pages/loans/return.svelte";
+  import loanPDF from "./pages/loans/pdf.svelte";
 
-  import "./axiosConfig.js";
+  import "./axios.config";
 
   import { path } from "./stores/pathStore";
   $: $path, loginViaSession();
@@ -163,6 +168,7 @@
           <Route path="help" component={Help} />
           <Route path="kabler" component={Cables} />
           <Route path="kabelgrupper" component={CablesGroups} />
+          <Route path="produktstatusser" component={ProductStatus} />
 
           <!-- dynsmic routes edit -->
           <!-- <Route path="brugere/:id" component={usersEdit} /> -->
@@ -174,6 +180,7 @@
           <Route path="udlaan/:id" component={loansEdit} />
           <Route path="kabler/:id" component={cablesEdit} />
           <Route path="kabelgrupper/:id" component={cableGroupsEdit} />
+          <Route path="produktstatusser/:id" component={productStatusEdit} />
 
           <!-- new routes -->
           <!-- <Route path="brugere/new" component={usersNew} /> -->
@@ -185,8 +192,10 @@
           <Route path="udlaan/new" component={loansNew} />
           <Route path="kabler/new" component={cablesNew} />
           <Route path="kabelgrupper/new" component={cableGroupsNew} />
+          <Route path="produktstatusser/new" component={productStatusNew} />
 
           <Route path="udlaan/:id/returner" component={loanReturn} />
+          <Route path="udlaan/:id/pdf" component={loanPDF} />
         </div>
       </main>
     </Router>

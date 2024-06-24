@@ -3,6 +3,8 @@ SELECT
   `il`.`date_created` AS `Oprettet`,
   `ps`.`name` AS `Produkt status`,
   `p`.`name` AS `Produkt navn`,
+  `il`.`withBag` AS `Med_taske`,
+  `il`.`withLock` AS `Med_Laas`,
   concat(
     `p`.`product_id_prefix`,
     lpad(`i`.`barcode_number`, 4, '0')

@@ -1,0 +1,1 @@
+interface buildingModel extends defaultModel {}

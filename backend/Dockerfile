@@ -1,8 +1,9 @@
 FROM node:20-alpine3.18
 
-RUN npm install -g nodemon
 
 WORKDIR /app
+
+RUN npm install -g tsc 
 
 COPY package*.json .
 
@@ -46,7 +47,7 @@ ENV MAIL_USERNAME $MAIL_USERNAME
 ENV MAIL_PASSWORD $MAIL_PASSWORD
 ENV MAIL_ENCRYPTION $MAIL_ENCRYPTION
 ENV MAIL_FROM_ADDRESS $MAIL_FROM_ADDRESS
-ENV MAIL_FROM_NAME $MAIL_FROM_NAME
+ENV MAIL_FROM_NAME $MAIL_FROM_NAME 
 
 
 EXPOSE 3000
@@ -55,4 +56,7 @@ LABEL Name=udlånsystem-backend
 
 RUN npx prisma migrate
 
-CMD ["npm", "run", "start"]
+
+
+
+ CMD ["npm", "run", "run-prod"]

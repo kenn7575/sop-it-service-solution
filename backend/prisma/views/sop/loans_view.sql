@@ -1,11 +1,11 @@
 SELECT
   `l`.`UUID` AS `UUID`,
+  `loaner`.`username` AS `Laaner_Brugernavn`,
+  `personel`.`username` AS `Personel_Brugernavn`,
   `l`.`date_created` AS `Oprettet`,
   `l`.`date_updated` AS `Opdateret`,
   `l`.`date_of_return` AS `Returneret`,
-  `loaner`.`name` AS `Bruger`,
-  `personel`.`name` AS `Personale`,
-  `rt`.`NAME` AS `Recipent`,
+  `rt`.`name` AS `Recipent`,
   concat(`l`.`loan_length`, ' dage') AS `Laanetid`,
   `l`.`date_created` + INTERVAL `l`.`loan_length` DAY AS `Returneringsdato`
 FROM

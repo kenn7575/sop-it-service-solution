@@ -9,7 +9,6 @@
   import doesObjectsMatch from "@services/doesObjectsMatch.js";
   import { toast } from "svelte-sonner";
   import type { z } from "zod";
-  import type { Field } from "types/field";
 
   //this is the id of the brand to be edited
   export let UUID: number;

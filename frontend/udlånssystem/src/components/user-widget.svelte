@@ -7,20 +7,10 @@
 
 <div class="content">
   <div class="info">
-    {#if user}
-      <!-- <img src={user.img_name ? pic : profilePic} alt="profilePic" /> -->
-    {:else}
-      <!-- <img src={profilePic} alt="" /> -->
-    {/if}
-    {#if user}
-      <div class="text">
-        <h3>{user.name || "Søren"}</h3>
-        <p>{user.username || "søren69420"}</p>
-      </div>
-    {:else}
-      <h3>{"Søren"}</h3>
-      <p>{"søren69420"}</p>
-    {/if}
+    <div class="text">
+      <h3>{user.firstName} {user.lastName}</h3>
+      <p>{user.username}</p>
+    </div>
   </div>
 
   <div class="more">
@@ -53,12 +43,6 @@
     display: flex;
     align-content: start;
     height: 100%;
-  }
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: solid 1px var(--text1);
   }
   p {
     color: var(--text2);

@@ -5,12 +5,6 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "resolveJsonModule": true,
-    /**
-     * Typecheck JS in `.svelte` and `.js` files by default.
-     * Disable checkJs if you'd like to use dynamic types in JS.
-     * Note that setting allowJs false does not prevent the use
-     * of JS in `.svelte` files.
-     */
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
@@ -22,7 +16,9 @@
       "@pages/*": ["./pages/*"],
       "@services/*": ["./services/*"],
       "@stores/*": ["./stores/*"]
-    }
+    },
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0"
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

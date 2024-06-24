@@ -1,7 +1,7 @@
 <script>
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
-  import { stripPath } from "../services/pathFormatter.js";
+  import { stripPath } from "../services/pathFormatter";
   import { currentUser } from "../services/login";
 
   export let destination = "/";
