@@ -1,5 +1,5 @@
 import express from "express";
-import prisma from "@/prisma.config";
+import { prismaGetRefs as prisma } from "@/prisma.config";
 import { returnLoan, returnCable, convertToPrismaTypes } from "@functions";
 
 import type { cables, items, loans } from "@prisma/client";

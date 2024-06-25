@@ -1,10 +1,8 @@
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/prisma.config";
 import { addFullname } from "@functions";
 
 const router = Router();
-
-const prisma = new PrismaClient();
 
 router.get(["/", "/:UUID"], async (req: any, res, next) => {
   const { moderator } = req.user;

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { findReferenced } from "./functions/general";
 
-const prisma = new PrismaClient().$extends({
+export const prismaGetRefs = new PrismaClient().$extends({
   query: {
     $allModels: includeInModel(),
   },
@@ -33,5 +33,7 @@ function includeInModel() {
     },
   };
 }
+
+const prisma = new PrismaClient();
 
 export default prisma;
