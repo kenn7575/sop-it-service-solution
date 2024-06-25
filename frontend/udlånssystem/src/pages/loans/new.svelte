@@ -14,10 +14,8 @@
         (o: productModel & { Barcode: string }) => o.Barcode == code
       );
 
-      if (products.find((o) => o.Barcode == code)) {
-        alert("Produktet er allerede tilføjet");
-        return;
-      }
+      if (products.find((o) => o.Barcode == code))
+        return alert("Produktet er allerede tilføjet");
 
       if (!product) {
         [product] = (await getData("items_from_loans?Barcode=" + code)).data;
@@ -30,10 +28,10 @@
       handleAddProduct({ detail: product });
     } else {
       //remove
-      const product = products.find((o) => o.UUID == code);
+      const product = products.find(({ UUID }) => UUID == code);
       if (!product) return;
 
-      if (importProducts.find((o) => o.UUID == code)) return;
+      if (importProducts.find(({ UUID }) => UUID == code)) return;
 
       handleRemoveProduct({ detail: product });
     }
@@ -61,7 +59,7 @@
   let employee;
   let password;
   $: loanLength = Math.round(
-    (returnDate.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
+    (returnDate?.getTime() - new Date().getTime()) / (1000 * 3600 * 24)
   );
   //import data
   let loanTypes = [
@@ -95,7 +93,7 @@
 
   //same page navigation
   export let page = 1;
-  let showDatePicker = true;
+  let showDatePicker = false;
 
   //Users
   //--------------------------------------------------------------------------------
@@ -353,7 +351,6 @@
           headers={userHeaders}
           values={importUsers}
           on:message={handleUserSelection}
-          buttonDestination="/brugere/new"
           filterKey="Brugernavn"
         />
       </div>
@@ -430,6 +427,7 @@
               max={maxDate}
               format={"yyyy-MM-dd"}
               min={minDate}
+              disabled={returnDate === null}
             />
             <button
               on:click={() => {
@@ -438,9 +436,18 @@
               }}
               class="max-time-btn"
               class:is-max={returnDate === maxDate}
+              disabled={returnDate === null}
             >
               max
             </button>
+            <button
+              class="max-time-btn"
+              class:is-max={returnDate === null}
+              on:click={() => {
+                if (returnDate) returnDate = null;
+                else returnDate = new Date();
+              }}>Uendeligt</button
+            >
           </div>
         </div>
         <div class="grid-item g2">
@@ -500,24 +507,29 @@
         <div class="chechout-container">
           <div class="info-container">
             <ul>
-              <li>Bruger: {user.Brugernavn}</li>
+              <li>Bruger: {user?.Navn || user.Brugernavn}</li>
               <li>Produkter: {products.length}</li>
-              <li>Kabler: {sum(cables.map((c) => c.Lånt))}</li>
+              <li>Kabler: {sum(cables.map(({ Lånt }) => Lånt))}</li>
+              {#if returnDate}
+                <li>
+                  Retur dato: {returnDate.getFullYear()}
+                  {translateMonth[returnDate.getMonth()]}
+                  {returnDate.getDate()}
+                </li>
+              {:else}
+                <li>Retur dato: Ingen</li>
+              {/if}
               <li>
-                Retur dato: {returnDate.getFullYear()}
-                {translateMonth[returnDate.getMonth()]}
-                {returnDate.getDate()}
-              </li>
-              <li>
-                Låner type: {loanTypes.find((o) => o.id === loanType).name ??
+                Låner type: {loanTypes.find(({ id }) => id === loanType).name ??
                   "Ikke sat"}
               </li>
               <li>
-                Lokalitet: {importZones.find((o) => o.UUID === locationOfUseId)
-                  .name}
+                Lokalitet: {importZones.find(
+                  ({ UUID }) => UUID === locationOfUseId
+                ).name}
               </li>
               <li>
-                Medarbejder: {$currentUser.name}
+                Medarbejder: {$currentUser.fullName}
               </li>
             </ul>
           </div>
@@ -725,9 +737,15 @@
     color: var(--text1);
     font-size: 1rem;
     cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
   }
   .max-time-btn:hover {
     background: var(--bg2);
+  }
+  .max-time-btn:disabled {
+    cursor: default;
+    opacity: 0.5;
   }
   .is-max,
   .is-max:hover {
