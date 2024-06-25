@@ -1,7 +1,9 @@
-import express from "express";
+import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
+import { addFullname } from "@functions";
 
-const router = express.Router();
+const router = Router();
+
 const prisma = new PrismaClient();
 
 router.get(["/", "/:UUID"], async (req: any, res, next) => {
@@ -24,7 +26,9 @@ router.get(["/", "/:UUID"], async (req: any, res, next) => {
     where: { UUID: { in: loans.map((loan) => loan.UUID) } },
   });
 
-  const headers = Object.keys(prisma.loans_view.fields);
+  await addFullname(loansView, "Laaner_Brugernavn");
+
+  let headers = Object.keys(prisma.loans_view.fields);
 
   res.json({ headers, data: loansView });
 });

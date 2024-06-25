@@ -1,5 +1,6 @@
 SELECT
   `l`.`UUID` AS `UUID`,
+  '' AS `Navn`,
   `loaner`.`username` AS `Laaner_Brugernavn`,
   `personel`.`username` AS `Personel_Brugernavn`,
   `l`.`date_created` AS `Oprettet`,

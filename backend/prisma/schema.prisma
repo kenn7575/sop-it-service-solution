@@ -282,6 +282,7 @@ view items_view {
 
 view loans_view {
   UUID                Int       @id @default(0) @db.UnsignedInt
+  Navn                String    @default("") @db.Char(0)
   Laaner_Brugernavn   String?   @db.VarChar(255)
   Personel_Brugernavn String?   @db.VarChar(255)
   Oprettet            DateTime  @default(now()) @db.DateTime(0)
@@ -326,6 +327,7 @@ view cable_categories_view {
 
 view users_view {
   UUID       Int      @id @default(0) @db.UnsignedInt
+  Navn       String   @default("") @db.Char(0)
   Brugernavn String   @db.VarChar(255)
   Oprettet   DateTime @default(now()) @db.DateTime(0)
   Opdateret  DateTime @default(now()) @db.DateTime(0)
