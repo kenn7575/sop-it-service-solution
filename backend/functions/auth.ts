@@ -54,11 +54,17 @@ export async function ldapAuthenticate(
 
   if (NODE_ENV === "development") {
     resolve({
+      date_created: new Date(),
+      distiguishedName: "John Doe",
+      exp: 0,
       firstName: "John",
+      fullName: "John Doe",
+      iat: 0,
       lastName: "Doe",
-      username: "jdoe",
       mail: "johndoe@mail.com",
       moderator: true,
+      username: "jdoe",
+      UUID: 792,
     }) as users & { moderator: boolean };
 
     return promise;

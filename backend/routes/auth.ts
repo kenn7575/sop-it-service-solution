@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { sign, verify } from "jsonwebtoken";
 import { ldapAuthenticate } from "@functions";
+import prisma from "@/prisma.config";
 
 const { JWT_SECRET } = process.env;
 
@@ -18,6 +19,21 @@ router.post("/login", async (req, res) => {
     if (!user) return res.json({ error: "Invalid credentials" });
 
     if (!JWT_SECRET) throw new Error("JWT_SECRET not set");
+
+    const dbUser = await prisma.users.findFirst({
+      where: { username: user.username },
+      select: { UUID: true },
+    });
+
+    let newUser = { UUID: 0 };
+
+    if (!dbUser) {
+      newUser = await prisma.users.create({
+        data: { username: user.username },
+      });
+    }
+
+    user.UUID = dbUser?.UUID || newUser.UUID;
 
     const token = sign(user, JWT_SECRET, {
       expiresIn: "1h",
