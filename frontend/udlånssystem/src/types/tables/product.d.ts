@@ -1,6 +1,4 @@
-interface productModel {
-  UUID: number;
-  name: string;
+interface productModel extends defaultModel {
   brand_id: brandModel["UUID"];
   category_id: categoryModel["UUID"];
   date_created: string | Date;

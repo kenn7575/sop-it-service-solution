@@ -4,4 +4,6 @@ interface itemInLoanModel {
   item_id: itemModel["UUID"];
   date_created: string | Date;
   date_updated: string | Date;
+  withBag: boolean;
+  withLock: boolean;
 }

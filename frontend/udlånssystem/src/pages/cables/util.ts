@@ -1,6 +1,6 @@
 import { autoGenZodSchema } from "@services/autoGen";
 
-export const fields: Field[] = [
+export const fields: Field<cableModel>[] = [
   {
     label: "Navn",
     binding: "name",
