@@ -11,9 +11,12 @@
   import goToPath from "@services/goToPath";
   import doseObjectsMatch from "@services/doesObjectsMatch";
 
+  import Pdf from "./pdf.svelte";
+  import html2pdf from "html2pdf.js";
+
   let importLoan: loanModel;
   let exportData: loanModel;
-  let itemsInLoan: itemModel[];
+  let itemsFromLoans: itemsFromLoan[] = [];
   let loan_view: any;
   let editMode = false;
 
@@ -33,7 +36,7 @@
     exportData = { ...data };
     importLoan = { ...data };
 
-    // let itemsInLoan = await getData("items_in_loan");
+    itemsFromLoans = (await getData("items_from_loans?loan_id=" + id)).data;
     loan_view = await getData("loans_view_extended", id);
 
     // HOT FIX - if the data is not found, redirect to the index page
@@ -79,9 +82,22 @@
   $: loaner_textbox = loan_view?.loaner_username + " | " + loan_view?.loaner_id;
   $: personel_textbox =
     loan_view?.personel_username + " | " + loan_view?.personel_id;
+
+  async function printPDF() {
+    const pdfElement = document.getElementById("pdf");
+
+    html2pdf(pdfElement, {
+      filename: `udlaan_${id}.pdf`,
+      image: { type: "png", quality: 1 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    });
+  }
 </script>
 
 <div class="container">
+  <div class="hidden">
+    <Pdf {id} />
+  </div>
   <FormEditPanel
     loanReturnDate={exportData?.date_of_return
       ? exportData?.date_of_return
@@ -94,7 +110,18 @@
     on:delete={handleReturn}
     on:update={handleUpdate}
     bind:editMode
-  />
+  >
+    <div class="flex flex-col gap-2">
+      <h1>Produkter:</h1>
+      <hr />
+      <div class="flex flex-col">
+        {#each itemsFromLoans as loanItem}
+          <span>{loanItem.Produkt_navn}</span>
+        {/each}
+      </div>
+    </div>
+    <button on:click={printPDF} class="mt-auto">Download PDF</button>
+  </FormEditPanel>
   {#if exportData && loan_view}
     <div class="content">
       <form action="" id="loan-form">
