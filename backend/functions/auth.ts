@@ -56,10 +56,8 @@ export async function ldapAuthenticate(
     resolve({
       date_created: new Date(),
       distiguishedName: "John Doe",
-      exp: 0,
       firstName: "John",
       fullName: "John Doe",
-      iat: 0,
       lastName: "Doe",
       mail: "johndoe@mail.com",
       moderator: true,
