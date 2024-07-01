@@ -236,17 +236,12 @@
       helpdesk_personel_id: $currentUser.UUID,
     };
 
-    const validatePassword = await axios.post("auth/login", {
-      username: $currentUser.username,
-      password,
-    });
-
-    if (validatePassword.status != 200) return alert("Forkert kode");
-
     const { data, status } = await axios.post("loans", {
       loan,
       products,
       cables,
+      personel_username: $currentUser.username,
+      personel_password: password,
     });
     if (status === 200) {
       alert("Gemt");

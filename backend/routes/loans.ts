@@ -1,6 +1,11 @@
 import express from "express";
 import { prismaGetRefs as prisma } from "@/prisma.config";
-import { returnLoan, returnCable, convertToPrismaTypes } from "@functions";
+import {
+  returnLoan,
+  returnCable,
+  convertToPrismaTypes,
+  ldapAuthenticate,
+} from "@functions";
 
 import type { cables, items, loans } from "@prisma/client";
 
@@ -29,9 +34,26 @@ router.post("/", async (req, res) => {
     loan: loans;
     products: (items & { withBag: boolean; withLock: boolean })[];
     cables: cables[] | any[];
+    personel_username: string;
+    personel_password: string;
   }
 
-  let { loan, products = [], cables = [] }: reqBody = req.body;
+  let {
+    loan,
+    products = [],
+    cables = [],
+    personel_username,
+    personel_password,
+  }: reqBody = req.body;
+
+  if (!loan) return res.sendStatus(400);
+
+  const authenticate = await ldapAuthenticate(
+    personel_username,
+    personel_password
+  ).catch((e) => console.log(e));
+
+  if (!authenticate) return res.sendStatus(401);
 
   loan = convertToPrismaTypes(loan, "loans");
   products = products.map((product) => convertToPrismaTypes(product, "items"));
