@@ -1,9 +1,9 @@
 interface storageLocationModel {
   UUID: number;
-  date_updated: string;
+  zone_id: number;
   kabinet: string;
   shelf: string;
   idle_since: string;
   img_name: string;
-  zone_id: number;
+  date_updated: string;
 }

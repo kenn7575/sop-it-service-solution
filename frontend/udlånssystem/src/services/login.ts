@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const currentUser = writable(null); //check for session token in local storage
+export const currentUser = writable<currentUser>(null); //check for session token in local storage
 
 export const getSession = () => new Promise(resolve => {
   const token = Cookies.get("token");

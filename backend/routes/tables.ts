@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { convertToPrismaTypes } from "@functions";
-import prisma2 from "@/prisma.config";
+import { prismaGetRefs as prisma2 } from "@/prisma.config";
 const prisma = prisma2 as any;
 
 import type { Prisma } from "@prisma/client";

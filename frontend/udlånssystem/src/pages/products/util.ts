@@ -1,6 +1,6 @@
 import { autoGenZodSchema } from "@services/autoGen";
 
-export const fields = [
+export const fields: Field<itemModel>[] = [
   {
     label: "Produkttype",
     binding: "product_id",
@@ -18,7 +18,11 @@ export const fields = [
     binding: "barcode_number",
     type: "text",
   },
-] as Field[];
+  {
+    label: "Lokation",
+    binding: "storage_location_id",
+  },
+];
 
 export const zodSchema = autoGenZodSchema(fields);
 
