@@ -22,6 +22,10 @@
 
     loading = false;
   });
+
+  $: date_to_be_returned =
+    new Date(loan.date_created).getTime() +
+    loan.loan_length * 24 * 60 * 60 * 1000;
 </script>
 
 {#if !loading}
@@ -56,8 +60,8 @@
       <div>
         <span> Afleveringsdato: </span>
         <h3>
-          {#if loan.date_of_return}
-            {new Date(loan.date_of_return).toLocaleDateString("da-dk")}
+          {#if loan.loan_length}
+            {new Date(date_to_be_returned).toLocaleDateString("da-dk")}
           {:else}
             <i class="fa-solid fa-infinity" />
           {/if}

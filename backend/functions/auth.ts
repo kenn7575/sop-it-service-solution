@@ -52,7 +52,7 @@ export async function ldapAuthenticate(
     }
   );
 
-  if (NODE_ENV === "development") {
+  if (NODE_ENV === "developmentt") {
     resolve({
       date_created: new Date(),
       distiguishedName: "John Doe",
@@ -108,9 +108,10 @@ export async function ldapAuthenticate(
         return promise;
       }
 
-      client.bind(user.distinguishedName, password!, (err) => {
+      client.bind(user.distinguishedName, password, (err) => {
         client.unbind();
         if (err) reject("User bind failed: " + username);
+        if (!password) reject("No password provided");
 
         resolve(user);
       });
