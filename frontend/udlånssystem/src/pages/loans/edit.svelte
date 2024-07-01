@@ -17,6 +17,7 @@
   let importLoan: loanModel;
   let exportData: loanModel;
   let itemsFromLoans: itemsFromLoan[] = [];
+  let cablesFromLoans: cableFromLoan[] = [];
   let loan_view: any;
   let editMode = false;
 
@@ -37,6 +38,7 @@
     importLoan = { ...data };
 
     itemsFromLoans = (await getData("items_from_loans?loan_id=" + id)).data;
+    cablesFromLoans = (await getData("cables_from_loans?loan_id=" + id)).data;
     loan_view = await getData("loans_view_extended", id);
 
     // HOT FIX - if the data is not found, redirect to the index page
@@ -111,14 +113,30 @@
     on:update={handleUpdate}
     bind:editMode
   >
-    <div class="flex flex-col gap-2">
-      <h1>Produkter:</h1>
-      <hr />
-      <div class="flex flex-col">
-        {#each itemsFromLoans as loanItem}
-          <span>{loanItem.Produkt_navn}</span>
-        {/each}
-      </div>
+    <div class="flex flex-col self-start gap-10">
+      {#if itemsFromLoans.length}
+        <div class="flex flex-col gap-1">
+          <h1>Produkter:</h1>
+          <hr />
+          <div class="flex flex-col">
+            {#each itemsFromLoans as item}
+              <span>{item.Produkt_navn}</span>
+            {/each}
+          </div>
+        </div>
+      {/if}
+
+      {#if cablesFromLoans.length}
+        <div class="flex flex-col gap-1">
+          <h1>Kabler:</h1>
+          <hr />
+          <div class="flex flex-col">
+            {#each cablesFromLoans as cable}
+              <span>{cable.Kabel_navn} x {cable.Maengde_laant}</span>
+            {/each}
+          </div>
+        </div>
+      {/if}
     </div>
     <button on:click={printPDF} class="mt-auto">Download PDF</button>
   </FormEditPanel>
