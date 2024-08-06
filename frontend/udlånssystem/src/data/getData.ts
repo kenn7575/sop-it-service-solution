@@ -1,6 +1,8 @@
 import axios from "axios";
 
 export default async function getData(table: string, UUID?: number) {
+  if (UUID === null) return {};
+
   const { data } = await axios
     .get(table + (UUID ? "/" + UUID : ""))
     .catch((err) => {
