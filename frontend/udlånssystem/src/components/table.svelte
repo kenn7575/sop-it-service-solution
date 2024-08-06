@@ -3,11 +3,13 @@
   import { navigate } from "svelte-routing";
   import { path } from "../stores/pathStore";
   import { createEventDispatcher } from "svelte";
+  import ContextMenu from "./contextMenu.svelte";
 
   export let buttonDestination = "";
   export let extraButton = "";
   export let filterKey = "UUID";
   export let sortBy = "UUID";
+  export let contextMenuItems = undefined;
 
   const dispatch = createEventDispatcher();
   function forwardId(object) {
@@ -152,6 +154,8 @@
       });
     }
   }
+
+  let contextMenuItemId: number;
 </script>
 
 <div class="content">
@@ -234,12 +238,22 @@
           {/each}
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tableBody">
+        {#if contextMenuItems}
+          <ContextMenu
+            elementId="tableBody"
+            itemId={contextMenuItemId}
+            menuItems={contextMenuItems}
+          />
+        {/if}
         {#each dataToShow as row, rowIndex}
           <tr
             class:row-even={rowIndex % 2 === 0}
             on:click={() => {
               forwardId(row);
+            }}
+            on:contextmenu={() => {
+              contextMenuItemId = row.UUID;
             }}
           >
             {#each Object.entries(row) as [key, value]}
@@ -428,6 +442,9 @@
   tbody tr {
     background: var(--bg2);
     cursor: pointer;
+  }
+  tbody tr:hover {
+    color: var(--text3);
   }
   td {
     padding: 0.5rem;

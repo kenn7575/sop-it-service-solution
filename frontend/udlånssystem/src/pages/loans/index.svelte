@@ -3,6 +3,7 @@
   import axios from "axios";
   import { onMount } from "svelte";
   import getData from "@data/getData";
+  import { contextMenuItems } from "./util";
 
   let headers: string[] = [];
   let values: any[] = [];
@@ -66,6 +67,7 @@
     filterKey="Bruger"
     sortBy="Oprettet"
     sortAscending={true}
+    {contextMenuItems}
   >
     <div slot="controls" class="flex gap-5">
       <label class="toggleReturned">

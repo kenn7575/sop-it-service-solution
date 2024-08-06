@@ -10,6 +10,7 @@
   import { getData, updateItem } from "@data/index";
   import goToPath from "@services/goToPath";
   import doseObjectsMatch from "@services/doesObjectsMatch";
+  import { handleReturn } from "./util";
 
   import Pdf from "./pdf.svelte";
   import html2pdf from "html2pdf.js";
@@ -64,10 +65,6 @@
     }
   }
 
-  async function handleReturn() {
-    goToPath(`/udlaan/${id}/returner`);
-  }
-
   function handleSubmit(event) {
     event.preventDefault();
     handleUpdate();
@@ -109,7 +106,7 @@
       goToPath(`/${page_name.toLowerCase()}`);
     }}
     on:reset={importDataFromDB}
-    on:delete={handleReturn}
+    on:delete={() => handleReturn(id)}
     on:update={handleUpdate}
     bind:editMode
   >
