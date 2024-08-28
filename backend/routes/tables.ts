@@ -39,19 +39,25 @@ router.get("/:table", async (req, res) => {
 
   if (filter.UUID) filter.UUID = Number(filter.UUID);
 
-  Object.entries(filter).map(([key, value]) => {
+  for (const [key, value] of Object.entries(filter)) {
     if (value === "null") filter[key] = null;
-  });
+  }
 
   filter = convertToPrismaTypes(filter, table);
 
-  const result = await prisma[table].findMany({
-    where: filter,
-  });
+  try {
+    let result = await prisma[table].findMany({
+      where: filter,
+    });
 
-  const headers = Object.keys(prisma[table].fields);
+    const headers = Object.keys(prisma[table].fields);
 
-  res.json({ headers, data: result });
+    // ?withHeaders=true
+
+    res.json({ headers, data: result });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 router.get("/:table/:UUID", async (req, res) => {
@@ -86,15 +92,10 @@ router.post("/:table", async (req, res) => {
 
   const prismaTable = prisma[table].fields;
 
-  for (const { key, value } of Object.entries(prismaTable) as any) {
-    if (value.typeName === "Int") values[key] = Number(values[key]);
+  for (const [key, value] of Object.entries(prismaTable) as any) {
+    if (value.typeName === "Int" && values[key])
+      values[key] = Number(values[key]);
   }
-
-  // Object.entries(prismaTable).map(([key, value]) => {
-  //   if (values[key]) {
-  //     if (value.typeName === "Int") values[key] = Number(values[key]);
-  //   }
-  // });
 
   const newRow = await prisma[table].create({
     data: values,

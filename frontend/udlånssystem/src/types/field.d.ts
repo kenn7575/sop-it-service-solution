@@ -1,17 +1,15 @@
 interface Field<T extends FieldType = any> {
   label: string;
   binding: keyof T;
-  type?: "text" | "number" | "select";
+  type?: 'text' | 'number' | 'select';
   required?: boolean;
   options?: { UUID: number; name: string }[] | string;
+  disabled?: boolean;
 }
 
 type FieldType =
   | brandModel
   | buildingModel
-  | cableModel
-  | cableCategoryModel
-  | cableinLoanModel
   | categoryModel
   | categoryGroupModel
   | itemModel

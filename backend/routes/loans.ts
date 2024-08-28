@@ -1,13 +1,8 @@
 import express from "express";
 import { prismaGetRefs as prisma } from "@/prisma.config";
-import {
-  returnLoan,
-  returnCable,
-  convertToPrismaTypes,
-  ldapAuthenticate,
-} from "@functions";
+import { returnLoan, convertToPrismaTypes, ldapAuthenticate } from "@functions";
 
-import type { cables, items, loans } from "@prisma/client";
+import type { items, loans } from "@prisma/client";
 
 const router = express.Router();
 
@@ -15,6 +10,8 @@ router.get(["/", "/:UUID"], async (req, res, next) => {
   const moderator = req.user?.moderator;
 
   if (moderator) return next();
+
+  if (req.user?.username) return res.sendStatus(401);
 
   let user = await prisma.users.findFirst({
     where: { username: req.user?.username },
@@ -33,7 +30,6 @@ router.post("/", async (req, res) => {
   interface reqBody {
     loan: loans;
     products: (items & { withBag: boolean; withLock: boolean })[];
-    cables: cables[] | any[];
     personel_username: string;
     personel_password: string;
   }
@@ -41,7 +37,6 @@ router.post("/", async (req, res) => {
   let {
     loan,
     products = [],
-    cables = [],
     personel_username,
     personel_password,
   }: reqBody = req.body;
@@ -57,7 +52,6 @@ router.post("/", async (req, res) => {
 
   loan = convertToPrismaTypes(loan, "loans");
   products = products.map((product) => convertToPrismaTypes(product, "items"));
-  cables = cables.map((cable) => convertToPrismaTypes(cable, "cables"));
 
   const newLoan = prisma.loans.create({
     data: {
@@ -67,12 +61,6 @@ router.post("/", async (req, res) => {
           item_id: UUID,
           withBag: Boolean(withBag),
           withLock: Boolean(withLock),
-        })),
-      },
-      cables_in_loan: {
-        create: cables.map(({ UUID, Lånt: amount }) => ({
-          cable_id: UUID,
-          amount_lent: Number(amount),
         })),
       },
     },
@@ -85,18 +73,7 @@ router.post("/", async (req, res) => {
     })
   );
 
-  const updateCables = cables.map(({ UUID, Lånt: amount }) =>
-    prisma.cables.update({
-      where: { UUID },
-      data: { amount_lent: { increment: Number(amount) } },
-    })
-  );
-
-  const result = await prisma.$transaction([
-    newLoan,
-    ...updateProducts,
-    ...updateCables,
-  ]);
+  const result = await prisma.$transaction([newLoan, ...updateProducts]);
 
   return res.json({ loanId: result[0].UUID });
 });
@@ -120,7 +97,7 @@ router.patch("/return/item", async (req, res) => {
 
   for (const item of items) {
     const { UUID: itemInLoanUUID } = (await prisma.items_in_loan.findFirst({
-      where: { item_id: item.UUID },
+      where: { item_id: item.UUID, loan_id: item.loan_id },
     }))!;
 
     const itemInLoan = prisma.items_in_loan.update({
@@ -134,28 +111,6 @@ router.patch("/return/item", async (req, res) => {
   await prisma.$transaction([...itemsToReturn, ...itemsInLoan]);
 
   await returnLoan(items[0].loan_id);
-
-  res.json({ success: true });
-});
-
-router.patch("/return/cable", async (req, res) => {
-  const { CablesInLoanToReturn: cables } = req.body;
-  if (!cables) return res.sendStatus(400);
-
-  for (const cable of cables) {
-    const { UUID: cableInLoanUUID } = (await prisma.cables_in_loan.findFirst({
-      where: { cable_id: cable.UUID, loan_id: cable.loan_id },
-    }))!;
-
-    await prisma.cables_in_loan.update({
-      where: { UUID: cableInLoanUUID },
-      data: { amount_returned: cable["Mængde returneret"] },
-    });
-
-    await returnCable(cable);
-  }
-
-  await returnLoan(cables[0].loan_id);
 
   res.json({ success: true });
 });

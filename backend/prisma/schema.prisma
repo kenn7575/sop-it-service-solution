@@ -20,40 +20,6 @@ model buildings {
   name String @db.VarChar(255)
 }
 
-model cables {
-  UUID             Int              @id @default(autoincrement()) @db.UnsignedInt
-  date_created     DateTime         @default(now()) @db.DateTime(0)
-  date_updated     DateTime         @default(now()) @db.DateTime(0)
-  name             String           @db.VarChar(100)
-  amount_total     Int              @default(0) @db.UnsignedInt
-  amount_lent      Int              @default(0) @db.UnsignedInt
-  category_id      Int              @default(1) @db.UnsignedInt
-  cable_categories cable_categories @relation(fields: [category_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "fk_cable_category")
-  cables_in_loan   cables_in_loan[]
-
-  @@index([category_id], map: "fk_cable_category_idx")
-}
-
-model cable_categories {
-  UUID   Int      @id @default(autoincrement()) @db.UnsignedInt
-  name   String   @db.VarChar(255)
-  cables cables[]
-}
-
-model cables_in_loan {
-  UUID            Int       @id @default(autoincrement()) @db.UnsignedInt
-  loan_id         Int       @db.UnsignedInt
-  cable_id        Int       @db.UnsignedInt
-  amount_lent     Int       @default(0)
-  amount_returned Int       @default(0)
-  date_returned   DateTime? @db.DateTime(0)
-  cables          cables    @relation(fields: [cable_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "cable_id_fk")
-  loans           loans     @relation(fields: [loan_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "cables_loan_id_fk")
-
-  @@index([cable_id], map: "cable_id_fk_idx")
-  @@index([loan_id], map: "cable_loan_id_fk_idx")
-}
-
 model categories {
   UUID              Int             @id @default(autoincrement()) @db.UnsignedInt
   name              String          @db.VarChar(255)
@@ -115,7 +81,6 @@ model loans {
   selfservice_case_id                     Int?              @db.UnsignedInt
   recipient_type_id                       Int?              @db.UnsignedInt
   loan_length                             Int?
-  cables_in_loan                          cables_in_loan[]
   items_in_loan                           items_in_loan[]
   users_loans_helpdesk_personel_idTousers users?            @relation("loans_helpdesk_personel_idTousers", fields: [helpdesk_personel_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "helpdesk_personel_id_fk")
   zones                                   zones?            @relation(fields: [location_of_use_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "location_of_use_id_fk")
@@ -209,16 +174,6 @@ model zones {
   @@index([building_id], map: "building_id")
 }
 
-view available_cables {
-  UUID          Int      @id @default(0) @db.UnsignedInt
-  Oprettet      DateTime @default(now()) @db.DateTime(0)
-  Opdateret     DateTime @default(now()) @db.DateTime(0)
-  Navn          String   @db.VarChar(100)
-  Total         Int      @default(0) @db.UnsignedInt
-  Tilgaengelige BigInt   @default(0) @db.UnsignedBigInt
-  Kategori_Navn String?  @map("Kategori Navn") @db.VarChar(255)
-}
-
 view available_products_view {
   UUID            Int     @id @default(0) @db.UnsignedInt
   Navn            String? @db.VarChar(255)
@@ -231,21 +186,6 @@ view available_products_view {
 view brands_view {
   UUID Int    @id @default(0) @db.UnsignedInt
   Navn String @db.VarChar(255)
-}
-
-view cables_from_loans {
-  loan_id            Int       @default(0) @db.UnsignedInt
-  UUID               Int       @id @default(0) @db.UnsignedInt
-  Oprettet           DateTime  @default(now()) @db.DateTime(0)
-  Kabel_navn         String    @map("Kabel navn") @db.VarChar(100)
-  Returneret         DateTime? @db.DateTime(0)
-  Maengde_laant      Int       @default(0) @map("Maengde laant")
-  Maengde_returneret Int       @default(0) @map("Maengde returneret")
-}
-
-view cables_view {
-  UUID Int    @id @default(0) @db.UnsignedInt
-  Name String @db.VarChar(255)
 }
 
 view categories_view {
@@ -281,16 +221,16 @@ view items_view {
 }
 
 view loans_view {
-  UUID                Int       @id @default(0) @db.UnsignedInt
-  Navn                String    @default("") @db.Char(0)
-  Laaner_Brugernavn   String?   @db.VarChar(255)
-  Personel_Brugernavn String?   @db.VarChar(255)
-  Oprettet            DateTime  @default(now()) @db.DateTime(0)
-  Opdateret           DateTime  @default(now()) @db.DateTime(0)
-  Returneret          DateTime? @db.DateTime(0)
-  Recipent            String?   @db.VarChar(255)
-  Laanetid            String?   @db.VarChar(16)
-  Returneringsdato    DateTime? @db.DateTime(0)
+  UUID             Int       @id @default(0) @db.UnsignedInt
+  Navn             String    @default("") @db.Char(0)
+  Laaner           String?   @db.VarChar(255)
+  Udlaaner         String?   @db.VarChar(255)
+  Oprettet         DateTime  @default(now()) @db.DateTime(0)
+  Opdateret        DateTime  @default(now()) @db.DateTime(0)
+  Returneret       DateTime? @db.DateTime(0)
+  Recipent         String?   @db.VarChar(255)
+  Laanetid         String?   @db.VarChar(16)
+  Returneringsdato DateTime? @db.DateTime(0)
 }
 
 view loans_view_extended {
@@ -317,12 +257,6 @@ view products_view {
   Brand           String?  @db.VarChar(255)
   Oprettet        DateTime @default(now()) @db.DateTime(0)
   Opdateret       DateTime @default(now()) @db.DateTime(0)
-  image_name      String?  @db.VarChar(50)
-}
-
-view cable_categories_view {
-  UUID Int    @id @default(0) @db.UnsignedInt
-  Navn String @db.VarChar(255)
 }
 
 view users_view {

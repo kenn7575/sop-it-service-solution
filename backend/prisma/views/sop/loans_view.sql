@@ -1,8 +1,8 @@
 SELECT
   `l`.`UUID` AS `UUID`,
   '' AS `Navn`,
-  `loaner`.`username` AS `Laaner_Brugernavn`,
-  `personel`.`username` AS `Personel_Brugernavn`,
+  `loaner`.`username` AS `Laaner`,
+  `personel`.`username` AS `Udlaaner`,
   `l`.`date_created` AS `Oprettet`,
   `l`.`date_updated` AS `Opdateret`,
   `l`.`date_of_return` AS `Returneret`,

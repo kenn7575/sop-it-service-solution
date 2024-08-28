@@ -1,0 +1,73 @@
+import { useNavigate } from 'react-router-dom';
+
+import useBarcode from '@hooks/useBarcode';
+import { cheatCode } from '@services/cheatCode';
+
+import getData from '@/data/getData';
+import { toast } from 'sonner';
+
+export default function Home() {
+  const navigate = useNavigate();
+
+  useBarcode(handleBarcodeScan);
+
+  let cheatActive = false;
+  window.addEventListener(
+    'cheatCode',
+    (e) => {
+      if (!cheatActive) cheatActive = true;
+    },
+    { once: true },
+  );
+  cheatCode();
+
+  async function handleBarcodeScan(value: string) {
+    if (!value) return;
+
+    const [scannedProduct] =
+      (await getData<itemsView[]>('items_view?Barcode=' + value)) || [];
+
+    if (!scannedProduct) return toast.warning('Produktet kunne ikke findes');
+
+    if (scannedProduct.Status == 'Available') {
+      navigate(`/udlaan/new?item=${scannedProduct.UUID}`);
+      return;
+    }
+
+    if (scannedProduct.Status == 'Lent') {
+      const item_from_loan = await getData<itemsFromLoan[]>(
+        `items_from_loans?UUID=${scannedProduct.UUID}&Returneret=null`,
+      );
+
+      if (!item_from_loan?.length) {
+        toast.error(
+          'Produktet er lånt ud, men kunne ikke findes på et aktivt lån',
+        );
+        return;
+      }
+
+      return navigate(
+        `/udlaan/${item_from_loan[0].loan_id}/returner?item=${scannedProduct.UUID}`,
+      );
+    }
+
+    navigate(`/produkter/${scannedProduct.UUID}`);
+  }
+
+  <img src="/nyanCat.gif" alt="nyan cat" />;
+  if (cheatActive) return;
+
+  return (
+    <div className="flex max-h-screen flex-col items-center gap-2 pt-16">
+      <h1 className="text-[3rem]">Velkommen til helpdesk'en</h1>
+      <p className="text-[1.2rem] text-foreground2">
+        Hvordan kan vi hjælpe dig i dag?
+      </p>
+      <img
+        className="h-full w-3/5 object-cover"
+        src="svg/welcome.svg"
+        alt="Welcome"
+      />
+    </div>
+  );
+}

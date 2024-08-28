@@ -5,8 +5,7 @@ SELECT
   `c`.`name` AS `Kategori`,
   `b`.`name` AS `Brand`,
   `p`.`date_created` AS `Oprettet`,
-  `p`.`date_updated` AS `Opdateret`,
-  `p`.`image_name` AS `image_name`
+  `p`.`date_updated` AS `Opdateret`
 FROM
   (
     (

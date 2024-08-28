@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
     user.UUID = dbUser?.UUID || newUser.UUID;
 
     const token = sign(user, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
     res.cookie("token", token, {
@@ -70,10 +70,6 @@ router.post("/validate", async (req, res) => {
 
     return res.status(400).json({ error: "Invalid token" });
   }
-});
-
-router.post("/validate_password", async (req, res) => {
-  console.log(req.body);
 });
 
 router.get("/cookies", (req, res) => {

@@ -24,7 +24,7 @@ router.get(["/", "/:UUID"], async (req: any, res, next) => {
     where: { UUID: { in: loans.map((loan) => loan.UUID) } },
   });
 
-  await addFullname(loansView, "Laaner_Brugernavn");
+  await addFullname(loansView, "Laaner");
 
   let headers = Object.keys(prisma.loans_view.fields);
 

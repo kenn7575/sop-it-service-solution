@@ -41,6 +41,6 @@ app.use("/api", router);
 
 const port = process.env.BACKEND_PORT || 5000;
 
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

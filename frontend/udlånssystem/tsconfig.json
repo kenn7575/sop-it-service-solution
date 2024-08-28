@@ -1,25 +1,36 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "resolveJsonModule": true,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "checkJs": true,
-    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "jsx": "react-jsx",
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["./components/*"],
       "@data/*": ["./data/*"],
       "@layouts/*": ["./layouts/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@hooks/*": ["./hooks/*"],
       "@pages/*": ["./pages/*"],
       "@services/*": ["./services/*"],
-      "@stores/*": ["./stores/*"]
+      "@stores/*": ["./stores/*"],
+      "@styles/*": ["./styles/*"],
+      "@/*": ["./*"]
     },
     "verbatimModuleSyntax": true,
     "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"]
 }

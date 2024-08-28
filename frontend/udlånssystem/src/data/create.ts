@@ -1,12 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default async function createItem(table: string, exportData: any) {
   try {
     const { data } = await axios
       .post(table, { data: { ...exportData } })
       .catch((err) => {
-        alert("Fejl! " + err);
-        console.log("Error: ", err);
+        toast.error('Fejl! ' + err);
+        console.log('Error: ', err);
         return { success: false, data: err, id: null };
       });
 
@@ -14,6 +15,6 @@ export default async function createItem(table: string, exportData: any) {
 
     return data;
   } catch (err) {
-    alert("Application crashed: " + err);
+    toast.error('Application crashed: ' + err);
   }
 }

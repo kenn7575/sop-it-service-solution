@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { LDAP_HOST, LDAP_PORT, LDAP_USERNAME, LDAP_PASSWORD } = process.env;
+const { LDAP_HOST, LDAP_PORT, LDAP_USERNAME, LDAP_PASSWORD, NODE_ENV } =
+  process.env;
 
 export const attributes = [
   "distinguishedName",
@@ -79,6 +80,8 @@ export async function getUsers(search: string, options: SearchOptions) {
   //   resolve = res;
   //   reject = rej;
   // });
+
+  // if (NODE_ENV === "development") return [];
 
   const client = await createLdapClient();
 
