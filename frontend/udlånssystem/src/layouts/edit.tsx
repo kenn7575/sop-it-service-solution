@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { Combobox } from '@components/Combobox';
 import FormEditPanel from '@components/form-edit-panel';
-import SelectQuestion from '@components/selectQuestion';
 import TextQuestion from '@components/textQuestion';
 
 import { deleteItem, getData, updateItem } from '@data/index.js';
@@ -78,6 +78,11 @@ export default function EditLayout({
     setImportData({ ...data });
 
     fetchSelectOptions();
+  }
+
+  function handleReset() {
+    setExportData({ ...importData });
+    setEditMode(false);
   }
 
   function isDeleteDisabled(): boolean {
@@ -156,10 +161,7 @@ export default function EditLayout({
   return (
     <div className="box-border flex h-full gap-4 p-8">
       <FormEditPanel
-        handleReset={() => {
-          importDataFromDB();
-          setEditMode(false);
-        }}
+        handleReset={handleReset}
         handleCancel={() => {
           navigate(getPrevPage());
         }}
@@ -201,7 +203,7 @@ export default function EditLayout({
 
             if (field.type == 'select' && typeof field.options == 'object')
               return (
-                <SelectQuestion
+                <Combobox
                   key={i}
                   setValue={(value) =>
                     setExportData((prev: any) => {
