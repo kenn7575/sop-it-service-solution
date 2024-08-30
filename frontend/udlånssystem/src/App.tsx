@@ -3,6 +3,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 
 import Nav from '@components/Nav';
 import Breadcrumbs from '@components/breadcrumbs';
+import { Toaster } from '@components/ui/sonner';
 
 import Dashboard from '@pages/Dashboard';
 import Error404 from '@pages/Error404';
@@ -36,8 +37,6 @@ import loansNew from '@pages/loans/new';
 import productStatusNew from '@pages/productStatus/new';
 import productTypesNew from '@pages/productTypes/new';
 import productsNew from '@pages/products/new';
-
-import { Toaster } from 'sonner';
 
 import './axios.config';
 

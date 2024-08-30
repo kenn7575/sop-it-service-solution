@@ -17,7 +17,7 @@ BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
-router.get(["/:table", "/:table/:UUID"], async (req, res, next) => {
+router.use(["/:table", "/:table/:UUID"], async (req, res, next) => {
   const table = req.params.table as Prisma.ModelName;
 
   if (!table) return next();
@@ -25,7 +25,7 @@ router.get(["/:table", "/:table/:UUID"], async (req, res, next) => {
   const prismaTable = prisma[table];
 
   if (!prismaTable) {
-    console.log("Table not found:", table);
+    console.log(`Table not found: ${table}. Method: ${req.method}`);
 
     return res.status(404).json({ error: "Table not found" });
   }

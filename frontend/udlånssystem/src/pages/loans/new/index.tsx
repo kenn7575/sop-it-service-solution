@@ -28,43 +28,6 @@ const oneMonthFromNow = new Date(
   new Date().getDate(),
 );
 
-// async function handleBarcode(code) {
-//   if (!$barcodeStore) return; //if barcode is empty
-//   //check if barcode is being added or removed
-//   if (!$controlStore) {
-//     //add
-
-//     if (importProducts.length == 0)
-//       importProducts = (await getData("available_products_view")).data;
-
-//     var product = importProducts.find(
-//       (o: productModel & { Barcode: string }) => o.Barcode == code
-//     );
-
-//     if (products.find((o) => o.Barcode == code))
-//       return alert("Produktet er allerede tilføjet");
-
-//     if (!product) {
-//       [product] = (await getData("items_from_loans?Barcode=" + code)).data;
-
-//       if (product) return alert("Produktet er allerede lånt ud");
-//     }
-
-//     if (!product) return alert("Produktet findes ikke");
-
-//     handleAddProduct({ detail: product });
-//   } else {
-//     //remove
-//     const product = products.find(({ UUID }) => UUID == code);
-//     if (!product) return;
-
-//     if (importProducts.find(({ UUID }) => UUID == code)) return;
-
-//     handleRemoveProduct({ detail: product });
-//   }
-// }
-// $: handleBarcode($barcodeStore);
-
 export default function NewLoan({ initPage = 1 }) {
   const navigate = useNavigate();
 

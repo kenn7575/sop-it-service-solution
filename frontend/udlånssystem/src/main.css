@@ -110,6 +110,7 @@ html {
   --date-picker-selected-color: #fff;
   --date-picker-selected-background: var(--p);
   --nav-width: 20rem;
+  --radius: 0.5rem;
 }
 .light {
   --nav: #dddddd;

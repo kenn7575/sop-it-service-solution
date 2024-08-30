@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { CurrentUserContext } from '@/App';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { toast } from 'sonner';
 
 export const getSession = () =>
   new Promise((resolve) => {
@@ -56,7 +57,7 @@ export async function loginViaCredentials(username: string, password: string) {
       }
     })
     .catch((err) => {
-      alert(`Ukendt fejl! Kunne ikke kontakte serveren. ${err}`);
+      toast.error(`Ukendt fejl! Kunne ikke kontakte serveren. ${err}`);
     });
   return output;
 }

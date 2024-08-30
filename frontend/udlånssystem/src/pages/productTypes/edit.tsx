@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import createItem from '@data/create';
 
 import EditLayout from '@layouts/edit';
+import { toast } from 'sonner';
 
 import { fields, zodSchema } from './util';
 
@@ -14,7 +15,7 @@ async function handleCreateNewProduct(product_id: number) {
 
   const response: any = await createItem('items', item);
   if (response && response.success) {
-    alert('Gemt');
+    toast.success('Gemt');
     Navigate({ to: `/produkter/${response.id}` });
   }
 }
