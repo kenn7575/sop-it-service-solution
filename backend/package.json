@@ -7,7 +7,9 @@
     "build": "tsc",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
     "dev": "nodemon",
-    "run-prod": "npm run build && npm run start"
+    "run-prod": "npm run build && npm run start",
+    "db:pull": "npx prisma db pull && npx prisma generate",
+    "db:push": "npx prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",

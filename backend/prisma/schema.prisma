@@ -175,8 +175,9 @@ model zones {
 }
 
 model feedback {
-  title       String  @id @db.VarChar(127)
-  description String? @db.Text
+  title        String   @id @db.VarChar(127)
+  description  String?  @db.Text
+  date_created DateTime @default(now()) @db.DateTime(0)
 }
 
 view available_products_view {
