@@ -23,15 +23,15 @@ interface ComboboxProps {
   editMode?: boolean;
   label: string;
   setValue?: (value: any) => void;
-  match?: { UUID: number };
-  options?: { UUID: number | string; name: string }[];
+  match?: defaultModel;
+  options?: defaultModel[];
 }
 
 export function Combobox({
   editMode = true,
   label,
   setValue = () => {},
-  match = { UUID: 1 },
+  match = { UUID: 1, name: '' },
   options = [{ UUID: 1, name: '' }],
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
@@ -52,9 +52,7 @@ export function Combobox({
             aria-expanded={open}
             className="w-full justify-between rounded-xl"
           >
-            {match.UUID
-              ? options.find(({ UUID }) => UUID == match.UUID)?.name
-              : `Vælg ${label}...`}
+            {match.name || `Vælg ${label}...`}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -67,11 +65,11 @@ export function Combobox({
                 {options.map((option) => (
                   <CommandItem
                     key={option.UUID}
-                    value={option.UUID.toString()}
+                    value={option.name}
                     className="hover:bg-primary"
                     onSelect={(currentValue) => {
-                      setValue(Number(currentValue));
-                      match.UUID = Number(currentValue);
+                      setValue(option.UUID);
+                      match.name = currentValue;
 
                       setOpen(false);
                     }}
@@ -79,7 +77,9 @@ export function Combobox({
                     <Check
                       className={cn(
                         'mr-2 h-4 w-4',
-                        match.UUID == option.UUID ? 'opacity-100' : 'opacity-0',
+                        match.name.trim() == option.name.trim()
+                          ? 'opacity-100'
+                          : 'opacity-0',
                       )}
                     />
                     {option.name}

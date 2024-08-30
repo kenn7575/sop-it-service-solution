@@ -182,6 +182,15 @@ export default function EditLayout({
       >
         <form id="edit-form">
           {fields2.map((field, i) => {
+            let option = { UUID: 0, name: '' };
+
+            if (field.options && typeof field.options != 'string') {
+              const findOption = field.options.find(
+                ({ UUID }) => UUID == exportData[field.binding],
+              );
+
+              if (findOption) option = findOption;
+            }
             if (field.type == 'text' || field.type == 'number')
               return (
                 <TextQuestion
@@ -213,7 +222,7 @@ export default function EditLayout({
                   }
                   label={field.label}
                   options={field?.options}
-                  match={{ UUID: exportData[field.binding] }}
+                  match={{ ...option }}
                   editMode={editMode}
                 />
               );
