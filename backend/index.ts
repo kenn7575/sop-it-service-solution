@@ -34,6 +34,7 @@ router.use("/mail", Routes.Mail);
 router.use("/items", Routes.Items);
 router.use("/users", Routes.Users);
 router.use("/users_view", Routes.Users_view);
+router.use("/locations", Routes.Locations);
 
 router.use("", Routes.tables);
 

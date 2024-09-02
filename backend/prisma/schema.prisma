@@ -16,8 +16,9 @@ model brands {
 }
 
 model buildings {
-  UUID Int    @id @default(autoincrement()) @db.UnsignedInt
-  name String @db.VarChar(255)
+  UUID  Int     @id @default(autoincrement())
+  name  String? @db.VarChar(255)
+  zones zones[]
 }
 
 model categories {
@@ -165,18 +166,20 @@ model users {
 }
 
 model zones {
-  UUID        Int     @id @default(autoincrement()) @db.UnsignedInt
-  name        String  @db.VarChar(255)
+  UUID        Int       @id @default(autoincrement()) @db.UnsignedInt
+  name        String    @db.VarChar(255)
   building_id Int
   floor_level Int
   loans       loans[]
+  buildings   buildings @relation(fields: [building_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "buildings_fk")
 
   @@index([building_id], map: "building_id")
 }
 
 model feedback {
-  title        String   @id @db.VarChar(127)
-  description  String?  @db.Text
+  UUID         Int      @id @default(autoincrement())
+  title        String   @db.VarChar(127)
+  description  String   @db.Text
   date_created DateTime @default(now()) @db.DateTime(0)
 }
 

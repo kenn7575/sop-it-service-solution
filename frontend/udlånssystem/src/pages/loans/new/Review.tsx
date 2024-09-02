@@ -1,7 +1,11 @@
+import { useContext, useState } from 'react';
+
 import TableSimplified from '@components/table-simplified';
 import TextQuestion from '@components/textQuestion';
 
 import translateMonth from '@services/translateMonth.json';
+
+import { CurrentUserContext } from '@/App';
 
 import { loanTypes } from '.';
 
@@ -10,13 +14,8 @@ interface NewLoanReviewProps {
   products: any[];
   returnDate: Date | null;
   loanType: number;
-  allZones: zoneModel[];
-  locationOfUseId: number;
-  createLoan: () => void;
-  username?: string;
-  setUsername: (username: string) => void;
-  password: string;
-  setPassword: (password: string) => void;
+  locationOfUse: zoneModel | undefined;
+  createLoan: (username: string, password: string) => void;
 }
 
 export default function NewLoanReview({
@@ -24,14 +23,14 @@ export default function NewLoanReview({
   products,
   returnDate,
   loanType,
-  allZones,
-  locationOfUseId,
+  locationOfUse,
   createLoan,
-  username = '',
-  setUsername,
-  password = '',
-  setPassword,
 }: NewLoanReviewProps) {
+  const { currentUser } = useContext(CurrentUserContext);
+
+  const [username, setUsername] = useState(currentUser?.username || '');
+  const [password, setPassword] = useState('');
+
   return (
     <div className="wrapper">
       <div className="chechout-container">
@@ -51,10 +50,7 @@ export default function NewLoanReview({
               Låner type:{' '}
               {loanTypes.find(({ id }) => id === loanType)!.name ?? 'Ikke sat'}
             </li>
-            <li>
-              Lokalitet:{' '}
-              {allZones.find(({ UUID }) => UUID === locationOfUseId)?.name}
-            </li>
+            <li>Lokalitet: {locationOfUse?.name}</li>
             <li>{/* Medarbejder: {$currentUser.fullName} */}</li>
           </ul>
         </div>
@@ -71,9 +67,10 @@ export default function NewLoanReview({
       </div>
       <div className="button-container">
         <form
+          id="create-loan"
           onSubmit={(e) => {
             e.preventDefault();
-            createLoan();
+            createLoan(username, password);
           }}
         >
           <TextQuestion
@@ -90,7 +87,8 @@ export default function NewLoanReview({
         </form>
         <button
           className="create-btn"
-          onClick={createLoan}
+          form="create-loan"
+          type="submit"
           // disabled={!validateInfo || !validateProducts || !validateUser}
         >
           Opret

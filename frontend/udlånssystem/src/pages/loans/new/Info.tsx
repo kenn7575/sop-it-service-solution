@@ -1,24 +1,22 @@
+import LocationSelector from '@components/LocationSelector';
 import DatePicker from '@components/datePicker';
 
 import { loanTypes } from '.';
-
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
 
 interface NewLoanInfoProps {
   setReturnDate: (returnDate: Date | null) => void;
   returnDate: Date | null;
   setLoanType: (loanType: (typeof loanTypes)[number]['id']) => void;
-  allZones: zoneModel[];
-  setLocationOfUseId: (locationOfUseId: number) => void;
+  locationOfUse: zoneModel | undefined;
+  setLocationOfUse: React.Dispatch<React.SetStateAction<zoneModel | undefined>>;
 }
 
 export default function NewLoanInfo({
   setReturnDate,
   returnDate,
   setLoanType,
-  allZones,
-  setLocationOfUseId,
+  locationOfUse,
+  setLocationOfUse,
 }: NewLoanInfoProps) {
   let minDate = new Date();
   let maxDate = new Date();
@@ -88,17 +86,7 @@ export default function NewLoanInfo({
       <div className="grid-item g3">
         <h4>Lokalitet</h4>
         <hr />
-        <select
-          onChange={(e) => {
-            setLocationOfUseId(parseInt(e.target.value));
-          }}
-        >
-          {allZones.map((zone, i) => (
-            <option key={i} className="dropdown-menu" value={zone.UUID}>
-              {zone.name}
-            </option>
-          ))}
-        </select>
+        <LocationSelector setZone={setLocationOfUse} zone={locationOfUse} />
       </div>
       {/* {#if products.some((p) => p.Kategori_Gruppe == "Laptop")}
           <table className="grid-item g4 w-2/3">

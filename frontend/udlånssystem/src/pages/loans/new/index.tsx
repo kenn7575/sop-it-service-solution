@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import getData from '@data/getData';
 import useBarcode from '@hooks/useBarcode';
 import useData from '@hooks/useData';
 
-import { CurrentUserContext } from '@/App';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -33,8 +32,6 @@ export default function NewLoan({ initPage = 1 }) {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { currentUser } = useContext(CurrentUserContext);
-
   const [page, setPage] = useState(initPage);
 
   const [user, setUser] = useState<usersView>();
@@ -45,12 +42,7 @@ export default function NewLoan({ initPage = 1 }) {
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [returnDate, setReturnDate] = useState<Date | null>(oneMonthFromNow);
   const [loanType, setLoanType] = useState(2);
-  const [locationOfUseId, setLocationOfUseId] = useState(1);
-  const [username, setUsername] = useState(currentUser?.username);
-  const [password, setPassword] = useState('');
-  const [allZones] = useData<zoneModel[]>('zones', {
-    withHeaders: true,
-  });
+  const [locationOfUse, setLocationOfUse] = useState<zoneModel>();
 
   useBarcode(handleBarcode);
 
@@ -149,8 +141,9 @@ export default function NewLoan({ initPage = 1 }) {
 
   //checkout
   //--------------------------------------------------------------------------------
-  async function createLoan() {
+  async function createLoan(username: string, password: string) {
     if (!user) return toast.error('Vælg en bruger');
+    if (!locationOfUse?.UUID) return toast.error('Vælg en lokalitet');
 
     let loan_length = null;
 
@@ -164,7 +157,7 @@ export default function NewLoan({ initPage = 1 }) {
       user_id: user.UUID,
       loan_length,
       recipient_type_id: loanType,
-      location_of_use_id: locationOfUseId,
+      location_of_use_id: locationOfUse.UUID,
     };
 
     const loanPromise = axios.post('loans', {
@@ -193,7 +186,7 @@ export default function NewLoan({ initPage = 1 }) {
         products={selectedProducts}
         user={user}
         returnDate={returnDate}
-        locationOfUseId={locationOfUseId}
+        locationOfUse={locationOfUse}
         loanType={loanType}
       />
 
@@ -221,8 +214,8 @@ export default function NewLoan({ initPage = 1 }) {
             setReturnDate={setReturnDate}
             returnDate={returnDate}
             setLoanType={setLoanType}
-            allZones={allZones?.data || []}
-            setLocationOfUseId={setLocationOfUseId}
+            locationOfUse={locationOfUse}
+            setLocationOfUse={setLocationOfUse}
           />
         )}
 
@@ -232,13 +225,8 @@ export default function NewLoan({ initPage = 1 }) {
             products={selectedProducts}
             returnDate={returnDate}
             loanType={loanType}
-            allZones={allZones?.data || []}
-            locationOfUseId={locationOfUseId}
+            locationOfUse={locationOfUse}
             createLoan={createLoan}
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
           />
         )}
       </div>
