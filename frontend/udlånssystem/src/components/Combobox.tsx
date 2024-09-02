@@ -23,8 +23,9 @@ interface ComboboxProps {
   editMode?: boolean;
   label: string;
   setValue?: (value: any) => void;
-  match?: defaultModel;
+  match?: defaultModel | undefined;
   options?: defaultModel[];
+  popoverWidth?: string;
 }
 
 export function Combobox({
@@ -33,6 +34,7 @@ export function Combobox({
   setValue = () => {},
   match = { UUID: 1, name: '' },
   options = [{ UUID: 1, name: '' }],
+  popoverWidth = 'w-auto',
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
 
@@ -56,7 +58,7 @@ export function Combobox({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[43.75rem] p-0 backdrop-blur-lg">
+        <PopoverContent className={`w-[${popoverWidth}] p-0 backdrop-blur-lg`}>
           <Command>
             <CommandInput placeholder={`Søg efter ${label}...`} />
             <CommandList>
@@ -66,9 +68,8 @@ export function Combobox({
                   <CommandItem
                     key={option.UUID}
                     value={option.name}
-                    className="hover:bg-primary"
                     onSelect={(currentValue) => {
-                      setValue(option.UUID);
+                      setValue(option);
                       match.name = currentValue;
 
                       setOpen(false);

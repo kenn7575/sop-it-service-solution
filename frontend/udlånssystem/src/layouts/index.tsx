@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import Table from '@components/table';
+import { Button } from '@components/ui/button';
 
 import { columnsFormatter } from '@helpers/tableHelpers';
 import useData from '@hooks/useData';
@@ -29,12 +30,14 @@ export default function Layout({ table }: LayoutProps) {
 
   return (
     <div className="h-full w-full overflow-hidden p-4">
-      <Link
-        to={`${location.pathname}/new`}
-        className="absolute bottom-16 right-20"
-      >
-        New
-      </Link>
+      <Button asChild variant="outline">
+        <Link
+          to={`${location.pathname}/new`}
+          className="absolute bottom-16 right-20"
+        >
+          New
+        </Link>
+      </Button>
       <Table
         columns={columns}
         data={inputData.data}

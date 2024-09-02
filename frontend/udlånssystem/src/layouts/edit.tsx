@@ -216,7 +216,7 @@ export default function EditLayout({
                   key={i}
                   setValue={(value) =>
                     setExportData((prev: any) => {
-                      prev[field.binding] = value;
+                      prev[field.binding] = value.UUID;
                       return prev;
                     })
                   }
@@ -224,6 +224,7 @@ export default function EditLayout({
                   options={field?.options}
                   match={{ ...option }}
                   editMode={editMode}
+                  popoverWidth="43.75rem"
                 />
               );
           })}
