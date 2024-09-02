@@ -172,9 +172,11 @@
   .is-max:hover {
     background: var(--p);
   }
-  hr {
+  .hr {
     margin: 0.5rem 0;
     border: solid 1px var(--text2);
+    
+    @apply rounded-full
   }
   span {
     color: var(--text2);

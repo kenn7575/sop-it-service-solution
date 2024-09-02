@@ -1,9 +1,12 @@
 import LocationSelector from '@components/LocationSelector';
 import DatePicker from '@components/datePicker';
+import { Checkbox } from '@components/ui/checkbox';
+import { Separator } from '@components/ui/separator';
 
 import { loanTypes } from '.';
 
 interface NewLoanInfoProps {
+  selectedProducts: itemsView[];
   setReturnDate: (returnDate: Date | null) => void;
   returnDate: Date | null;
   setLoanType: (loanType: (typeof loanTypes)[number]['id']) => void;
@@ -12,6 +15,7 @@ interface NewLoanInfoProps {
 }
 
 export default function NewLoanInfo({
+  selectedProducts,
   setReturnDate,
   returnDate,
   setLoanType,
@@ -37,7 +41,7 @@ export default function NewLoanInfo({
     <div className="grid">
       <div className="grid-item g1">
         <h4>Retur dato</h4>
-        <hr />
+        <Separator className="hr" />
         <div className="btn-group">
           <DatePicker
             onChange={setReturnDate}
@@ -70,7 +74,7 @@ export default function NewLoanInfo({
       </div>
       <div className="grid-item g2">
         <h4>Låner type</h4>
-        <hr />
+        <Separator className="hr" />
         <select
           onChange={(e) => {
             setLoanType(parseInt(e.target.value));
@@ -85,40 +89,60 @@ export default function NewLoanInfo({
       </div>
       <div className="grid-item g3">
         <h4>Lokalitet</h4>
-        <hr />
-        <LocationSelector setZone={setLocationOfUse} zone={locationOfUse} />
+        <Separator className="hr" />
       </div>
-      {/* {#if products.some((p) => p.Kategori_Gruppe == "Laptop")}
-          <table className="grid-item g4 w-2/3">
+      {selectedProducts.some((p) => p.Kategori_Gruppe == 'Laptop') && (
+        <table className="grid-item g4 w-2/3">
+          <thead>
             <tr className="">
-              <th className="w-3/4 text-left"><h4>Ekstra info</h4></th>
-              <th><h4>Taske</h4></th>
-              <th><h4>Lås</h4></th>
+              <th className="w-3/4 text-left">
+                <h4>Ekstra info</h4>
+              </th>
+              <th>
+                <h4>Taske</h4>
+              </th>
+              <th>
+                <h4>Lås</h4>
+              </th>
             </tr>
+          </thead>
 
-            <hr />
-            {#each products.filter((p) => p.Kategori_Gruppe == "Laptop") as laptop}
-              <tr>
-                <td><p>{laptop.Navn} [#{laptop.UUID}]</p></td>
+          <tbody>
+            <tr>
+              <td>
+                <hr />
+              </td>
+            </tr>
+          </tbody>
 
-                <td>
-                  <input
-                    id="taske"
-                    bind:checked={laptop.withBag}
-                    type="checkbox"
-                  />
-                </td>
-                <td>
-                  <input
-                    id="laas"
-                    bind:checked={laptop.withLock}
-                    type="checkbox"
-                  />
-                </td>
-              </tr>
-            {/each}
-          </table>
-        {/if} */}
+          <tbody>
+            {selectedProducts
+              .filter((p) => p.Kategori_Gruppe == 'Laptop')
+              .map((laptop, i) => (
+                <tr key={i}>
+                  <td>
+                    <p>
+                      {laptop.Navn} [#{laptop.UUID}]
+                    </p>
+                  </td>
+
+                  <td>
+                    <Checkbox
+                      id="taske"
+                      // bind:checked={laptop.withBag}
+                    />
+                  </td>
+                  <td>
+                    <Checkbox
+                      id="laas"
+                      // bind:checked={laptop.withLock}
+                    />
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
