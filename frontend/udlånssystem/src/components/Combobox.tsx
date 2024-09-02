@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +22,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 interface ComboboxProps {
   editMode?: boolean;
   label: string;
+  showLabel?: boolean;
   setValue?: (value: any) => void;
   match?: defaultModel | undefined;
   options?: defaultModel[];
@@ -31,6 +32,7 @@ interface ComboboxProps {
 export function Combobox({
   editMode = true,
   label,
+  showLabel = true,
   setValue = () => {},
   match = { UUID: 1, name: '' },
   options = [{ UUID: 1, name: '' }],
@@ -42,10 +44,12 @@ export function Combobox({
 
   return (
     <div className="question">
-      <label htmlFor="trigger">
-        {label}
-        {editMode && <span className="required-tag">*</span>}
-      </label>
+      {showLabel && (
+        <label htmlFor="trigger">
+          {label}
+          {editMode && <span className="required-tag">*</span>}
+        </label>
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild disabled={!editMode} id="trigger">
           <Button
@@ -54,7 +58,11 @@ export function Combobox({
             aria-expanded={open}
             className="w-full justify-between rounded-xl"
           >
-            {match.name || `Vælg ${label}...`}
+            {match.name ? (
+              <p>{match.name}</p>
+            ) : (
+              <p className="opacity-70">{label}</p>
+            )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
