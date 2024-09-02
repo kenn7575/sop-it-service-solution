@@ -42,6 +42,7 @@ export default function NewLoan({ initPage = 1 }) {
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [returnDate, setReturnDate] = useState<Date | null>(oneMonthFromNow);
   const [loanType, setLoanType] = useState(2);
+  const [building, setBuilding] = useState<buildingModel>();
   const [locationOfUse, setLocationOfUse] = useState<zoneModel>();
 
   useBarcode(handleBarcode);
@@ -211,9 +212,12 @@ export default function NewLoan({ initPage = 1 }) {
 
         {page === 3 && (
           <NewLoanInfo
+            selectedProducts={selectedProducts}
             setReturnDate={setReturnDate}
             returnDate={returnDate}
             setLoanType={setLoanType}
+            building={building}
+            setBuilding={setBuilding}
             locationOfUse={locationOfUse}
             setLocationOfUse={setLocationOfUse}
           />

@@ -10,6 +10,8 @@ interface NewLoanInfoProps {
   setReturnDate: (returnDate: Date | null) => void;
   returnDate: Date | null;
   setLoanType: (loanType: (typeof loanTypes)[number]['id']) => void;
+  building: buildingModel | undefined;
+  setBuilding: (building: buildingModel | undefined) => void;
   locationOfUse: zoneModel | undefined;
   setLocationOfUse: React.Dispatch<React.SetStateAction<zoneModel | undefined>>;
 }
@@ -19,6 +21,8 @@ export default function NewLoanInfo({
   setReturnDate,
   returnDate,
   setLoanType,
+  building,
+  setBuilding,
   locationOfUse,
   setLocationOfUse,
 }: NewLoanInfoProps) {
@@ -90,6 +94,12 @@ export default function NewLoanInfo({
       <div className="grid-item g3">
         <h4>Lokalitet</h4>
         <Separator className="hr" />
+        <LocationSelector
+          building={building}
+          setBuilding={setBuilding}
+          setZone={setLocationOfUse}
+          zone={locationOfUse}
+        />
       </div>
       {selectedProducts.some((p) => p.Kategori_Gruppe == 'Laptop') && (
         <table className="grid-item g4 w-2/3">

@@ -1,1 +1,3 @@
-interface buildingModel extends defaultModel {}
+interface buildingModel extends defaultModel {
+  zones?: zoneModel[];
+}
