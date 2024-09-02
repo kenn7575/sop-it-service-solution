@@ -1,18 +1,20 @@
-import { writable } from "svelte/store";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { useContext } from 'react';
 
-export const currentUser = writable<currentUser>(null); //check for session token in local storage
+import { CurrentUserContext } from '@/App';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { toast } from 'sonner';
 
-export const getSession = () => new Promise(resolve => {
-  const token = Cookies.get("token");
-  resolve(token);
-})
+export const getSession = () =>
+  new Promise((resolve) => {
+    const token = Cookies.get('token');
+    resolve(token);
+  });
 //validate session token
 export const validateSession = async () => {
-  let { data } = await axios.post("auth/validate").catch((err) => {
+  let { data } = await axios.post('auth/validate').catch((err) => {
     err.response.data.user = null;
-    return err.response
+    return err.response;
   });
 
   data.user = data;
@@ -21,36 +23,32 @@ export const validateSession = async () => {
 
 //login user
 export const loginViaSession = async () => {
-  let { data } = await axios.get("auth/cookies")
+  const { setCurrentUser } = useContext(CurrentUserContext);
+
+  let { data } = await axios.get('auth/cookies');
 
   const { token } = data;
 
   if (!token) {
-    currentUser.update((user) => {
-      return null; //update current user
-    });
+    setCurrentUser(null);
     return false;
   }
 
   let res = await validateSession();
 
   if (res && !res.error) {
-    currentUser.update((user) => {
-      return res.user; //update current user
-    });
+    setCurrentUser(res.user);
     return true;
   } else {
-    currentUser.update((user) => {
-      return null; //update current user
-    });
+    setCurrentUser(null);
     return false;
   }
 };
 
-export async function loginViaCredentials(username, password) {
-  let output = { status: 500, message: "Server error", user: undefined };
+export async function loginViaCredentials(username: string, password: string) {
+  let output = { status: 500, message: 'Server error', user: undefined };
   await axios
-    .post("auth/login", { username, password })
+    .post('auth/login', { username, password })
     .then((res) => {
       output.message = res.data;
       if (res.data?.username) {
@@ -59,13 +57,14 @@ export async function loginViaCredentials(username, password) {
       }
     })
     .catch((err) => {
-      alert(`Ukendt fejl! Kunne ikke kontakte serveren. ${err}`);
+      toast.error(`Ukendt fejl! Kunne ikke kontakte serveren. ${err}`);
     });
   return output;
 }
-export function logout() {
-  axios.post("auth/logout")
-  currentUser.update((user) => {
-    return null; //update current user
-  });
+export function logout(
+  setCurrentUser: React.Dispatch<React.SetStateAction<userState>>,
+) {
+  axios.post('auth/logout');
+
+  setCurrentUser(null);
 }

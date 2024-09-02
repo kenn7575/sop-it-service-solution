@@ -1,1 +1,8 @@
-{}
+{
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/index.*": "${dirname}/index",
+    "**/new.*": "${dirname}/new",
+    "**/edit.*": "${dirname}/edit"
+  }
+}

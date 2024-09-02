@@ -52,7 +52,7 @@ export async function ldapAuthenticate(
     }
   );
 
-  if (NODE_ENV === "developmentt") {
+  if (NODE_ENV === "development") {
     resolve({
       date_created: new Date(),
       distiguishedName: "John Doe",

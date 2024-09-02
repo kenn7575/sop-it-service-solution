@@ -1,15 +1,15 @@
-import { autoGenZodSchema } from "@services/autoGen";
+import { autoGenZodSchema } from '@services/autoGen';
 
 export const fields: Field<categoryModel>[] = [
   {
-    label: "Navn",
-    binding: "name",
+    label: 'Navn',
+    binding: 'name',
   },
   {
-    label: "Kategorigruppe",
-    binding: "category_group_id",
-    type: "select",
-    options: "category_groups",
+    label: 'Kategorigruppe',
+    binding: 'category_group_id',
+    type: 'select',
+    options: 'category_groups',
   },
 ];
 

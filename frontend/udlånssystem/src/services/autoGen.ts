@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export function autoGenZodSchema(fields: Field[]): z.ZodObject<any> {
   let zodSchema = {} as any;
@@ -11,23 +11,23 @@ export function autoGenZodSchema(fields: Field[]): z.ZodObject<any> {
       message: `${field.label} er påkrævet`,
     };
 
-    if (!field?.type) field.type = "text";
+    if (!field?.type) field.type = 'text';
     if (field.required === undefined) field.required = true;
 
     switch (field.type) {
-      case "text":
+      case 'text':
         zodType = z
           .string(defaultOptions)
           .trim()
           .min(1, defaultOptions.message);
         break;
-      case "number":
+      case 'number':
         zodType = z
           .number(defaultOptions)
           .int(`${field.label} skal være et heltal`)
           .min(0, `${field.label} skal være et positivt heltal`);
         break;
-      case "select":
+      case 'select':
         zodType = z.number(defaultOptions).int();
         break;
     }

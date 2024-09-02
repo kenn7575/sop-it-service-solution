@@ -34,6 +34,7 @@ router.use("/mail", Routes.Mail);
 router.use("/items", Routes.Items);
 router.use("/users", Routes.Users);
 router.use("/users_view", Routes.Users_view);
+router.use("/locations", Routes.Locations);
 
 router.use("", Routes.tables);
 
@@ -41,6 +42,6 @@ app.use("/api", router);
 
 const port = process.env.BACKEND_PORT || 5000;
 
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

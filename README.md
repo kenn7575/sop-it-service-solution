@@ -1,5 +1,5 @@
 # sop-database-design
-### welcome to the sop it service solution repo.
+### Welcome to the sop it service solution repo.
 🙌 Let's make the Helpdesk System great again!
 
 ## Status
@@ -14,55 +14,65 @@
 📣 Here you can also find [announcements](https://github.com/kenn7575/sop-it-service-solution/discussions/categories/announcements) about the projects progress.
 
 ## Issues
-The [issues](https://github.com/kenn7575/sop-it-service-solution/issues) page is for anyone to repport
+The [issues](https://github.com/kenn7575/sop-it-service-solution/issues) page is for anyone to report
 - 👾 Bugs (obvious errors that compromises the systems functionality).
 - 😲 Concerns (other types of errors that compromises the systems efficiency or usability).
 
 # For Developers 
-👨‍💻 This project is developed in [Visual Studio Code](https://code.visualstudio.com/) using [PHP](https://www.php.net/), [MariaDB](https://mariadb.org/) and [Svelte](https://svelte.dev/)
+👨‍💻 This project is developed using [Node js](https://nodejs.org/en) ([Express js](https://expressjs.com/)), [MariaDB](https://mariadb.org/) and [React](https://react.dev/)
 
-For specific information about the technologies version, see the [package.json](https://github.com/kenn7575/sop-it-service-solution/blob/main/frontend/udl%C3%A5nssystem/package.json) for the front-end and the [composer.json](https://github.com/kenn7575/sop-it-service-solution/blob/main/backend/composer.lock) for the back-end.
+For specific information about the technologies version, see the [package.json](https://github.com/kenn7575/sop-it-service-solution/blob/main/frontend/udl%C3%A5nssystem/package.json) for the frontend and the [package.json](https://github.com/kenn7575/sop-it-service-solution/blob/main/backend/package.json) for the backend.
 
 ### Structure
 The project is divided into 2 main folders:
-- [backend](https://github.com/kenn7575/sop-it-service-solution/tree/main/backend) - The back-end of the project.
-- [frontend](https://github.com/kenn7575/sop-it-service-solution/tree/main/frontend) - The front-end of the project.
+- [frontend](https://github.com/kenn7575/sop-it-service-solution/tree/main/frontend) - The frontend of the project.
+- [backend](https://github.com/kenn7575/sop-it-service-solution/tree/main/backend) - The backend of the project.
 
 ## Installation
 ### Prerequisites
-- [PHP](https://www.php.net/) - The back-end is written in PHP, so you need to have PHP installed on your machine.
+- [Node js](https://nodejs.org/en) - The backend is written in Node js, so you need to have Node js, installed on your machine.
+- [NPM](https://www.npmjs.com/) - The frontend and backend both use npm to manage dependencies, which is installed with Node js by default.
 - [MariaDB](https://mariadb.org/) - The database is written in MariaDB, so you need to have MariaDB installed on your machine.
-- [Composer](https://getcomposer.org/) - The back-end uses composer to manage dependencies, so you need to have composer installed on your machine.
-- [Node.js](https://nodejs.org/en/) - The front-end uses Node.js to manage dependencies, so you need to have Node.js installed on your machine.
 - [Git](https://git-scm.com/) - The project uses Git for version control, so you need to have Git installed on your machine.
-- [Visual Studio Code](https://code.visualstudio.com/) - The project uses Visual Studio Code as the IDE, so you need to have Visual Studio Code installed on your machine.
 
 ### Environment variables
-The project uses environment variables to store sensitive information. You need to create a .env file in the root folder of the project. The in the root folder we've included a .env.example file that you can use as a template. The .env file should look something like this:
+The project uses environment variables to store sensitive information. You need to create a .env file in the root folder of the project. In the root folder we've included a .env.example file that you can use as a template.
+
+The .env file for the backend should look something like this:
+
 ```
-ADMIN_USERNAME="" ; Database username
-ADMIN_PASSWORD="" ; Database password
+NODE_ENV="development" #Nodejs environment. Format: "development" or "production".
 
-AUTH="" ; Auth key
-FRONTEND_URL="http://localhost:5173" ; Frontend URL
+DATABASE_URL="database_url" #URL to the database. Format: "mysql://user:password@host:port/database".
 
-LDAP_HOST= ; LDAP host - IP or domain name - format: x.x.x.x
-LDAP_USERNAME="" ; LDAP username
-LDAP_PASSWORD="" ; LDAP password
-LDAP_PORT=389 ; LDAP port
-LDAP_BASE_DN="" ; LDAP base DN
-LDAP_TIMEOUT=5
-LDAP_USERS="" ; LDAP users DN
-LDAP_ADMINS="" ; LDAP admins DN
+FRONTEND_URL="http://localhost:5173" #URL to the frontend. Format: "http://localhost:port,http://localhost:port2".
 
-MAIL_MAILER="mailjet" ; Mail driver
-MAIL_HOST="in-v3.mailjet.com" ; Mail host
-MAIL_PORT=587 ; Mail port
-MAIL_USERNAME="" ; Mail username
-MAIL_PASSWORD="" ; Mail password
-MAIL_ENCRYPTION="tls" ; Mail encryption
-MAIL_FROM_ADDRESS="" ; Mail from address
-MAIL_FROM_NAME="Udlånsystemets automatiske mail" ; Mail from name
+BACKEND_PORT=3000 #Port the backend should run on. Default: 3000
+
+JWT_SECRET="secret" #Secret used to sign the JWT tokens.
+
+LDAP_HOST="xxx.xxx.xxx.xxx" #IP address of the LDAP server. Format: "xxx.xxx.xxx.xxx".
+LDAP_PORT="389" #Port of the LDAP server.
+LDAP_USERNAME="username" #Username used to connect to the LDAP server.
+LDAP_PASSWORD="password" #Password used to connect to the LDAP server.
+LDAP_BASE_DN="base_dn" #Base DN of the LDAP server.
+LDAP_USERS="users" #DN of the "regular" users (non-admin) in the LDAP server.
+LDAP_ADMINS="admins" #DN of the admins in the LDAP server.
+
+MAIL_MAILER="mailer" #Mailer used to send emails.
+MAIL_HOST="host" #Host of the mail server.
+MAIL_PORT=587 #Port of the mail server.
+MAIL_USERNAME="username" #Username used to connect to the mail server.
+MAIL_PASSWORD="password" #Password used to connect to the mail server.
+MAIL_ENCRYPTION="tls" #Encryption used to connect to the mail server.
+MAIL_FROM_ADDRESS="from_address" #Email address used as the sender of the emails.
+MAIL_FROM_NAME="from_name" #Name used as the sender of the emails.
+```
+
+The .env file for the frontend should look something like this:
+
+```
+VITE_APP_BACKEND_URL="http://localhost:3000/api"
 ```
 
 ### Setup
@@ -72,21 +82,27 @@ MAIL_FROM_NAME="Udlånsystemets automatiske mail" ; Mail from name
 2. Choose a location on your machine to clone the repository to.
 3. Open the folder in VS code.
 
-#### Run the back-end
-1. Open a terminal in VS code in the root folder
-2. run ```npm run serve``` to start the back-end server.
+#### Install backend dependencies
+1. Open a terminal in VS code in the backend folder.
+2. Run ```npm run i``` to install the frontend dependencies.
 > You need to have Node.js installed on your machine for this to work.
+> Watch out for errors in the terminal. If that happend try reading the error message and resolve the issue.
 
-#### install front-end dependencies
+#### Run the backend
+1. Open a terminal in VS code in the backend folder
+2. Run ```npm run dev``` to start the backend server.
+> You need to have Node.js installed on your machine to run the backend.
+
+#### Install frontend dependencies
 1. Open a terminal in VS code in the root folder.
-2. run ```npm run i``` to install the front-end dependencies.
+2. Run ```npm run i``` to install the frontend dependencies.
 > You need to have Node.js installed on your machine for this to work.
-> Watch out for errors in the terminal. If that happend try reading the error message and resolve the issue. If you can't resolve the issue, try googling the error message or ask for help.
+> Watch out for errors in the terminal. If that happend try reading the error message and resolve the issue.
 
-#### Run the front-end
-1. I a root folder terminal , run ```npm run dev``` to start the front-end server. Or run ```npm run host``` to expose the front-end server to the network.
-2. Open the link provided in the terminal to open the front-end in your browser. Typically its gonna be hosted on http://localhost:5173.
-> You need to have Node.js installed on your machine for this to work. If the front-end crashes or behaves strangely, the back-end is probably not running or the .env file has incorrect values.
+#### Run the frontend
+1. In a root folder terminal, run ```npm run dev``` to start the frontend server. Or run ```npm run host``` to expose the frontend server to the network.
+2. Open the link provided in the terminal to open the frontend in your browser. Typically its gonna be hosted on http://localhost:5173.
+> You need to have Node.js installed on your machine to run the frontend. If the frontend crashes or behaves strangely, the backend is probably not running or the .env file has incorrect values.
 
 ## Congratulations!
 🎉 You now have the project up and running on your machine (hopefully). You can now start developing on the project.
@@ -145,4 +161,4 @@ MAIL_FROM_NAME="Udlånsystemets automatiske mail" ; Mail from name
 - You are not allowed to merge your own pull requests.
 - You are not allowed to approve your own pull requests.
 
-If any of these rules are broken, the pull request will be denied. If you break rules of the danger zone, you will be permenly banned from this repo.
+If any of these rules are broken, the pull request will be denied.

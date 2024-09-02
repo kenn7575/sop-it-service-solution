@@ -1,19 +1,20 @@
-import axios from "axios";
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default async function updateItem(
   table: string,
   UUID: number,
-  exportData: any //typescript class instance with validateUpdate() method
+  exportData: any,
 ): Promise<object> {
   try {
     const { data } = await axios
-      .patch(table + "/" + UUID, { data: { ...exportData } })
+      .patch(table + '/' + UUID, { data: { ...exportData } })
       .then((res: any) => {
         res.id = res.data;
         return res;
       })
       .catch((err) => {
-        alert("Fejl! " + err);
+        toast.error('Fejl! ' + err);
         return { success: false, data: err, id: null };
       });
 
@@ -21,6 +22,7 @@ export default async function updateItem(
 
     return data;
   } catch (error) {
-    alert("Application crashed: " + error);
+    toast.error('Application crashed: ' + error);
+    return { success: false, data: error, id: null };
   }
 }

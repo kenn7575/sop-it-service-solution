@@ -11,3 +11,10 @@ interface currentUser {
   username: string;
   UUID: number;
 }
+
+type userState = currentUser | null | undefined;
+
+interface CurrentUserContextType {
+  currentUser: userState;
+  setCurrentUser: React.Dispatch<React.SetStateAction<userState>>;
+}

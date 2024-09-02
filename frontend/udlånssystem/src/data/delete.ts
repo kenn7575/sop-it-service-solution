@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default async function deleteItem(importData: object): Promise<object> {
   return axios
-    .delete("", {
+    .delete('', {
       params: {
         ...importData,
       },
@@ -15,6 +16,7 @@ export default async function deleteItem(importData: object): Promise<object> {
       }
     })
     .catch((err) => {
+      toast.error('Fejl! ' + err);
       return { success: false, error: err };
     });
 }
