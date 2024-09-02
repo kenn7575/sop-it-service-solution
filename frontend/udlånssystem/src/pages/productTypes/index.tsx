@@ -1,5 +1,5 @@
 import Layout from '@layouts/index';
 
 export default function Index() {
-  return <Layout table="products_view" page_name="Produkttyper" />;
+  return <Layout table="products_view" />;
 }
