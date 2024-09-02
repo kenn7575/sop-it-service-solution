@@ -38,23 +38,23 @@ module.exports = {
           foreground: 'var(--secondary-foreground)',
         },
         destructive: {
-          DEFAULT: 'var(--destructive))',
+          DEFAULT: 'var(--destructive)',
           foreground: 'var(--destructive-foreground)',
         },
         muted: {
-          DEFAULT: 'var(--muted))',
+          DEFAULT: 'var(--muted)',
           foreground: 'var(--muted-foreground)',
         },
         accent: {
-          DEFAULT: 'var(--accent))',
+          DEFAULT: 'var(--accent)',
           foreground: 'var(--accent-foreground)',
         },
         popover: {
-          DEFAULT: 'var(--popover))',
+          DEFAULT: 'var(--popover)',
           foreground: 'var(--popover-foreground)',
         },
         card: {
-          DEFAULT: 'var(--card))',
+          DEFAULT: 'var(--card)',
           foreground: 'var(--card-foreground)',
         },
       },

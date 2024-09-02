@@ -81,7 +81,7 @@
   }
 }
 button:focus {
-  outline: solid var(--p) 2px;
+  outline: solid var(--p) 1px;
   /* border: solid var(--p) 2px; */
 }
 html {
@@ -98,19 +98,24 @@ html {
   --secondary: var(--s);
   --i: #409cf8;
   --w: #ffa700;
-  --at: #a231f5;
   --text1: #fff;
   --primary-foreground: #fff;
   --text2: #bebecc;
   --text3: #bebecc;
+  --nav-width: 20rem;
+
   --date-picker-foreground: var(--text1);
   --date-picker-background: var(--bg2);
   --date-picker-highlight-border: var(--p);
   --date-picker-highlight-shadow: var(--p);
   --date-picker-selected-color: #fff;
   --date-picker-selected-background: var(--p);
-  --nav-width: 20rem;
+
   --radius: 0.5rem;
+  --popover: var(--bg3);
+  --popover-foreground: var(--text1);
+  --accent: #1f2139;
+  --accent-foreground: var(--text1);
 }
 .light {
   --nav: #dddddd;
@@ -121,6 +126,8 @@ html {
   --text1: #303033;
   --text2: #8f9192;
   --text3: #303033;
+
+  --accent: #f5f5f5;
 }
 h1 {
   color: var(--text1);
@@ -202,6 +209,9 @@ select:disabled {
   pointer-events: none;
 }
 .question {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   margin-bottom: 1rem;
 }
 form .question input.text {
