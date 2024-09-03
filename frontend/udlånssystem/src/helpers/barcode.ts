@@ -1,5 +1,6 @@
 let pressedKeys: string[] = [];
-var firstKeyPress = 0;
+let firstKeyPress = 0;
+const maxTimeBetweenKeyPresses = 200;
 
 export async function handleBarcodeScan(
   e: KeyboardEvent,
@@ -9,10 +10,16 @@ export async function handleBarcodeScan(
 
   if (['Shift', 'Control', 'Alt'].includes(e.key)) return;
 
+  setTimeout(() => {
+    pressedKeys = [];
+  }, maxTimeBetweenKeyPresses);
+
   if (e.key == 'Enter') {
     e.preventDefault();
     const barcode = pressedKeys.join('');
-    if (new Date().getTime() - firstKeyPress > 100) return (pressedKeys = []);
+    if (new Date().getTime() - firstKeyPress > maxTimeBetweenKeyPresses) {
+      return (pressedKeys = []);
+    }
 
     pressedKeys = [];
 
