@@ -30,10 +30,10 @@ export default function Layout({ table }: LayoutProps) {
 
   return (
     <div className="h-full w-full overflow-hidden p-4">
-      <Button asChild variant="outline">
+      <Button asChild>
         <Link
           to={`${location.pathname}/new`}
-          className="absolute bottom-16 right-20"
+          className="absolute right-3 top-3 h-9"
         >
           New
         </Link>
