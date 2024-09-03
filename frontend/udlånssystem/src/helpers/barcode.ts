@@ -1,6 +1,6 @@
 let pressedKeys: string[] = [];
 let firstKeyPress = 0;
-const maxTimeBetweenKeyPresses = 200;
+const maxTimeBetweenKeyPresses = 350;
 
 export async function handleBarcodeScan(
   e: KeyboardEvent,
