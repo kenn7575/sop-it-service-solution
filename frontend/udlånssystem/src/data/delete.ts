@@ -1,22 +1,8 @@
 import axios from 'axios';
-import { toast } from 'sonner';
 
-export default async function deleteItem(importData: object): Promise<object> {
-  return axios
-    .delete('', {
-      params: {
-        ...importData,
-      },
-    })
-    .then((res) => {
-      if (res.status == 200) {
-        return { success: true, error: null };
-      } else {
-        return { success: false, error: res.data };
-      }
-    })
-    .catch((err) => {
-      toast.error('Fejl! ' + err);
-      return { success: false, error: err };
-    });
+export default async function deleteItem(
+  table: string,
+  UUID: number,
+): Promise<object> {
+  return axios.delete(`${table}/${UUID}`);
 }

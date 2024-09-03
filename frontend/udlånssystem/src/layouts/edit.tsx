@@ -137,7 +137,7 @@ export default function EditLayout({
       action: {
         label: 'Slet',
         onClick: () => {
-          toast.promise(deleteItem({ UUID, table }), {
+          toast.promise(deleteItem(table, UUID), {
             loading: 'Sletter...',
             success: () => {
               navigate(getPrevPage());
