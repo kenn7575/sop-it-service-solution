@@ -4,8 +4,6 @@ import { SearchOptions } from "ldapjs";
 import { attributes, createLdapClient, formatEntryResult } from "./ldapHelper";
 import dotenv from "dotenv";
 
-import type { users } from "@prisma/client";
-
 dotenv.config();
 
 const { JWT_SECRET, NODE_ENV, LDAP_USERS, LDAP_ADMINS } = process.env;
@@ -22,9 +20,7 @@ export function authenticateUser(
 
   try {
     //TODO: Change this to be correct, instead of implicitly adding moderator
-    const verified = verify(token, JWT_SECRET) as users & {
-      moderator: boolean;
-    };
+    const verified = verify(token, JWT_SECRET) as user;
 
     req.user = verified;
 
@@ -39,18 +35,16 @@ export function authenticateUser(
 
 // ** Replace with global interface
 export async function ldapAuthenticate(
-  username: users["username"],
+  username: user["username"],
   password: string,
   searchBase = LDAP_ADMINS
-): Promise<(users & { moderator: boolean }) | null> {
+): Promise<user | null> {
   let resolve: any, reject: any;
 
-  const promise = new Promise<(users & { moderator: boolean }) | null>(
-    (res, rej) => {
-      resolve = res;
-      reject = rej;
-    }
-  );
+  const promise = new Promise<user | null>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
 
   if (NODE_ENV === "development") {
     resolve({
@@ -63,7 +57,7 @@ export async function ldapAuthenticate(
       moderator: true,
       username: "jdoe",
       UUID: 792,
-    }) as users & { moderator: boolean };
+    }) as user;
 
     return promise;
   }

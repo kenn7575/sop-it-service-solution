@@ -22,4 +22,14 @@ router.get("/:UUID", async (req, res) => {
   res.json(item);
 });
 
+router.patch("/:UUID", async (req, res, next) => {
+  // TODO: Only limit when changing status
+
+  if (req.user && req.user.moderatorLevel < 2) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  next();
+});
+
 export default router;

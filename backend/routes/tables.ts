@@ -128,6 +128,10 @@ router.patch("/:table/:UUID", async (req, res) => {
 });
 
 router.delete("/:table/:UUID", async (req, res) => {
+  if (req.user && req.user.moderatorLevel < 2) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
   const { table, UUID } = req.params as {
     table: Prisma.ModelName;
     UUID: string;
@@ -145,12 +149,6 @@ router.delete("/:table/:UUID", async (req, res) => {
 
     res.status(400).json({ error: error.message });
   }
-});
-
-router.delete("/", async (req, res) => {
-  const { table, UUID } = req.query;
-
-  return res.redirect(`api/${table}/${UUID}`);
 });
 
 export default router;
