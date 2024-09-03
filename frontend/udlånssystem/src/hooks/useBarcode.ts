@@ -14,6 +14,7 @@ export default function useBarcode(callback: (barcode: string) => void) {
   useEffect(() => {
     handleBarcodeScanRef.current = (e: any) => {
       handleBarcodeScan(e, (barcode) => {
+        if (barcode.length < 7) return;
         callback(barcode);
         setBarcode(barcode);
       });
