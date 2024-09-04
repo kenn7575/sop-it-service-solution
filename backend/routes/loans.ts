@@ -7,7 +7,7 @@ import type { items, loans } from "@prisma/client";
 const router = express.Router();
 
 router.get(["/", "/:UUID"], async (req, res, next) => {
-  const moderator = req.user?.moderator;
+  const moderator = req.user?.moderatorLevel;
 
   if (moderator) return next();
 
