@@ -227,6 +227,7 @@ export default function NewLoan({ initPage = 1 }) {
           <NewLoanReview
             user={user}
             products={selectedProducts}
+            headers={products?.headers}
             returnDate={returnDate}
             loanType={loanType}
             locationOfUse={locationOfUse}

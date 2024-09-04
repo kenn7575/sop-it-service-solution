@@ -2,7 +2,7 @@
     max-height: 50vh;
   } */
 .returnLoan {
-  & button {
+  & button#add-all, & button#return {
     width: 100%;
     max-width: 400px;
     min-height: 2rem;

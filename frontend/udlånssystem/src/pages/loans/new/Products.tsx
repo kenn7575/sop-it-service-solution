@@ -1,5 +1,4 @@
 import Table from '@components/table';
-import TableSimplified from '@components/table-simplified';
 
 import { columnsFormatter } from '@helpers/tableHelpers';
 
