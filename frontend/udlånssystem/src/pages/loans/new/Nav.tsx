@@ -96,7 +96,7 @@ export default function NewLoanNav({
           if (validateInfo() && validateProducts() && validateUser()) {
             setPage(4);
           } else {
-            toast.error('Du kan ikke gå videre før alle felter er udfyldt');
+            toast.warning('Du kan ikke gå videre før alle felter er udfyldt');
           }
         }}
         className={`page-nav-btn ${page === 4 ? 'current' : ''}`}

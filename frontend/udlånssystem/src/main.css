@@ -117,6 +117,24 @@ html {
   --popover-foreground: var(--text1);
   --accent: #1f2139;
   --accent-foreground: var(--text1);
+
+  [data-sonner-toaster][data-theme='dark'] {
+    --normal-bg: var(--bg2);
+    --normal-border: var(--bg3);
+    --normal-text: var(--text1);
+    --success-bg: var(--p);
+    --success-border: var(--bg3);
+    --success-text: var(--text1);
+    --info-bg: var(--i);
+    --info-border: var(--bg3);
+    --info-text: var(--text1);
+    --warning-bg: var(--w);
+    --warning-border: var(--bg3);
+    --warning-text: var(--text3);
+    --error-bg: var(--s);
+    --error-border: var(--bg3);
+    --error-text: var(--text1);
+  }
 }
 .light {
   --nav: #dddddd;
