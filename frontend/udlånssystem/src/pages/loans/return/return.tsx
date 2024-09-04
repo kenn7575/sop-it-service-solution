@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
-import TableSimplified from '@components/table-simplified';
+import Table from '@components/table';
 
 import getData from '@data/getData';
+import { columnsFormatter } from '@helpers/tableHelpers';
 import useBarcode from '@hooks/useBarcode';
 import useData from '@hooks/useData';
 
 import axios from 'axios';
 import { toast } from 'sonner';
-
-import ReturnedList from './ReturnedList';
 
 import '@styles/return.css';
 
@@ -31,8 +30,8 @@ export default function Return() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [itemsLent, setItemsLent] = useState<itemsFromLoan[]>([]);
-  const [itemsReturned, setItemsReturned] = useState<itemsFromLoan[]>([]);
   const [itemsReturning, setItemsReturning] = useState<itemsFromLoan[]>([]);
+  const [itemsReturned, setItemsReturned] = useState<itemsFromLoan[]>([]);
 
   const [products] = useData<itemsFromLoan[]>('items_from_loans');
 
@@ -149,6 +148,10 @@ export default function Return() {
     importDataFromDB();
   }, []);
 
+  const columns = columnsFormatter<itemsFromLoan>(
+    Object.keys(itemsLent[0] || itemsReturning[0] || itemsReturned[0] || {}),
+  );
+
   return (
     <div className="returnLoan relative max-h-full overflow-y-scroll pb-16">
       {(itemsReturning.length != 0 || itemsLent.length != 0) && (
@@ -156,19 +159,23 @@ export default function Return() {
           <div className="seperation seperation-1 absolute left-1/2 h-full border-r-2" />
           <div className="col-start-1">
             {itemsLent?.length > 0 && (
-              <TableSimplified
-                onMessage={handleAddProduct}
-                inputData={itemsLent}
+              <Table
+                data={itemsLent}
+                columns={columns || []}
                 exclude={exclude}
+                onRowClick={handleAddProduct}
+                withFilters={false}
               />
             )}
           </div>
           <div className="col-start-2">
             {itemsReturning?.length > 0 ? (
-              <TableSimplified
-                onMessage={handleRemoveProduct}
-                inputData={itemsReturning}
+              <Table
+                data={itemsReturning}
+                columns={columns || []}
                 exclude={exclude}
+                onRowClick={handleRemoveProduct}
+                withFilters={false}
               />
             ) : (
               <p className="text-center">Tryk for at vælge produkter</p>
@@ -196,7 +203,16 @@ export default function Return() {
             </button>
           </>
         )}
-        <ReturnedList text="Returnerede produkter" inputData={itemsReturned} />
+
+        <h1 className="mt-16 text-xl">Returnerede produkter</h1>
+        <hr className="w-full" />
+
+        <Table
+          data={itemsReturned}
+          columns={columns || []}
+          exclude={exclude}
+          withFilters={false}
+        />
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 
-import TableSimplified from '@components/table-simplified';
+import Table from '@components/table';
 import TextQuestion from '@components/textQuestion';
 
+import { columnsFormatter } from '@helpers/tableHelpers';
 import translateMonth from '@services/translateMonth.json';
 
 import { CurrentUserContext } from '@/App';
@@ -11,7 +12,8 @@ import { loanTypes } from '.';
 
 interface NewLoanReviewProps {
   user?: usersView;
-  products: any[];
+  products: productModel[];
+  headers?: string[];
   returnDate: Date | null;
   loanType: number;
   locationOfUse: zoneModel | undefined;
@@ -21,6 +23,7 @@ interface NewLoanReviewProps {
 export default function NewLoanReview({
   user,
   products,
+  headers,
   returnDate,
   loanType,
   locationOfUse,
@@ -30,6 +33,9 @@ export default function NewLoanReview({
 
   const [username, setUsername] = useState(currentUser?.username || '');
   const [password, setPassword] = useState('');
+
+  const columns = columnsFormatter<productModel>(headers);
+  if (!columns) return null;
 
   return (
     <div className="wrapper">
@@ -56,11 +62,11 @@ export default function NewLoanReview({
         </div>
         {products.length > 0 && (
           <div className="table-container">
-            <TableSimplified
-              inputData={products}
-              title="Produkter"
-              disabled={true}
-              exclude={['Stor. Loc. ID', 'withBag', 'withLock']}
+            <Table
+              data={products}
+              columns={columns}
+              withFilters={false}
+              withPagination={false}
             />
           </div>
         )}

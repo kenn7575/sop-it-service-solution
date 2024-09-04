@@ -37,7 +37,7 @@ export function formatEntryResult(entry: SearchEntry) {
     ldapUser[type] = values[0];
   });
 
-  const user = {
+  const user: user = {
     distinguishedName: ldapUser.distinguishedName,
     firstName: ldapUser.cn.split(" ")[0],
     lastName: ldapUser.cn.split(" ")[1],
@@ -46,7 +46,7 @@ export function formatEntryResult(entry: SearchEntry) {
     mail: ldapUser.mail,
     date_created: convertADDatetime(ldapUser.whenCreated),
     date_updated: convertADDatetime(ldapUser.whenChanged),
-    moderator: false,
+    moderatorLevel: 1,
   };
 
   return user;
@@ -94,7 +94,7 @@ export async function getUsers(search: string, options: SearchOptions) {
       searchRes.on("searchEntry", (entry) => {
         const user = formatEntryResult(entry);
 
-        user.moderator = search == process.env.LDAP_ADMINS;
+        if (search == process.env.LDAP_ADMINS) user.moderatorLevel = 1;
 
         if (user) users.push(user);
       });
