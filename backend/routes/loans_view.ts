@@ -4,16 +4,16 @@ import { addFullname } from "@functions";
 
 const router = Router();
 
-router.get(["/", "/:UUID"], async (req: any, res, next) => {
-  const { moderator } = req.user;
+router.get(["/", "/:UUID"], async (req, res) => {
+  const moderatorLevel = req.user?.moderatorLevel;
 
   let user = await prisma.users.findFirst({
-    where: { username: req.user.username },
+    where: { username: req.user?.username },
   });
 
-  if (!user && !moderator) return res.sendStatus(401);
+  if (!user && !moderatorLevel) return res.sendStatus(401);
 
-  let user_id = moderator ? undefined : user?.UUID;
+  let user_id = moderatorLevel ? undefined : user?.UUID;
 
   let loans = await prisma.loans.findMany({
     where: { user_id },
