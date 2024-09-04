@@ -30,7 +30,7 @@ export function convertADDatetime(ldapTime: string) {
   return date;
 }
 
-export function formatEntryResult(entry: SearchEntry) {
+export function formatEntryResult(entry: SearchEntry): user {
   let ldapUser = {} as any;
 
   entry.pojo.attributes.map(({ type, values }) => {
@@ -46,7 +46,7 @@ export function formatEntryResult(entry: SearchEntry) {
     mail: ldapUser.mail,
     date_created: convertADDatetime(ldapUser.whenCreated),
     date_updated: convertADDatetime(ldapUser.whenChanged),
-    moderatorLevel: 1,
+    moderatorLevel: 0,
   };
 
   return user;

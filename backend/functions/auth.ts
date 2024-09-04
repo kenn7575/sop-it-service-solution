@@ -54,7 +54,7 @@ export async function ldapAuthenticate(
       fullName: "John Doe",
       lastName: "Doe",
       mail: "johndoe@mail.com",
-      moderator: true,
+      moderatorLevel: 1,
       username: "jdoe",
       UUID: 792,
     }) as user;
@@ -79,12 +79,12 @@ export async function ldapAuthenticate(
       return promise;
     }
 
-    let user = {} as any;
+    let user: user | null = null;
 
     res.on("searchEntry", (entry) => {
       user = formatEntryResult(entry);
 
-      user.moderator = searchBase === LDAP_ADMINS;
+      if (searchBase === LDAP_ADMINS) user.moderatorLevel = 1;
     });
 
     res.on("end", (result) => {
