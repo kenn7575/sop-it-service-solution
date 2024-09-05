@@ -54,7 +54,7 @@ function Layout() {
         setCurrentUser,
       }}
     >
-      <Toaster theme="dark" closeButton />
+      <Toaster theme="dark" closeButton position="bottom-center" />
       {currentUser ? (
         <div className="grid h-screen grid-cols-[auto_1fr] bg-base-100">
           <header className="h-screen w-nav bg-nav">
