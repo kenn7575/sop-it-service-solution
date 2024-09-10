@@ -46,8 +46,8 @@ form.loginPage {
       box-sizing: border-box;
       padding: 10px 15px;
       display: block;
-      position: absolute;
-      margin-top: -40px;
+      position: relative;
+      margin-top: -45px;
       z-index: 2;
       pointer-events: none;
     }

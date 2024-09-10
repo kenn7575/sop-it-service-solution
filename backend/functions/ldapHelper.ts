@@ -15,6 +15,7 @@ export const attributes = [
   "whenCreated",
   "whenChanged",
   "lastLogon",
+  "memberOf",
 ];
 
 export function convertADDatetime(ldapTime: string) {
@@ -30,11 +31,12 @@ export function convertADDatetime(ldapTime: string) {
   return date;
 }
 
-export function formatEntryResult(entry: SearchEntry) {
+export function formatEntryResult(entry: SearchEntry): user {
   let ldapUser = {} as any;
 
   entry.pojo.attributes.map(({ type, values }) => {
-    ldapUser[type] = values[0];
+    if (type === "memberOf") ldapUser[type] = values;
+    else ldapUser[type] = values[0];
   });
 
   const user: user = {
@@ -44,9 +46,10 @@ export function formatEntryResult(entry: SearchEntry) {
     fullName: ldapUser.cn,
     username: ldapUser.sAMAccountName,
     mail: ldapUser.mail,
+    memberOf: ldapUser.memberOf,
     date_created: convertADDatetime(ldapUser.whenCreated),
     date_updated: convertADDatetime(ldapUser.whenChanged),
-    moderatorLevel: 1,
+    moderatorLevel: 0,
   };
 
   return user;
@@ -95,6 +98,10 @@ export async function getUsers(search: string, options: SearchOptions) {
         const user = formatEntryResult(entry);
 
         if (search == process.env.LDAP_ADMINS) user.moderatorLevel = 1;
+        
+        if (user.memberOf?.includes(process.env.LDAP_SUPERIORS || "")) {
+          user.moderatorLevel = 2;
+        }
 
         if (user) users.push(user);
       });

@@ -121,9 +121,8 @@ export default function EditLayout({
         setEditMode(false);
         return 'Gemt';
       },
-      error: (err: any) => {
-        console.log(err);
-        return 'Der opstod en fejl';
+      error: (err) => {
+        return err.message;
       },
     });
   }
@@ -175,7 +174,7 @@ export default function EditLayout({
       </FormEditPanel>
       <div
         onSubmit={(e) => {
-          e.preventDefault;
+          e.preventDefault();
           handleUpdate();
         }}
         className="form"
