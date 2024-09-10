@@ -6,7 +6,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { JWT_SECRET, NODE_ENV, LDAP_USERS, LDAP_ADMINS } = process.env;
+const { JWT_SECRET, NODE_ENV, LDAP_USERS, LDAP_ADMINS, LDAP_SUPERIORS } =
+  process.env;
 
 export function authenticateUser(
   req: Request,
@@ -85,6 +86,7 @@ export async function ldapAuthenticate(
       user = formatEntryResult(entry);
 
       if (searchBase === LDAP_ADMINS) user.moderatorLevel = 1;
+      if (user.memberOf.includes(LDAP_SUPERIORS || "")) user.moderatorLevel = 2;
     });
 
     res.on("end", (result) => {
