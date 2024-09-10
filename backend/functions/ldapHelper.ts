@@ -98,7 +98,8 @@ export async function getUsers(search: string, options: SearchOptions) {
         const user = formatEntryResult(entry);
 
         if (search == process.env.LDAP_ADMINS) user.moderatorLevel = 1;
-        if (user.memberOf.includes(process.env.LDAP_SUPERIORS || "")) {
+        
+        if (user.memberOf?.includes(process.env.LDAP_SUPERIORS || "")) {
           user.moderatorLevel = 2;
         }
 

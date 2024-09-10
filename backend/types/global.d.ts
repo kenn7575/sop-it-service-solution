@@ -7,7 +7,7 @@ declare global {
     lastName: string;
     fullName: string;
     mail: string;
-    memberOf: string[];
+    memberOf?: string[];
   }
 
   interface user extends Omit<users, "UUID">, ldapUser {
