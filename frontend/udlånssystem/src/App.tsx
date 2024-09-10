@@ -16,7 +16,6 @@ import Notifications from '@pages/notifications';
 
 import brands from '@pages/brands/index';
 import categories from '@pages/categories/index';
-import categoryGroups from '@pages/categoryGroups/index';
 import loans from '@pages/loans/index';
 import productStatus from '@pages/productStatus/index';
 import productTypes from '@pages/productTypes/index';
@@ -24,7 +23,6 @@ import products from '@pages/products/index';
 
 import brandsEdit from '@pages/brands/edit';
 import categoriesEdit from '@pages/categories/edit';
-import categoryGroupsEdit from '@pages/categoryGroups/edit';
 import loansEdit from '@pages/loans/edit';
 import productStatusEdit from '@pages/productStatus/edit';
 import productTypesEdit from '@pages/productTypes/edit';
@@ -32,7 +30,6 @@ import productsEdit from '@pages/products/edit';
 
 import brandsNew from '@pages/brands/new';
 import categoriesNew from '@pages/categories/new';
-import categoryGroupsNew from '@pages/categoryGroups/new';
 import loansNew from '@pages/loans/new';
 import productStatusNew from '@pages/productStatus/new';
 import productTypesNew from '@pages/productTypes/new';
@@ -90,7 +87,6 @@ export default function App() {
 
         <Route path="brands" Component={brands} />
         <Route path="kategorier" Component={categories} />
-        <Route path="kategorigrupper" Component={categoryGroups} />
         <Route path="udlaan" Component={loans} />
         <Route path="produktstatusser" Component={productStatus} />
         <Route path="produkttyper" Component={productTypes} />
@@ -98,7 +94,6 @@ export default function App() {
 
         <Route path="brands/:id" Component={brandsEdit} />
         <Route path="kategorier/:id" Component={categoriesEdit} />
-        <Route path="kategorigrupper/:id" Component={categoryGroupsEdit} />
         <Route path="produkter/:id" Component={productsEdit} />
         <Route path="produkttyper/:id" Component={productTypesEdit} />
         <Route path="udlaan/:id" Component={loansEdit} />
@@ -107,7 +102,6 @@ export default function App() {
         <Route path="produkter/new" Component={productsNew} />
         <Route path="brands/new" Component={brandsNew} />
         <Route path="kategorier/new" Component={categoriesNew} />
-        <Route path="kategorigrupper/new" Component={categoryGroupsNew} />
         <Route path="produkttyper/new" Component={productTypesNew} />
         <Route path="udlaan/new" Component={loansNew} />
         <Route path="produktstatusser/new" Component={productStatusNew} />

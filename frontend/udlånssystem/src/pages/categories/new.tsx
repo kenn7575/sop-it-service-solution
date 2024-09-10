@@ -1,7 +1,5 @@
 import NewLayout from '@layouts/new';
 
-import { fields, zodSchema } from './util';
-
 export default function New() {
-  return <NewLayout table="categories" fields={fields} zodSchema={zodSchema} />;
+  return <NewLayout table="categories" />;
 }

@@ -22,19 +22,9 @@ model buildings {
 }
 
 model categories {
-  UUID              Int             @id @default(autoincrement()) @db.UnsignedInt
-  name              String          @db.VarChar(255)
-  category_group_id Int             @db.UnsignedInt
-  category_groups   category_groups @relation(fields: [category_group_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "category_group_id_fk")
-  products          products[]
-
-  @@index([category_group_id], map: "category_group_id")
-}
-
-model category_groups {
-  UUID       Int          @id @default(autoincrement()) @db.UnsignedInt
-  name       String?      @db.VarChar(255)
-  categories categories[]
+  UUID     Int        @id @default(autoincrement()) @db.UnsignedInt
+  name     String     @db.VarChar(255)
+  products products[]
 }
 
 model items {
@@ -184,12 +174,11 @@ model feedback {
 }
 
 view available_products_view {
-  UUID            Int     @id @default(0) @db.UnsignedInt
-  Navn            String? @db.VarChar(255)
-  Brand           String? @db.VarChar(255)
-  Kategori_Gruppe String? @db.VarChar(255)
-  Status          String? @db.VarChar(255)
-  Barcode         String? @db.VarChar(54)
+  UUID    Int     @id @default(0) @db.UnsignedInt
+  Navn    String? @db.VarChar(255)
+  Brand   String? @db.VarChar(255)
+  Status  String? @db.VarChar(255)
+  Barcode String? @db.VarChar(54)
 }
 
 view brands_view {
@@ -198,14 +187,8 @@ view brands_view {
 }
 
 view categories_view {
-  UUID                Int     @id @default(0) @db.UnsignedInt
-  Kategori_navn       String  @map("Kategori navn") @db.VarChar(255)
-  Kategorigruppe_navn String? @map("Kategorigruppe navn") @db.VarChar(255)
-}
-
-view category_groups_view {
-  UUID Int     @id @default(0) @db.UnsignedInt
-  Navn String? @db.VarChar(255)
+  UUID          Int    @id @default(0) @db.UnsignedInt
+  Kategori_navn String @map("Kategori navn") @db.VarChar(255)
 }
 
 view items_from_loans {
@@ -259,13 +242,12 @@ view loans_view_extended {
 }
 
 view products_view {
-  UUID            Int      @id @default(0) @db.UnsignedInt
-  Navn            String   @db.VarChar(255)
-  Kategori_Gruppe String?  @map("Kategori Gruppe") @db.VarChar(255)
-  Kategori        String?  @db.VarChar(255)
-  Brand           String?  @db.VarChar(255)
-  Oprettet        DateTime @default(now()) @db.DateTime(0)
-  Opdateret       DateTime @default(now()) @db.DateTime(0)
+  UUID      Int      @id @default(0) @db.UnsignedInt
+  Navn      String   @db.VarChar(255)
+  Kategori  String?  @db.VarChar(255)
+  Brand     String?  @db.VarChar(255)
+  Oprettet  DateTime @default(now()) @db.DateTime(0)
+  Opdateret DateTime @default(now()) @db.DateTime(0)
 }
 
 view users_view {
