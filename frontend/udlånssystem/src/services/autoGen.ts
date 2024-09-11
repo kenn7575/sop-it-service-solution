@@ -4,7 +4,7 @@ export function autoGenZodSchema(fields: Field[]): z.ZodObject<any> {
   let zodSchema = {} as any;
 
   for (let field of fields) {
-    let zodType: z.ZodType<any, any>;
+    let zodType: z.ZodType<any, any> = z.any();
 
     const defaultOptions = {
       description: field.label,
