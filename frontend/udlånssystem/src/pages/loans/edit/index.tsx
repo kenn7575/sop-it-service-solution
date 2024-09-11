@@ -42,7 +42,7 @@ export default function Edit() {
       <EditLayout
         table="loans"
         fields={fields}
-        editPanelSlot={
+        panelSlot={
           <>
             {!loan?.date_of_return ? (
               <button onClick={handleDelete}>Returner</button>

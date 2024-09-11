@@ -49,7 +49,7 @@ export default function NewLoan({ initPage = 1 }) {
 
   async function handleBarcode(code: string) {
     let findProduct = selectedProducts.find(
-      ({ Barcode }: any) => Barcode == code,
+      ({ Stregkode }) => Stregkode == code,
     );
 
     if (findProduct) {
@@ -57,7 +57,7 @@ export default function NewLoan({ initPage = 1 }) {
       return;
     }
 
-    findProduct = products?.data.find(({ Barcode }: any) => Barcode == code);
+    findProduct = products?.data.find(({ Stregkode }: any) => Stregkode == code);
 
     if (findProduct) {
       toast.success(`${findProduct.Navn} tilføjet`);
@@ -66,7 +66,7 @@ export default function NewLoan({ initPage = 1 }) {
     }
 
     let getItemsFromLoans = await getData<any>(
-      `items_from_loans?Barcode=${code}&Returneret=null`,
+      `items_from_loans?Stregkode=${code}&Returneret=null`,
       { withHeaders: false },
     );
 

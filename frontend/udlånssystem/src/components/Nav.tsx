@@ -68,11 +68,6 @@ export default function Nav() {
               destination: '/kategorier',
             },
             {
-              text: 'Kategorigrupper',
-              icon: 'fa-solid fa-tag',
-              destination: '/kategorigrupper',
-            },
-            {
               text: 'Brands',
               destination: '/brands',
               icon: 'fa-regular fa-copyright',

@@ -12,6 +12,7 @@ export const fields: Field<itemModel>[] = [
     binding: 'product_status_id',
     type: 'select',
     options: 'product_status',
+    required: false,
   },
   // {
   //   label: 'Stregkode Nummer',

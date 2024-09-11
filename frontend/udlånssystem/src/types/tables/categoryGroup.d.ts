@@ -1,1 +1,0 @@
-interface categoryGroupModel extends defaultModel {}

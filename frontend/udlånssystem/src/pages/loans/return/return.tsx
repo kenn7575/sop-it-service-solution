@@ -16,7 +16,7 @@ import '@styles/return.css';
 const exclude = [
   'date_returned',
   'loan_id',
-  'Barcode',
+  'Stregkode',
   'Returneret',
   'Med_taske',
   'Med_Laas',
@@ -52,7 +52,7 @@ export default function Return() {
 
   async function handleBarcode(code: string) {
     let findProduct = itemsReturning.find(
-      ({ Barcode }: any) => Barcode == code,
+      ({ Stregkode }) => Stregkode == code,
     );
 
     if (findProduct) {
@@ -60,7 +60,7 @@ export default function Return() {
       return;
     }
 
-    findProduct = itemsLent.find(({ Barcode }: any) => Barcode == code);
+    findProduct = itemsLent.find(({ Stregkode }) => Stregkode == code);
 
     if (findProduct) {
       toast.success(`${findProduct.Produkt_navn} tilføjet`);
@@ -69,7 +69,7 @@ export default function Return() {
     }
 
     let getItemsFromLoans = await getData<any>(
-      `items_from_loans?Barcode=${code}&Returneret=null`,
+      `items_from_loans?Stregkode=${code}&Returneret=null`,
       { withHeaders: false },
     );
 

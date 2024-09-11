@@ -50,6 +50,14 @@ router.post("/", async (req, res) => {
 
   if (!authenticate) return res.sendStatus(401);
 
+  const helpdesk_personel = await prisma.users.findFirst({
+    where: { username: personel_username },
+  });
+
+  if (!helpdesk_personel) return res.sendStatus(401);
+
+  loan.helpdesk_personel_id = helpdesk_personel.UUID;
+
   loan = convertToPrismaTypes(loan, "loans");
   products = products.map((product) => convertToPrismaTypes(product, "items"));
 
@@ -66,14 +74,7 @@ router.post("/", async (req, res) => {
     },
   });
 
-  const updateProducts = products.map(({ UUID }) =>
-    prisma.items.update({
-      where: { UUID },
-      data: { product_status_id: 4 },
-    })
-  );
-
-  const result = await prisma.$transaction([newLoan, ...updateProducts]);
+  const result = await prisma.$transaction([newLoan]);
 
   return res.json({ loanId: result[0].UUID });
 });
@@ -81,17 +82,6 @@ router.post("/", async (req, res) => {
 router.patch("/return/item", async (req, res) => {
   const { ItemsInLoanToReturn: items } = req.body;
   if (!items) return res.sendStatus(400);
-
-  var itemsToReturn = [];
-
-  for (const item of items) {
-    const itemToReturn = prisma.items.update({
-      where: { UUID: item.UUID },
-      data: { product_status_id: 1 },
-    });
-
-    itemsToReturn.push(itemToReturn);
-  }
 
   var itemsInLoan = [];
 
@@ -108,7 +98,7 @@ router.patch("/return/item", async (req, res) => {
     itemsInLoan.push(itemInLoan);
   }
 
-  await prisma.$transaction([...itemsToReturn, ...itemsInLoan]);
+  await prisma.$transaction(itemsInLoan);
 
   await returnLoan(items[0].loan_id);
 

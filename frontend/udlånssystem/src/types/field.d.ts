@@ -1,11 +1,20 @@
-interface Field<T extends FieldType = any> {
+interface BaseField<T extends FieldType = any> {
   label: string;
   binding: keyof T;
-  type?: 'text' | 'number' | 'select';
   required?: boolean;
-  options?: { UUID: number; name: string }[] | string;
   disabled?: boolean;
 }
+
+interface TextField<T extends FieldType = any> extends BaseField<T> {
+  type?: 'text' | 'number' | 'password';
+} 
+
+interface SelectField<T extends FieldType = any> extends BaseField<T> {
+  type: 'select';
+  options: { UUID: number; name: string }[] | string;
+}
+
+type Field<T extends FieldType = any> = TextField<T> | SelectField<T>;
 
 type FieldType =
   | brandModel

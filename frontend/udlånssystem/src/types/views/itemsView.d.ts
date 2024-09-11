@@ -4,5 +4,5 @@ interface itemsView {
   Brand: string;
   Kategori_Gruppe: string;
   Status: string;
-  Barcode: string;
+  Stregkode: string;
 }
