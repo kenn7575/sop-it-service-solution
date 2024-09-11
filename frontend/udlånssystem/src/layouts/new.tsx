@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import FormNewPanel from '@components/form-new-panel';
-import SelectQuestion from '@components/selectQuestion';
-import TextQuestion from '@components/textQuestion';
 
-import createItem from '@data/create';
-import getData from '@data/getData';
+import { createItem, getData } from '@data/index';
 import { autoGenZodSchema } from '@services/autoGen';
 import { getPrevPage } from '@services/pathFormatter';
 
 import { toast } from 'sonner';
 import type { z } from 'zod';
+
+import FormPage from './components/FormPage';
 
 const defaultFields: Field[] = [{ label: 'Navn', binding: 'name' }];
 
@@ -19,16 +18,21 @@ interface NewLayoutProps {
   table: string;
   fields?: Field[];
   zodSchema?: z.ZodObject<any>;
+  panelSlot?: React.ReactElement;
+  formSlot?: React.ReactElement;
 }
 
 export default function NewLayout({
   table,
   fields = defaultFields,
   zodSchema = autoGenZodSchema(fields),
+  panelSlot = <></>,
+  formSlot = <></>,
 }: NewLayoutProps) {
   const navigate = useNavigate();
 
   const [exportData, setExportData] = useState<any>({});
+
   const [fields2, setFields] = useState(fields);
 
   async function fetchSelectOptions() {
@@ -46,6 +50,10 @@ export default function NewLayout({
 
   // $: fetchSelectOptions(), fields;
 
+  useEffect(() => {
+    fetchSelectOptions();
+  }, [fields2]);
+
   async function handleCreate() {
     const { data, error } = zodSchema.safeParse(exportData);
 
@@ -55,28 +63,21 @@ export default function NewLayout({
           id: e.code + '-' + e.path.join('-'),
         }),
       );
-
       return;
     }
 
     toast.promise(createItem(table, data), {
       loading: 'Gemmer...',
       success: ({ id }) => {
-        console.log(id);
         if (!id) return 'Der opstod en fejl';
         navigate(`${getPrevPage()}/${id}`);
         return 'Gemt';
       },
       error: (err: any) => {
-        console.log(err);
-        return 'Der opstod en fejl';
+        return 'Fejl: ' + err?.response?.data?.error;
       },
     });
   }
-
-  useEffect(() => {
-    fetchSelectOptions();
-  }, []);
 
   return (
     <div className="box-border flex h-full gap-4 p-8">
@@ -86,45 +87,12 @@ export default function NewLayout({
         }}
         handleCreate={handleCreate}
       />
-
-      <div className="form">
-        <form id="new-form">
-          {fields2.map((field, i) => {
-            if (field.type == 'text' || field.type == 'number')
-              return (
-                <TextQuestion
-                  key={i}
-                  setValue={(value) =>
-                    setExportData((prev: any) => {
-                      prev[field.binding] = value;
-                      return { ...prev };
-                    })
-                  }
-                  value={exportData[field.binding]}
-                  label={field.label}
-                  required={field.required}
-                  type={field.type}
-                />
-              );
-
-            if (field.type == 'select' && typeof field.options == 'object')
-              return (
-                <SelectQuestion
-                  key={i}
-                  setValue={(value) =>
-                    setExportData((prev: any) => {
-                      prev[field.binding] = value;
-                      return prev;
-                    })
-                  }
-                  label={field.label}
-                  options={field?.options}
-                  match={{ UUID: exportData[field.binding] }}
-                />
-              );
-          })}
-        </form>
-      </div>
+      <FormPage
+        fields={fields}
+        exportData={exportData}
+        setExportData={setExportData}
+        formSlot={formSlot}
+      />
     </div>
   );
 }

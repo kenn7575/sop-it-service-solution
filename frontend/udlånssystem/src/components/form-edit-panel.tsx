@@ -1,17 +1,28 @@
 import '@styles/controlPanel.css';
 
+interface FormEditPanelProps {
+  editMode?: boolean;
+  setEditMode?: (mode: boolean) => void;
+  disableDelete?: boolean;
+  handleReset?: () => void;
+  handleUpdate?: () => void;
+  handleDelete?: () => void;
+  handleCancel?: () => void;
+  editPanelSlot?: JSX.Element;
+  formSlot?: JSX.Element;
+  children?: JSX.Element;
+}
+
 export default function FormEditPanel({
   editMode = false,
-  setEditMode = (value: any) => {},
+  setEditMode = () => {},
   disableDelete = false,
   handleReset = () => {},
   handleUpdate = () => {},
   handleDelete = () => {},
   handleCancel = () => {},
-  editPanelSlot = <></>,
-  formSlot = <></>,
   children = <></>,
-}) {
+}: FormEditPanelProps) {
   return (
     <div className="control-panel">
       <div className="buttons">

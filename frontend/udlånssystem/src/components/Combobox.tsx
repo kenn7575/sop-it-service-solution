@@ -24,9 +24,12 @@ interface ComboboxProps {
   label: string;
   showLabel?: boolean;
   setValue?: (value: any) => void;
+  resetValue?: () => void;
   match?: defaultModel | undefined;
   options?: defaultModel[];
   popoverWidth?: string;
+  required?: boolean;
+  disabled?: boolean;
 }
 
 export function Combobox({
@@ -34,11 +37,14 @@ export function Combobox({
   label,
   showLabel = true,
   setValue = () => {},
-  match = { UUID: 1, name: '' },
-  options = [{ UUID: 1, name: '' }],
+  match,
+  options,
   popoverWidth = 'w-auto',
+  required = true,
+  disabled = false,
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(match);
 
   if (!options) return null;
 
@@ -47,7 +53,9 @@ export function Combobox({
       {showLabel && (
         <label htmlFor="trigger">
           {label}
-          {editMode && <span className="required-tag">*</span>}
+          {required && editMode && !disabled && (
+            <span className="required-tag">*</span>
+          )}
         </label>
       )}
       <Popover open={open} onOpenChange={setOpen}>
@@ -56,14 +64,24 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between rounded-xl"
+            className="w-full justify-between rounded-xl gap-4"
           >
-            {match.name ? (
-              <p>{match.name}</p>
+            {selected ? (
+              <p>{selected.name}</p>
             ) : (
-              <p className="opacity-70">{label}</p>
+              <p className="italic opacity-70">{label}</p>
             )}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <div className="flex items-center justify-center *:opacity-50">
+              <i
+                className="fas fa-xmark hover:opacity-80"
+                onClick={(e) => {
+                  setSelected(undefined);
+                  setValue({ UUID: null, name: '' });
+                  e.preventDefault();
+                }}
+              />
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0" />
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className={`w-[${popoverWidth}] p-0 backdrop-blur-lg`}>
@@ -76,9 +94,9 @@ export function Combobox({
                   <CommandItem
                     key={option.UUID}
                     value={option.name}
-                    onSelect={(currentValue) => {
+                    onSelect={() => {
                       setValue(option);
-                      match.name = currentValue;
+                      setSelected(option);
 
                       setOpen(false);
                     }}
@@ -86,7 +104,7 @@ export function Combobox({
                     <Check
                       className={cn(
                         'mr-2 h-4 w-4',
-                        match.name.trim() == option.name.trim()
+                        selected?.name.trim() == option.name.trim()
                           ? 'opacity-100'
                           : 'opacity-0',
                       )}

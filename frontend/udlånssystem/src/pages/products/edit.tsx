@@ -34,7 +34,7 @@ export default function Edit() {
       table="items"
       fields={fields}
       zodSchema={zodSchema}
-      editPanelSlot={
+      panelSlot={
         <>
           <div className="flex flex-col items-center gap-3 overflow-hidden">
             <h1>Lånehistorik:</h1>
@@ -42,7 +42,7 @@ export default function Edit() {
               <ul className="loanHistoryList">
                 {item?.items_in_loan
                   .reverse()
-                  .map((item: itemModel | any, i: number) => {
+                  .map((item: itemInLoanModel | any, i: number) => {
                     const loanHistory = new LoanHistory(item);
                     return (
                       <Link

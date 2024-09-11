@@ -32,12 +32,12 @@ model items {
   date_created        DateTime           @default(now()) @db.DateTime(0)
   date_updated        DateTime?          @default(now()) @db.DateTime(0)
   storage_location_id Int?               @db.UnsignedInt
-  product_status_id   Int                @default(1) @db.UnsignedInt
+  product_status_id   Int?               @db.UnsignedInt
   product_id          Int                @db.UnsignedInt
   description         String?            @db.LongText
   barcode_number      Int?
   products            products           @relation(fields: [product_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "product_id_fk")
-  product_status      product_status     @relation(fields: [product_status_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "product_status_id_fk")
+  product_status      product_status?    @relation(fields: [product_status_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "product_status_id_fk")
   storage_locations   storage_locations? @relation(fields: [storage_location_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "storage_location_id_fk")
   items_in_loan       items_in_loan[]
 
@@ -106,7 +106,6 @@ model products {
   date_updated      DateTime   @default(now()) @db.DateTime(0)
   product_id_prefix String?    @db.VarChar(50)
   image_name        String?    @db.VarChar(50)
-  max_loan_time     Int?       @default(360)
   items             items[]
   categories        categories @relation(fields: [category_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "product_category_fk")
   brands            brands     @relation(fields: [brand_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "products_brands_fk")
@@ -174,11 +173,10 @@ model feedback {
 }
 
 view available_products_view {
-  UUID    Int     @id @default(0) @db.UnsignedInt
-  Navn    String? @db.VarChar(255)
-  Brand   String? @db.VarChar(255)
-  Status  String? @db.VarChar(255)
-  Barcode String? @db.VarChar(54)
+  UUID      Int     @id @default(0) @db.UnsignedInt
+  Navn      String? @db.VarChar(255)
+  Brand     String? @db.VarChar(255)
+  Stregkode String? @db.VarChar(54)
 }
 
 view brands_view {
@@ -187,27 +185,25 @@ view brands_view {
 }
 
 view categories_view {
-  UUID          Int    @id @default(0) @db.UnsignedInt
-  Kategori_navn String @map("Kategori navn") @db.VarChar(255)
+  UUID Int    @id @default(0) @db.UnsignedInt
+  Navn String @db.VarChar(255)
 }
 
 view items_from_loans {
-  UUID           Int       @id @default(0) @db.UnsignedInt
-  Oprettet       DateTime  @default(now()) @db.DateTime(0)
-  Produkt_status String    @map("Produkt status") @db.VarChar(255)
-  Produkt_navn   String    @map("Produkt navn") @db.VarChar(255)
-  Med_taske      Boolean   @default(false)
-  Med_Laas       Boolean   @default(false)
-  Barcode        String?   @db.VarChar(54)
-  loan_id        Int       @db.UnsignedInt
-  Returneret     DateTime? @db.DateTime(0)
+  UUID       Int       @id @default(0) @db.UnsignedInt
+  Oprettet   DateTime  @default(now()) @db.DateTime(0)
+  Produkt    String    @db.VarChar(255)
+  Med_taske  Boolean   @default(false)
+  Med_Laas   Boolean   @default(false)
+  Stregkode  String?   @db.VarChar(54)
+  loan_id    Int       @db.UnsignedInt
+  Returneret DateTime? @db.DateTime(0)
 }
 
 view items_view {
   UUID      Int       @id @default(0) @db.UnsignedInt
   Navn      String?   @db.VarChar(255)
-  Barcode   String?   @db.VarChar(54)
-  Status    String?   @db.VarChar(255)
+  Stregkode String?   @db.VarChar(54)
   Oprettet  DateTime  @default(now()) @db.DateTime(0)
   Opdateret DateTime? @default(now()) @db.DateTime(0)
 }

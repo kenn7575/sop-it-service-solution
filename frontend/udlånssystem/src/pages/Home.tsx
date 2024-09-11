@@ -25,7 +25,7 @@ export default function Home() {
     if (!value) return;
 
     const [scannedProduct] =
-      (await getData<itemsView[]>('items_view?Barcode=' + value)) || [];
+      (await getData<itemsView[]>('items_view?Stregkode=' + value)) || [];
 
     if (!scannedProduct) return toast.warning('Produktet kunne ikke findes');
 

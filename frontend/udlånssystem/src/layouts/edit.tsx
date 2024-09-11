@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Combobox } from '@components/Combobox';
 import FormEditPanel from '@components/form-edit-panel';
-import TextQuestion from '@components/textQuestion';
 
-import { deleteItem, getData, updateItem } from '@data/index.js';
+import { deleteItem, getData, updateItem } from '@data/index';
 import { autoGenZodSchema } from '@services/autoGen';
 import doesObjectsMatch from '@services/doesObjectsMatch.js';
 import { getPrevPage } from '@services/pathFormatter';
@@ -13,13 +11,15 @@ import { getPrevPage } from '@services/pathFormatter';
 import { toast } from 'sonner';
 import type { z } from 'zod';
 
+import FormPage from './components/FormPage';
+
 const defaultFields: Field[] = [{ label: 'Navn', binding: 'name' }];
 
 interface EditLayoutProps {
   table: string;
   fields?: Field[];
   zodSchema?: z.ZodObject<any>;
-  editPanelSlot?: React.ReactElement;
+  panelSlot?: React.ReactElement;
   formSlot?: React.ReactElement;
 }
 
@@ -27,7 +27,7 @@ export default function EditLayout({
   table,
   fields = defaultFields,
   zodSchema = autoGenZodSchema(fields),
-  editPanelSlot = <></>,
+  panelSlot = <></>,
   formSlot = <></>,
 }: EditLayoutProps) {
   const { id } = useParams();
@@ -170,66 +170,15 @@ export default function EditLayout({
         setEditMode={setEditMode}
         disableDelete={isDeleteDisabled()}
       >
-        {editPanelSlot}
+        {panelSlot}
       </FormEditPanel>
-      <div
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleUpdate();
-        }}
-        className="form"
-      >
-        <form id="edit-form">
-          {fields2.map((field, i) => {
-            let option = { UUID: 0, name: '' };
-
-            if (field.options && typeof field.options != 'string') {
-              const findOption = field.options.find(
-                ({ UUID }) => UUID == exportData[field.binding],
-              );
-
-              if (findOption) option = findOption;
-            }
-            if (field.type == 'text' || field.type == 'number')
-              return (
-                <TextQuestion
-                  key={i}
-                  value={exportData[field.binding] || undefined}
-                  setValue={(value) =>
-                    setExportData((prev: any) => {
-                      prev[field.binding] = value;
-                      return { ...prev };
-                    })
-                  }
-                  editMode={editMode}
-                  label={field.label}
-                  required={field.required}
-                  type={field.type}
-                  disabled={field.disabled}
-                />
-              );
-
-            if (field.type == 'select' && typeof field.options == 'object')
-              return (
-                <Combobox
-                  key={i}
-                  setValue={(value) =>
-                    setExportData((prev: any) => {
-                      prev[field.binding] = value.UUID;
-                      return prev;
-                    })
-                  }
-                  label={field.label}
-                  options={field?.options}
-                  match={{ ...option }}
-                  editMode={editMode}
-                  popoverWidth="43.75rem"
-                />
-              );
-          })}
-          {formSlot}
-        </form>
-      </div>
+      <FormPage
+        fields={fields2}
+        editMode={editMode}
+        exportData={exportData}
+        setExportData={setExportData}
+        formSlot={formSlot}
+      />
     </div>
   );
 }

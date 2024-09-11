@@ -1,5 +1,5 @@
 SELECT
   `sop`.`categories`.`UUID` AS `UUID`,
-  `sop`.`categories`.`name` AS `Kategori navn`
+  `sop`.`categories`.`name` AS `Navn`
 FROM
   `sop`.`categories`

@@ -5,5 +5,4 @@ interface productModel extends defaultModel {
   date_updated: string | Date;
   product_id_prefix: string;
   image_name?: string;
-  max_loan_time: number;
 }
