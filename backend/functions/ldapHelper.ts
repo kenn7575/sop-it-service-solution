@@ -4,8 +4,15 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { LDAP_HOST, LDAP_PORT, LDAP_USERNAME, LDAP_PASSWORD, NODE_ENV } =
-  process.env;
+const {
+  LDAP_HOST,
+  LDAP_PORT,
+  LDAP_USERNAME,
+  LDAP_PASSWORD,
+  NODE_ENV,
+  LDAP_ADMINS = "",
+  LDAP_SUPERIORS = "",
+} = process.env;
 
 export const attributes = [
   "distinguishedName",
@@ -31,6 +38,14 @@ export function convertADDatetime(ldapTime: string) {
   return date;
 }
 
+function getModeratorLevel(user: ldapUser) {
+  if (user.memberOf?.includes(LDAP_SUPERIORS)) return 2;
+
+  if (user.memberOf?.includes(LDAP_ADMINS)) return 1;
+
+  return 0;
+}
+
 export function formatEntryResult(entry: SearchEntry): user {
   let ldapUser = {} as any;
 
@@ -49,7 +64,7 @@ export function formatEntryResult(entry: SearchEntry): user {
     memberOf: ldapUser.memberOf,
     date_created: convertADDatetime(ldapUser.whenCreated),
     date_updated: convertADDatetime(ldapUser.whenChanged),
-    moderatorLevel: 0,
+    moderatorLevel: getModeratorLevel(ldapUser),
   };
 
   return user;
@@ -92,18 +107,12 @@ export async function getUsers(search: string, options: SearchOptions) {
     client.search(search, options, (err, searchRes) => {
       if (err) reject("Search error");
 
-      const users = [] as any[];
+      const users: user[] = [] as any[];
 
       searchRes.on("searchEntry", (entry) => {
         const user = formatEntryResult(entry);
 
-        if (search == process.env.LDAP_ADMINS) user.moderatorLevel = 1;
-        
-        if (user.memberOf?.includes(process.env.LDAP_SUPERIORS || "")) {
-          user.moderatorLevel = 2;
-        }
-
-        if (user) users.push(user);
+        users.push(user);
       });
 
       searchRes.on("error", (err) => {
