@@ -84,9 +84,6 @@ export async function ldapAuthenticate(
 
     res.on("searchEntry", (entry) => {
       user = formatEntryResult(entry);
-
-      if (searchBase === LDAP_ADMINS) user.moderatorLevel = 1;
-      if (user.memberOf?.includes(LDAP_SUPERIORS || "")) user.moderatorLevel = 2;
     });
 
     res.on("end", (result) => {
