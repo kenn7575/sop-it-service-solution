@@ -40,7 +40,7 @@ export default function useData<T>(
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [url]);
 
   return [data, setData, isLoading];
 }

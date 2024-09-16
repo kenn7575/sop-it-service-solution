@@ -204,6 +204,7 @@ view items_view {
   UUID      Int       @id @default(0) @db.UnsignedInt
   Navn      String?   @db.VarChar(255)
   Stregkode String?   @db.VarChar(54)
+  Status    String?   @db.VarChar(255)
   Oprettet  DateTime  @default(now()) @db.DateTime(0)
   Opdateret DateTime? @default(now()) @db.DateTime(0)
 }
@@ -257,4 +258,21 @@ view users_view {
 view product_status_view {
   UUID Int    @id @default(0) @db.UnsignedInt
   Navn String @db.VarChar(255)
+}
+
+view items_without_status {
+  UUID      Int       @id @default(0) @db.UnsignedInt
+  Navn      String?   @db.VarChar(255)
+  Stregkode String?   @db.VarChar(54)
+  Oprettet  DateTime  @default(now()) @db.DateTime(0)
+  Opdateret DateTime? @default(now()) @db.DateTime(0)
+}
+
+view items_with_status {
+  UUID      Int       @id @default(0) @db.UnsignedInt
+  Navn      String?   @db.VarChar(255)
+  Stregkode String?   @db.VarChar(54)
+  Status    String    @db.VarChar(255)
+  Oprettet  DateTime  @default(now()) @db.DateTime(0)
+  Opdateret DateTime? @default(now()) @db.DateTime(0)
 }

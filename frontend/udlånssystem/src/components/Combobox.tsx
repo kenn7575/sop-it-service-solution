@@ -64,7 +64,7 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between rounded-xl gap-4"
+            className="w-full justify-between gap-4 rounded-xl"
           >
             {selected ? (
               <p>{selected.name}</p>
@@ -97,6 +97,11 @@ export function Combobox({
                     onSelect={() => {
                       setValue(option);
                       setSelected(option);
+                      
+                      if (selected?.UUID === option.UUID) {
+                        setSelected(undefined);
+                        setValue({ UUID: null, name: '' });
+                      }
 
                       setOpen(false);
                     }}

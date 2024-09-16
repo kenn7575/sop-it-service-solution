@@ -14,5 +14,5 @@ FROM
       `sop`.`items` `i`
       LEFT JOIN `sop`.`products` `p` ON(`i`.`product_id` = `p`.`UUID`)
     )
-    LEFT JOIN `sop`.`product_status` `ps` ON(`i`.`product_status_id` = `ps`.`UUID`)
+    JOIN `sop`.`product_status` `ps` ON(`i`.`product_status_id` = `ps`.`UUID`)
   )

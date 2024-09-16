@@ -111,7 +111,10 @@ html {
   --date-picker-selected-color: #fff;
   --date-picker-selected-background: var(--p);
 
+  --background: var(--bg1);
+
   --border: var(--text2);
+  --input: var(--text3);
   --radius: 0.5rem;
   --popover: var(--bg3);
   --popover-foreground: var(--text1);
