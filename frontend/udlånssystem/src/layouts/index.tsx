@@ -8,9 +8,10 @@ import useData from '@hooks/useData';
 
 interface LayoutProps {
   table: string;
+  exclude?: string[];
 }
 
-export default function Layout({ table }: LayoutProps) {
+export default function Layout({ table, exclude }: LayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -42,6 +43,7 @@ export default function Layout({ table }: LayoutProps) {
         columns={columns}
         data={inputData.data}
         onRowClick={(original) => handleRowClick(original.UUID)}
+        exclude={exclude}
       />
     </div>
   );
