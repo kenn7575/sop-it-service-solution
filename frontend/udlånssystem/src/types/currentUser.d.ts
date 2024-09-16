@@ -7,7 +7,7 @@ interface currentUser {
   iat: number;
   lastName: string;
   mail: string;
-  moderator: boolean;
+  moderatorLevel: boolean;
   username: string;
   UUID: number;
 }
