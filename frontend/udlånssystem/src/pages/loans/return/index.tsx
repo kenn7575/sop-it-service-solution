@@ -51,19 +51,17 @@ export default function Return() {
   useBarcode(handleBarcode);
 
   async function handleBarcode(code: string) {
-    let findProduct = itemsReturning.find(
-      ({ Stregkode }) => Stregkode == code,
-    );
+    let findProduct = itemsReturning.find(({ Stregkode }) => Stregkode == code);
 
     if (findProduct) {
-      toast.error(`${findProduct.Produkt_navn} er allerede tilføjet`);
+      toast.error(`${findProduct.Produkt} er allerede tilføjet`);
       return;
     }
 
     findProduct = itemsLent.find(({ Stregkode }) => Stregkode == code);
 
     if (findProduct) {
-      toast.success(`${findProduct.Produkt_navn} tilføjet`);
+      toast.success(`${findProduct.Produkt} tilføjet`);
       handleAddProduct(findProduct);
       return;
     }
@@ -76,7 +74,7 @@ export default function Return() {
     findProduct = getItemsFromLoans[0];
 
     if (findProduct) {
-      toast.error(`${findProduct.Produkt_navn} lånt ud på et andet lån`);
+      toast.error(`${findProduct.Produkt} lånt ud på et andet lån`);
       return;
     }
 
