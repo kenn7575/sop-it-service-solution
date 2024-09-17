@@ -22,7 +22,7 @@ export default function LoanProducts() {
             className="flex items-center gap-3"
             to={'/produkter/' + item.UUID}
           >
-            <span>{item.Produkt_navn}</span>
+            <span>{item.Produkt}</span>
             <i className="fa-solid fa-up-right-from-square cursor-pointer" />
           </Link>
         ))}
