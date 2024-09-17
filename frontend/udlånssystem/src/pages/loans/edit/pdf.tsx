@@ -103,7 +103,7 @@ export default forwardRef<HTMLDivElement, LoansPdfProps>(({ id }, ref) => {
           <div>
             {itemsInLoan.map((item, i) => (
               <div key={i}>
-                <p>{item.Produkt_navn}</p>
+                <p>{item.Produkt}</p>
               </div>
             ))}
           </div>

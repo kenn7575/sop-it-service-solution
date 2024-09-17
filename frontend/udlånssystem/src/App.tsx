@@ -11,7 +11,7 @@ import Feedback from '@pages/Feedback';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import Chat from '@pages/chat';
-import loanReturn from '@pages/loans/return/return';
+import loanReturn from '@pages/loans/return';
 import Notifications from '@pages/notifications';
 
 import brands from '@pages/brands/index';
