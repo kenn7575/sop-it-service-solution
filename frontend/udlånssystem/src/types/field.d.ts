@@ -7,7 +7,7 @@ interface BaseField<T extends FieldType = any> {
 
 interface TextField<T extends FieldType = any> extends BaseField<T> {
   type?: 'text' | 'number' | 'password';
-} 
+}
 
 interface SelectField<T extends FieldType = any> extends BaseField<T> {
   type: 'select';
