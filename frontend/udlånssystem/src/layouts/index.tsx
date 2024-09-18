@@ -1,13 +1,14 @@
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import Table from '@components/table';
 import { Button } from '@components/ui/button';
 
+import getData from '@data/getData';
 import { columnsFormatter } from '@helpers/tableHelpers';
-import useData from '@hooks/useData';
 
 interface LayoutProps {
-  table: string;
+  table: string | DataWithHeaders<unknown> | null;
   exclude?: string[];
 }
 
@@ -15,9 +16,23 @@ export default function Layout({ table, exclude }: LayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [inputData] = useData<any>(table, {
-    withHeaders: true,
-  });
+  const [inputData, setInputData] = useState<any>(table);
+
+  async function fetchData() {
+    if (typeof table === 'string') {
+      const data = await getData(table, {
+        withHeaders: true,
+      });
+
+      if (data) setInputData(data);
+    }
+
+    if (typeof table === 'object') setInputData(table);
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [table]);
 
   function handleRowClick(id: number) {
     navigate(`${location.pathname}/${id}`);

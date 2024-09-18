@@ -57,7 +57,9 @@ export default function NewLoan({ initPage = 1 }) {
       return;
     }
 
-    findProduct = products?.data.find(({ Stregkode }: any) => Stregkode == code);
+    findProduct = products?.data.find(
+      ({ Stregkode }: any) => Stregkode == code,
+    );
 
     if (findProduct) {
       toast.success(`${findProduct.Navn} tilføjet`);

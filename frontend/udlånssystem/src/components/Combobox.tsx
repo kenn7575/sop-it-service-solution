@@ -97,7 +97,7 @@ export function Combobox({
                     onSelect={() => {
                       setValue(option);
                       setSelected(option);
-                      
+
                       if (selected?.UUID === option.UUID) {
                         setSelected(undefined);
                         setValue({ UUID: null, name: '' });
