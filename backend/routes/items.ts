@@ -22,4 +22,22 @@ router.get("/:UUID", async (req, res) => {
   res.json(item);
 });
 
+router.post("/", async (req, res) => {
+  const { product_id, amount } = req.body.data;
+
+  const transactions = [];
+
+  for (let i = 0; i < amount; i++) {
+    const item = prisma.items.create({
+      data: { product_id: Number(product_id) },
+    });
+
+    transactions.push(item);
+  }
+
+  const item = await prisma.$transaction(transactions);
+
+  res.json(item);
+});
+
 export default router;
