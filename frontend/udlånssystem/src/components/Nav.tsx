@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import NavBtn from './Nav-btn.tsx';
 import NavMenu from './Nav-menu.tsx';
 import Toggle from './toggle.tsx';
@@ -80,7 +82,7 @@ export default function Nav() {
             {
               text: 'Dashboard',
               icon: 'fa-solid fa-chart-line',
-              destination: '/dashboard ',
+              destination: '/dashboard',
             },
           ]}
           icon="fa-solid fa-ellipsis"
@@ -88,7 +90,21 @@ export default function Nav() {
         />
       </section>
       <section className="mt-auto">
-        <hr className="w-full border-[1px] border-solid border-foreground2"></hr>
+        <hr className="w-full border-[1px] border-solid border-foreground2" />
+
+        <Link
+          to="https://signup.itskp-odense.dk/Home/Signup"
+          target='_blank'
+          className="button w-full cursor-pointer rounded-[10px] border-none bg-transparent p-[0.7rem_1rem] transition-colors duration-100 ease-in-out"
+        >
+          <div className="flex items-center justify-start gap-2">
+            <i className="fa-solid fa-user" />
+            <p className="text-[1.2rem] text-foreground3">Opret bruger</p>
+            <i className="fa-solid fa-external-link-alt" />
+          </div>
+        </Link>
+
+        <hr className="w-full border-[1px] border-solid border-foreground2" />
         <NavBtn
           destination="/notifikationer"
           text="Notifikationer"

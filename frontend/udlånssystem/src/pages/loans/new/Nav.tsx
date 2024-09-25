@@ -1,5 +1,7 @@
 import { toast } from 'sonner';
 
+import '@styles/navMenu.css';
+
 interface NewLoanNavProps {
   page: number;
   setPage: (page: number) => void;
