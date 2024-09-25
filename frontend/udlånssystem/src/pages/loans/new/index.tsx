@@ -146,7 +146,6 @@ export default function NewLoan({ initPage = 1 }) {
   //--------------------------------------------------------------------------------
   async function createLoan(username: string, password: string) {
     if (!user) return toast.error('Vælg en bruger');
-    if (!locationOfUse?.UUID) return toast.error('Vælg en lokalitet');
 
     let loan_length = null;
 
@@ -160,7 +159,7 @@ export default function NewLoan({ initPage = 1 }) {
       user_id: user.UUID,
       loan_length,
       recipient_type_id: loanType,
-      location_of_use_id: locationOfUse.UUID,
+      location_of_use_id: locationOfUse?.UUID,
     };
 
     const loanPromise = axios.post('loans', {
@@ -189,7 +188,6 @@ export default function NewLoan({ initPage = 1 }) {
         products={selectedProducts}
         user={user}
         returnDate={returnDate}
-        locationOfUse={locationOfUse}
         loanType={loanType}
       />
 

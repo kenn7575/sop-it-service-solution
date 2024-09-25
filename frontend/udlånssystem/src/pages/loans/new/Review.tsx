@@ -56,8 +56,7 @@ export default function NewLoanReview({
               Låner type:{' '}
               {loanTypes.find(({ id }) => id === loanType)!.name ?? 'Ikke sat'}
             </li>
-            <li>Lokalitet: {locationOfUse?.name}</li>
-            <li>{/* Medarbejder: {$currentUser.fullName} */}</li>
+            <li>Lokalitet: {locationOfUse?.name || 'Ingen'}</li>
           </ul>
         </div>
         {products.length > 0 && (

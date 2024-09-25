@@ -6,7 +6,6 @@ interface NewLoanNavProps {
   products: any[];
   user: any;
   returnDate: Date | null;
-  locationOfUse: zoneModel | undefined;
   loanType: number;
 }
 
@@ -16,7 +15,6 @@ export default function NewLoanNav({
   products,
   user,
   returnDate,
-  locationOfUse,
   loanType,
 }: NewLoanNavProps) {
   function validateUser() {
@@ -33,8 +31,6 @@ export default function NewLoanNav({
 
   function validateInfo() {
     if (returnDate === undefined) return false;
-
-    if (!locationOfUse?.UUID) return false;
 
     if (!loanType) return false;
 
