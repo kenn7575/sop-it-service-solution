@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-
-import '@styles/navMenu.css';
+import { NavLink, useLocation } from 'react-router-dom';
 
 export default function NavMenu({
   text = 'Home',
@@ -15,13 +13,8 @@ export default function NavMenu({
   ],
 }) {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-
-  function handleNavClick(dest: string) {
-    navigate(dest, { replace: true });
-  }
 
   //toggle menu
   function handleMenuClick() {
@@ -50,15 +43,9 @@ export default function NavMenu({
     return !open ? 'rotate-180' : '';
   }
 
-  function isSelected(button: any) {
-    return location.pathname == button.destination ? 'selected' : '';
-  }
-
   return (
     <>
       <button
-        // class:selected={!open &&
-        //   buttons.some((button) => button.destination === location.pathname)}
         className="w-full cursor-pointer rounded-[10px] p-0 transition-colors duration-100 ease-in-out"
         onClick={handleMenuClick}
       >
@@ -73,18 +60,12 @@ export default function NavMenu({
       </button>
 
       {open && (
-        <div
-          className="flex w-full flex-col gap-2 pl-16"
-          // transition:fly={{ y: -20, duration: 200 }}
-        >
+        <div className="flex w-full flex-col gap-2 pl-16">
           {buttons.map((button, i) => (
             <NavLink
-              key={i}
-              className={
-                'w-full cursor-pointer rounded-[10px] p-0 text-center transition-colors duration-100 ease-in-out ' +
-                isSelected(button)
-              }
               id={button.text}
+              key={i}
+              className="w-full cursor-pointer rounded-[10px] p-0 text-center transition-colors duration-100 ease-in-out"
               to={button.destination}
             >
               <div className="flex items-center justify-start gap-2 p-[0.5rem_1rem]">

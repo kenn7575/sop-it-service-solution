@@ -1,12 +1,13 @@
 import { toast } from 'sonner';
 
+import '@styles/navMenu.css';
+
 interface NewLoanNavProps {
   page: number;
   setPage: (page: number) => void;
   products: any[];
   user: any;
   returnDate: Date | null;
-  locationOfUse: zoneModel | undefined;
   loanType: number;
 }
 
@@ -16,7 +17,6 @@ export default function NewLoanNav({
   products,
   user,
   returnDate,
-  locationOfUse,
   loanType,
 }: NewLoanNavProps) {
   function validateUser() {
@@ -33,8 +33,6 @@ export default function NewLoanNav({
 
   function validateInfo() {
     if (returnDate === undefined) return false;
-
-    if (!locationOfUse?.UUID) return false;
 
     if (!loanType) return false;
 
