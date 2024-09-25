@@ -7,7 +7,7 @@ nav a:hover:not(.active) {
 }
 
 .active {
-  background-color: var(--p);
+  background-color: var(--p) !important;
 
   & p,
   i {
