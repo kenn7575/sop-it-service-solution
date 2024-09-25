@@ -80,6 +80,16 @@ export default function Nav() {
               destination: '/produktstatusser',
             },
             {
+              text: 'Bygninger',
+              icon: 'fa-solid fa-building',
+              destination: '/bygninger',
+            },
+            {
+              text: 'Zoner',
+              icon: 'fa-solid fa-map-marker-alt',
+              destination: '/zoner',
+            },
+            {
               text: 'Dashboard',
               icon: 'fa-solid fa-chart-line',
               destination: '/dashboard',
@@ -94,7 +104,7 @@ export default function Nav() {
 
         <Link
           to="https://signup.itskp-odense.dk/Home/Signup"
-          target='_blank'
+          target="_blank"
           className="button w-full cursor-pointer rounded-[10px] border-none bg-transparent p-[0.7rem_1rem] transition-colors duration-100 ease-in-out"
         >
           <div className="flex items-center justify-start gap-2">

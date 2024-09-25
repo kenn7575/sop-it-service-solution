@@ -276,3 +276,15 @@ view items_with_status {
   Oprettet  DateTime  @default(now()) @db.DateTime(0)
   Opdateret DateTime? @default(now()) @db.DateTime(0)
 }
+
+view zones_view {
+  UUID    Int     @id @default(0) @db.UnsignedInt
+  Navn    String  @db.VarChar(255)
+  Bygning String? @db.VarChar(255)
+  Etage   Int
+}
+
+view buildings_view {
+  UUID Int     @id @default(0)
+  Navn String? @db.VarChar(255)
+}
