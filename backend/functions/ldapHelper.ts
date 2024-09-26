@@ -42,6 +42,7 @@ function getModeratorLevel(user: ldapUser) {
   if (user.memberOf?.includes(LDAP_SUPERIORS)) return 2;
 
   if (user.memberOf?.includes(LDAP_ADMINS)) return 1;
+  if (user.distinguishedName.includes("Zone9")) return 1;
 
   return 0;
 }

@@ -3,7 +3,7 @@ import DatePicker from '@components/datePicker';
 import { Checkbox } from '@components/ui/checkbox';
 import { Separator } from '@components/ui/separator';
 
-import { loanTypes } from '.';
+import { loanTypes } from '..';
 
 interface NewLoanInfoProps {
   selectedProducts: itemsView[];

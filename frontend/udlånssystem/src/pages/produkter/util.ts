@@ -14,11 +14,12 @@ export const fields: Field<itemModel>[] = [
     options: 'product_status',
     required: false,
   },
-  // {
-  //   label: 'Stregkode Nummer',
-  //   binding: 'barcode_number',
-  //   type: 'text',
-  // },
+  {
+    label: 'Stregkode Nummer',
+    binding: 'barcode_number',
+    type: 'number',
+    required: false,
+  },
   // {
   //   label: 'Lokation',
   //   binding: 'storage_location_id',
@@ -51,7 +52,7 @@ export class LoanHistory {
   }
 
   isActive() {
-    if (this?.date_returned == null) return 'active';
+    if (this?.date_returned == null) return 'activeLoan';
     return '';
   }
 

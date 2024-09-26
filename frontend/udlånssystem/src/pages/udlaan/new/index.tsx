@@ -8,11 +8,11 @@ import useData from '@hooks/useData';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-import NewLoanInfo from './Info';
-import NewLoanNav from './Nav';
-import NewLoanProducts from './Products';
-import NewLoanReview from './Review';
-import UserSelect from './UserSelect';
+import NewLoanInfo from './components/Info';
+import NewLoanNav from './components/Nav';
+import NewLoanProducts from './components/Products';
+import NewLoanReview from './components/Review';
+import UserSelect from './components/UserSelect';
 
 import '@styles/newLoan.css';
 

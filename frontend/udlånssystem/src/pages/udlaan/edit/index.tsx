@@ -8,8 +8,8 @@ import EditLayout from '@layouts/edit';
 import html2pdf from 'html2pdf.js';
 
 import { fields, handleReturn } from '../util';
-import LoanProducts from './loanProducts';
-import Pdf from './pdf';
+import LoanProducts from './components/loanProducts';
+import Pdf from './components/pdf';
 
 export default function Edit() {
   const { id } = useParams();

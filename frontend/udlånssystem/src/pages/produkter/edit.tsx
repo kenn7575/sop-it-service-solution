@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 
+import { findActiveLoan } from '@helpers/loanHelpers';
 import useData from '@hooks/useData';
 
 import EditLayout from '@layouts/edit';
@@ -22,12 +23,7 @@ export default function Edit() {
 
   if (!item) return null;
 
-  let loanText = item.product_status_id === 1 ? 'Opret lån' : 'Gå til lån';
-  let to = item.product_status_id === 1 ? '/udlaan/new?item=' + id : '';
-
-  if (itemInLoan && itemInLoan.length > 0 && !itemInLoan[0]?.date_returned) {
-    to = '/udlaan/' + itemInLoan[0].loan_id;
-  }
+  const activeLoan = findActiveLoan(itemInLoan);
 
   return (
     <EditLayout
@@ -64,9 +60,13 @@ export default function Edit() {
 
           <Link
             className="mt-auto flex h-8 w-full min-w-8 items-center justify-center rounded-[10px] border-[1px] border-foreground bg-none text-foreground"
-            to={to}
+            to={
+              activeLoan
+                ? '/udlaan/' + activeLoan.loan_id
+                : '/udlaan/new?item=' + id
+            }
           >
-            {loanText}
+            {activeLoan ? 'Gå til lån' : 'Opret lån'}
           </Link>
         </>
       }
