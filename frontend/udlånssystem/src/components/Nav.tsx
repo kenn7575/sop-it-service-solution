@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import '@/styles/navMenu.css';
+
 import NavBtn from './Nav-btn.tsx';
 import NavMenu from './Nav-menu.tsx';
 import Toggle from './toggle.tsx';

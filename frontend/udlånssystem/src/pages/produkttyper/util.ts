@@ -4,7 +4,6 @@ export const fields: Field<productModel>[] = [
   {
     label: 'Navn',
     binding: 'name',
-    type: 'text',
   },
   {
     label: 'Brand',
@@ -17,6 +16,11 @@ export const fields: Field<productModel>[] = [
     binding: 'category_id',
     type: 'select',
     options: 'categories',
+  },
+  {
+    label: 'Stregkode prefix',
+    binding: 'product_id_prefix',
+    required: false,
   },
 ];
 

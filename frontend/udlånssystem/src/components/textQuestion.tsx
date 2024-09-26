@@ -1,3 +1,5 @@
+import { Input } from './ui/input';
+
 interface TextQuestionProps {
   editMode?: boolean;
   label: string;
@@ -32,16 +34,16 @@ export default function TextQuestion({
       <label htmlFor="text">
         {label}
         {required && editMode && !disabled && (
-          <span className={'required-tag'}>*</span>
+          <span className="required-tag">*</span>
         )}
       </label>
 
-      <input
+      <Input
         autoComplete="off"
         disabled={!editMode || disabled}
         value={value}
         onChange={handleChange}
-        className="text"
+        className="rounded-xl"
         type={type}
         placeholder={placeholder}
         required={required}

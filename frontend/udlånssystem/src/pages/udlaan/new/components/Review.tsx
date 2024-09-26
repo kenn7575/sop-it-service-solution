@@ -8,7 +8,7 @@ import translateMonth from '@services/translateMonth.json';
 
 import { CurrentUserContext } from '@/App';
 
-import { loanTypes } from '.';
+import { loanTypes } from '..';
 
 interface NewLoanReviewProps {
   user?: usersView;
