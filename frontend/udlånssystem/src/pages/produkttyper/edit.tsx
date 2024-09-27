@@ -17,7 +17,6 @@ import { Label } from '@components/ui/label';
 import createItem from '@data/create';
 
 import EditLayout from '@layouts/edit';
-import { toast } from 'sonner';
 
 import { fields, zodSchema } from './util';
 
@@ -30,14 +29,9 @@ export default function Edit() {
   async function handleCreateNewProduct(product_id?: number | string) {
     if (!product_id || isNaN(Number(product_id))) return;
 
-    toast.promise(createItem('items', { product_id, amount }), {
-      loading: 'Gemmer...',
-      success: () => {
-        setOpen(false);
-        return 'Gemt';
-      },
-      error: (err) => 'Fejl: ' + err,
-    });
+    await createItem('items', { product_id, amount });
+
+    setOpen(false);
   }
   return (
     <EditLayout

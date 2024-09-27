@@ -1,17 +1,21 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 
-export default async function updateItem(
+export default function updateItem<T = any>(
   table: string,
   UUID: number,
-  exportData: any,
-): Promise<object> {
-  const { data } = await axios
-    .patch(table + '/' + UUID, { data: { ...exportData } })
-    .then((res: any) => {
-      res.id = res.data;
-      return res;
-    });
+  data: T,
+  config = { withToast: true },
+): Promise<T> {
+  const promise = axios.patch<any, T>(`${table}/${UUID}`, { data });
 
-  return data;
+  if (config?.withToast) {
+    toast.promise(promise, {
+      id: 'updateItem' + UUID,
+      loading: 'Gemmer...',
+      success: 'Gemt!',
+    });
+  }
+
+  return promise;
 }

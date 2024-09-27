@@ -3,17 +3,18 @@ import { toast } from 'sonner';
 
 export default async function createItem<T = any>(
   table: string,
-  newData: any,
+  data: T,
+  config = { withToast: true },
 ): Promise<T> {
-  try {
-    const { data }: { data: T } = await axios.post(table, {
-      data: { ...newData },
-    });
+  const promise = axios.post<any, T>(table, { data });
 
-    return data;
-  } catch (err) {
-    toast.error('Fejl! ' + err);
-    throw err;
-  } finally {
+  if (config?.withToast) {
+    toast.promise(promise, {
+      id: 'createItem',
+      loading: 'Gemmer...',
+      success: 'Gemt!',
+    });
   }
+
+  return promise;
 }
