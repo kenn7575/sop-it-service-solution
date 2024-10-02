@@ -15,7 +15,7 @@ export default function TextQuestion({
   editMode = true,
   label,
   type = 'text',
-  value = '',
+  value,
   setValue = (_value: any) => {},
   required = true,
   placeholder = '',
