@@ -55,8 +55,6 @@ export default function EditLayout({
     setFields(fields);
   }
 
-  // $: fetchSelectOptions(), fields;
-
   useEffect(() => {
     importDataFromDB();
   }, []);
@@ -77,7 +75,7 @@ export default function EditLayout({
     setExportData({ ...data });
     setImportData({ ...data });
 
-    fetchSelectOptions();
+    await fetchSelectOptions();
   }
 
   function handleReset() {
@@ -97,7 +95,7 @@ export default function EditLayout({
     return false;
   }
 
-  async function handleUpdate(): Promise<void> {
+  async function handleUpdate() {
     if (doesObjectsMatch(importData, exportData)) {
       setEditMode(false);
       return;
@@ -114,20 +112,13 @@ export default function EditLayout({
       return;
     }
 
-    toast.promise(updateItem(table, UUID, data), {
-      loading: 'Gemmer...',
-      success: () => {
-        importDataFromDB();
-        setEditMode(false);
-        return 'Gemt';
-      },
-      error: (err) => {
-        return err.message;
-      },
-    });
+    await updateItem(table, UUID, data);
+
+    importDataFromDB();
+    setEditMode(false);
   }
 
-  async function handleDelete() {
+  function handleDelete() {
     const name = importData?.name || '#' + UUID;
 
     toast(`Sikker på du vil slette "${name}"?`, {
@@ -135,17 +126,10 @@ export default function EditLayout({
       position: 'top-center',
       action: {
         label: 'Slet',
-        onClick: () => {
-          toast.promise(deleteItem(table, UUID), {
-            loading: 'Sletter...',
-            success: () => {
-              navigate(getPrevPage());
-              return 'Slettet';
-            },
-            error: (err: any) => {
-              return 'Fejl: ' + err?.response?.data?.error;
-            },
-          });
+        onClick: async () => {
+          await deleteItem(table, UUID);
+
+          navigate(getPrevPage());
         },
       },
       cancel: {

@@ -48,8 +48,6 @@ export default function NewLayout({
     setFields(fields);
   }
 
-  // $: fetchSelectOptions(), fields;
-
   useEffect(() => {
     fetchSelectOptions();
   }, [fields2]);
@@ -66,17 +64,11 @@ export default function NewLayout({
       return;
     }
 
-    toast.promise(createItem(table, data), {
-      loading: 'Gemmer...',
-      success: ({ id }) => {
-        if (!id) return 'Der opstod en fejl';
-        navigate(`${getPrevPage()}/${id}`);
-        return 'Gemt';
-      },
-      error: (err: any) => {
-        return 'Fejl: ' + err?.response?.data?.error;
-      },
-    });
+    const {
+      data: { id },
+    } = await createItem(table, data);
+
+    navigate(`${getPrevPage()}/${id}`);
   }
 
   return (

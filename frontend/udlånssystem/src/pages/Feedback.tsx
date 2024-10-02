@@ -6,10 +6,8 @@ import createItem from '@data/create';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-interface FeedbackProps {}
-
-export default function Feedback({}: FeedbackProps) {
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+export default function Feedback() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -21,15 +19,9 @@ export default function Feedback({}: FeedbackProps) {
     if (!description.trim())
       return toast.error('Udfyld venligst beskrivelsen.');
 
-    const createPromise = createItem('feedback', { title, description });
+    await createItem('feedback', { title, description });
 
-    toast.promise(createPromise, {
-      loading: 'Indsender feedback...',
-      success: () => {
-        form.reset();
-        return 'Feedback indsendt!';
-      },
-    });
+    form.reset();
   }
 
   return (
