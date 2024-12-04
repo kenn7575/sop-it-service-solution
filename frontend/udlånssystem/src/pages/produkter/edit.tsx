@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { findActiveLoan } from '@helpers/loanHelpers';
@@ -20,6 +21,11 @@ export default function Edit() {
     'items_in_loan?item_id=' + id,
     { withHeaders: false },
   );
+  const [itemsInLoan, setItemsInLoan] = useState<itemInLoanModel[]>([]);
+
+  useEffect(() => {
+    if (item) setItemsInLoan(item.items_in_loan.reverse());
+  }, [item]);
 
   if (!item) return null;
 
@@ -32,26 +38,24 @@ export default function Edit() {
       zodSchema={zodSchema}
       panelSlot={
         <>
-          <div className="flex flex-col items-center gap-3 overflow-hidden">
+          <div className="flex flex-col items-center gap-3 overflow-scroll">
             <h1>Lånehistorik:</h1>
-            {item?.items_in_loan?.length > 0 ? (
+            {itemsInLoan?.length > 0 ? (
               <ul className="loanHistoryList">
-                {item?.items_in_loan
-                  .reverse()
-                  .map((item: itemInLoanModel | any, i: number) => {
-                    const loanHistory = new LoanHistory(item);
-                    return (
-                      <Link
-                        key={i}
-                        className={`${loanHistory.isActive()} loanHistoryItem`}
-                        to={`/udlaan/${item.loan_id}`}
-                      >
-                        <p>{loanHistory.date()}</p>
-                        <p>{loanHistory.time()}</p>
-                        <p>{loanHistory.user()}</p>
-                      </Link>
-                    );
-                  })}
+                {itemsInLoan.map((item: itemInLoanModel | any, i: number) => {
+                  const loanHistory = new LoanHistory(item);
+                  return (
+                    <Link
+                      key={i}
+                      className={`${loanHistory.isActive()} loanHistoryItem`}
+                      to={`/udlaan/${item.loan_id}`}
+                    >
+                      <p>{loanHistory.date()}</p>
+                      <p>{loanHistory.time()}</p>
+                      <p>{loanHistory.user()}</p>
+                    </Link>
+                  );
+                })}
               </ul>
             ) : (
               <p>Ingen lånehistorik</p>
