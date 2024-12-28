@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "ldapjs": "^3.0.7",
     "node-mailjet": "^6.0.5",
+    "vitest": "^2.1.8",
     "pdfkit": "^0.15.0"
   },
   "devDependencies": {

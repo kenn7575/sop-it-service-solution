@@ -1,6 +1,6 @@
 import { Router } from "express";
 import prisma from "@/prisma.config";
-import { addFullname, getLdapUsers } from "../functions";
+import { addFullname, getLdapUsers } from "@functions";
 import { users_view } from "@prisma/client";
 
 const router = Router();

@@ -3,8 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authenticateUser } from "@functions";
 import dotenv from "dotenv";
+import prisma from "@/prisma.config";
 
-import * as Routes from "@/routes";
+import * as Routes from "@/api/routes";
 
 dotenv.config();
 
@@ -42,6 +43,8 @@ app.use("/api", router);
 
 const port = process.env.BACKEND_PORT || 5000;
 
-app.listen(port, () => {
+app.listen(port, async () => {
+  await prisma.$connect();
+  
   console.log(`Server listening on port ${port}`);
 });
