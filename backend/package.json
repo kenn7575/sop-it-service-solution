@@ -21,8 +21,9 @@
     "jsonwebtoken": "^9.0.2",
     "ldapjs": "^3.0.7",
     "node-mailjet": "^6.0.5",
+    "pdfkit": "^0.15.0",
     "vitest": "^2.1.8",
-    "pdfkit": "^0.15.0"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",

@@ -12,6 +12,10 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
+      "@controllers/*": ["./api/controllers/*"],
+      "@routes/*": ["./api/routes/*"],
+      "@services/*": ["./api/services/*"],
+      "@middleware/*": ["./api/middleware/*"],
       "@functions": ["./functions"],
       "@functions/*": ["./functions/*"],
       "@/*": ["./*"]

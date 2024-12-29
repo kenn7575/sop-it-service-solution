@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { Login, Validate } from "@/api/controllers/auth";
+import * as authController from "@controllers/auth";
 
 const router = Router();
 
-router.post("/login", Login());
-router.post("/validate", Validate());
+router.post("/login", authController.Login());
+router.post("/validate", authController.Validate());
 
 router.get("/cookies", (req, res) => {
   res.json(req.cookies);

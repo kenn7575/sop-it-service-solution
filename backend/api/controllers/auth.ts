@@ -1,9 +1,4 @@
-import { Request, Response } from "express";
-import * as LoginService from "@/api/services/auth";
-
-interface IController {
-  (req: Request, res: Response): void;
-}
+import * as AuthService from "@services/auth";
 
 export function Login(): IController {
   return async (req, res) => {
@@ -12,19 +7,16 @@ export function Login(): IController {
     if (!username || !password)
       return res.json({ error: "Missing credentials" });
 
-    const { status, data, message } = await LoginService.Login(
-      username,
-      password
-    );
+    const response = await AuthService.login(username, password);
 
-    if (data)
-      res.cookie("token", data, {
+    if (response.data.token)
+      res.cookie("token", response.data.token, {
         httpOnly: true,
         sameSite: "none",
         secure: true,
       });
 
-    res.status(status).json({ data, message });
+    res.status(response.status).json(response.data.user);
   };
 }
 
@@ -34,8 +26,8 @@ export function Validate(): IController {
 
     if (!token) return res.status(401).json({ error: "Validation failed" });
 
-    const { status, data, message } = await LoginService.Validate(token);
+    const response = await AuthService.validate(token);
 
-    res.status(status).json({ data, message });
+    res.status(response.status).json(response.data);
   };
 }

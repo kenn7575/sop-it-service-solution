@@ -1,18 +1,8 @@
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import * as locationsController from "@controllers/locations";
 
 const router = Router();
 
-const prisma = new PrismaClient();
-
-router.get("/", async (req, res) => {
-  const buildings = await prisma.buildings.findMany({
-    include: {
-      zones: true,
-    },
-  });
-
-  res.json(buildings);
-});
+router.get("/", locationsController.GetAll());
 
 export default router;

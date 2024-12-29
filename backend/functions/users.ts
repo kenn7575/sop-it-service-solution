@@ -17,6 +17,8 @@ export async function addFullname(
   loans: { Navn: string; [usernameKey: string]: string | any }[],
   usernameKey: string
 ) {
+  if (process.env.NODE_ENV == "development") return;
+
   const { data } = await getLdapUsers();
 
   for (let loan of loans) {
@@ -27,6 +29,8 @@ export async function addFullname(
 }
 
 export async function getLdapUsers(res?: any): Promise<any> {
+  if (process.env.NODE_ENV == "development") return { headers, data: [] };
+
   try {
     const searchOptions = {
       filter: "(objectClass=person)",
