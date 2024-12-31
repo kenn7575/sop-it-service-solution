@@ -7,9 +7,14 @@
     "build": "tsc",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
     "dev": "nodemon",
+    "test": "vitest --run --reporter=verbose",
     "run-prod": "npm run build && npm run start",
     "db:pull": "npx prisma db pull && npx prisma generate",
-    "db:push": "npx prisma db push"
+    "db:push": "npx prisma db push && node prisma/addViews.js",
+    "db:seed": "npx prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
@@ -22,6 +27,7 @@
     "ldapjs": "^3.0.7",
     "node-mailjet": "^6.0.5",
     "pdfkit": "^0.15.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8",
     "zod": "^3.24.1"
   },

@@ -55,7 +55,7 @@ export async function createOne(
 
   const result = await prisma.$transaction([newLoan]);
 
-  return { status: 200, data: result };
+  return { status: 201, data: result };
 }
 
 interface Item {

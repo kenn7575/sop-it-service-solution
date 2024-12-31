@@ -65,7 +65,7 @@ export async function createOne(
 
     const newRow = await (prisma[table] as any).create({ data: values });
 
-    return { status: 200, data: { ...newRow, id: newRow.UUID } };
+    return { status: 201, data: { ...newRow, id: newRow.UUID } };
   } catch (error: any) {
     return { status: 400, data: { error: error.message } };
   }

@@ -2,8 +2,10 @@ import { prismaGetRefs as prisma } from "@/prisma.config";
 import { createItemSchema } from "@/schemas/item";
 
 export async function getAll(UUID?: string | number): Promise<IResponse> {
-  const item = await prisma.items.findUnique({
-    where: { UUID: Number(UUID) },
+  const UUIDNumber = Number(UUID);
+
+  const item = await prisma.items.findMany({
+    where: { UUID: UUIDNumber || undefined },
     include: {
       items_in_loan: {
         include: { loans: { include: { users_loans_user_idTousers: true } } },
@@ -14,7 +16,7 @@ export async function getAll(UUID?: string | number): Promise<IResponse> {
   return { status: 200, data: item };
 }
 
-export async function createOneOrMore(
+export async function createMultiple(
   product_id: number,
   amount = 1
 ): Promise<IResponse> {
@@ -34,5 +36,5 @@ export async function createOneOrMore(
 
   const item = await prisma.$transaction(transactions);
 
-  return { status: 200, data: item };
+  return { status: 201, data: item };
 }
