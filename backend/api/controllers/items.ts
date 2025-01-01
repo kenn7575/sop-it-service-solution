@@ -14,7 +14,7 @@ export function CreateOne(): IController {
   return async (req, res) => {
     const { product_id, amount } = req.body.data;
 
-    const response = await ItemsService.createOneOrMore(product_id, amount);
+    const response = await ItemsService.createMultiple(product_id, amount);
 
     res.status(response.status).json(response.data);
   };
