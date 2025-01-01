@@ -1,7 +1,10 @@
 import { prismaGetRefs as prisma } from "@/prisma.config";
 import { getTables } from "@/schemas/tables";
 import { convertToPrismaTypes } from "@functions";
+import findPrismaSchema from "@functions/findPrismaSchema";
 import { Prisma } from "@prisma/client";
+import { zonesUncheckedCreateInputSchema } from "prisma/generated/zod";
+import { z } from "zod";
 
 export async function getAll(
   table: Prisma.ModelName,
@@ -57,6 +60,16 @@ export async function createOne(
   try {
     const prismaTable = prisma[table].fields;
 
+    const createSchema = findPrismaSchema("create", table);
+    const { error } = createSchema.safeParse(values);
+
+    if (error) {
+      return {
+        status: 400,
+        data: { error: error.flatten() },
+      };
+    }
+
     for (const [key, value] of Object.entries(prismaTable) as any) {
       if (value.typeName === "Int" && values[key]) {
         values[key] = Number(values[key]);
@@ -84,6 +97,16 @@ export async function updateOne(
     delete values["date_created"];
     delete values["date_updated"];
 
+    const updateSchema = findPrismaSchema("update", table);
+    const { error } = updateSchema.safeParse(values);
+
+    if (error) {
+      return {
+        status: 400,
+        data: { error: error.flatten() },
+      };
+    }
+
     const result = await (prisma[table] as any).update({
       where: { UUID: Number(UUID) },
       data: values,
@@ -101,9 +124,9 @@ export async function deleteOne(
   user?: Express.Request["user"]
 ): Promise<IResponse> {
   if (user && user.moderatorLevel < 2) {
-    return { status: 403, data: { error: "Unauthorized" } };
+    return { status: 403, data: { error: "Forbidden" } };
   }
-  
+
   try {
     const result = await (prisma[table] as any).delete({
       where: { UUID: Number(UUID) },
