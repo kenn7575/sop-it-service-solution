@@ -69,9 +69,13 @@ export async function returnLoan(items: Item[]): Promise<IResponse> {
   var itemsInLoan = [];
 
   for (const item of items) {
-    const { UUID: itemInLoanUUID } = (await prisma.items_in_loan.findFirst({
+    const findItemInLoan = (await prisma.items_in_loan.findFirst({
       where: { item_id: item.UUID, loan_id: item.loan_id },
-    }))!;
+    }));
+
+    if (!findItemInLoan) return { status: 404, data: { success: false } };
+
+    const itemInLoanUUID = findItemInLoan.UUID;
 
     const itemInLoan = prisma.items_in_loan.update({
       where: { UUID: itemInLoanUUID },
