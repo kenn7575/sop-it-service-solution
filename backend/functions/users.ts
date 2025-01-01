@@ -17,7 +17,7 @@ export async function addFullname(
   loans: { Navn: string; [usernameKey: string]: string | any }[],
   usernameKey: string
 ) {
-  if (process.env.NODE_ENV == "development") return;
+  if (["development", "test"].includes(process.env.NODE_ENV || "")) return;
 
   const { data } = await getLdapUsers();
 
@@ -29,7 +29,9 @@ export async function addFullname(
 }
 
 export async function getLdapUsers(res?: any): Promise<any> {
-  if (process.env.NODE_ENV == "development") return { headers, data: [] };
+  if (["development", "test"].includes(process.env.NODE_ENV || "")) {
+    return { headers, data: [] };
+  }
 
   try {
     const searchOptions = {

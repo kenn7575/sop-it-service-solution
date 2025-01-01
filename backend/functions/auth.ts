@@ -47,7 +47,7 @@ export async function ldapAuthenticate(
     reject = rej;
   });
 
-  if (NODE_ENV === "development") {
+  if (["development", "test"].includes(process.env.NODE_ENV || "")) {
     resolve({
       date_created: new Date(),
       distiguishedName: "John Doe",

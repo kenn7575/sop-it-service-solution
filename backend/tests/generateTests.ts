@@ -1,23 +1,27 @@
+import { Prisma } from "@prisma/client";
 import { expect, TestFunction } from "vitest";
-
-type GetId = number | (() => Promise<{ id: number }>);
 
 type IService<T = any> = Partial<{
   getAll: (id?: number) => Promise<IResponse<T[]>>;
   getOne: (id: number) => Promise<IResponse<T>>;
-  createOne: (body: any) => Promise<IResponse<T>>;
+  createOne: (...args: any[]) => Promise<IResponse<T>>;
   createMultiple: (body: any) => Promise<IResponse<T[]>>;
   updateOne: (id: number, body: any) => Promise<IResponse<T>>;
   deleteOne: (id: number) => Promise<IResponse<T>>;
+  returnLoan: (items: any) => Promise<IResponse<T>>;
 }>;
 
+type FunctionWithArgs<T> = T extends (...args: infer P) => any
+  ? (...args: P) => TestFunction
+  : never;
+
 type ITestCases<T extends IService> = {
-  [K in keyof T as `${string & K}Test`]: T[K] extends (...args: infer P) => any
-    ? (...args: P) => TestFunction
-    : never;
+  [K in keyof T as `${string & K}Test`]: FunctionWithArgs<T[K]>;
 } & {
   cleanUp: () => void;
 };
+
+function createTableTestCases(table: Prisma.ModelName) {}
 
 export default function createTestCases<T extends IService>(
   service: T,
@@ -38,11 +42,13 @@ export default function createTestCases<T extends IService>(
         const response = await service.getAll!(...args);
 
         expect(response.status).toBe(200);
-        expect(response.data).toBeInstanceOf(Array);
+        if (Array.isArray(response.data)) {
+          expect(response.data).toBeInstanceOf(Array);
+        } else {
+          expect(response.data).toBeInstanceOf(Object);
+        }
       };
-    }) as T["getAll"] extends (...args: infer P) => any
-      ? (...args: P) => TestFunction
-      : never;
+    }) as FunctionWithArgs<T["getAll"]>;
   }
 
   if (service.getOne && typeof service.getOne === "function") {
@@ -53,22 +59,18 @@ export default function createTestCases<T extends IService>(
         expect(response.status).toBe(200);
         expect(response.data).toBeInstanceOf(Object);
       };
-    }) as T["getOne"] extends (...args: infer P) => any
-      ? (...args: P) => TestFunction
-      : never;
+    }) as FunctionWithArgs<T["getOne"]>;
   }
 
   if (service.createOne && typeof service.createOne === "function") {
-    testCases.createOneTest = ((body: any): TestFunction => {
+    testCases.createOneTest = ((...args: any[]): TestFunction => {
       return async () => {
-        const response = await service.createOne!(body);
+        const response = await service.createOne!(...args);
 
         expect(response.status).toBe(201);
         expect(response.data).toBeInstanceOf(Object);
       };
-    }) as T["createOne"] extends (...args: infer P) => any
-      ? (...args: P) => TestFunction
-      : never;
+    }) as FunctionWithArgs<T["createOne"]>;
   }
 
   if (service.createMultiple && typeof service.createMultiple === "function") {
@@ -83,9 +85,7 @@ export default function createTestCases<T extends IService>(
           cleanupList.push(...response.data.map((d) => d.UUID));
         }
       };
-    }) as T["createMultiple"] extends (...args: infer P) => any
-      ? (...args: P) => TestFunction
-      : never;
+    }) as FunctionWithArgs<T["createMultiple"]>;
   }
 
   if (service.updateOne && typeof service.updateOne === "function") {
@@ -96,9 +96,7 @@ export default function createTestCases<T extends IService>(
         expect(response.status).toBe(200);
         expect(response.data).toBeInstanceOf(Object);
       };
-    }) as T["updateOne"] extends (...args: infer P) => any
-      ? (...args: P) => TestFunction
-      : never;
+    }) as FunctionWithArgs<T["updateOne"]>;
   }
 
   if (service.deleteOne && typeof service.deleteOne === "function") {
@@ -108,9 +106,7 @@ export default function createTestCases<T extends IService>(
 
         expect(response.status).toBe(200);
       };
-    }) as T["deleteOne"] extends (...args: infer P) => any
-      ? (...args: P) => TestFunction
-      : never;
+    }) as FunctionWithArgs<T["deleteOne"]>;
   }
 
   return testCases;

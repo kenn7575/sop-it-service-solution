@@ -5,22 +5,13 @@ import {
   ldapAuthenticate,
   returnLoan as returnLoanHelper,
 } from "@functions";
-import { items, loans } from "@prisma/client";
 
-export async function createOne(
-  loan: loans,
-  products: (items & { withBag: boolean; withLock: boolean })[],
-  personel_username: string,
-  personel_password: string
-): Promise<IResponse> {
-  const { data, error } = createLoanSchema.safeParse({
-    loan,
-    products,
-    personel_username,
-    personel_password,
-  });
+export async function createOne(values: ILoanCreateInput): Promise<IResponse> {
+  const { data, error } = createLoanSchema.safeParse(values);
 
   if (error) return { status: 400, data: error };
+
+  let { loan, products, personel_username, personel_password } = data;
 
   const authenticate = await ldapAuthenticate(
     personel_username,
@@ -69,9 +60,9 @@ export async function returnLoan(items: Item[]): Promise<IResponse> {
   var itemsInLoan = [];
 
   for (const item of items) {
-    const findItemInLoan = (await prisma.items_in_loan.findFirst({
+    const findItemInLoan = await prisma.items_in_loan.findFirst({
       where: { item_id: item.UUID, loan_id: item.loan_id },
-    }));
+    });
 
     if (!findItemInLoan) return { status: 404, data: { success: false } };
 
