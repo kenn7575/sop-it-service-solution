@@ -21,7 +21,7 @@ type ITestCases<T extends IService> = {
 
 export default function createTestCases<T extends IService>(
   service: T,
-  
+
   cleanupFunction: (id: string) => void
 ): ITestCases<T> {
   const cleanupList: string[] = [];
@@ -45,22 +45,18 @@ export default function createTestCases<T extends IService>(
       : never;
   }
 
-  // getOneTest(getId: GetId) {
-  //   return async () => {
-  //     let id = getId;
+  if (service.getOne && typeof service.getOne === "function") {
+    testCases.getOneTest = ((id: number): TestFunction => {
+      return async () => {
+        const response = await service.getOne!(id);
 
-  //     if (typeof getId === "function") id = (await getId()).id;
-
-  //     const response = await this.service.getOne(id as number);
-
-  //     expect(response.status).toBe(200);
-  //     expect(response.data).toEqual({
-  //       data: expect.arrayContaining([]),
-  //       status: "Found",
-  //       message: this.expectedMessage?.getAll,
-  //     });
-  //   };
-  // }
+        expect(response.status).toBe(200);
+        expect(response.data).toBeInstanceOf(Object);
+      };
+    }) as T["getOne"] extends (...args: infer P) => any
+      ? (...args: P) => TestFunction
+      : never;
+  }
 
   if (service.createOne && typeof service.createOne === "function") {
     testCases.createOneTest = ((body: any): TestFunction => {
@@ -92,13 +88,30 @@ export default function createTestCases<T extends IService>(
       : never;
   }
 
+  if (service.updateOne && typeof service.updateOne === "function") {
+    testCases.updateOneTest = ((id: number, body: any): TestFunction => {
+      return async () => {
+        const response = await service.updateOne!(id, body);
+
+        expect(response.status).toBe(200);
+        expect(response.data).toBeInstanceOf(Object);
+      };
+    }) as T["updateOne"] extends (...args: infer P) => any
+      ? (...args: P) => TestFunction
+      : never;
+  }
+
+  if (service.deleteOne && typeof service.deleteOne === "function") {
+    testCases.deleteOneTest = ((id: number): TestFunction => {
+      return async () => {
+        const response = await service.deleteOne!(id);
+
+        expect(response.status).toBe(200);
+      };
+    }) as T["deleteOne"] extends (...args: infer P) => any
+      ? (...args: P) => TestFunction
+      : never;
+  }
+
   return testCases;
-
-  // updateTest() {
-  //   return async () => {};
-  // }
-
-  // deleteTest() {
-  //   return async () => {};
-  // }
 }
