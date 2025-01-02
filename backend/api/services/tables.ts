@@ -3,12 +3,10 @@ import { getTables } from "@/schemas/tables";
 import { convertToPrismaTypes } from "@functions";
 import findPrismaSchema from "@functions/findPrismaSchema";
 import { Prisma } from "@prisma/client";
-import { zonesUncheckedCreateInputSchema } from "prisma/generated/zod";
-import { z } from "zod";
 
 export async function getAll(
   table: Prisma.ModelName,
-  filter?: any
+  filter: any = {}
 ): Promise<IResponse> {
   if (filter.UUID) filter.UUID = Number(filter.UUID);
 
@@ -33,7 +31,7 @@ export async function getAll(
 
 export async function getOne(
   table: Prisma.ModelName,
-  UUID: string,
+  UUID: string | number,
   filter?: any,
   include?: string[]
 ): Promise<IResponse> {
@@ -86,7 +84,7 @@ export async function createOne(
 
 export async function updateOne(
   table: Prisma.ModelName,
-  UUID: string,
+  UUID: string | number,
   values: any
 ): Promise<IResponse> {
   try {
@@ -120,7 +118,7 @@ export async function updateOne(
 
 export async function deleteOne(
   table: Prisma.ModelName,
-  UUID: string,
+  UUID: string | number,
   user?: Express.Request["user"]
 ): Promise<IResponse> {
   if (user && user.moderatorLevel < 2) {

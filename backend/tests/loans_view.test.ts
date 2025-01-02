@@ -3,13 +3,7 @@ import * as loansViewService from "@services/loans_view";
 import createTestCases from "./generateTests";
 
 describe("Loans View", () => {
-  const deleteFunction = async (UUID: string) => {};
-
-  const specificTestCases = createTestCases(loansViewService, deleteFunction);
-
-  afterEach(async () => {
-    specificTestCases.cleanUp();
-  });
+  const specificTestCases = createTestCases(loansViewService);
 
   describe("Get cases", () => {
     it("should get all loans", specificTestCases.getAllTest());

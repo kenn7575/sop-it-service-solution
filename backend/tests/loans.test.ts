@@ -6,6 +6,7 @@ import { items, loans } from "@prisma/client";
 
 describe("Loans", () => {
   const deleteFunction = async (UUID: string) => {
+    if (!UUID) return;
     await prisma.loans.delete({ where: { UUID: Number(UUID) } });
   };
 

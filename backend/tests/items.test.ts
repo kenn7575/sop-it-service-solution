@@ -10,13 +10,17 @@ describe("Items", () => {
   };
 
   const specificTestCases = createTestCases(itemsService, deleteFunction);
+  const tableTestCases = createTestCases(tableService, deleteFunction);
 
   afterEach(async () => {
     specificTestCases.cleanUp();
   });
 
-  describe("Get cases", () => {
+  describe("Get cases", async () => {
+    const { UUID } = await prisma.items.findFirstOrThrow();
+
     it("should get all items", specificTestCases.getAllTest());
+    it("should get one item", tableTestCases.getOneTest("items", UUID));
   });
 
   describe("Create cases", async () => {
