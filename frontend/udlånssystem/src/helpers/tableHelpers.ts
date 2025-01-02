@@ -11,7 +11,6 @@ export const dateColumns = [
 
 function EnableFilter(header: string) {
   if (dateColumns.includes(header)) return false;
-  if (header == 'UUID') return false;
 
   return true;
 }
@@ -23,6 +22,15 @@ export function columnsFormatter<T>(headers?: string[]) {
     header: header.replaceAll('_', ' '),
     accessorKey: String(header),
     enableColumnFilter: EnableFilter(header),
+    filterFn: (rows, id, filterValue) => {
+      const filterKey = (rows.original as Record<string, any>)[id];
+
+      if (String(filterKey).toLowerCase().includes(filterValue.toLowerCase())) {
+        return true;
+      }
+
+      return false;
+    },
     cell: (row) => {
       if (dateColumns.includes(header)) return dateToReadable(row.getValue());
 
