@@ -33,6 +33,7 @@ router.use("/loans", Routes.Loans);
 router.use("/loans_view", Routes.Loans_view);
 router.use("/mail", Routes.Mail);
 router.use("/items", Routes.Items);
+router.use("/items_view", Routes.Items_view);
 router.use("/users", Routes.Users);
 router.use("/users_view", Routes.Users_view);
 router.use("/locations", Routes.Locations);

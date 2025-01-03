@@ -19,8 +19,8 @@ describe("Items", () => {
   describe("Get cases", async () => {
     const { UUID } = await prisma.items.findFirstOrThrow();
 
-    it("should get all items", specificTestCases.getAllTest());
-    it("should get one item", tableTestCases.getOneTest("items", UUID));
+    it("should get all items", tableTestCases.getAllTest("items"));
+    it("should get one item", specificTestCases.getOneTest(UUID));
   });
 
   describe("Create cases", async () => {

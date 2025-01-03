@@ -1,5 +1,6 @@
 export { default as Auth } from "./auth";
 export { default as Items } from "./items";
+export { default as Items_view } from "./items_view";
 export { default as Loans_view } from "./loans_view";
 export { default as Loans } from "./loans";
 export { default as Locations } from "./locations";

@@ -1,10 +1,10 @@
 import * as ItemsService from "@services/items";
 
-export function GetAll(): IController {
+export function GetOne(): IController {
   return async (req, res) => {
     const { UUID } = req.params;
 
-    const response = await ItemsService.getAll(UUID);
+    const response = await ItemsService.getOne(UUID);
 
     res.status(response.status).json(response.data);
   };

@@ -1,10 +1,10 @@
 import { prismaGetRefs as prisma } from "@/prisma.config";
 import { createItemSchema } from "@/schemas/item";
 
-export async function getAll(UUID?: string | number): Promise<IResponse> {
+export async function getOne(UUID?: string | number): Promise<IResponse> {
   const UUIDNumber = Number(UUID);
 
-  const item = await prisma.items.findMany({
+  const item = await prisma.items.findUnique({
     where: { UUID: UUIDNumber || undefined },
     include: {
       items_in_loan: {
