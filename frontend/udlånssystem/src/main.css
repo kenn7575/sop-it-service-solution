@@ -317,3 +317,11 @@ span.required-tag.hidden {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+@font-face {
+  font-family: "Libre Barcode 128 Text";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/Barcode.ttf') format('truetype');
+}

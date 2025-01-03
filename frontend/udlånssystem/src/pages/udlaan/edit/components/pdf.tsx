@@ -70,40 +70,46 @@ export default forwardRef<HTMLDivElement, LoansPdfProps>(({ id }, ref) => {
       <section className="grid grid-cols-2 gap-y-3">
         <div>
           <span> Låner: </span>
-          <h3>{loaner.username}</h3>
+          <h2>{loaner.username}</h2>
         </div>
 
         <div>
           <span> Udlåner: </span>
-          <h3>{helpdesk_personel?.username || 'Ingen'}</h3>
+          <h2>{helpdesk_personel?.username || 'Ingen'}</h2>
         </div>
 
         <div>
           <span> Udlånsdato: </span>
-          <h3>{new Date(loan.date_created).toLocaleDateString('da-dk')}</h3>
+          <h2>{new Date(loan.date_created).toLocaleDateString('da-dk')}</h2>
         </div>
 
         <div>
           <span> Afleveringsdato: </span>
-          <h3>
+          <h2>
             {loan.loan_length ? (
               new Date(date_to_be_returned).toLocaleDateString('da-dk')
             ) : (
               <i className="fa-solid fa-infinity" />
             )}
-          </h3>
+          </h2>
         </div>
       </section>
 
       <div className="line" />
 
       <section className="flex">
-        <div className="w-1/2">
-          <h2 className="mb-2">Produkter:</h2>
-          <div>
+        <div className="w-full">
+          <h2 className="mb-2 font-semibold">Produkter:</h2>
+          <div className="flex flex-col gap-4">
             {itemsInLoan.map((item, i) => (
-              <div key={i}>
-                <p>{item.Produkt}</p>
+              <div key={i} className="flex w-full justify-between">
+                <h3>{item.Produkt}</h3>
+                <div className="flex flex-col items-center text-nowrap">
+                  <p className="!font-barcode -mt-4 text-4xl">
+                    {item.Stregkode}
+                  </p>
+                  <p className="text-sm">{item.Stregkode}</p>
+                </div>
               </div>
             ))}
           </div>
