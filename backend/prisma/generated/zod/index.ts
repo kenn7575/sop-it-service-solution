@@ -22,7 +22,7 @@ export const ItemsScalarFieldEnumSchema = z.enum(['UUID','date_created','date_up
 
 export const Items_in_loanScalarFieldEnumSchema = z.enum(['UUID','loan_id','item_id','date_created','date_returned','withBag','withLock']);
 
-export const LoansScalarFieldEnumSchema = z.enum(['UUID','date_created','date_updated','date_of_return','location_of_use_id','user_id','helpdesk_personel_id','selfservice_case_id','recipient_type_id','loan_length']);
+export const LoansScalarFieldEnumSchema = z.enum(['UUID','date_created','date_updated','date_of_return','location_of_use_id','user_id','helpdesk_personel_id','selfservice_case_id','recipient_type_id','loan_length','mail_sent']);
 
 export const Pickup_locationsScalarFieldEnumSchema = z.enum(['UUID','name']);
 
@@ -158,6 +158,7 @@ export const loansSchema = z.object({
   selfservice_case_id: z.number().int().nullable(),
   recipient_type_id: z.number().int().nullable(),
   loan_length: z.number().int().nullable(),
+  mail_sent: z.boolean(),
 })
 
 export type loans = z.infer<typeof loansSchema>
@@ -672,6 +673,7 @@ export const loansSelectSchema: z.ZodType<Prisma.loansSelect> = z.object({
   selfservice_case_id: z.boolean().optional(),
   recipient_type_id: z.boolean().optional(),
   loan_length: z.boolean().optional(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.union([z.boolean(),z.lazy(() => items_in_loanFindManyArgsSchema)]).optional(),
   users_loans_helpdesk_personel_idTousers: z.union([z.boolean(),z.lazy(() => usersArgsSchema)]).optional(),
   zones: z.union([z.boolean(),z.lazy(() => zonesArgsSchema)]).optional(),
@@ -1392,6 +1394,7 @@ export const loansWhereInputSchema: z.ZodType<Prisma.loansWhereInput> = z.object
   selfservice_case_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   recipient_type_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   loan_length: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  mail_sent: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   items_in_loan: z.lazy(() => Items_in_loanListRelationFilterSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.union([ z.lazy(() => UsersNullableRelationFilterSchema),z.lazy(() => usersWhereInputSchema) ]).optional().nullable(),
   zones: z.union([ z.lazy(() => ZonesNullableRelationFilterSchema),z.lazy(() => zonesWhereInputSchema) ]).optional().nullable(),
@@ -1411,6 +1414,7 @@ export const loansOrderByWithRelationInputSchema: z.ZodType<Prisma.loansOrderByW
   selfservice_case_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   recipient_type_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   loan_length: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  mail_sent: z.lazy(() => SortOrderSchema).optional(),
   items_in_loan: z.lazy(() => items_in_loanOrderByRelationAggregateInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersOrderByWithRelationInputSchema).optional(),
   zones: z.lazy(() => zonesOrderByWithRelationInputSchema).optional(),
@@ -1436,6 +1440,7 @@ export const loansWhereUniqueInputSchema: z.ZodType<Prisma.loansWhereUniqueInput
   selfservice_case_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
   recipient_type_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
   loan_length: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
+  mail_sent: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   items_in_loan: z.lazy(() => Items_in_loanListRelationFilterSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.union([ z.lazy(() => UsersNullableRelationFilterSchema),z.lazy(() => usersWhereInputSchema) ]).optional().nullable(),
   zones: z.union([ z.lazy(() => ZonesNullableRelationFilterSchema),z.lazy(() => zonesWhereInputSchema) ]).optional().nullable(),
@@ -1455,6 +1460,7 @@ export const loansOrderByWithAggregationInputSchema: z.ZodType<Prisma.loansOrder
   selfservice_case_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   recipient_type_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   loan_length: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  mail_sent: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => loansCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => loansAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => loansMaxOrderByAggregateInputSchema).optional(),
@@ -1476,6 +1482,7 @@ export const loansScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.loansSc
   selfservice_case_id: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
   recipient_type_id: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
   loan_length: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  mail_sent: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
 }).strict();
 
 export const pickup_locationsWhereInputSchema: z.ZodType<Prisma.pickup_locationsWhereInput> = z.object({
@@ -3065,6 +3072,7 @@ export const loansCreateInputSchema: z.ZodType<Prisma.loansCreateInput> = z.obje
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanCreateNestedManyWithoutLoansInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersCreateNestedOneWithoutLoans_loans_helpdesk_personel_idTousersInputSchema).optional(),
   zones: z.lazy(() => zonesCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -3084,6 +3092,7 @@ export const loansUncheckedCreateInputSchema: z.ZodType<Prisma.loansUncheckedCre
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedCreateNestedManyWithoutLoansInputSchema).optional()
 }).strict();
 
@@ -3092,6 +3101,7 @@ export const loansUpdateInputSchema: z.ZodType<Prisma.loansUpdateInput> = z.obje
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUpdateManyWithoutLoansNestedInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersUpdateOneWithoutLoans_loans_helpdesk_personel_idTousersNestedInputSchema).optional(),
   zones: z.lazy(() => zonesUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -3111,6 +3121,7 @@ export const loansUncheckedUpdateInputSchema: z.ZodType<Prisma.loansUncheckedUpd
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedUpdateManyWithoutLoansNestedInputSchema).optional()
 }).strict();
 
@@ -3124,7 +3135,8 @@ export const loansCreateManyInputSchema: z.ZodType<Prisma.loansCreateManyInput> 
   helpdesk_personel_id: z.number().int().optional().nullable(),
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansUpdateManyMutationInputSchema: z.ZodType<Prisma.loansUpdateManyMutationInput> = z.object({
@@ -3132,6 +3144,7 @@ export const loansUpdateManyMutationInputSchema: z.ZodType<Prisma.loansUpdateMan
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const loansUncheckedUpdateManyInputSchema: z.ZodType<Prisma.loansUncheckedUpdateManyInput> = z.object({
@@ -3145,6 +3158,7 @@ export const loansUncheckedUpdateManyInputSchema: z.ZodType<Prisma.loansUnchecke
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const pickup_locationsCreateInputSchema: z.ZodType<Prisma.pickup_locationsCreateInput> = z.object({
@@ -4857,7 +4871,8 @@ export const loansCountOrderByAggregateInputSchema: z.ZodType<Prisma.loansCountO
   helpdesk_personel_id: z.lazy(() => SortOrderSchema).optional(),
   selfservice_case_id: z.lazy(() => SortOrderSchema).optional(),
   recipient_type_id: z.lazy(() => SortOrderSchema).optional(),
-  loan_length: z.lazy(() => SortOrderSchema).optional()
+  loan_length: z.lazy(() => SortOrderSchema).optional(),
+  mail_sent: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const loansAvgOrderByAggregateInputSchema: z.ZodType<Prisma.loansAvgOrderByAggregateInput> = z.object({
@@ -4880,7 +4895,8 @@ export const loansMaxOrderByAggregateInputSchema: z.ZodType<Prisma.loansMaxOrder
   helpdesk_personel_id: z.lazy(() => SortOrderSchema).optional(),
   selfservice_case_id: z.lazy(() => SortOrderSchema).optional(),
   recipient_type_id: z.lazy(() => SortOrderSchema).optional(),
-  loan_length: z.lazy(() => SortOrderSchema).optional()
+  loan_length: z.lazy(() => SortOrderSchema).optional(),
+  mail_sent: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const loansMinOrderByAggregateInputSchema: z.ZodType<Prisma.loansMinOrderByAggregateInput> = z.object({
@@ -4893,7 +4909,8 @@ export const loansMinOrderByAggregateInputSchema: z.ZodType<Prisma.loansMinOrder
   helpdesk_personel_id: z.lazy(() => SortOrderSchema).optional(),
   selfservice_case_id: z.lazy(() => SortOrderSchema).optional(),
   recipient_type_id: z.lazy(() => SortOrderSchema).optional(),
-  loan_length: z.lazy(() => SortOrderSchema).optional()
+  loan_length: z.lazy(() => SortOrderSchema).optional(),
+  mail_sent: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const loansSumOrderByAggregateInputSchema: z.ZodType<Prisma.loansSumOrderByAggregateInput> = z.object({
@@ -7070,6 +7087,7 @@ export const loansCreateWithoutItems_in_loanInputSchema: z.ZodType<Prisma.loansC
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersCreateNestedOneWithoutLoans_loans_helpdesk_personel_idTousersInputSchema).optional(),
   zones: z.lazy(() => zonesCreateNestedOneWithoutLoansInputSchema).optional(),
   recipient_type: z.lazy(() => recipient_typeCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -7087,7 +7105,8 @@ export const loansUncheckedCreateWithoutItems_in_loanInputSchema: z.ZodType<Pris
   helpdesk_personel_id: z.number().int().optional().nullable(),
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansCreateOrConnectWithoutItems_in_loanInputSchema: z.ZodType<Prisma.loansCreateOrConnectWithoutItems_in_loanInput> = z.object({
@@ -7143,6 +7162,7 @@ export const loansUpdateWithoutItems_in_loanInputSchema: z.ZodType<Prisma.loansU
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersUpdateOneWithoutLoans_loans_helpdesk_personel_idTousersNestedInputSchema).optional(),
   zones: z.lazy(() => zonesUpdateOneWithoutLoansNestedInputSchema).optional(),
   recipient_type: z.lazy(() => recipient_typeUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -7161,6 +7181,7 @@ export const loansUncheckedUpdateWithoutItems_in_loanInputSchema: z.ZodType<Pris
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const items_in_loanCreateWithoutLoansInputSchema: z.ZodType<Prisma.items_in_loanCreateWithoutLoansInput> = z.object({
@@ -7601,6 +7622,7 @@ export const loansCreateWithoutRecipient_typeInputSchema: z.ZodType<Prisma.loans
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanCreateNestedManyWithoutLoansInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersCreateNestedOneWithoutLoans_loans_helpdesk_personel_idTousersInputSchema).optional(),
   zones: z.lazy(() => zonesCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -7618,6 +7640,7 @@ export const loansUncheckedCreateWithoutRecipient_typeInputSchema: z.ZodType<Pri
   helpdesk_personel_id: z.number().int().optional().nullable(),
   selfservice_case_id: z.number().int().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedCreateNestedManyWithoutLoansInputSchema).optional()
 }).strict();
 
@@ -7661,6 +7684,7 @@ export const loansScalarWhereInputSchema: z.ZodType<Prisma.loansScalarWhereInput
   selfservice_case_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   recipient_type_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   loan_length: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  mail_sent: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
 }).strict();
 
 export const loansCreateWithoutSelfservice_caseInputSchema: z.ZodType<Prisma.loansCreateWithoutSelfservice_caseInput> = z.object({
@@ -7668,6 +7692,7 @@ export const loansCreateWithoutSelfservice_caseInputSchema: z.ZodType<Prisma.loa
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanCreateNestedManyWithoutLoansInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersCreateNestedOneWithoutLoans_loans_helpdesk_personel_idTousersInputSchema).optional(),
   zones: z.lazy(() => zonesCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -7685,6 +7710,7 @@ export const loansUncheckedCreateWithoutSelfservice_caseInputSchema: z.ZodType<P
   helpdesk_personel_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedCreateNestedManyWithoutLoansInputSchema).optional()
 }).strict();
 
@@ -7766,6 +7792,7 @@ export const loansCreateWithoutUsers_loans_helpdesk_personel_idTousersInputSchem
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanCreateNestedManyWithoutLoansInputSchema).optional(),
   zones: z.lazy(() => zonesCreateNestedOneWithoutLoansInputSchema).optional(),
   recipient_type: z.lazy(() => recipient_typeCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -7783,6 +7810,7 @@ export const loansUncheckedCreateWithoutUsers_loans_helpdesk_personel_idTousersI
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedCreateNestedManyWithoutLoansInputSchema).optional()
 }).strict();
 
@@ -7801,6 +7829,7 @@ export const loansCreateWithoutUsers_loans_user_idTousersInputSchema: z.ZodType<
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanCreateNestedManyWithoutLoansInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersCreateNestedOneWithoutLoans_loans_helpdesk_personel_idTousersInputSchema).optional(),
   zones: z.lazy(() => zonesCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -7818,6 +7847,7 @@ export const loansUncheckedCreateWithoutUsers_loans_user_idTousersInputSchema: z
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedCreateNestedManyWithoutLoansInputSchema).optional()
 }).strict();
 
@@ -7868,6 +7898,7 @@ export const loansCreateWithoutZonesInputSchema: z.ZodType<Prisma.loansCreateWit
   date_updated: z.coerce.date().optional(),
   date_of_return: z.coerce.date().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanCreateNestedManyWithoutLoansInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersCreateNestedOneWithoutLoans_loans_helpdesk_personel_idTousersInputSchema).optional(),
   recipient_type: z.lazy(() => recipient_typeCreateNestedOneWithoutLoansInputSchema).optional(),
@@ -7885,6 +7916,7 @@ export const loansUncheckedCreateWithoutZonesInputSchema: z.ZodType<Prisma.loans
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
   loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedCreateNestedManyWithoutLoansInputSchema).optional()
 }).strict();
 
@@ -8216,7 +8248,8 @@ export const loansCreateManyRecipient_typeInputSchema: z.ZodType<Prisma.loansCre
   user_id: z.number().int(),
   helpdesk_personel_id: z.number().int().optional().nullable(),
   selfservice_case_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansUpdateWithoutRecipient_typeInputSchema: z.ZodType<Prisma.loansUpdateWithoutRecipient_typeInput> = z.object({
@@ -8224,6 +8257,7 @@ export const loansUpdateWithoutRecipient_typeInputSchema: z.ZodType<Prisma.loans
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUpdateManyWithoutLoansNestedInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersUpdateOneWithoutLoans_loans_helpdesk_personel_idTousersNestedInputSchema).optional(),
   zones: z.lazy(() => zonesUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -8241,6 +8275,7 @@ export const loansUncheckedUpdateWithoutRecipient_typeInputSchema: z.ZodType<Pri
   helpdesk_personel_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedUpdateManyWithoutLoansNestedInputSchema).optional()
 }).strict();
 
@@ -8254,6 +8289,7 @@ export const loansUncheckedUpdateManyWithoutRecipient_typeInputSchema: z.ZodType
   helpdesk_personel_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const loansCreateManySelfservice_caseInputSchema: z.ZodType<Prisma.loansCreateManySelfservice_caseInput> = z.object({
@@ -8265,7 +8301,8 @@ export const loansCreateManySelfservice_caseInputSchema: z.ZodType<Prisma.loansC
   user_id: z.number().int(),
   helpdesk_personel_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansUpdateWithoutSelfservice_caseInputSchema: z.ZodType<Prisma.loansUpdateWithoutSelfservice_caseInput> = z.object({
@@ -8273,6 +8310,7 @@ export const loansUpdateWithoutSelfservice_caseInputSchema: z.ZodType<Prisma.loa
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUpdateManyWithoutLoansNestedInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersUpdateOneWithoutLoans_loans_helpdesk_personel_idTousersNestedInputSchema).optional(),
   zones: z.lazy(() => zonesUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -8290,6 +8328,7 @@ export const loansUncheckedUpdateWithoutSelfservice_caseInputSchema: z.ZodType<P
   helpdesk_personel_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedUpdateManyWithoutLoansNestedInputSchema).optional()
 }).strict();
 
@@ -8303,6 +8342,7 @@ export const loansUncheckedUpdateManyWithoutSelfservice_caseInputSchema: z.ZodTy
   helpdesk_personel_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const itemsCreateManyStorage_locationsInputSchema: z.ZodType<Prisma.itemsCreateManyStorage_locationsInput> = z.object({
@@ -8355,7 +8395,8 @@ export const loansCreateManyUsers_loans_helpdesk_personel_idTousersInputSchema: 
   user_id: z.number().int(),
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansCreateManyUsers_loans_user_idTousersInputSchema: z.ZodType<Prisma.loansCreateManyUsers_loans_user_idTousersInput> = z.object({
@@ -8367,7 +8408,8 @@ export const loansCreateManyUsers_loans_user_idTousersInputSchema: z.ZodType<Pri
   helpdesk_personel_id: z.number().int().optional().nullable(),
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansUpdateWithoutUsers_loans_helpdesk_personel_idTousersInputSchema: z.ZodType<Prisma.loansUpdateWithoutUsers_loans_helpdesk_personel_idTousersInput> = z.object({
@@ -8375,6 +8417,7 @@ export const loansUpdateWithoutUsers_loans_helpdesk_personel_idTousersInputSchem
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUpdateManyWithoutLoansNestedInputSchema).optional(),
   zones: z.lazy(() => zonesUpdateOneWithoutLoansNestedInputSchema).optional(),
   recipient_type: z.lazy(() => recipient_typeUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -8392,6 +8435,7 @@ export const loansUncheckedUpdateWithoutUsers_loans_helpdesk_personel_idTousersI
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedUpdateManyWithoutLoansNestedInputSchema).optional()
 }).strict();
 
@@ -8405,6 +8449,7 @@ export const loansUncheckedUpdateManyWithoutUsers_loans_helpdesk_personel_idTous
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const loansUpdateWithoutUsers_loans_user_idTousersInputSchema: z.ZodType<Prisma.loansUpdateWithoutUsers_loans_user_idTousersInput> = z.object({
@@ -8412,6 +8457,7 @@ export const loansUpdateWithoutUsers_loans_user_idTousersInputSchema: z.ZodType<
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUpdateManyWithoutLoansNestedInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersUpdateOneWithoutLoans_loans_helpdesk_personel_idTousersNestedInputSchema).optional(),
   zones: z.lazy(() => zonesUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -8429,6 +8475,7 @@ export const loansUncheckedUpdateWithoutUsers_loans_user_idTousersInputSchema: z
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedUpdateManyWithoutLoansNestedInputSchema).optional()
 }).strict();
 
@@ -8442,6 +8489,7 @@ export const loansUncheckedUpdateManyWithoutUsers_loans_user_idTousersInputSchem
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const loansCreateManyZonesInputSchema: z.ZodType<Prisma.loansCreateManyZonesInput> = z.object({
@@ -8453,7 +8501,8 @@ export const loansCreateManyZonesInputSchema: z.ZodType<Prisma.loansCreateManyZo
   helpdesk_personel_id: z.number().int().optional().nullable(),
   selfservice_case_id: z.number().int().optional().nullable(),
   recipient_type_id: z.number().int().optional().nullable(),
-  loan_length: z.number().int().optional().nullable()
+  loan_length: z.number().int().optional().nullable(),
+  mail_sent: z.boolean().optional()
 }).strict();
 
 export const loansUpdateWithoutZonesInputSchema: z.ZodType<Prisma.loansUpdateWithoutZonesInput> = z.object({
@@ -8461,6 +8510,7 @@ export const loansUpdateWithoutZonesInputSchema: z.ZodType<Prisma.loansUpdateWit
   date_updated: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   date_of_return: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUpdateManyWithoutLoansNestedInputSchema).optional(),
   users_loans_helpdesk_personel_idTousers: z.lazy(() => usersUpdateOneWithoutLoans_loans_helpdesk_personel_idTousersNestedInputSchema).optional(),
   recipient_type: z.lazy(() => recipient_typeUpdateOneWithoutLoansNestedInputSchema).optional(),
@@ -8478,6 +8528,7 @@ export const loansUncheckedUpdateWithoutZonesInputSchema: z.ZodType<Prisma.loans
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   items_in_loan: z.lazy(() => items_in_loanUncheckedUpdateManyWithoutLoansNestedInputSchema).optional()
 }).strict();
 
@@ -8491,6 +8542,7 @@ export const loansUncheckedUpdateManyWithoutZonesInputSchema: z.ZodType<Prisma.l
   selfservice_case_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   recipient_type_id: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   loan_length: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mail_sent: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 /////////////////////////////////////////
