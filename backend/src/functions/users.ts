@@ -30,7 +30,17 @@ export async function addFullname(
 
 export async function getLdapUsers(res?: any): Promise<any> {
   if (["development", "test"].includes(process.env.NODE_ENV || "")) {
-    return { headers, data: [] };
+    return {
+      headers,
+      data: [
+        {
+          UUID: 1,
+          username: "johndoe0000",
+          date_created: new Date(),
+          date_updated: new Date(),
+        },
+      ],
+    };
   }
 
   try {
