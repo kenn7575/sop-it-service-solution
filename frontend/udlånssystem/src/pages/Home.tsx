@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useBarcode from '@hooks/useBarcode';
@@ -11,11 +12,11 @@ export default function Home() {
 
   useBarcode(handleBarcodeScan);
 
-  let cheatActive = false;
+  const [cheatActive, setCheatActive] = useState(false);
   window.addEventListener(
     'cheatCode',
     (e) => {
-      if (!cheatActive) cheatActive = true;
+      if (!cheatActive) setCheatActive(true);
     },
     { once: true },
   );
@@ -54,8 +55,12 @@ export default function Home() {
     navigate(`/produkter/${scannedProduct.UUID}`);
   }
 
-  <img src="/nyanCat.gif" alt="nyan cat" />;
-  if (cheatActive) return;
+  if (cheatActive)
+    return (
+      <div className="flex items-center justify-center">
+        <img src="/nyanCat.gif" className="w-full" alt="nyan cat" />
+      </div>
+    );
 
   return (
     <div className="flex max-h-screen flex-col items-center gap-2 pt-16">
