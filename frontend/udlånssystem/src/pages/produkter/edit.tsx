@@ -38,7 +38,7 @@ export default function Edit() {
       zodSchema={zodSchema}
       panelSlot={
         <>
-          <div className="flex flex-col items-center gap-3 overflow-scroll">
+          <div className="flex flex-col items-center gap-3 px-4 overflow-y-scroll">
             <h1>Lånehistorik:</h1>
             {itemsInLoan?.length > 0 ? (
               <ul className="loanHistoryList">

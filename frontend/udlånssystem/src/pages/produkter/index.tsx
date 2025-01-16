@@ -8,19 +8,21 @@ import useData from '@hooks/useData';
 import Layout from '@layouts/index';
 
 export default function Index() {
-  const [withStatus, setWithStatus] = useState(false);
+  const [showDeleted, setShowDeleted] = useState(false);
 
   const [itemsView] = useData<itemsView[]>('items_view', {
     withHeaders: true,
   });
 
-  function filterWithStatus(): DataWithHeaders<itemsView[]> {
+  function filterDeleted(): DataWithHeaders<itemsView[]> {
     if (!itemsView)
       return [{ data: [], headers: [] }] as unknown as DataWithHeaders<
         itemsView[]
       >;
 
-    const filtered = itemsView.data.filter((item) => item.Status);
+    const filtered = itemsView.data.filter(
+      (item) => !['Lånt ud', 'Tilgængelig'].includes(item.Status),
+    );
 
     return {
       data: filtered,
@@ -28,25 +30,24 @@ export default function Index() {
     };
   }
 
-  function filterWithoutStatus(): DataWithHeaders<itemsView[]> {
+  function filterNotDeleted(): DataWithHeaders<itemsView[]> {
     if (!itemsView)
       return [{ data: [], headers: [] }] as unknown as DataWithHeaders<
         itemsView[]
       >;
 
-    const filtered = itemsView.data.filter((item) => !item.Status);
-    const newHeaders = itemsView.headers.filter(
-      (header) => header !== 'Status',
+    const filtered = itemsView.data.filter((item) =>
+      ['Lånt ud', 'Tilgængelig'].includes(item.Status),
     );
 
     return {
       data: filtered,
-      headers: newHeaders,
+      headers: itemsView.headers,
     };
   }
 
   function handleChange() {
-    setWithStatus((prev) => !prev);
+    setShowDeleted((prev) => !prev);
   }
 
   return (
@@ -56,7 +57,7 @@ export default function Index() {
         <Switch id="toggleItems" onCheckedChange={handleChange} />
       </div>
 
-      <Layout table={withStatus ? filterWithStatus() : filterWithoutStatus()} />
+      <Layout table={showDeleted ? filterDeleted() : filterNotDeleted()} />
     </>
   );
 }

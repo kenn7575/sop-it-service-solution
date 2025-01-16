@@ -4,6 +4,10 @@ generator client {
   binaryTargets   = ["native", "darwin-arm64", "linux-arm64-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -72,6 +76,7 @@ model loans {
   selfservice_case_id                     Int?              @db.UnsignedInt
   recipient_type_id                       Int?              @db.UnsignedInt
   loan_length                             Int?
+  mail_sent                               Boolean           @default(false)
   items_in_loan                           items_in_loan[]
   users_loans_helpdesk_personel_idTousers users?            @relation("loans_helpdesk_personel_idTousers", fields: [helpdesk_personel_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "helpdesk_personel_id_fk")
   zones                                   zones?            @relation(fields: [location_of_use_id], references: [UUID], onDelete: NoAction, onUpdate: NoAction, map: "location_of_use_id_fk")

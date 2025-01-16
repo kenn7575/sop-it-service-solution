@@ -80,6 +80,9 @@ module.exports = {
       width: {
         nav: 'var(--nav-width)',
       },
+      fontFamily: {
+        barcode: ['"Libre Barcode 128 Text"', 'monospace'],
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

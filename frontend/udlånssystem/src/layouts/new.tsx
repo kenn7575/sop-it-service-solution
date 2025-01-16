@@ -20,14 +20,15 @@ interface NewLayoutProps {
   zodSchema?: z.ZodObject<any>;
   panelSlot?: React.ReactElement;
   formSlot?: React.ReactElement;
+  redirectOnCreate?: boolean;
 }
 
 export default function NewLayout({
   table,
   fields = defaultFields,
   zodSchema = autoGenZodSchema(fields),
-  panelSlot = <></>,
   formSlot = <></>,
+  redirectOnCreate = true,
 }: NewLayoutProps) {
   const navigate = useNavigate();
 
@@ -36,7 +37,7 @@ export default function NewLayout({
   const [fields2, setFields] = useState(fields);
 
   async function fetchSelectOptions() {
-    for (let field of fields) {
+    for (const field of fields) {
       if (field.type == 'select') {
         if (typeof field.options != 'string') continue;
 
@@ -68,7 +69,7 @@ export default function NewLayout({
       data: { id },
     } = await createItem(table, data);
 
-    navigate(`${getPrevPage()}/${id}`);
+    if (redirectOnCreate) navigate(`${getPrevPage()}/${id}`);
   }
 
   return (

@@ -10,10 +10,9 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "baseUrl": "./",
+    "baseUrl": "src",
     "paths": {
-      "@functions": ["./functions"],
-      "@functions/*": ["./functions/*"],
+      "@*": ["./api/*"],
       "@/*": ["./*"]
     }
   },
