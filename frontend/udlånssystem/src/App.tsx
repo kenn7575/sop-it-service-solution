@@ -12,6 +12,7 @@ import Login from '@pages/Login';
 import loanReturn from '@pages/udlaan/return';
 
 import { getPages } from '@helpers/routeHelpers';
+import useRealtimeLogout from '@hooks/useRealtimeLogout';
 
 import './axios.config';
 
@@ -21,6 +22,8 @@ export const CurrentUserContext = createContext<CurrentUserContextType>({
 
 function Layout() {
   const [currentUser, setCurrentUser] = useState<userState>();
+
+  useRealtimeLogout(currentUser);
 
   return (
     <CurrentUserContext.Provider
