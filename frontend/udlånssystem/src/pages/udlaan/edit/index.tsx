@@ -34,10 +34,12 @@ export default function Edit() {
     handleReturn(id!, navigate);
   }
 
+  if (!loan) return null;
+
   return (
     <>
       <div className="hidden">
-        <Pdf id={Number(id)} ref={pdfRef} />
+        <Pdf loan={loan} ref={pdfRef} />
       </div>
       <EditLayout
         table="loans"

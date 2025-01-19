@@ -20,13 +20,13 @@ export async function sendMail(to: string, subject: string, text: string) {
   if (!username || !password || !from_addr || !from_name) return;
 
   if (["test", "development"].includes(process.env.NODE_ENV || "")) {
-    console.log(`Mail to: ${to}\nSubject: ${subject}\nText:\n${text}`);
+    console.log(`Mail to: ${to}\nSubject: ${subject}\n`);
     return { success: true };
   }
 
   const from = `${from_name} <${from_addr}>`;
 
-  const { data, error } = await resend.emails.send({ from, to, subject, text });
+  const { data, error } = await resend.emails.send({ from, to, subject, html: text });
 
   if (error) {
     console.error(error);

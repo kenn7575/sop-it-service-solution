@@ -17,3 +17,11 @@ export function ReturnLoan(): IController {
     res.status(response.status).json(response.data);
   };
 }
+
+export function GetPdf(): IController {
+  return async (req, res) => {
+    const response = await loansService.getPdf(req.params.UUID);
+
+    res.send(response.data);
+  };
+}
