@@ -1,16 +1,14 @@
 import { forwardRef, useEffect, useState } from 'react';
 
 import getData from '@data/getData';
-import useData from '@hooks/useData';
 
 import '@styles/pdf.css';
 
 interface LoansPdfProps {
-  id: number;
+  loan: loanModel;
 }
 
-export default forwardRef<HTMLDivElement, LoansPdfProps>(({ id }, ref) => {
-  const [loan] = useData<loanModel>('loans', undefined, id);
+export default forwardRef<HTMLDivElement, LoansPdfProps>(({ loan }, ref) => {
   const [itemsInLoan, setItemsInLoan] = useState<itemsFromLoan[]>([]);
   const [loaner, setLoaner] = useState<userModel | null>();
   const [helpdesk_personel, setHelpdesk_personel] =
@@ -105,7 +103,7 @@ export default forwardRef<HTMLDivElement, LoansPdfProps>(({ id }, ref) => {
               <div key={i} className="flex w-full justify-between">
                 <h3>{item.Produkt}</h3>
                 <div className="flex flex-col items-center text-nowrap">
-                  <p className="!font-barcode -mt-4 text-4xl">
+                  <p className="-mt-4 !font-barcode text-4xl">
                     {item.Stregkode}
                   </p>
                   <p className="text-sm">{item.Stregkode}</p>

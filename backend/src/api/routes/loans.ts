@@ -5,6 +5,7 @@ import * as loanMiddleware from "@middleware/loans";
 const router = Router();
 
 router.get(["/", "/:UUID"], loanMiddleware.Validate);
+router.get("/:UUID/pdf", loanController.GetPdf());
 router.post("/", loanController.CreateOne());
 router.patch("/return/item", loanController.ReturnLoan());
 

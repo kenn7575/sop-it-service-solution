@@ -4,7 +4,9 @@ import {
   convertToPrismaTypes,
   ldapAuthenticate,
   returnLoan as returnLoanHelper,
+  sendMail,
 } from "@/functions";
+import { generateLoanHTML } from "@/functions/generateLoanHTML";
 
 export async function createOne(values: ILoanCreateInput): Promise<IResponse> {
   const { data, error } = createLoanSchema.safeParse(values);
@@ -46,6 +48,13 @@ export async function createOne(values: ILoanCreateInput): Promise<IResponse> {
 
   const result = await prisma.$transaction([newLoan]);
 
+  const user = await prisma.users.findFirst({ where: { UUID: loan.user_id } });
+  const userEmail = user?.username + "@edu.sde.dk";
+
+  const loanReceipt = await generateLoanHTML(result[0].UUID, true);
+
+  sendMail(userEmail, "Lånekontrakt", loanReceipt);
+
   return { status: 201, data: result };
 }
 
@@ -81,4 +90,10 @@ export async function returnLoan(items: Item[]): Promise<IResponse> {
   await returnLoanHelper(items[0].loan_id);
 
   return { status: 200, data: { success: true } };
+}
+
+export async function getPdf(UUID: string): Promise<IResponse> {
+  const html = await generateLoanHTML(Number(UUID));
+
+  return { status: 200, data: html };
 }
