@@ -14,9 +14,14 @@ const {
   MAIL_RESEND_API_KEY: resend_api_key,
 } = process.env;
 
-const resend = new Resend(resend_api_key);
-
 export async function sendMail(to: string, subject: string, text: string) {
+  if (!resend_api_key) {
+    console.error("Missing MAIL_RESEND_API_KEY");
+    return { success: false };
+  }
+
+  const resend = new Resend(resend_api_key);
+
   if (!username || !password || !from_addr || !from_name) return;
 
   if (["test", "development"].includes(process.env.NODE_ENV || "")) {
@@ -26,7 +31,13 @@ export async function sendMail(to: string, subject: string, text: string) {
 
   const from = `${from_name} <${from_addr}>`;
 
-  const { data, error } = await resend.emails.send({ from, to, subject, html: text });
+  const { data, error } = await resend.emails.send({
+    from,
+    to,
+    subject,
+    html: text,
+    react: null,
+  });
 
   if (error) {
     console.error(error);
