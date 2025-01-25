@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import '@/styles/navMenu.css';
+import "@/styles/navMenu.css";
 
-import NavBtn from './Nav-btn.tsx';
-import NavMenu from './Nav-menu.tsx';
-import Toggle from './toggle.tsx';
-import UserWidget from './user-widget.tsx';
+import NavBtn from "./Nav-btn.tsx";
+import NavMenu from "./Nav-menu.tsx";
+import Toggle from "./toggle.tsx";
+import UserWidget from "./user-widget.tsx";
 
 export default function Nav() {
   return (
@@ -67,34 +67,34 @@ export default function Nav() {
         <NavMenu
           buttons={[
             {
-              text: 'Kategorier',
-              icon: 'fa-solid fa-tag',
-              destination: '/kategorier',
+              text: "Kategorier",
+              icon: "fa-solid fa-tag",
+              destination: "/kategorier",
             },
             {
-              text: 'Brands',
-              destination: '/brands',
-              icon: 'fa-regular fa-copyright',
+              text: "Brands",
+              destination: "/brands",
+              icon: "fa-regular fa-copyright",
             },
             {
-              text: 'Produkt Statusser',
-              icon: 'fa-solid fa-clipboard-question',
-              destination: '/produktstatusser',
+              text: "Produkt Statusser",
+              icon: "fa-solid fa-clipboard-question",
+              destination: "/produktstatusser",
             },
             {
-              text: 'Bygninger',
-              icon: 'fa-solid fa-building',
-              destination: '/bygninger',
+              text: "Bygninger",
+              icon: "fa-solid fa-building",
+              destination: "/bygninger",
             },
             {
-              text: 'Zoner',
-              icon: 'fa-solid fa-map-marker-alt',
-              destination: '/zoner',
+              text: "Zoner",
+              icon: "fa-solid fa-map-marker-alt",
+              destination: "/zoner",
             },
             {
-              text: 'Dashboard',
-              icon: 'fa-solid fa-chart-line',
-              destination: '/dashboard',
+              text: "Dashboard",
+              icon: "fa-solid fa-chart-line",
+              destination: "/dashboard",
             },
           ]}
           icon="fa-solid fa-ellipsis"

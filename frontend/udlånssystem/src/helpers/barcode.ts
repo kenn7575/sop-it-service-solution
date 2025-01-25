@@ -8,15 +8,15 @@ export async function handleBarcodeScan(
 ) {
   if (pressedKeys.length === 0) firstKeyPress = new Date().getTime();
 
-  if (['Shift', 'Control', 'Alt'].includes(e.key)) return;
+  if (["Shift", "Control", "Alt"].includes(e.key)) return;
 
   setTimeout(() => {
     pressedKeys = [];
   }, maxTimeBetweenKeyPresses);
 
-  if (e.key == 'Enter') {
+  if (e.key == "Enter") {
     e.preventDefault();
-    const barcode = pressedKeys.join('');
+    const barcode = pressedKeys.join("");
     if (new Date().getTime() - firstKeyPress > maxTimeBetweenKeyPresses) {
       return (pressedKeys = []);
     }

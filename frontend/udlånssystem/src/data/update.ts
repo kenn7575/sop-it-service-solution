@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function updateItem<T = any>(
   table: string,
@@ -11,9 +11,9 @@ export default function updateItem<T = any>(
 
   if (config?.withToast) {
     toast.promise(promise, {
-      id: 'updateItem' + UUID,
-      loading: 'Gemmer...',
-      success: 'Gemt!',
+      id: "updateItem" + UUID,
+      loading: "Gemmer...",
+      success: "Gemt!",
     });
   }
 

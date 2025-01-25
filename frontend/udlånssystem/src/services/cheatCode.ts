@@ -8,13 +8,13 @@ export function cheatCode() {
     if (codes[index] === e.keyCode) {
       index++;
       if (index === codes.length) {
-        console.log('cheat code activated');
-        window.removeEventListener('keydown', keydownHandler);
-        window.dispatchEvent(new Event('cheatCode'));
+        console.log("cheat code activated");
+        window.removeEventListener("keydown", keydownHandler);
+        window.dispatchEvent(new Event("cheatCode"));
       }
     } else {
       index = 0;
     }
   }
-  window.addEventListener('keydown', keydownHandler);
+  window.addEventListener("keydown", keydownHandler);
 }

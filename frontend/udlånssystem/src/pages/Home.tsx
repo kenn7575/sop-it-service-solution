@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import useBarcode from '@hooks/useBarcode';
-import { cheatCode } from '@services/cheatCode';
+import useBarcode from "@hooks/useBarcode";
+import { cheatCode } from "@services/cheatCode";
 
-import getData from '@/data/getData';
-import { toast } from 'sonner';
+import getData from "@/data/getData";
+import { toast } from "sonner";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function Home() {
 
   const [cheatActive, setCheatActive] = useState(false);
   window.addEventListener(
-    'cheatCode',
+    "cheatCode",
     (e) => {
       if (!cheatActive) setCheatActive(true);
     },
@@ -26,23 +26,23 @@ export default function Home() {
     if (!value) return;
 
     const [scannedProduct] =
-      (await getData<itemsView[]>('items_view?Stregkode=' + value)) || [];
+      (await getData<itemsView[]>("items_view?Stregkode=" + value)) || [];
 
-    if (!scannedProduct) return toast.warning('Produktet kunne ikke findes');
+    if (!scannedProduct) return toast.warning("Produktet kunne ikke findes");
 
-    if (scannedProduct.Status == 'Available') {
+    if (scannedProduct.Status == "Available") {
       navigate(`/udlaan/new?item=${scannedProduct.UUID}`);
       return;
     }
 
-    if (scannedProduct.Status == 'Lent') {
+    if (scannedProduct.Status == "Lent") {
       const item_from_loan = await getData<itemsFromLoan[]>(
         `items_from_loans?UUID=${scannedProduct.UUID}&Returneret=null`,
       );
 
       if (!item_from_loan?.length) {
         toast.error(
-          'Produktet er lånt ud, men kunne ikke findes på et aktivt lån',
+          "Produktet er lånt ud, men kunne ikke findes på et aktivt lån",
         );
         return;
       }

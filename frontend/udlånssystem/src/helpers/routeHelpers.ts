@@ -1,9 +1,9 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
-const exclude = ['components', 'Login', 'Home'];
+const exclude = ["components", "Login", "Home"];
 
 export function getPages() {
-  const allPages = import.meta.glob('../pages/**/*.tsx');
+  const allPages = import.meta.glob("../pages/**/*.tsx");
 
   return Object.entries(allPages)
     .filter(([path]) => {
@@ -15,10 +15,10 @@ export function getPages() {
     })
     .map(([path, page]) => {
       let name = path
-        .replace('../pages/', '')
-        .replace('.tsx', '')
-        .replace('/index', '')
-        .replace('edit', ':id');
+        .replace("../pages/", "")
+        .replace(".tsx", "")
+        .replace("/index", "")
+        .replace("edit", ":id");
 
       return { path: name.toLowerCase(), element: lazy(page as any) };
     });

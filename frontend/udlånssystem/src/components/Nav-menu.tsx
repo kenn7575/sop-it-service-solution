@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 export default function NavMenu({
-  text = 'Home',
-  icon = 'fa-solid fa-house',
+  text = "Home",
+  icon = "fa-solid fa-house",
   buttons = [
     {
-      text: '',
-      icon: '',
-      destination: '/',
+      text: "",
+      icon: "",
+      destination: "/",
     },
   ],
 }) {
@@ -34,13 +34,13 @@ export default function NavMenu({
       if (!el) return;
 
       el.scrollIntoView({
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }, 10);
   }
 
   function isClosed() {
-    return !open ? 'rotate-180' : '';
+    return !open ? "rotate-180" : "";
   }
 
   return (
@@ -55,7 +55,7 @@ export default function NavMenu({
             <p className="text-[1.2rem] text-foreground3">{text}</p>
           </div>
 
-          <i className={'fa-solid fa-angle-up ' + isClosed()} />
+          <i className={"fa-solid fa-angle-up " + isClosed()} />
         </div>
       </button>
 

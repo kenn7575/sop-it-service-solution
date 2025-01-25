@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
-import Table from '@components/table';
+import Table from "@components/table";
 
-import getData from '@data/getData';
-import { columnsFormatter } from '@helpers/tableHelpers';
-import useBarcode from '@hooks/useBarcode';
-import useData from '@hooks/useData';
+import getData from "@data/getData";
+import { columnsFormatter } from "@helpers/tableHelpers";
+import useBarcode from "@hooks/useBarcode";
+import useData from "@hooks/useData";
 
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
-import '@styles/return.css';
+import "@styles/return.css";
 
 const exclude = [
-  'date_returned',
-  'loan_id',
-  'Stregkode',
-  'Returneret',
-  'Med_taske',
-  'Med_Laas',
+  "date_returned",
+  "loan_id",
+  "Stregkode",
+  "Returneret",
+  "Med_taske",
+  "Med_Laas",
 ];
 
 export default function Return() {
@@ -33,17 +33,17 @@ export default function Return() {
   const [itemsReturning, setItemsReturning] = useState<itemsFromLoan[]>([]);
   const [itemsReturned, setItemsReturned] = useState<itemsFromLoan[]>([]);
 
-  const [products] = useData<itemsFromLoan[]>('items_from_loans');
+  const [products] = useData<itemsFromLoan[]>("items_from_loans");
 
   useEffect(() => {
-    const initItem = searchParams.get('item');
+    const initItem = searchParams.get("item");
 
     if (initItem) {
       const item = products?.find(({ UUID }) => UUID.toString() == initItem);
 
       if (item) {
         handleAddProduct(item);
-        setSearchParams('');
+        setSearchParams("");
       }
     }
   }, [products]);
@@ -78,12 +78,12 @@ export default function Return() {
       return;
     }
 
-    toast.error('Produktet kunne ikke findes');
+    toast.error("Produktet kunne ikke findes");
   }
 
   async function importDataFromDB() {
     const items = await getData<itemsFromLoan[]>(
-      'items_from_loans?loan_id=' + id,
+      "items_from_loans?loan_id=" + id,
     );
 
     if (!items) return;
@@ -124,14 +124,14 @@ export default function Return() {
 
   async function handleReturn() {
     if (itemsReturning.length > 0) {
-      const updatePromise = axios.patch('loans/return/item', {
+      const updatePromise = axios.patch("loans/return/item", {
         ItemsInLoanToReturn: itemsReturning,
       });
 
       toast.promise(updatePromise, {
-        loading: 'Returnerer produkter...',
-        success: 'Produkterne er returneret',
-        error: 'Der skete en fejl',
+        loading: "Returnerer produkter...",
+        success: "Produkterne er returneret",
+        error: "Der skete en fejl",
       });
     }
 

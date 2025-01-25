@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import getData from '@data/getData';
-import useBarcode from '@hooks/useBarcode';
-import useData from '@hooks/useData';
+import getData from "@data/getData";
+import useBarcode from "@hooks/useBarcode";
+import useData from "@hooks/useData";
 
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
-import NewLoanInfo from './components/Info';
-import NewLoanNav from './components/Nav';
-import NewLoanProducts from './components/Products';
-import NewLoanReview from './components/Review';
-import UserSelect from './components/UserSelect';
+import NewLoanInfo from "./components/Info";
+import NewLoanNav from "./components/Nav";
+import NewLoanProducts from "./components/Products";
+import NewLoanReview from "./components/Review";
+import UserSelect from "./components/UserSelect";
 
-import '@styles/newLoan.css';
+import "@styles/newLoan.css";
 
 export const loanTypes = [
-  { name: 'Til person', id: 2 },
-  { name: 'Til lokale', id: 1 },
+  { name: "Til person", id: 2 },
+  { name: "Til lokale", id: 1 },
 ];
 
 const oneMonthFromNow = new Date(
@@ -35,8 +35,8 @@ export default function NewLoan({ initPage = 1 }) {
   const [page, setPage] = useState(initPage);
 
   const [user, setUser] = useState<usersView>();
-  const [allUsers] = useData<usersView[]>('users_view', { withHeaders: true });
-  const [products, setProducts] = useData<any>('available_products_view', {
+  const [allUsers] = useData<usersView[]>("users_view", { withHeaders: true });
+  const [products, setProducts] = useData<any>("available_products_view", {
     withHeaders: true,
   });
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
@@ -79,7 +79,7 @@ export default function NewLoan({ initPage = 1 }) {
       return;
     }
 
-    toast.error('Produktet kunne ikke findes');
+    toast.error("Produktet kunne ikke findes");
   }
 
   //Users
@@ -130,14 +130,14 @@ export default function NewLoan({ initPage = 1 }) {
   //--------------------------------------------------------------------------------
 
   useEffect(() => {
-    const initItem = searchParams.get('item');
+    const initItem = searchParams.get("item");
 
     if (initItem) {
       const item = products?.data.find(({ UUID }: any) => UUID == initItem);
 
       if (item) {
         handleAddProduct(item);
-        setSearchParams('');
+        setSearchParams("");
       }
     }
   }, [products]);
@@ -145,7 +145,7 @@ export default function NewLoan({ initPage = 1 }) {
   //checkout
   //--------------------------------------------------------------------------------
   async function createLoan(username: string, password: string) {
-    if (!user) return toast.error('Vælg en bruger');
+    if (!user) return toast.error("Vælg en bruger");
 
     let loan_length = null;
 
@@ -162,7 +162,7 @@ export default function NewLoan({ initPage = 1 }) {
       location_of_use_id: locationOfUse?.UUID,
     };
 
-    const loanPromise = axios.post('loans', {
+    const loanPromise = axios.post("loans", {
       loan,
       products: selectedProducts,
       personel_username: username,
@@ -170,13 +170,13 @@ export default function NewLoan({ initPage = 1 }) {
     });
 
     toast.promise(loanPromise, {
-      loading: 'Gemmer...',
+      loading: "Gemmer...",
       success: ({ data }: any) => {
         navigate(`/udlaan/${data.loanId}`);
 
-        return 'Gemt';
+        return "Gemt";
       },
-      error: (err) => 'Error 500 - ' + err.response.data,
+      error: (err) => "Error 500 - " + err.response.data,
     });
   }
 

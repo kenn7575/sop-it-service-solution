@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import Table from '@components/table';
-import { Button } from '@components/ui/button';
+import Table from "@components/table";
+import { Button } from "@components/ui/button";
 
-import getData from '@data/getData';
-import { columnsFormatter } from '@helpers/tableHelpers';
+import getData from "@data/getData";
+import { columnsFormatter } from "@helpers/tableHelpers";
 
 interface LayoutProps {
   table: string | DataWithHeaders<unknown> | null;
@@ -19,7 +19,7 @@ export default function Layout({ table, exclude }: LayoutProps) {
   const [inputData, setInputData] = useState<any>(table);
 
   async function fetchData() {
-    if (typeof table === 'string') {
+    if (typeof table === "string") {
       const data = await getData(table, {
         withHeaders: true,
       });
@@ -27,7 +27,7 @@ export default function Layout({ table, exclude }: LayoutProps) {
       if (data) setInputData(data);
     }
 
-    if (typeof table === 'object') setInputData(table);
+    if (typeof table === "object") setInputData(table);
   }
 
   useEffect(() => {

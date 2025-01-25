@@ -1,20 +1,20 @@
-import { Suspense, createContext, useState } from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Suspense, createContext, useState } from "react";
+import { Outlet, Route, Routes } from "react-router-dom";
 
-import Error404 from '@components/Error404';
-import Loading from '@components/Loading';
-import Nav from '@components/Nav';
-import Breadcrumbs from '@components/breadcrumbs';
-import { Toaster } from '@components/ui/sonner';
+import Error404 from "@components/Error404";
+import Loading from "@components/Loading";
+import Nav from "@components/Nav";
+import Breadcrumbs from "@components/breadcrumbs";
+import { Toaster } from "@components/ui/sonner";
 
-import Home from '@pages/Home';
-import Login from '@pages/Login';
-import loanReturn from '@pages/udlaan/return';
+import Home from "@pages/Home";
+import Login from "@pages/Login";
+import loanReturn from "@pages/udlaan/return";
 
-import { getPages } from '@helpers/routeHelpers';
-import useRealtimeLogout from '@hooks/useRealtimeLogout';
+import { getPages } from "@helpers/routeHelpers";
+import useRealtimeLogout from "@hooks/useRealtimeLogout";
 
-import './axios.config';
+import "./axios.config";
 
 export const CurrentUserContext = createContext<CurrentUserContextType>({
   currentUser: undefined,

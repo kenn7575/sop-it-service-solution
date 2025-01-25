@@ -1,12 +1,12 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from "react-router-dom";
 
-import useData from '@hooks/useData';
+import useData from "@hooks/useData";
 
 export default function LoanProducts() {
   const { id } = useParams() as any;
 
   const [itemsFromLoans] = useData<itemsFromLoan[]>(
-    'items_from_loans?loan_id=' + id,
+    "items_from_loans?loan_id=" + id,
   );
 
   if (!itemsFromLoans?.length) return null;
@@ -20,7 +20,7 @@ export default function LoanProducts() {
           <Link
             key={i}
             className="flex items-center gap-3"
-            to={'/produkter/' + item.UUID}
+            to={"/produkter/" + item.UUID}
           >
             <span>{item.Produkt}</span>
             <i className="fa-solid fa-up-right-from-square cursor-pointer" />

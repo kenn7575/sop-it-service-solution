@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Label } from '@components/ui/label';
-import { Switch } from '@components/ui/switch';
+import { Label } from "@components/ui/label";
+import { Switch } from "@components/ui/switch";
 
-import useData from '@hooks/useData';
+import useData from "@hooks/useData";
 
-import Layout from '@layouts/index';
+import Layout from "@layouts/index";
 
 export default function Index() {
   const [showDeleted, setShowDeleted] = useState(false);
 
-  const [itemsView] = useData<itemsView[]>('items_view', {
+  const [itemsView] = useData<itemsView[]>("items_view", {
     withHeaders: true,
   });
 
@@ -21,7 +21,7 @@ export default function Index() {
       >;
 
     const filtered = itemsView.data.filter(
-      (item) => !['Lånt ud', 'Tilgængelig'].includes(item.Status),
+      (item) => !["Lånt ud", "Tilgængelig"].includes(item.Status),
     );
 
     return {
@@ -37,7 +37,7 @@ export default function Index() {
       >;
 
     const filtered = itemsView.data.filter((item) =>
-      ['Lånt ud', 'Tilgængelig'].includes(item.Status),
+      ["Lånt ud", "Tilgængelig"].includes(item.Status),
     );
 
     return {

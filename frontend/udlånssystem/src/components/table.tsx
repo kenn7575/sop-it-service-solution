@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Button } from '@components/ui/button';
+import { Button } from "@components/ui/button";
 
-import { getLongestWordLength } from '@helpers/tableHelpers';
+import { getLongestWordLength } from "@helpers/tableHelpers";
 
 import {
   Table,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   type ColumnDef,
   type Header,
@@ -23,14 +23,14 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
-import Filter from './tableFilter';
-import ToolTip from './tooltip';
-import { Slider } from './ui/slider';
+import Filter from "./tableFilter";
+import ToolTip from "./tooltip";
+import { Slider } from "./ui/slider";
 
-import '@styles/table.css';
-import '@styles/tablePagination.css';
+import "@styles/table.css";
+import "@styles/tablePagination.css";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -76,10 +76,10 @@ export default function DataTable<TData, TValue>({
 
   function sortDir(header: Header<TData, unknown>) {
     const sort = header.column.getIsSorted();
-    if (sort == 'asc') return 'down';
-    if (sort == 'desc') return 'up';
+    if (sort == "asc") return "down";
+    if (sort == "desc") return "up";
 
-    return '';
+    return "";
   }
 
   return (
@@ -128,7 +128,7 @@ export default function DataTable<TData, TValue>({
                     onRowClick(row.original);
                   }}
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => {
                     if (exclude.includes(cell.column.id)) return null;

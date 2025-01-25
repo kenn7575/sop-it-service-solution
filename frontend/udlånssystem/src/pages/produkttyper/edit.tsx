@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { Button } from '@components/ui/button';
+import { Button } from "@components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -10,15 +10,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog';
-import { Input } from '@components/ui/input';
-import { Label } from '@components/ui/label';
+} from "@components/ui/dialog";
+import { Input } from "@components/ui/input";
+import { Label } from "@components/ui/label";
 
-import createItem from '@data/create';
+import createItem from "@data/create";
 
-import EditLayout from '@layouts/edit';
+import EditLayout from "@layouts/edit";
 
-import { fields, zodSchema } from './util';
+import { fields, zodSchema } from "./util";
 
 export default function Edit() {
   const { id } = useParams();
@@ -29,7 +29,7 @@ export default function Edit() {
   async function handleCreateNewProduct(product_id?: number | string) {
     if (!product_id || isNaN(Number(product_id))) return;
 
-    await createItem('items', { product_id, amount });
+    await createItem("items", { product_id, amount });
 
     setOpen(false);
   }

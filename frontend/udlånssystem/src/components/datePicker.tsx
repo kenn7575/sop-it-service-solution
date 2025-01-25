@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 
 interface DatePickerProps {
   onChange?: (date: Date | null) => void;
@@ -24,7 +24,7 @@ export default function DatePicker({
   selected,
   maxDate,
   minDate,
-  dateFormat = 'PPP',
+  dateFormat = "PPP",
   disabled = false,
   className,
 }: DatePickerProps) {
@@ -32,10 +32,10 @@ export default function DatePicker({
     <Popover>
       <PopoverTrigger asChild disabled={disabled} className={className}>
         <Button
-          variant={'outline'}
+          variant={"outline"}
           className={cn(
-            'w-[280px] justify-start text-left font-normal',
-            !selected && 'text-muted-foreground',
+            "w-[280px] justify-start text-left font-normal",
+            !selected && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import type { Column, Table } from '@tanstack/react-table';
+import { Input } from "@/components/ui/input";
+import type { Column, Table } from "@tanstack/react-table";
 
 export default function Filter({
   column,
@@ -19,7 +19,7 @@ export default function Filter({
       onClick={(e) => e.stopPropagation()}
       placeholder="Søg..."
       type="text"
-      value={(columnFilterValue ?? '') as string}
+      value={(columnFilterValue ?? "") as string}
       disabled={!column.getCanFilter()}
     />
   );

@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import '@styles/toggle.css';
+import "@styles/toggle.css";
 
 export default function Toggle() {
   const [darkmode, setDarkmode] = useState(
-    localStorage.getItem('theme') == 'dark',
+    localStorage.getItem("theme") == "dark",
   );
 
-  function setTheme(theme: 'dark' | 'light') {
+  function setTheme(theme: "dark" | "light") {
     document.documentElement.className = theme;
-    localStorage.setItem('theme', theme);
-    setDarkmode(theme === 'dark');
+    localStorage.setItem("theme", theme);
+    setDarkmode(theme === "dark");
   }
 
   function toggleTheme(darkmode: boolean) {
-    setTheme(darkmode ? 'dark' : 'light');
+    setTheme(darkmode ? "dark" : "light");
   }
 
   useEffect(() => {

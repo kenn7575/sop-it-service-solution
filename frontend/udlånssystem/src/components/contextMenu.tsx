@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import '@styles/contextMenu.css';
+import "@styles/contextMenu.css";
 
 interface ContextMenuProps {
   menuItems: any[];
@@ -77,7 +77,7 @@ export default function ContextMenu({
           )}
 
           {menuItems.map((item: ContextMenuItem) => {
-            if (item.name == 'hr') return <hr />;
+            if (item.name == "hr") return <hr />;
 
             if (!item.onClick) {
               return <p className={item.class}>{item.displayText}</p>;

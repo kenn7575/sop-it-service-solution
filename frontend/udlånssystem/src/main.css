@@ -121,7 +121,7 @@ html {
   --accent: #1f2139;
   --accent-foreground: var(--text1);
 
-  [data-sonner-toaster][data-theme='dark'] {
+  [data-sonner-toaster][data-theme="dark"] {
     --normal-bg: var(--bg2);
     --normal-border: var(--bg3);
     --normal-text: var(--text1);
@@ -323,5 +323,5 @@ span.required-tag.hidden {
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/assets/fonts/Barcode.ttf') format('truetype');
+  src: url("/assets/fonts/Barcode.ttf") format("truetype");
 }

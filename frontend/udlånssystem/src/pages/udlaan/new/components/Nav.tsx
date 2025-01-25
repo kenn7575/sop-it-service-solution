@@ -1,6 +1,6 @@
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
-import '@styles/navMenu.css';
+import "@styles/navMenu.css";
 
 interface NewLoanNavProps {
   page: number;
@@ -45,7 +45,7 @@ export default function NewLoanNav({
         onClick={() => {
           setPage(1);
         }}
-        className={`page-nav-btn ${page === 1 ? 'current' : ''} ${page > 1 && !validateUser() ? 'invalid' : ''} ${page > 1 && validateUser() ? 'valid' : ''} `}
+        className={`page-nav-btn ${page === 1 ? "current" : ""} ${page > 1 && !validateUser() ? "invalid" : ""} ${page > 1 && validateUser() ? "valid" : ""} `}
       >
         <i className="fa-solid fa-user" />
         <p>Bruger</p>
@@ -63,7 +63,7 @@ export default function NewLoanNav({
         onClick={() => {
           setPage(2);
         }}
-        className={`page-nav-btn ${page === 2 ? 'current' : ''} ${page > 2 && !validateProducts() ? 'invalid' : ''} ${page > 2 && validateProducts() ? 'valid' : ''}`}
+        className={`page-nav-btn ${page === 2 ? "current" : ""} ${page > 2 && !validateProducts() ? "invalid" : ""} ${page > 2 && validateProducts() ? "valid" : ""}`}
       >
         <i className="fa-solid fa-cart-shopping" />
         <p>Produkter</p>
@@ -81,7 +81,7 @@ export default function NewLoanNav({
         onClick={() => {
           setPage(3);
         }}
-        className={`page-nav-btn ${page === 3 ? 'current' : ''} ${page > 4 && !validateInfo() ? 'invalid' : ''} ${page > 4 && validateInfo() ? 'valid' : ''}`}
+        className={`page-nav-btn ${page === 3 ? "current" : ""} ${page > 4 && !validateInfo() ? "invalid" : ""} ${page > 4 && validateInfo() ? "valid" : ""}`}
       >
         <i className="fa-solid fa-info" />
         <p>Info</p>
@@ -94,10 +94,10 @@ export default function NewLoanNav({
           if (validateInfo() && validateProducts() && validateUser()) {
             setPage(4);
           } else {
-            toast.warning('Du kan ikke gå videre før alle felter er udfyldt');
+            toast.warning("Du kan ikke gå videre før alle felter er udfyldt");
           }
         }}
-        className={`page-nav-btn ${page === 4 ? 'current' : ''}`}
+        className={`page-nav-btn ${page === 4 ? "current" : ""}`}
       >
         <i className="fa-solid fa-file-signature" />
         <p>Gennemse</p>

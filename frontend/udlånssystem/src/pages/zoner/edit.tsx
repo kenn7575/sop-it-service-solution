@@ -1,6 +1,6 @@
-import EditLayout from '@layouts/edit';
+import EditLayout from "@layouts/edit";
 
-import { fields } from './util';
+import { fields } from "./util";
 
 export default function Edit() {
   return <EditLayout table="zones" fields={fields} />;

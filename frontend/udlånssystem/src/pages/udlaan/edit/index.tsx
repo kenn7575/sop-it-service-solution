@@ -1,15 +1,15 @@
-import { useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { dateToReadable } from '@helpers/dateHelpers';
-import useData from '@hooks/useData';
+import { dateToReadable } from "@helpers/dateHelpers";
+import useData from "@hooks/useData";
 
-import EditLayout from '@layouts/edit';
-import html2pdf from 'html2pdf.js';
+import EditLayout from "@layouts/edit";
+import html2pdf from "html2pdf.js";
 
-import { fields, handleReturn } from '../util';
-import LoanProducts from './components/loanProducts';
-import Pdf from './components/pdf';
+import { fields, handleReturn } from "../util";
+import LoanProducts from "./components/loanProducts";
+import Pdf from "./components/pdf";
 
 export default function Edit() {
   const { id } = useParams();
@@ -18,15 +18,15 @@ export default function Edit() {
 
   const pdfRef = useRef<HTMLDivElement>(null);
 
-  const [loan] = useData<loanModel>('loans', undefined, id);
+  const [loan] = useData<loanModel>("loans", undefined, id);
 
   async function printPDF() {
     const pdfElement = pdfRef.current;
 
     html2pdf(pdfElement, {
       filename: `udlaan_${id}.pdf`,
-      image: { type: 'png', quality: 1 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      image: { type: "png", quality: 1 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     });
   }
 

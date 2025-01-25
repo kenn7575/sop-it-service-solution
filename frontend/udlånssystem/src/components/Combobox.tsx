@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -10,14 +10,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { Check, ChevronsUpDown } from 'lucide-react';
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 interface ComboboxProps {
   editMode?: boolean;
@@ -39,7 +39,7 @@ export function Combobox({
   setValue = () => {},
   match,
   options,
-  popoverWidth = 'w-auto',
+  popoverWidth = "w-auto",
   required = true,
   disabled = false,
 }: ComboboxProps) {
@@ -76,7 +76,7 @@ export function Combobox({
                 className="fas fa-xmark hover:opacity-80"
                 onClick={(e) => {
                   setSelected(undefined);
-                  setValue({ UUID: null, name: '' });
+                  setValue({ UUID: null, name: "" });
                   e.preventDefault();
                 }}
               />
@@ -100,7 +100,7 @@ export function Combobox({
 
                       if (selected?.UUID === option.UUID) {
                         setSelected(undefined);
-                        setValue({ UUID: null, name: '' });
+                        setValue({ UUID: null, name: "" });
                       }
 
                       setOpen(false);
@@ -108,10 +108,10 @@ export function Combobox({
                   >
                     <Check
                       className={cn(
-                        'mr-2 h-4 w-4',
+                        "mr-2 h-4 w-4",
                         selected?.name.trim() == option.name.trim()
-                          ? 'opacity-100'
-                          : 'opacity-0',
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
                     {option.name}
