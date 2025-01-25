@@ -1,6 +1,7 @@
-import { users } from "@prisma/client";
-import { Client, SearchEntry, SearchOptions, createClient } from "ldapjs";
 import dotenv from "dotenv";
+import { Client, SearchEntry, SearchOptions, createClient } from "ldapjs";
+
+import { users } from "@prisma/client";
 
 dotenv.config();
 

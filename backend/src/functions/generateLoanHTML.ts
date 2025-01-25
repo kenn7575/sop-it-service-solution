@@ -1,5 +1,6 @@
-import Handlebars from "handlebars";
 import fs from "fs";
+import Handlebars from "handlebars";
+
 import prisma from "@/configs/prisma.config";
 
 export async function generateLoanHTML(loan_id: number, email = false) {
@@ -19,7 +20,7 @@ export async function generateLoanHTML(loan_id: number, email = false) {
     where: { loan_id: loan_id },
   });
 
-  if (!loan) return ""
+  if (!loan) return "";
 
   const date_to_be_returned =
     new Date(loan.date_created).getTime() +
@@ -33,7 +34,7 @@ export async function generateLoanHTML(loan_id: number, email = false) {
     date_created: new Date(loan.date_created).toLocaleDateString(),
     return_date: new Date(date_to_be_returned).toLocaleDateString(),
     itemsInLoan: itemsInLoan,
-    email
+    email,
   });
 
   return html;

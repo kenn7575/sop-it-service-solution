@@ -1,8 +1,10 @@
 import { describe, it } from "vitest";
-import * as tableService from "@services/tables";
-import createTestCases from "./generateTests";
+
 import prisma from "@/configs/prisma.config";
 import { Prisma } from "@prisma/client";
+import * as tableService from "@services/tables";
+
+import createTestCases from "./generateTests";
 
 describe("Products", () => {
   const testCases = createTestCases(tableService);

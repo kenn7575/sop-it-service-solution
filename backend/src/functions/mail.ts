@@ -1,8 +1,9 @@
-import { Resend } from "resend";
 import dotenv from "dotenv";
+import Mailjet from "node-mailjet";
+import { Resend } from "resend";
+
 import prisma from "@/configs/prisma.config";
 import { loans } from "@prisma/client";
-import Mailjet from "node-mailjet";
 
 dotenv.config();
 

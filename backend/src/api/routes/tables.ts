@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import * as tableController from "@controllers/tables";
 import { Validate } from "@middleware/tables";
 

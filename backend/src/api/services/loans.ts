@@ -1,5 +1,4 @@
 import prisma from "@/configs/prisma.config";
-import { createLoanSchema } from "@/schemas/loans";
 import {
   convertToPrismaTypes,
   ldapAuthenticate,
@@ -7,6 +6,7 @@ import {
   sendMail,
 } from "@/functions";
 import { generateLoanHTML } from "@/functions/generateLoanHTML";
+import { createLoanSchema } from "@/schemas/loans";
 
 export async function createOne(values: ILoanCreateInput): Promise<IResponse> {
   const { data, error } = createLoanSchema.safeParse(values);

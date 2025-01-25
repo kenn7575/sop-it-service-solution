@@ -1,7 +1,7 @@
 import { prismaGetRefs as prisma } from "@/configs/prisma.config";
-import { getTables } from "@/schemas/tables";
 import { convertToPrismaTypes } from "@/functions";
 import findPrismaSchema from "@/functions/findPrismaSchema";
+import { getTables } from "@/schemas/tables";
 import { Prisma } from "@prisma/client";
 
 export async function getAll(

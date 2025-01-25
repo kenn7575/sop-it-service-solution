@@ -1,7 +1,9 @@
-import { describe, it, afterEach } from "vitest";
-import * as loansService from "@services/loans";
-import createTestCases from "./generateTests";
+import { afterEach, describe, it } from "vitest";
+
 import prisma from "@/configs/prisma.config";
+import * as loansService from "@services/loans";
+
+import createTestCases from "./generateTests";
 
 describe("Loans", () => {
   const deleteFunction = async (UUID: string) => {

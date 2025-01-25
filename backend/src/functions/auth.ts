@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
+import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import { SearchOptions } from "ldapjs";
+
 import { attributes, createLdapClient, formatEntryResult } from "./ldapHelper";
-import dotenv from "dotenv";
 
 dotenv.config();
 

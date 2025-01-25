@@ -1,8 +1,10 @@
-import { describe, it, afterEach } from "vitest";
+import { afterEach, describe, it } from "vitest";
+
+import prisma from "@/configs/prisma.config";
 import * as itemsService from "@services/items";
 import * as tableService from "@services/tables";
+
 import createTestCases from "./generateTests";
-import prisma from "@/configs/prisma.config";
 
 describe("Items", () => {
   const deleteFunction = async (UUID: string) => {

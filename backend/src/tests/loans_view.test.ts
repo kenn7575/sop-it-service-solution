@@ -1,5 +1,7 @@
 import { describe, it } from "vitest";
+
 import * as loansViewService from "@services/loans_view";
+
 import createTestCases from "./generateTests";
 
 describe("Loans View", () => {

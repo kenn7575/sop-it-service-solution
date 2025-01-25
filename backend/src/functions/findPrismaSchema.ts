@@ -1,5 +1,7 @@
-import { Prisma } from "@prisma/client";
 import { z } from "zod";
+
+import { Prisma } from "@prisma/client";
+
 import * as PrismaSchemas from "../../prisma/generated/zod";
 
 type ISchemaType = "create" | "update";

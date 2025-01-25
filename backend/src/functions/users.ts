@@ -1,5 +1,6 @@
-import { attributes, getUsers } from ".";
 import { SearchOptions } from "ldapjs";
+
+import { attributes, getUsers } from ".";
 
 const { LDAP_USERS, LDAP_ADMINS } = process.env;
 
