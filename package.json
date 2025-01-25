@@ -1,11 +1,8 @@
 {
   "scripts": {
-    "i": "npm i && cd frontend/udlånssystem && npm install",
-    "dev": "cd frontend/udlånssystem && npm run dev",
-    "serv": "cd backend && npm run dev",
+    "i": "cd frontend/udlånssystem && npm install && cd ../.. && cd backend && npm install", 
+    "frontend": "cd frontend/udlånssystem && npm run dev",
+    "backend": "cd backend && npm run dev",
     "build": "cd frontend/udlånssystem && npm run build"
-  },
-  "devDependencies": {
-    "concurrently": "^8.1.0"
   }
 }
