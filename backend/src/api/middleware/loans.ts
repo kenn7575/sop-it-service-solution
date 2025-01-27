@@ -1,5 +1,6 @@
+import { NextFunction, Request, Response } from "express";
+
 import prisma from "@/configs/prisma.config";
-import { Request, Response, NextFunction } from "express";
 
 export async function Validate(
   req: Request,

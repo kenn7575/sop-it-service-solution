@@ -1,18 +1,18 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
-import { CurrentUserContext } from '@/App';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { toast } from 'sonner';
+import { CurrentUserContext } from "@/App";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export const getSession = () =>
   new Promise((resolve) => {
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     resolve(token);
   });
 //validate session token
 export const validateSession = async () => {
-  let { data } = await axios.post('auth/validate').catch((err) => {
+  let { data } = await axios.post("auth/validate").catch((err) => {
     err.response.data.user = null;
     return err.response;
   });
@@ -25,7 +25,7 @@ export const validateSession = async () => {
 export const loginViaSession = async () => {
   const { setCurrentUser } = useContext(CurrentUserContext);
 
-  let { data } = await axios.get('auth/cookies');
+  let { data } = await axios.get("auth/cookies");
 
   const { token } = data;
 
@@ -46,9 +46,9 @@ export const loginViaSession = async () => {
 };
 
 export async function loginViaCredentials(username: string, password: string) {
-  let output = { status: 500, message: 'Server error', user: undefined };
+  let output = { status: 500, message: "Server error", user: undefined };
   await axios
-    .post('auth/login', { username, password })
+    .post("auth/login", { username, password })
     .then((res) => {
       output.message = res.data;
       if (res.data?.username) {
@@ -64,7 +64,7 @@ export async function loginViaCredentials(username: string, password: string) {
 export function logout(
   setCurrentUser: React.Dispatch<React.SetStateAction<userState>>,
 ) {
-  axios.post('auth/logout');
+  axios.post("auth/logout");
 
   setCurrentUser(null);
 }

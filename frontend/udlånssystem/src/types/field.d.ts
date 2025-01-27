@@ -6,11 +6,11 @@ interface BaseField<T extends FieldType = any> {
 }
 
 interface TextField<T extends FieldType = any> extends BaseField<T> {
-  type?: 'text' | 'number' | 'password';
+  type?: "text" | "number" | "password";
 }
 
 interface SelectField<T extends FieldType = any> extends BaseField<T> {
-  type: 'select';
+  type: "select";
   options: { UUID: number; name: string }[] | string;
 }
 

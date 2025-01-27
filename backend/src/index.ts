@@ -1,12 +1,12 @@
-import express, { Router } from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
-import { authenticateUser, sendMailToExpiredLoans } from "@/functions";
+import cors from "cors";
 import dotenv from "dotenv";
-import prisma from "@/configs/prisma.config";
+import express, { Router } from "express";
 import cron from "node-cron";
 
 import * as Routes from "@/api/routes";
+import prisma from "@/configs/prisma.config";
+import { authenticateUser, sendMailToExpiredLoans } from "@/functions";
 
 dotenv.config();
 

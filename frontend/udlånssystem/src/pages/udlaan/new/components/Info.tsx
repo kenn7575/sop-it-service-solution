@@ -1,15 +1,15 @@
-import LocationSelector from '@components/LocationSelector';
-import DatePicker from '@components/datePicker';
-import { Checkbox } from '@components/ui/checkbox';
-import { Separator } from '@components/ui/separator';
+import LocationSelector from "@components/LocationSelector";
+import DatePicker from "@components/datePicker";
+import { Checkbox } from "@components/ui/checkbox";
+import { Separator } from "@components/ui/separator";
 
-import { loanTypes } from '..';
+import { loanTypes } from "..";
 
 interface NewLoanInfoProps {
   selectedProducts: itemsView[];
   setReturnDate: (returnDate: Date | null) => void;
   returnDate: Date | null;
-  setLoanType: (loanType: (typeof loanTypes)[number]['id']) => void;
+  setLoanType: (loanType: (typeof loanTypes)[number]["id"]) => void;
   building: buildingModel | undefined;
   setBuilding: (building: buildingModel | undefined) => void;
   locationOfUse: zoneModel | undefined;
@@ -31,14 +31,14 @@ export default function NewLoanInfo({
   maxDate.setMonth(minDate.getMonth() + 6);
 
   function isMaxDate(date: Date | null) {
-    if (!date) return '';
+    if (!date) return "";
 
     const date1 = date?.setHours(0, 0, 0, 0);
     const date2 = maxDate.setHours(0, 0, 0, 0);
 
-    if (date1 === date2) return 'is-max';
+    if (date1 === date2) return "is-max";
 
-    return '';
+    return "";
   }
 
   return (
@@ -51,7 +51,7 @@ export default function NewLoanInfo({
             onChange={setReturnDate}
             selected={returnDate}
             maxDate={maxDate}
-            dateFormat={'dd-MM-yyy'}
+            dateFormat={"dd-MM-yyy"}
             minDate={minDate}
             disabled={returnDate === null}
             className="bg-base-200 p-[4px_6px] text-foreground"
@@ -60,13 +60,13 @@ export default function NewLoanInfo({
             onClick={() => {
               setReturnDate(maxDate);
             }}
-            className={'max-time-btn ' + isMaxDate(returnDate)}
+            className={"max-time-btn " + isMaxDate(returnDate)}
             disabled={returnDate === null}
           >
             Max
           </button>
           <button
-            className={'max-time-btn' + (returnDate === null ? ' is-max' : '')}
+            className={"max-time-btn" + (returnDate === null ? " is-max" : "")}
             onClick={() => {
               if (returnDate) setReturnDate(null);
               else setReturnDate(new Date());
@@ -101,7 +101,7 @@ export default function NewLoanInfo({
           zone={locationOfUse}
         />
       </div>
-      {selectedProducts.some((p) => p.Kategori_Gruppe == 'Laptop') && (
+      {selectedProducts.some((p) => p.Kategori_Gruppe == "Laptop") && (
         <table className="grid-item g4 w-2/3">
           <thead>
             <tr className="">
@@ -127,7 +127,7 @@ export default function NewLoanInfo({
 
           <tbody>
             {selectedProducts
-              .filter((p) => p.Kategori_Gruppe == 'Laptop')
+              .filter((p) => p.Kategori_Gruppe == "Laptop")
               .map((laptop, i) => (
                 <tr key={i}>
                   <td>

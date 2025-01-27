@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
 import prisma from "@/configs/prisma.config";
+import { Prisma } from "@prisma/client";
 
 export function getFieldTypes(table: Prisma.ModelName) {
   let fieldTypes = {} as Record<string, string>;

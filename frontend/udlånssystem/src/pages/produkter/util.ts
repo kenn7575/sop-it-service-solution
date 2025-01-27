@@ -1,23 +1,23 @@
-import { autoGenZodSchema } from '@services/autoGen';
+import { autoGenZodSchema } from "@services/autoGen";
 
 export const fields: Field<itemModel>[] = [
   {
-    label: 'Produkttype',
-    binding: 'product_id',
-    type: 'select',
-    options: 'products',
+    label: "Produkttype",
+    binding: "product_id",
+    type: "select",
+    options: "products",
   },
   {
-    label: 'Status',
-    binding: 'product_status_id',
-    type: 'select',
-    options: 'product_status',
+    label: "Status",
+    binding: "product_status_id",
+    type: "select",
+    options: "product_status",
     required: false,
   },
   {
-    label: 'Stregkode Nummer',
-    binding: 'barcode_number',
-    type: 'number',
+    label: "Stregkode Nummer",
+    binding: "barcode_number",
+    type: "number",
     required: false,
   },
   // {
@@ -33,7 +33,7 @@ function capFirst(string: string): string {
 }
 
 function fDate(date: string | Date): string {
-  return new Date(date).toLocaleDateString('da-DK');
+  return new Date(date).toLocaleDateString("da-DK");
 }
 
 export class LoanHistory {
@@ -52,33 +52,33 @@ export class LoanHistory {
   }
 
   isActive() {
-    if (this?.date_returned == null) return 'activeLoan';
-    return '';
+    if (this?.date_returned == null) return "activeLoan";
+    return "";
   }
 
   date() {
     let text = fDate(this.loan.date_created);
 
     if (this.date_returned) {
-      text += ' - ' + fDate(this.date_returned);
+      text += " - " + fDate(this.date_returned);
     }
 
     return text;
   }
 
   time() {
-    if (!this.date_returned) return 'Aktivt lån';
+    if (!this.date_returned) return "Aktivt lån";
     let created = new Date(this.loan.date_created).getTime();
     let returned = new Date(this.date_returned).getTime();
 
     let diff = returned - created;
 
-    if (diff < 0) return '';
+    if (diff < 0) return "";
 
     let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
     let days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 30;
 
-    let text = '';
+    let text = "";
 
     if (months == 1) text += `${months} måned & `;
     else if (months > 0) text += `${months} måneder & `;
@@ -90,9 +90,9 @@ export class LoanHistory {
 
   user() {
     if (this.loan) {
-      let { name = '', username } = this.loan.users_loans_user_idTousers;
+      let { name = "", username } = this.loan.users_loans_user_idTousers;
 
-      let nameList = name.split(' ');
+      let nameList = name.split(" ");
 
       let firstName = capFirst(nameList[0]);
       let lastName = capFirst(nameList[nameList.length - 1]);
@@ -100,6 +100,6 @@ export class LoanHistory {
       return `${firstName} ${lastName} (${username})`;
     }
 
-    return '';
+    return "";
   }
 }

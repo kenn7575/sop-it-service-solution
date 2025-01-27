@@ -1,14 +1,14 @@
-import { useContext, useState } from 'react';
+import { useContext, useState } from "react";
 
-import Table from '@components/table';
-import TextQuestion from '@components/textQuestion';
+import Table from "@components/table";
+import TextQuestion from "@components/textQuestion";
 
-import { columnsFormatter } from '@helpers/tableHelpers';
-import translateMonth from '@services/translateMonth.json';
+import { columnsFormatter } from "@helpers/tableHelpers";
+import translateMonth from "@services/translateMonth.json";
 
-import { CurrentUserContext } from '@/App';
+import { CurrentUserContext } from "@/App";
 
-import { loanTypes } from '..';
+import { loanTypes } from "..";
 
 interface NewLoanReviewProps {
   user?: usersView;
@@ -31,8 +31,8 @@ export default function NewLoanReview({
 }: NewLoanReviewProps) {
   const { currentUser } = useContext(CurrentUserContext);
 
-  const [username, setUsername] = useState(currentUser?.username || '');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(currentUser?.username || "");
+  const [password, setPassword] = useState("");
 
   const columns = columnsFormatter<productModel>(headers);
   if (!columns) return null;
@@ -46,17 +46,17 @@ export default function NewLoanReview({
             <li>Produkter: {products.length}</li>
             {returnDate ? (
               <li>
-                Retur dato: {returnDate.getFullYear()}{' '}
+                Retur dato: {returnDate.getFullYear()}{" "}
                 {translateMonth[returnDate.getMonth()]} {returnDate.getDate()}
               </li>
             ) : (
               <li>Retur dato: Ingen</li>
             )}
             <li>
-              Låner type:{' '}
-              {loanTypes.find(({ id }) => id === loanType)!.name ?? 'Ikke sat'}
+              Låner type:{" "}
+              {loanTypes.find(({ id }) => id === loanType)!.name ?? "Ikke sat"}
             </li>
-            <li>Lokalitet: {locationOfUse?.name || 'Ingen'}</li>
+            <li>Lokalitet: {locationOfUse?.name || "Ingen"}</li>
           </ul>
         </div>
         {products.length > 0 && (

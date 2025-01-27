@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import * as usersViewController from "@controllers/users_view";
 
 const router = Router();

@@ -1,6 +1,7 @@
-import { ldapAuthenticate } from "@/functions";
-import prisma from "@/configs/prisma.config";
 import { sign, verify } from "jsonwebtoken";
+
+import prisma from "@/configs/prisma.config";
+import { ldapAuthenticate } from "@/functions";
 
 const { JWT_SECRET } = process.env;
 

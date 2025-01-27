@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { Button } from '@components/ui/button';
+import { Button } from "@components/ui/button";
 
-import { getLongestWordLength } from '@helpers/tableHelpers';
+import { getLongestWordLength } from "@helpers/tableHelpers";
 
 import {
   Table,
@@ -11,9 +12,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   type ColumnDef,
+  type ColumnFiltersState,
   type Header,
   type PaginationState,
   type SortingState,
@@ -23,14 +25,14 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
-import Filter from './tableFilter';
-import ToolTip from './tooltip';
-import { Slider } from './ui/slider';
+import Filter from "./tableFilter";
+import ToolTip from "./tooltip";
+import { Slider } from "./ui/slider";
 
-import '@styles/table.css';
-import '@styles/tablePagination.css';
+import "@styles/table.css";
+import "@styles/tablePagination.css";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,6 +53,10 @@ export default function DataTable<TData, TValue>({
   withFilters = true,
   withPagination = true,
 }: DataTableProps<TData, TValue>) {
+  const [searchParams] = useSearchParams();
+
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize,
@@ -64,23 +70,41 @@ export default function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     state: {
       pagination,
       sorting,
+      columnFilters,
     },
     autoResetPageIndex: false,
   });
 
   function sortDir(header: Header<TData, unknown>) {
     const sort = header.column.getIsSorted();
-    if (sort == 'asc') return 'down';
-    if (sort == 'desc') return 'up';
+    if (sort == "asc") return "down";
+    if (sort == "desc") return "up";
 
-    return '';
+    return "";
   }
+
+  useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries());
+
+    const newFilters = [];
+
+    for (const column of columns) {
+      const header = column.header as string;
+      if (!header) continue;
+      const value = params[header];
+
+      if (value) newFilters.push({ id: header, value });
+    }
+
+    setColumnFilters(newFilters);
+  }, [searchParams]);
 
   return (
     <div className="defaultTable flex h-full w-full flex-col">
@@ -128,7 +152,7 @@ export default function DataTable<TData, TValue>({
                     onRowClick(row.original);
                   }}
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => {
                     if (exclude.includes(cell.column.id)) return null;

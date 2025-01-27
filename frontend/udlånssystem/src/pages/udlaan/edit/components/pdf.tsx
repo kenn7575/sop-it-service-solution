@@ -1,8 +1,8 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from "react";
 
-import getData from '@data/getData';
+import getData from "@data/getData";
 
-import '@styles/pdf.css';
+import "@styles/pdf.css";
 
 interface LoansPdfProps {
   loan: loanModel;
@@ -26,14 +26,14 @@ export default forwardRef<HTMLDivElement, LoansPdfProps>(({ loan }, ref) => {
     if (!loan) return;
 
     const itemsInLoanTemp = await getData<itemsFromLoan[]>(
-      'items_from_loans?loan_id=' + loan.UUID,
+      "items_from_loans?loan_id=" + loan.UUID,
     );
 
-    const loanerTemp = await getData<userModel>('users', {
+    const loanerTemp = await getData<userModel>("users", {
       UUID: loan.user_id,
     });
 
-    const helpdesk_personelTemp = await getData<userModel>('users', {
+    const helpdesk_personelTemp = await getData<userModel>("users", {
       UUID: loan.helpdesk_personel_id,
     });
 
@@ -73,19 +73,19 @@ export default forwardRef<HTMLDivElement, LoansPdfProps>(({ loan }, ref) => {
 
         <div>
           <span> Udlåner: </span>
-          <h2>{helpdesk_personel?.username || 'Ingen'}</h2>
+          <h2>{helpdesk_personel?.username || "Ingen"}</h2>
         </div>
 
         <div>
           <span> Udlånsdato: </span>
-          <h2>{new Date(loan.date_created).toLocaleDateString('da-dk')}</h2>
+          <h2>{new Date(loan.date_created).toLocaleDateString("da-dk")}</h2>
         </div>
 
         <div>
           <span> Afleveringsdato: </span>
           <h2>
             {loan.loan_length ? (
-              new Date(date_to_be_returned).toLocaleDateString('da-dk')
+              new Date(date_to_be_returned).toLocaleDateString("da-dk")
             ) : (
               <i className="fa-solid fa-infinity" />
             )}

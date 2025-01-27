@@ -1,9 +1,9 @@
-import { Input } from './ui/input';
+import { Input } from "./ui/input";
 
 interface TextQuestionProps {
   editMode?: boolean;
   label: string;
-  type?: 'text' | 'number' | 'password';
+  type?: "text" | "number" | "password";
   value?: string | number;
   setValue?: (value: any) => void;
   required?: boolean;
@@ -14,17 +14,17 @@ interface TextQuestionProps {
 export default function TextQuestion({
   editMode = true,
   label,
-  type = 'text',
+  type = "text",
   value,
   setValue = (_value: any) => {},
   required = true,
-  placeholder = '',
+  placeholder = "",
   disabled = false,
 }: TextQuestionProps) {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     let newValue: string | number = e.target.value;
 
-    if (type === 'number') newValue = Number(newValue);
+    if (type === "number") newValue = Number(newValue);
 
     setValue(newValue);
   }

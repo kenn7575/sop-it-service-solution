@@ -1,7 +1,7 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Fragment } from 'react/jsx-runtime';
+import { useLocation, useNavigate } from "react-router-dom";
+import { Fragment } from "react/jsx-runtime";
 
-import { formatPathToBreadcrumbs } from '@services/pathFormatter';
+import { formatPathToBreadcrumbs } from "@services/pathFormatter";
 
 export default function Breadcrumbs() {
   const location = useLocation();

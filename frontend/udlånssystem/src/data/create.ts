@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
 export default async function createItem<T = any>(
   table: string,
@@ -10,9 +10,9 @@ export default async function createItem<T = any>(
 
   if (config?.withToast) {
     toast.promise(promise, {
-      id: 'createItem',
-      loading: 'Gemmer...',
-      success: 'Gemt!',
+      id: "createItem",
+      loading: "Gemmer...",
+      success: "Gemt!",
     });
   }
 

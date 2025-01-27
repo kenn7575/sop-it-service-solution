@@ -1,5 +1,5 @@
-import { loans } from "@prisma/client";
 import prisma from "@/configs/prisma.config";
+import { loans } from "@prisma/client";
 
 export async function returnLoan(loanId: loans["UUID"]) {
   const itemsNotReturned = await prisma.items_in_loan.findMany({

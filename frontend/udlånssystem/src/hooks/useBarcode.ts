@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { handleBarcodeScan } from '@helpers/barcode';
+import { handleBarcodeScan } from "@helpers/barcode";
 
 export default function useBarcode(callback: (barcode: string) => void) {
-  const [barcode, setBarcode] = useState<string>('');
+  const [barcode, setBarcode] = useState<string>("");
 
   const handleBarcodeScanRef = useRef<Function>();
 
@@ -20,10 +20,10 @@ export default function useBarcode(callback: (barcode: string) => void) {
       });
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
 

@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import FormEditPanel from '@components/form-edit-panel';
+import FormEditPanel from "@components/form-edit-panel";
 
-import { deleteItem, getData, updateItem } from '@data/index';
-import { autoGenZodSchema } from '@services/autoGen';
-import doesObjectsMatch from '@services/doesObjectsMatch.js';
-import { getPrevPage } from '@services/pathFormatter';
+import { deleteItem, getData, updateItem } from "@data/index";
+import { autoGenZodSchema } from "@services/autoGen";
+import doesObjectsMatch from "@services/doesObjectsMatch.js";
+import { getPrevPage } from "@services/pathFormatter";
 
-import { toast } from 'sonner';
-import type { z } from 'zod';
+import { toast } from "sonner";
+import type { z } from "zod";
 
-import FormPage from './components/FormPage';
+import FormPage from "./components/FormPage";
 
-const defaultFields: Field[] = [{ label: 'Navn', binding: 'name' }];
+const defaultFields: Field[] = [{ label: "Navn", binding: "name" }];
 
 interface EditLayoutProps {
   table: string;
@@ -44,8 +44,8 @@ export default function EditLayout({
 
   async function fetchSelectOptions() {
     for (let field of fields) {
-      if (field.type == 'select') {
-        if (typeof field.options != 'string') continue;
+      if (field.type == "select") {
+        if (typeof field.options != "string") continue;
 
         field.options = await getData<any>(field.options);
         setFields((prev) => [...prev]);
@@ -67,7 +67,7 @@ export default function EditLayout({
     const data = await getData<any>(table, { UUID });
 
     if (!data?.UUID) {
-      toast.error('Kunne ikke finde data');
+      toast.error("Kunne ikke finde data");
       navigate(getPrevPage());
       return;
     }
@@ -106,7 +106,7 @@ export default function EditLayout({
     if (error) {
       error.errors.reverse().map((e) =>
         toast.warning(e.message, {
-          id: e.code + '-' + e.path.join('-'),
+          id: e.code + "-" + e.path.join("-"),
         }),
       );
       return;
@@ -119,13 +119,13 @@ export default function EditLayout({
   }
 
   function handleDelete() {
-    const name = importData?.name || '#' + UUID;
+    const name = importData?.name || "#" + UUID;
 
     toast(`Sikker på du vil slette "${name}"?`, {
-      id: 'promptDelete',
-      position: 'top-center',
+      id: "promptDelete",
+      position: "top-center",
       action: {
-        label: 'Slet',
+        label: "Slet",
         onClick: async () => {
           await deleteItem(table, UUID);
 
@@ -133,8 +133,8 @@ export default function EditLayout({
         },
       },
       cancel: {
-        label: 'Annuller',
-        onClick: () => toast.dismiss('promptDelete'),
+        label: "Annuller",
+        onClick: () => toast.dismiss("promptDelete"),
       },
     });
   }

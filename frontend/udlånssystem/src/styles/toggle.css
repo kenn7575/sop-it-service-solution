@@ -9,7 +9,7 @@ label.toggle {
   position: relative;
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 2px;
     left: 2px;

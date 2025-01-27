@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { sendMail } from "@/functions";
 
 const router = Router();

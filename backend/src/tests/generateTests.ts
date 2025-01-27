@@ -1,5 +1,6 @@
+import { TestFunction, expect } from "vitest";
+
 import { Prisma } from "@prisma/client";
-import { expect, TestFunction } from "vitest";
 
 type ServiceFunction<T> = (...args: any[]) => Promise<IResponse<T>>;
 
@@ -27,7 +28,6 @@ function createTableTestCases(table: Prisma.ModelName) {}
 
 export default function createTestCases<T extends IService>(
   service: T,
-
   cleanupFunction: (id: string) => void = () => {}
 ): ITestCases<T> {
   const cleanupList: string[] = [];

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function deleteItem<T = any>(
   table: string,
@@ -10,9 +10,9 @@ export default function deleteItem<T = any>(
 
   if (config?.withToast) {
     toast.promise(promise, {
-      id: 'deleteItem' + UUID,
-      loading: 'Sletter...',
-      success: 'Slettet!',
+      id: "deleteItem" + UUID,
+      loading: "Sletter...",
+      success: "Slettet!",
     });
   }
 

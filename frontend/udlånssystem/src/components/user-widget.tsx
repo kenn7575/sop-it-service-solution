@@ -1,8 +1,8 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
-import { logout } from '@services/login';
+import { logout } from "@services/login";
 
-import { CurrentUserContext } from '@/App';
+import { CurrentUserContext } from "@/App";
 
 export default function UserWidget() {
   const { currentUser: user, setCurrentUser } = useContext(CurrentUserContext);

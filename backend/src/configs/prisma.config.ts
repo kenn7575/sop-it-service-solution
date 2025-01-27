@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { findReferenced } from "@/functions/general";
+import { PrismaClient } from "@prisma/client";
 
 export const prismaGetRefs = new PrismaClient().$extends({
   query: { $allModels: includeInModel() },

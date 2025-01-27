@@ -41,7 +41,7 @@
   }
 
   & .seperation-1::after {
-    content: 'Til Returnering';
+    content: "Til Returnering";
     position: absolute;
     width: max-content;
     top: 0;
@@ -50,7 +50,7 @@
   }
 
   & .seperation-1::before {
-    content: 'Udlånte produkter';
+    content: "Udlånte produkter";
     position: absolute;
     top: 0;
     width: max-content;
@@ -59,7 +59,7 @@
   }
 
   & .seperation-2::before {
-    content: 'Udlånte kabler';
+    content: "Udlånte kabler";
     position: absolute;
     top: 0;
     width: max-content;
@@ -68,7 +68,7 @@
   }
 
   & .seperation-2::after {
-    content: 'Til retunering';
+    content: "Til retunering";
     position: absolute;
     width: max-content;
     top: 0;

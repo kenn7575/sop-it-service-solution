@@ -1,12 +1,12 @@
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from "@tanstack/react-table";
 
-import { dateToReadable } from './dateHelpers';
+import { dateToReadable } from "./dateHelpers";
 
 export const dateColumns = [
-  'Oprettet',
-  'Opdateret',
-  'Returneret',
-  'Returneringsdato',
+  "Oprettet",
+  "Opdateret",
+  "Returneret",
+  "Returneringsdato",
 ];
 
 function EnableFilter(header: string) {
@@ -19,7 +19,7 @@ export function columnsFormatter<T>(headers?: string[]) {
   if (!headers) return;
 
   const columns: ColumnDef<T, any>[] = headers.map((header) => ({
-    header: header.replaceAll('_', ' '),
+    header: header.replaceAll("_", " "),
     accessorKey: String(header),
     enableColumnFilter: EnableFilter(header),
     filterFn: (rows, id, filterValue) => {

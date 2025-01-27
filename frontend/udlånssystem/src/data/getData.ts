@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
 const defaultConfig: Config = {
   UUID: undefined,
@@ -23,7 +23,7 @@ export default async function getData<T>(
   if (config.UUID === null) return null;
 
   const { data }: { data: DataWithHeaders } = await axios
-    .get(table + (config.UUID ? '/' + config.UUID : ''))
+    .get(table + (config.UUID ? "/" + config.UUID : ""))
     .catch(handleError);
 
   if (config.withHeaders) return data as DataWithHeaders<T>;
@@ -39,9 +39,9 @@ export default async function getData<T>(
 }
 
 function handleError(err: any) {
-  if (err.response.status == 401) return 'Du er ikke logget ind';
+  if (err.response.status == 401) return "Du er ikke logget ind";
 
-  toast.error('Ukendt fejl ' + err);
+  toast.error("Ukendt fejl " + err);
 
   return err;
 }

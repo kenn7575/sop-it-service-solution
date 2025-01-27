@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect } from "react";
 
 export default function useRealtimeLogout(currentUser: userState | undefined) {
   useEffect(() => {

@@ -1,10 +1,10 @@
-import { Input } from '@components/ui/input';
-import { Textarea } from '@components/ui/textarea';
+import { Input } from "@components/ui/input";
+import { Textarea } from "@components/ui/textarea";
 
-import createItem from '@data/create';
+import createItem from "@data/create";
 
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function Feedback() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -15,11 +15,11 @@ export default function Feedback() {
     const { value: title } = form.feedbackTitle;
     const { value: description } = form.description;
 
-    if (!title.trim()) return toast.error('Udfyld venligst titlen.');
+    if (!title.trim()) return toast.error("Udfyld venligst titlen.");
     if (!description.trim())
-      return toast.error('Udfyld venligst beskrivelsen.');
+      return toast.error("Udfyld venligst beskrivelsen.");
 
-    await createItem('feedback', { title, description });
+    await createItem("feedback", { title, description });
 
     form.reset();
   }

@@ -1,6 +1,6 @@
-import useData from '@hooks/useData';
+import useData from "@hooks/useData";
 
-import { Combobox } from './Combobox';
+import { Combobox } from "./Combobox";
 
 interface LocationSelectorProps {
   building: buildingModel | undefined;
@@ -15,7 +15,7 @@ export default function LocationSelector({
   building,
   setBuilding,
 }: LocationSelectorProps) {
-  const [locations] = useData<any>('locations');
+  const [locations] = useData<any>("locations");
 
   return (
     <div className="flex gap-3">
