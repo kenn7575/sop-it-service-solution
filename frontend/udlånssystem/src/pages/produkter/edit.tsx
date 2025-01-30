@@ -9,6 +9,7 @@ import EditLayout from "@layouts/edit";
 import { LoanHistory, fields, zodSchema } from "./util";
 
 import "@styles/productsEdit.css";
+import { Button } from "@components/ui/button";
 
 interface itemModelWithItemsInLoan extends itemModel {
   items_in_loan: itemInLoanModel[];
@@ -73,6 +74,13 @@ export default function Edit() {
             {activeLoan ? "Gå til lån" : "Opret lån"}
           </Link>
         </>
+      }
+      formSlot={
+        <div className="flex w-full justify-center">
+          <Button asChild variant="outline" size="default">
+            <Link to={`/produkter/new/${id}`}>Kopier produkt</Link>
+          </Button>
+        </div>
       }
     ></EditLayout>
   );
