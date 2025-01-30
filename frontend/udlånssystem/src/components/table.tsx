@@ -26,6 +26,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { toast } from "sonner";
 
 import Filter from "./tableFilter";
 import ToolTip from "./tooltip";
@@ -106,6 +107,8 @@ export default function DataTable<TData, TValue>({
     setColumnFilters(newFilters);
   }, [searchParams]);
 
+  let pressDownDuration: NodeJS.Timeout;
+
   return (
     <div className="defaultTable flex h-full w-full flex-col">
       <div className="h-full w-full overflow-y-auto">
@@ -148,17 +151,45 @@ export default function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  onClick={() => {
-                    onRowClick(row.original);
-                  }}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => {
                     if (exclude.includes(cell.column.id)) return null;
 
+                    let goToLink = true;
+
                     return (
-                      <TableCell key={cell.id} className={cell.column.id}>
+                      <TableCell
+                        key={cell.id}
+                        className={cell.column.id}
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+
+                          goToLink = true;
+
+                          const value = cell.getValue() as string;
+
+                          pressDownDuration = setTimeout(() => {
+                            if (value) {
+                              navigator.clipboard.writeText(value);
+                              toast.success(
+                                `Kopierede "${value}" til udklipsholderen`,
+                                { position: "top-center" },
+                              );
+                              goToLink = false;
+                            }
+                          }, 500);
+
+                          return false;
+                        }}
+                        onMouseUp={(e) => {
+                          e.stopPropagation();
+                          clearTimeout(pressDownDuration);
+                          if (goToLink) onRowClick(row.original);
+                          return false;
+                        }}
+                      >
                         <ToolTip
                           display={cell.getValue() as string}
                           className="mx-2 flex h-full w-full py-[0.35rem]"
