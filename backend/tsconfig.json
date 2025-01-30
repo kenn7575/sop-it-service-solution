@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "baseUrl": "src",
     "paths": {
+      "*": ["node_modules/*"],
       "@*": ["./api/*"],
       "@/*": ["./*"]
     },
