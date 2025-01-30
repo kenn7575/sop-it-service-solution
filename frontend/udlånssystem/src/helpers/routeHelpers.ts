@@ -1,9 +1,13 @@
-import { lazy } from "react";
+import { type ComponentType, lazy } from "react";
 
 const exclude = ["components", "Login", "Home"];
 
+interface ReactComponent {
+  default: ComponentType<any>;
+}
+
 export function getPages() {
-  const allPages = import.meta.glob("../pages/**/*.tsx");
+  const allPages = import.meta.glob<ReactComponent>("../pages/**/*.tsx");
 
   return Object.entries(allPages)
     .filter(([path]) => {
@@ -21,6 +25,6 @@ export function getPages() {
         .replace("edit", ":id")
         .replace(/\[([^\]]+)\]/g, ":$1");
 
-      return { path: name.toLowerCase(), element: lazy(page as any) };
+      return { path: name.toLowerCase(), element: lazy(page) };
     });
 }
