@@ -172,7 +172,7 @@ export default function NewLoan({ initPage = 1 }) {
     toast.promise(loanPromise, {
       loading: "Gemmer...",
       success: ({ data }: any) => {
-        navigate(`/udlaan/${data.loanId}`);
+        navigate(`/udlaan/${data.UUID}`);
 
         return "Gemt";
       },
