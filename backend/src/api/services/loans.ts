@@ -33,7 +33,7 @@ export async function createOne(values: ILoanCreateInput): Promise<IResponse> {
   loan = convertToPrismaTypes(loan, "loans");
   products = products.map((product) => convertToPrismaTypes(product, "items"));
 
-  const newLoan = prisma.loans.create({
+  const newLoan = await prisma.loans.create({
     data: {
       ...loan,
       items_in_loan: {
@@ -46,16 +46,14 @@ export async function createOne(values: ILoanCreateInput): Promise<IResponse> {
     },
   });
 
-  const result = await prisma.$transaction([newLoan]);
-
   const user = await prisma.users.findFirst({ where: { UUID: loan.user_id } });
   const userEmail = user?.username + "@edu.sde.dk";
 
-  const loanReceipt = await generateLoanHTML(result[0].UUID, true);
+  const loanReceipt = await generateLoanHTML(newLoan.UUID, true);
 
   sendMail(userEmail, "Lånekontrakt", loanReceipt);
 
-  return { status: 201, data: result };
+  return { status: 201, data: newLoan };
 }
 
 interface Item {

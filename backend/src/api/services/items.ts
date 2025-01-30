@@ -1,11 +1,13 @@
 import { prismaGetRefs as prisma } from "@/configs/prisma.config";
-import { createItemSchema } from "@/schemas/item";
+import { createItemSchema, getItemSchema } from "@/schemas/item";
 
 export async function getOne(UUID?: string | number): Promise<IResponse> {
-  const UUIDNumber = Number(UUID);
+  const { data, error } = getItemSchema.safeParse({ UUID });
+
+  if (error) return { status: 400, data: error };
 
   const item = await prisma.items.findUnique({
-    where: { UUID: UUIDNumber || undefined },
+    where: { UUID: data.UUID || undefined },
     include: {
       items_in_loan: {
         include: { loans: { include: { users_loans_user_idTousers: true } } },

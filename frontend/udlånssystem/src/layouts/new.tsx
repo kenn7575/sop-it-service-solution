@@ -21,6 +21,7 @@ interface NewLayoutProps {
   panelSlot?: React.ReactElement;
   formSlot?: React.ReactElement;
   redirectOnCreate?: boolean;
+  initValues?: any;
 }
 
 export default function NewLayout({
@@ -29,10 +30,11 @@ export default function NewLayout({
   zodSchema = autoGenZodSchema(fields),
   formSlot = <></>,
   redirectOnCreate = true,
+  initValues = {},
 }: NewLayoutProps) {
   const navigate = useNavigate();
 
-  const [exportData, setExportData] = useState<any>({});
+  const [exportData, setExportData] = useState<any>(initValues);
 
   const [fields2, setFields] = useState(fields);
 
