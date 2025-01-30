@@ -18,7 +18,8 @@ export function getPages() {
         .replace("../pages/", "")
         .replace(".tsx", "")
         .replace("/index", "")
-        .replace("edit", ":id");
+        .replace("edit", ":id")
+        .replace(/\[([^\]]+)\]/g, ":$1");
 
       return { path: name.toLowerCase(), element: lazy(page as any) };
     });
