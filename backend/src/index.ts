@@ -8,6 +8,8 @@ import * as Routes from "@/api/routes";
 import prisma from "@/configs/prisma.config";
 import { authenticateUser, sendMailToExpiredLoans } from "@/functions";
 
+import passport from "./passport";
+
 dotenv.config();
 
 const app = express();
@@ -21,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("json spaces", 4);
 app.use(cookieParser());
+app.use(passport.initialize());
 
 const router = Router();
 
