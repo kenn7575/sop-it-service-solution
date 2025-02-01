@@ -1,0 +1,105 @@
+name: sop-udlaanssystem-dev
+version: "3.9"
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend/udlånssystem
+      dockerfile: Dockerfile.dev
+      target: dev
+    env_file:
+      - frontend/udlånssystem/.env
+    command: ["npm", "run", "dev", "--", "--host"]
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/udlånssystem:/app
+      - /app/node_modules
+    networks:
+      - internal
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: dev
+    expose:
+      - "3001"
+    command: ["sh", "-c", "npm run db:push && npm run dev"]
+    depends_on:
+      - db
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    configs:
+      - source: nodemon
+        target: /app/nodemon.json
+    networks:
+      - internal
+
+  db:
+    container_name: db
+    image: mariadb:10.5
+    restart: always
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    env_file:
+      - backend/.env
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - public
+      - internal
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.19.6
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    configs:
+      - source: nginx
+        target: /etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - public
+      - internal
+
+  ldap:
+    container_name: ldap
+    image: osixia/openldap:1.5.0
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+      LDAP_ORGANISATION: "SOP"
+      LDAP_DOMAIN: "sop.dk"
+      LDAP_BASE_DN: "dc=sop,dc=dk"
+      LDAP_ADMIN_PASSWORD: "admin"
+    networks:
+      - internal
+
+networks:
+  public:
+    driver: bridge
+  internal:
+    name: internal
+    internal: true
+  
+volumes:
+  db:
+    driver: local
+
+configs:
+  nodemon:
+    file: ./backend/nodemon.json
+  nginx:
+    file: ./nginx.conf
