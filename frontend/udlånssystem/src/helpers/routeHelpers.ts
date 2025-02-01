@@ -7,7 +7,9 @@ interface ReactComponent {
 }
 
 export function getPages() {
-  const allPages = import.meta.glob<ReactComponent>("../pages/**/*.tsx");
+  const allPages = import.meta.glob<ReactComponent>("../pages/**/*.tsx", {
+    eager: true,
+  });
 
   return Object.entries(allPages)
     .filter(([path]) => {
@@ -17,7 +19,7 @@ export function getPages() {
 
       return true;
     })
-    .map(([path, page]) => {
+    .map(([path, { default: element }]) => {
       let name = path
         .replace("../pages/", "")
         .replace(".tsx", "")
@@ -25,6 +27,6 @@ export function getPages() {
         .replace("edit", ":id")
         .replace(/\[([^\]]+)\]/g, ":$1");
 
-      return { path: name.toLowerCase(), element: lazy(page) };
+      return { path: name.toLowerCase(), element };
     });
 }

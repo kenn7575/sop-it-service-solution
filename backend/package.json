@@ -1,5 +1,6 @@
 {
-  "name": "backend_express",
+  "name": "udlaansystem-backend",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/index.js",
@@ -11,7 +12,8 @@
     "run-prod": "npm run build && npm run start",
     "db:pull": "npx prisma db pull && npx prisma generate",
     "db:push": "npx prisma db push && node prisma/addViews.js",
-    "db:seed": "npx prisma db seed"
+    "db:seed": "npx prisma db seed",
+    "db:deploy": "npx prisma migrate deploy && npx prisma generate"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
