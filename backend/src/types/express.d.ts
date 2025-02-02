@@ -1,8 +1,6 @@
 declare global {
   namespace Express {
-    interface Request {
-      user?: user | null;
-    }
+    interface User extends user {}
   }
 }
 
