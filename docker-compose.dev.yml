@@ -31,6 +31,7 @@ services:
       - db
     env_file:
       - backend/.env
+      - backend/.docker.env
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -49,7 +50,7 @@ services:
     ports:
       - "3306:3306"
     env_file:
-      - backend/.env
+      - backend/.docker.env
     volumes:
       - db:/var/lib/mysql
     networks:
