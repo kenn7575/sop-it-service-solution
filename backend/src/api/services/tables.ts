@@ -58,14 +58,17 @@ export async function createOne(
   try {
     const prismaTable = prisma[table].fields;
 
-    const createSchema = findPrismaSchema("create", table);
-    const { error } = createSchema.safeParse(values);
+    const createSchema = await findPrismaSchema("createSchema", table);
 
-    if (error) {
-      return {
-        status: 400,
-        data: { error: error.flatten() },
-      };
+    if (createSchema) {
+      const { error } = createSchema.safeParse(values);
+
+      if (error) {
+        return {
+          status: 400,
+          data: { error: error.flatten() },
+        };
+      }
     }
 
     for (const [key, value] of Object.entries(prismaTable) as any) {
@@ -95,14 +98,17 @@ export async function updateOne(
     delete values["date_created"];
     delete values["date_updated"];
 
-    const updateSchema = findPrismaSchema("update", table);
-    const { error } = updateSchema.safeParse(values);
+    const updateSchema = await findPrismaSchema("updateSchema", table);
 
-    if (error) {
-      return {
-        status: 400,
-        data: { error: error.flatten() },
-      };
+    if (updateSchema) {
+      const { error } = updateSchema.safeParse(values);
+
+      if (error) {
+        return {
+          status: 400,
+          data: { error: error.flatten() },
+        };
+      }
     }
 
     const result = await (prisma[table] as any).update({
@@ -119,7 +125,7 @@ export async function updateOne(
 export async function deleteOne(
   table: Prisma.ModelName,
   UUID: string | number,
-  user?: Express.Request["user"]
+  user?: user
 ): Promise<IResponse> {
   if (user && user.moderatorLevel < 2) {
     return { status: 403, data: { error: "Forbidden" } };

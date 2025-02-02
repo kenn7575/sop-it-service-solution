@@ -2,22 +2,21 @@ import { z } from "zod";
 
 import { Prisma } from "@prisma/client";
 
-import * as PrismaSchemas from "../../prisma/generated/zod";
+type ISchemaType = "createSchema" | "updateSchema";
 
-type ISchemaType = "create" | "update";
-
-export default function findPrismaSchema(
+export default async function findPrismaSchema(
   type: ISchemaType,
   table: Prisma.ModelName
-): z.ZodObject<any, any, any> {
-  const createSuffix = "UncheckedCreateInputSchema";
-  const updateSuffix = "UncheckedUpdateInputSchema";
+): Promise<z.ZodObject<any> | null> {
+  try {
+    const schema: any = await import("@/schemas/" + table);
 
-  const schemaName = `${table}${
-    type === "create" ? createSuffix : updateSuffix
-  }` as keyof typeof PrismaSchemas;
+    if (!schema) throw new Error("Schema not found");
 
-  const schema = PrismaSchemas[schemaName];
+    if (!schema[type]) throw new Error("Schema not found for type: " + type);
 
-  return schema as z.ZodObject<any, any, any>;
+    return schema[type];
+  } catch (error) {
+    return null;
+  }
 }
